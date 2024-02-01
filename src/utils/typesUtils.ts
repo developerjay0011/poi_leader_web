@@ -4,7 +4,12 @@ export interface LoginFormFields {
   userId: string
   password: string
   remember: boolean
+  fullName: string
+  email: string
+  phoneNo: string
+  userType: string
 }
+
 
 export interface ErrObj {
   isErr: boolean
@@ -17,6 +22,21 @@ export interface RegisterFormFields {
   phoneNo: string
   password: string
   userType: string
+  userId: string
+}
+
+export interface LoginData {
+  email: string; 
+  password: string
+}
+
+export interface RegisterData {
+  email: string; 
+  password: string;
+  name: string;
+  mobile: string;
+  leadertype: string;
+
 }
 
 export interface ErrObj {
