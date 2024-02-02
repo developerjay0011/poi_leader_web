@@ -1,170 +1,174 @@
-import { FC, useEffect, useReducer } from 'react'
-import { useForm } from 'react-hook-form'
+import { FC, useEffect, useReducer, useState } from "react";
+import { useForm } from "react-hook-form";
 
-import { motion as m } from 'framer-motion'
-import { ConnectToAPI } from '../../utils/utility'
-import { BasicLeaderInfo } from './BasicLeaderInfo'
-import { PoliticalInfo } from './PoliticalInfo'
-import { PersonalLeaderInfo } from './PersonalLeaderInfo'
-import { ContactInfoField } from './ContactInfoField'
+import { motion as m } from "framer-motion";
+import { ConnectToAPI } from "../../utils/utility";
+import { BasicLeaderInfo } from "./BasicLeaderInfo";
+import { PoliticalInfo } from "./PoliticalInfo";
+import { PersonalLeaderInfo } from "./PersonalLeaderInfo";
+import { ContactInfoField } from "./ContactInfoField";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux_store";
+import { cusSelector } from "@/redux_store/cusHooks";
+import { fetchAddLeadersDropdown } from "../api/auth";
 
 export interface LeaderFormFields {
-  username: string
-  email: string
-  password: string
-  leaderType: string
+  username: string;
+  email: string;
+  password: string;
+  leaderType: string;
 
   // Personal Information
-  firstName: string
-  middleName: string
-  lastName: string
-  dob: string
-  gender: string
-  motherName: string
-  fatherName: string
-  hobbies: string
-  about: string
-  maritalStatus: string
-  spouseName: string
-  noOfDaughters: number
-  noOfSons: number
-  bloodGroup: string
-  criminalCases: number
-  assests: string
-  placeOfBirth: string
-  higherEduction: string
-  profession: string
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  dob: string;
+  gender: string;
+  motherName: string;
+  fatherName: string;
+  hobbies: string;
+  about: string;
+  maritalStatus: string;
+  spouseName: string;
+  noOfDaughters: number;
+  noOfSons: number;
+  bloodGroup: string;
+  criminalCases: number;
+  assests: string;
+  placeOfBirth: string;
+  higherEduction: string;
+  profession: string;
 
   //  Political Info
-  designation: string
-  parliamentHouse: string
-  politicalParty: string
-  lokSabhaState: string
-  lokSabhaConstituency: string
-  rajyaSabhaNominated: string
-  rajyaSabhaState: string
-  mlaState: string
-  mlaConstituency: string
+  designation: string;
+  parliamentHouse: string;
+  politicalParty: string;
+  lokSabhaState: string;
+  lokSabhaConstituency: string;
+  rajyaSabhaNominated: string;
+  rajyaSabhaState: string;
+  mlaState: string;
+  mlaConstituency: string;
   ministries: {
-    name: string
-    type: string
-  }[]
+    name: string;
+    type: string;
+  }[];
 
   // Emerging Leader Political Info
-  joinedDate: string
-  postInParty: string
+  joinedDate: string;
+  postInParty: string;
 
   // Question
-  participatedInElection: string
-  politicalAchievements: string
-  whyYouJoinedPolitics: string
-  preparingForFutureElections: string
+  participatedInElection: string;
+  politicalAchievements: string;
+  whyYouJoinedPolitics: string;
+  preparingForFutureElections: string;
 
   // participatedInElection YES Field
-  election: string
-  electionYear: string
-  position: string
-  opponents: string
-  electionState: string
-  electionConstituency: string
+  election: string;
+  electionYear: string;
+  position: string;
+  opponents: string;
+  electionState: string;
+  electionConstituency: string;
 
   // participatedInElection NO Field
-  targetElection: string
-  targetElectionYear: string
-  targetElectionState: string
-  targetElectionConstituency: string
-  topTenPriorities: string
+  targetElection: string;
+  targetElectionYear: string;
+  targetElectionState: string;
+  targetElectionConstituency: string;
+  topTenPriorities: string;
 
-  familySupportedForPolitics: string
-  doneAnyPoliticalActivity: string
+  familySupportedForPolitics: string;
+  doneAnyPoliticalActivity: string;
   activities: {
-    img: string[]
-    description: string
-  }[]
+    img: string[];
+    description: string;
+  }[];
   references: {
-    name: string
-    age: string
-    mobileNo: string
-  }[]
-  peopleInTeam: string
+    name: string;
+    age: string;
+    mobileNo: string;
+  }[];
+  peopleInTeam: string;
 
   // Contact Information
-  pAddress: string
-  pState: string
-  pDistrict: string
-  pPincode: string
+  pAddress: string;
+  pState: string;
+  pDistrict: string;
+  pPincode: string;
 
-  bothAddressIsSame: string
+  bothAddressIsSame: string;
 
-  cAddress: string
-  cState: string
-  cPincode: string
-  cDistrict: string
+  cAddress: string;
+  cState: string;
+  cPincode: string;
+  cDistrict: string;
 
   socialMedia: {
-    facebook: string
-    instagram: string
-    twitter: string
-  }
+    facebook: string;
+    instagram: string;
+    twitter: string;
+  };
 
-  telePhoneNos: string
-  mobileNos: string
-  workEmails: string
+  telePhoneNos: string;
+  mobileNos: string;
+  workEmails: string;
 }
 
 export interface ProfessionDetails {
-  professionId: string
-  professionName: string
+  professionId: string;
+  professionName: string;
 }
 
 export interface AssemblyConstituencyDetails {
-  assemblyName: string
-  assemblyId: string
-  stateId: string
+  assembly_name: string;
+  id: string;
+  stateid: string;
 }
 
 export interface DesignationDetails {
-  designationId: string
-  designationName: string
+  id: string;
+  designation: string;
 }
 
 export interface ParliamentaryConstituencyDetails {
-  parliamentaryId: string
-  parliamentaryName: string
-  stateId: string
+  id: string;
+  parliamentary_name: string;
+  stateid: string;
 }
 
 export interface StateDetails {
-  stateId: string
-  stateName: string
+  id: string;
+  state: string;
 }
 
 export interface PartyDetails {
-  partyid: string
-  partyname: string
+  id: string;
+  party_name: string;
 }
 
 export interface DistrictDetails {
-  districtId: string
-  districtName: string
-  stateId: string
+  id: string;
+  district: string;
+  stateid: string;
 }
 
 export interface PincodeDetails {
-  districtId: string
-  pincodes: string[]
+  districtId: string;
+  pincodes: string[];
 }
 
 interface LeaderFormState {
-  states: StateDetails[]
-  districts: DistrictDetails[]
-  pincodes: PincodeDetails[]
-  assemblyConstituency: AssemblyConstituencyDetails[]
-  parliamentaryConstituency: ParliamentaryConstituencyDetails[]
-  designations: DesignationDetails[]
-  parties: PartyDetails[]
-  loading: boolean
-  professions: ProfessionDetails[]
+  states: StateDetails[];
+  districts: DistrictDetails[];
+  pincodes: PincodeDetails[];
+  assemblyConstituency: AssemblyConstituencyDetails[];
+  parliamentaryConstituency: ParliamentaryConstituencyDetails[];
+  designations: DesignationDetails[];
+  parties: PartyDetails[];
+  loading: boolean;
+  professions: ProfessionDetails[];
 }
 
 const init: LeaderFormState = {
@@ -177,7 +181,7 @@ const init: LeaderFormState = {
   parties: [],
   loading: true,
   professions: [],
-}
+};
 
 enum LeaderFormActionType {
   STORE_STATE,
@@ -192,7 +196,7 @@ enum LeaderFormActionType {
 }
 
 interface LeaderFormAction {
-  type: LeaderFormActionType
+  type: LeaderFormActionType;
   payload:
     | StateDetails[]
     | DistrictDetails[]
@@ -202,54 +206,148 @@ interface LeaderFormAction {
     | DesignationDetails[]
     | PartyDetails[]
     | boolean
-    | ProfessionDetails[]
+    | ProfessionDetails[];
+}
+
+interface UserDetails {
+  data: {
+    user_detail: {
+      username: string;
+      email: string;
+      password: string;
+    };
+  };
 }
 
 const reducerFn: (
   state: LeaderFormState,
   action: LeaderFormAction
 ) => LeaderFormState = (state, action) => {
-  const { type, payload } = action
+  const { type, payload } = action;
 
   if (type === LeaderFormActionType.STORE_ASSEMBLY)
     return {
       ...state,
       assemblyConstituency: payload as AssemblyConstituencyDetails[],
-    }
+    };
   if (type === LeaderFormActionType.STORE_STATE)
-    return { ...state, states: payload as StateDetails[] }
+    return { ...state, states: payload as StateDetails[] };
   if (type === LeaderFormActionType.STORE_DISTRICT)
-    return { ...state, districts: payload as DistrictDetails[] }
+    return { ...state, districts: payload as DistrictDetails[] };
   if (type === LeaderFormActionType.STORE_PINCODE)
-    return { ...state, pincodes: payload as PincodeDetails[] }
+    return { ...state, pincodes: payload as PincodeDetails[] };
   if (type === LeaderFormActionType.STORE_PARLIAMENTARY)
     return {
       ...state,
       parliamentaryConstituency: payload as ParliamentaryConstituencyDetails[],
-    }
+    };
   if (type === LeaderFormActionType.STORE_DESIGNATION)
     return {
       ...state,
       designations: payload as DesignationDetails[],
-    }
+    };
   if (type === LeaderFormActionType.STORE_PARTY)
     return {
       ...state,
       parties: payload as PartyDetails[],
-    }
+    };
 
   if (type === LeaderFormActionType.SET_LOADING)
-    return { ...state, loading: payload as boolean }
+    return { ...state, loading: payload as boolean };
 
   if (type === LeaderFormActionType.STORE_PROFESSION)
-    return { ...state, professions: payload as ProfessionDetails[] }
+    return { ...state, professions: payload as ProfessionDetails[] };
 
-  return init
-}
+  return init;
+};
+
+/* interface ModifiedData {
+  id: string;
+  username: string;
+  email: string;
+  mobile: string;
+  image: string | null;
+  leadertype: string;
+  password: string;
+  request_status: string;
+  isactive: boolean;
+  is_profile_complete: boolean;
+  created_date: string;
+  modified_date: string | null;
+  personal_info: {
+    first_name: string;
+    middle_name: string;
+    last_name: string;
+    gender: string;
+    blood_group: string;
+    father_name: string;
+    mother_name: string;
+    dob: string; // This should be string or Date, depending on how you handle dates in your application
+    place_of_birth: string;
+    marital_status: string;
+    higher_education: string;
+    profession: string;
+    hobbies: string;
+    assets: string;
+  };
+  contact_info: {
+    permanent_address: string;
+    permanent_state_id: string;
+    permanent_district_id: string;
+    permanent_pincode: string;
+    is_same_as_permanent: boolean;
+    present_address: string;
+    present_state_id: string;
+    present_district_id: string;
+    present_pincode: string;
+    telephones: string;
+    mobile_nos: string;
+    fb_link: string;
+    insta_link: string;
+    twitter_link: string;
+  };
+  political_info: {
+    political_party_id: string;
+    designation_id: string;
+    parliament_house: string;
+    stateid: string;
+    assemblyid: string;
+    parliamentaryid: string;
+    is_hold_ministry: boolean;
+    ministries: {
+      ministryid: string;
+      ministrytype: string;
+    }[];
+    is_nominated: boolean;
+    joined_date: string; // This should be string or Date, depending on how you handle dates in your application
+    post_in_party: string;
+    achievements: string;
+    why_join_politics: string;
+    is_participated_in_elections: boolean;
+    is_prepare_for_elections: boolean;
+    done_any_political_activity: boolean;
+    does_family_supports: boolean;
+    people_in_team: string;
+    referencies: {
+      name: string;
+      age: number;
+      mobile: string;
+    }[];
+  };
+  general_setting: {
+    enable_follow_me: boolean;
+    show_agendas: boolean;
+    send_me_notifications: boolean;
+  };
+} */
 
 export const AddLeaderPage: FC = () => {
-  
-  const [state, dispatchFn] = useReducer(reducerFn, init)
+  const userDetails = cusSelector((state: RootState) => state.auth.userDetails);
+  const [leaderOption, setLeaderOption] = useState<any>({});
+  const [state, dispatchFn] = useReducer(reducerFn, init);
+
+  console.log(userDetails);
+
   const {
     register,
     formState: { errors },
@@ -259,50 +357,140 @@ export const AddLeaderPage: FC = () => {
     control,
   } = useForm<LeaderFormFields>({
     defaultValues: {
-      bothAddressIsSame: 'yes',
-      references: [{ age: '', mobileNo: '', name: '' }],
+      username: userDetails?.data?.user_detail?.username || "",
+      email: userDetails?.data?.user_detail?.email || "",
+      password: userDetails?.data?.user_detail?.password || "",
+      bothAddressIsSame: "yes",
+      references: [{ age: "", mobileNo: "", name: "" }],
     },
-    mode: 'onTouched',
-  })
+    mode: "onTouched",
+  });
 
   const formSubmitHandler = (data: LeaderFormFields) => {
-    console.log(data)
-  }
+    console.log("inside this function");
 
-  // Below is the logic to prefill fields which depends on data coming from an API
-  // useEffect(() => {
-  //   if (state.states.length > 0 && state.districts.length > 0) {
-  //     setValue('pState', 'f1b64cf8fbb341709c43ab6f7295e5f9')
-  //     setValue('pDistrict', '9f50cb535edc4341bdb528b784884552')
-  //   }
-  // }, [state, setValue])
+    console.log(data, "formSubmitHandler userMenegment");
+
+   /*  const bodyData: ModifiedData = {
+      id: "string",
+      username: data?.username,
+      email: "string",
+      mobile: "string",
+      image: "string",
+      leadertype: "string",
+      password: "string",
+      request_status: "string",
+      isactive: true,
+      is_profile_complete: true,
+      created_date: "2024-02-02T07:46:43.423Z",
+      modified_date: "2024-02-02T07:46:43.423Z",
+      personal_info: {
+        first_name: "string",
+        middle_name: "string",
+        last_name: "string",
+        gender: "string",
+        blood_group: "string",
+        father_name: "string",
+        mother_name: "string",
+        dob: "2024-02-02T07:46:43.423Z",
+        place_of_birth: "string",
+        marital_status: "string",
+        higher_education: "string",
+        profession: "string",
+        hobbies: "string",
+        assets: "string",
+      },
+      contact_info: {
+        permanent_address: "string",
+        permanent_state_id: "string",
+        permanent_district_id: "string",
+        permanent_pincode: "string",
+        is_same_as_permanent: true,
+        present_address: "string",
+        present_state_id: "string",
+        present_district_id: "string",
+        present_pincode: "string",
+        telephones: "string",
+        mobile_nos: "string",
+        fb_link: "string",
+        insta_link: "string",
+        twitter_link: "string",
+      },
+      political_info: {
+        political_party_id: "string",
+        designation_id: "string",
+        parliament_house: "string",
+        stateid: "string",
+        assemblyid: "string",
+        parliamentaryid: "string",
+        is_hold_ministry: true,
+        ministries: [
+          {
+            ministryid: "string",
+            ministrytype: "string",
+          },
+        ],
+        is_nominated: true,
+        joined_date: "2024-02-02T07:46:43.423Z",
+        post_in_party: "string",
+        achievements: "string",
+        why_join_politics: "string",
+        is_participated_in_elections: true,
+        is_prepare_for_elections: true,
+        done_any_political_activity: true,
+        does_family_supports: true,
+        people_in_team: "string",
+        referencies: [
+          {
+            name: "string",
+            age: 0,
+            mobile: "string",
+          },
+        ],
+      },
+      general_setting: {
+        enable_follow_me: true,
+        show_agendas: true,
+        send_me_notifications: true,
+      },
+    }; */
+  };
+
+  useEffect(() => {
+    (async () => {
+      const LeadersDropdown = await fetchAddLeadersDropdown();
+      setLeaderOption(LeadersDropdown);
+    })();
+  }, []);
 
   return (
     <m.section
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -100, opacity: 0 }}
-      transition={{ ease: 'easeIn' }}
-      className='w-[95%] m-auto relative my-7 border bg-white border-gray-300 shadow-md rounded-md py-8 px-7 max-lg:w-[98%] max-lg:my-5'>
-      <h1 className='text-4xl font-bold capitalize'>add new leader</h1>
-      {state.loading && (
-        <div className='flex flex-col gap-3 items-center py-10'>
-          <span className='formLoader' />
-          <p className='text-cyan-700 animate-pulse'>Loading Assets...</p>
+      transition={{ ease: "easeIn" }}
+      className="w-[95%] m-auto relative my-7 border bg-white border-gray-300 shadow-md rounded-md py-8 px-7 max-lg:w-[98%] max-lg:my-5"
+    >
+      <h1 className="text-4xl font-bold capitalize">add new leader</h1>
+      {/* {state.loading && (
+        <div className="flex flex-col gap-3 items-center py-10">
+          <span className="formLoader" />
+          <p className="text-cyan-700 animate-pulse">Loading Assets...</p>
         </div>
-      )}
+      )} */}
 
       {/* {!state.loading && state.assemblyConstituency.length > 0 && ( */}
       {true && (
         <form
-          className='mt-10 flex flex-col gap-10'
+          className="mt-10 flex flex-col gap-10"
           noValidate
-          onSubmit={handleSubmit(formSubmitHandler)}>
+          // onSubmit={handleSubmit(formSubmitHandler)}
+        >
           {/* BASIC INFO */}
-          <div className='border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6'>
-            <h2 className='text-3xl font-semibold'>Basic Information</h2>
+          <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
+            <h2 className="text-3xl font-semibold">Basic Information</h2>
 
-            <section className='grid grid-cols-3 gap-x-4 gap-y-5'>
+            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
               <BasicLeaderInfo
                 register={register}
                 errors={errors}
@@ -313,30 +501,30 @@ export const AddLeaderPage: FC = () => {
           </div>
 
           {/* Political Info */}
-          <div className='border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6'>
-            <h2 className='text-3xl font-semibold'>Political Information</h2>
+          <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
+            <h2 className="text-3xl font-semibold">Political Information</h2>
 
-            <section className='grid grid-cols-3 gap-x-4 gap-y-5'>
+            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
               <PoliticalInfo
                 register={register}
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
                 control={control}
-                assemblyConstituency={state.assemblyConstituency}
-                parliamentaryConstituency={state.parliamentaryConstituency}
-                states={state.states}
-                designations={state.designations}
-                parties={state.parties}
+                assemblyConstituency={leaderOption.assemblies}
+                parliamentaryConstituency={leaderOption.parliamentries}
+                states={leaderOption.states}
+                designations={leaderOption?.designations}
+                parties={leaderOption?.politicalparty}
               />
             </section>
           </div>
 
           {/* Personal Info */}
-          <div className='border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6'>
-            <h2 className='text-3xl font-semibold'>Personal Information</h2>
+          <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
+            <h2 className="text-3xl font-semibold">Personal Information</h2>
 
-            <section className='grid grid-cols-3 gap-x-4 gap-y-5'>
+            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
               <PersonalLeaderInfo
                 register={register}
                 errors={errors}
@@ -348,37 +536,40 @@ export const AddLeaderPage: FC = () => {
           </div>
 
           {/* Contact Info */}
-          <div className='border border-zinc-200 px-6 py-7 rounded-md'>
-            <h2 className='text-3xl font-semibold mb-7'>Contact Information</h2>
+          <div className="border border-zinc-200 px-6 py-7 rounded-md">
+            <h2 className="text-3xl font-semibold mb-7">Contact Information</h2>
 
-            <section className='grid grid-cols-3 gap-x-4 gap-y-5'>
+            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
               <ContactInfoField
                 register={register}
                 errors={errors}
                 watch={watch}
                 setValue={setValue}
-                districts={state.districts}
-                states={state.states}
+                districts={leaderOption.states}
+                states={leaderOption.districts}
                 pincodes={state.pincodes}
               />
             </section>
           </div>
 
-          <div className='flex gap-2 justify-end'>
+          <div className="flex gap-2 justify-end">
             <button
-              type='submit'
-              className='px-5 py-1 rounded-full bg-cyan-500 text-cyan-50'>
+              onClick={handleSubmit(formSubmitHandler)}
+              type="submit"
+              className="px-5 py-1 rounded-full bg-cyan-500 text-cyan-50"
+            >
               Submit
             </button>
             <button
               // onClick={() => navigate('/admin/user-management/manage-leaders')} // By passing -1 in navigate function this will redirect to the previous route
-              type='button'
-              className='px-5 py-1 rounded-full text-cyan-500 bg-cyan-100 transition-all hover:bg-cyan-500 hover:text-cyan-50'>
+              type="button"
+              className="px-5 py-1 rounded-full text-cyan-500 bg-cyan-100 transition-all hover:bg-cyan-500 hover:text-cyan-50"
+            >
               Close
             </button>
           </div>
         </form>
       )}
     </m.section>
-  )
-}
+  );
+};

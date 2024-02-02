@@ -75,3 +75,19 @@ export const fetchVerifyOtp = async (VerifyOtp: {
     return error;
   }
 };
+export const fetchAddLeadersDropdown = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Common/GetAddLeadersDropdown`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.json();
+  } catch (error) {
+    return error;
+  }
+};

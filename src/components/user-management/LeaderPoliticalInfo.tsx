@@ -54,6 +54,10 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
     control,
     name: "ministries",
   });
+
+  console.log(parties);
+  console.log(assemblyConstituency);
+
   const [hasMinistry, setHasMinistry] = useState(false);
   const designation = watch("designation");
   const parliamentHouse = watch("parliamentHouse");
@@ -86,9 +90,9 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
         }}
         selectField={{
           title: "select designation",
-          options: designations.map((el) => ({
-            id: el.designationId,
-            value: el.designationName,
+          options: designations?.map((el) => ({
+            id: el.id,
+            value: el.designation,
           })),
         }}
       />
@@ -106,9 +110,9 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             required
             selectField={{
               title: "select state",
-              options: states.map((el) => ({
-                id: el.stateId,
-                value: el.stateName,
+              options: states?.map((el) => ({
+                id: el.id,
+                value: el.state,
               })),
             }}
           />
@@ -127,8 +131,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
                 title: "select constituency",
                 // filtering assembly constituency based on mla State
                 options: assemblyConstituency
-                  .filter((el) => el.stateId === mlaState)
-                  .map((el) => ({ id: el.assemblyId, value: el.assemblyName })),
+                  ?.filter((el) => el.stateid === mlaState)
+                  ?.map((el) => ({ id: el.id, value: el.assembly_name })),
               }}
             />
           )}
@@ -188,9 +192,9 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             type="select"
             selectField={{
               title: "select state",
-              options: states.map((el) => ({
-                id: el.stateId,
-                value: el.stateName,
+              options: states?.map((el) => ({
+                id: el.id,
+                value: el.state,
               })),
             }}
           />
@@ -211,10 +215,10 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
                 title: "select constituency",
                 // filtering parliamentary constituency based on loksabha State
                 options: parliamentaryConstituency
-                  .filter((el) => el.stateId === lokSabhaState)
-                  .map((el) => ({
-                    id: el.parliamentaryId,
-                    value: el.parliamentaryName,
+                  ?.filter((el) => el.stateid === lokSabhaState)
+                  ?.map((el) => ({
+                    id: el.id,
+                    value: el.parliamentary_name,
                   })),
               }}
             />
@@ -246,9 +250,9 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
               type="select"
               selectField={{
                 title: "select state",
-                options: states.map((el) => ({
-                  id: el.stateId,
-                  value: el.stateName,
+                options: states?.map((el) => ({
+                  id: el.id,
+                  value: el.state,
                 })),
               }}
             />
@@ -269,9 +273,9 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
           selectField={{
             title: "select political party",
             // Rendering party List
-            options: parties.map((el) => ({
-              id: el.partyid,
-              value: el.partyname,
+            options: parties?.map((el) => ({
+              id: el.id,
+              value: el.party_name,
             })),
           }}
         />
@@ -342,9 +346,9 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
                 selectField={{
                   title: "select ministry type",
                   // Rendering party List
-                  options: parties.map((el) => ({
-                    id: el.partyid,
-                    value: el.partyname,
+                  options: parties?.map((el) => ({
+                    id: el.id,
+                    value: el.party_name,
                   })),
                 }}
               />

@@ -82,11 +82,11 @@ export const Input: FC<InputProps> = ({
               : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
           }`}>
           <option value=''>
-            {selectField.options.length > 0
+            {selectField?.options?.length > 0
               ? selectField.title
               : `No ${selectField.title.split(' ').at(-1)} Found !!`}
           </option>
-          {selectField.options.map((el) => (
+          {selectField?.options?.map((el) => (
             <option value={el.id} key={el.id}>
               {el.value}
             </option>

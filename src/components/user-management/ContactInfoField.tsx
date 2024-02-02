@@ -80,9 +80,9 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
         }}
         selectField={{
           title: 'Select State',
-          options: states.map((el) => ({
-            id: el.stateId,
-            value: el.stateName,
+          options: states?.map((el) => ({
+            id: el.id,
+            value: el.state,
           })),
         }}
       />
@@ -99,8 +99,8 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
         selectField={{
           title: 'Select District',
           options: districts
-            .filter((el) => (pState ? el.stateId === pState : el))
-            .map((el) => ({ id: el.districtId, value: el.districtName })),
+            // .filter((el) => (pState ? el.stateid === pState : el))
+            ?.map((el) => ({ id: el.id, value: el.district })),
         }}
       />
       <Input
@@ -190,8 +190,8 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
             selectField={{
               title: 'Select State',
               options: states.map((el) => ({
-                id: el.stateId,
-                value: el.stateName,
+                id: el.id,
+                value: el.state,
               })),
             }}
           />
@@ -208,8 +208,8 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
             selectField={{
               title: 'Select District',
               options: districts
-                .filter((el) => (cState ? el.stateId === cState : el))
-                .map((el) => ({ id: el.districtId, value: el.districtName })),
+                // .filter((el) => (cState ? el.stateid === cState : el))
+                ?.map((el) => ({ id: el.id, value: el.district })),
             }}
           />
           <Input

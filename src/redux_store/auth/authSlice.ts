@@ -1,30 +1,27 @@
-import { UserDetails } from '@/utils/typesUtils'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { UserDetails } from '@/utils/typesUtils'; // Import UserDetails type
 
 interface AuthState {
-  userDetails: UserDetails | null
-  isLoggedIn: boolean
+  userDetails: UserDetails | null;
 }
 
-const init: AuthState = {
-  isLoggedIn: false,
+const initialState: AuthState = {
   userDetails: null,
-}
+};
 
 export const authSlice = createSlice({
   name: 'auth',
-  initialState: init,
+  initialState,
   reducers: {
-    logIn(state, action: PayloadAction<UserDetails>) {
-      state.isLoggedIn = true
-      state.userDetails = action.payload
+    setUserData(state, action: PayloadAction<UserDetails | null>) {
+      state.userDetails = action.payload; // Update userDetails based on the action payload
+      console.log(action.payload, "action.payload");
+
     },
-    logOut(state) {
-      state.isLoggedIn = false
-      state.userDetails = null
-      localStorage.clear()
+    clearUserData(state) {
+      state.userDetails = null; // Clear userDetails
     },
   },
-})
+});
 
-export const authActions = authSlice.actions
+export const authActions = authSlice.actions;

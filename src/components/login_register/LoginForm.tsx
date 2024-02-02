@@ -14,11 +14,14 @@ import {
   RegisterFormFields,
 } from "@/utils/typesUtils";
 import { LPInputField } from "@/utils/LPInputField";
-import { cusDispatch } from "@/redux_store/cusHooks";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { fetchLogin } from "../api/auth";
+import { authActions } from "@/redux_store/auth/authSlice";
+import { RootState } from "@/redux_store";
+import { useSelector } from "react-redux";
 
 interface LoginResponse {
   success: boolean;
@@ -31,6 +34,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
   const dispatch = cusDispatch();
+  
 
   const [showForgetPassForm, setShowForgetPassForm] = useState(false);
   const [err, setErr] = useState<ErrObj>({ isErr: false, errTxt: "" });
@@ -65,26 +69,33 @@ export const LoginForm: FC<LoginFormProps> = () => {
     try {
       const response = await fetchLogin(resBody);
 
-      const loginResponse = response as LoginResponse; // Type assertion
+      const loginResponse = response as any; // Type assertion
       const { success, message, data } = loginResponse;
+      console.log(data);
+
       if (success) {
-        if (data?.leader_detail?.request_status === "approved") {
-          router.push("/user");
-        } else {
-          setErr({
-            errTxt: `Your Requast Is ${data?.leader_detail?.request_status} `,
-            isErr: true,
-          });
-        }
         if (data?.leader_detail?.is_profile_complete) {
-          router.push("/user");
+          // router.push("/user");
+          if (data?.leader_detail?.request_status === "approved") {
+            router.push("/user");
+            dispatch(authActions.setUserData(loginResponse));
+          } else {
+            setErr({
+              errTxt: `Your Requast Is ${data?.leader_detail?.request_status} `,
+              isErr: true,
+            });
+          }
         } else {
           router.push("/userManagement");
         }
       } else {
         setErr({ errTxt: message, isErr: true });
+        /* if (!data?.leader_detail?.is_profile_complete) {
+          router.push("/userManagement");
+          dispatch(authActions.setUserData(loginResponse));
+        } */
       }
-      router.push("/user");
+      // router.push("/user");
       setLoggingIn(false);
     } catch (error: any) {
       console.error(error);

@@ -1,21 +1,20 @@
-import { FC } from 'react'
+import { FC } from "react";
 import {
   FieldErrors,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
-} from 'react-hook-form'
+} from "react-hook-form";
 
-import { Input } from './Input'
-import { LEADER_IDS } from '@/utils/typesUtils'
-import { LeaderFormFields } from './AddLeaderPage'
-
+import { Input } from "./Input";
+import { LEADER_IDS } from "@/utils/typesUtils";
+import { LeaderFormFields } from "./AddLeaderPage";
 
 interface BasicLeaderInfoProps {
-  errors: FieldErrors<LeaderFormFields>
-  register: UseFormRegister<LeaderFormFields>
-  watch: UseFormWatch<LeaderFormFields>
-  setValue: UseFormSetValue<LeaderFormFields>
+  errors: FieldErrors<LeaderFormFields>;
+  register: UseFormRegister<LeaderFormFields>;
+  watch: UseFormWatch<LeaderFormFields>;
+  setValue: UseFormSetValue<LeaderFormFields>;
 }
 
 export const BasicLeaderInfo: FC<BasicLeaderInfoProps> = ({
@@ -27,116 +26,116 @@ export const BasicLeaderInfo: FC<BasicLeaderInfoProps> = ({
     <>
       <Input
         errors={errors}
-        id='username'
-        placeholder='poi01'
+        id="username"
+        placeholder="poi01"
         register={register}
-        title='Username'
+        title="Username"
         required
-        type='text'
+        type="text"
         validations={{
-          required: 'Username is required',
+          required: "Username is required",
         }}
       />
 
       <Input
         errors={errors}
-        id='email'
-        placeholder='example@gmail.com'
+        id="email"
+        placeholder="example@gmail.com"
         register={register}
-        title='Email'
+        title="Email"
         required
-        type='email'
+        type="email"
         validations={{
-          required: 'Email is required',
+          required: "Email is required",
           pattern: {
             value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
-            message: 'Entered email is not valid | Ex: something@example.com',
+            message: "Entered email is not valid | Ex: something@example.com",
           },
         }}
       />
 
       <Input
         errors={errors}
-        id='password'
-        placeholder='XXXXXXX'
+        id="password"
+        placeholder="XXXXXXX"
         register={register}
-        title='Password'
+        title="Password"
         required
-        type='password'
+        type="password"
         validations={{
-          required: 'Password is required',
+          required: "Password is required",
         }}
       />
 
       <Input
         errors={errors}
-        id='leaderType'
+        id="leaderType"
         register={register}
-        title='Leader Type'
+        title="Leader Type"
         required
-        type='select'
+        type="select"
         validations={{
-          required: 'Leader Type is required',
+          required: "Leader Type is required",
           onChange() {
             // Resetting all field that depends on leader type
-            setValue('designation', '')
-            setValue('parliamentHouse', '')
-            setValue('politicalParty', '')
-            setValue('lokSabhaState', '')
-            setValue('lokSabhaConstituency', '')
-            setValue('rajyaSabhaNominated', '')
-            setValue('rajyaSabhaState', '')
-            setValue('mlaState', '')
-            setValue('mlaConstituency', '')
-            setValue('joinedDate', '')
-            setValue('postInParty', '')
-            setValue('participatedInElection', '')
-            setValue('election', '')
-            setValue('electionYear', '')
-            setValue('position', '')
-            setValue('opponents', '')
-            setValue('electionState', '')
-            setValue('electionConstituency', '')
-            setValue('targetElection', '')
-            setValue('targetElectionYear', '')
-            setValue('targetElectionState', '')
-            setValue('targetElectionConstituency', '')
-            setValue('topTenPriorities', '')
-            setValue('familySupportedForPolitics', '')
-            setValue('doneAnyPoliticalActivity', '')
-            setValue('peopleInTeam', '')
-            setValue('ministries', [
+            setValue("designation", "");
+            setValue("parliamentHouse", "");
+            setValue("politicalParty", "");
+            setValue("lokSabhaState", "");
+            setValue("lokSabhaConstituency", "");
+            setValue("rajyaSabhaNominated", "");
+            setValue("rajyaSabhaState", "");
+            setValue("mlaState", "");
+            setValue("mlaConstituency", "");
+            setValue("joinedDate", "");
+            setValue("postInParty", "");
+            setValue("participatedInElection", "");
+            setValue("election", "");
+            setValue("electionYear", "");
+            setValue("position", "");
+            setValue("opponents", "");
+            setValue("electionState", "");
+            setValue("electionConstituency", "");
+            setValue("targetElection", "");
+            setValue("targetElectionYear", "");
+            setValue("targetElectionState", "");
+            setValue("targetElectionConstituency", "");
+            setValue("topTenPriorities", "");
+            setValue("familySupportedForPolitics", "");
+            setValue("doneAnyPoliticalActivity", "");
+            setValue("peopleInTeam", "");
+            setValue("ministries", [
               {
-                name: '',
-                type: '',
+                name: "",
+                type: "",
               },
-            ])
-            setValue('activities', [
+            ]);
+            setValue("activities", [
               {
-                img: [''],
-                description: '',
+                img: [""],
+                description: "",
               },
-            ])
-            setValue('references', [
+            ]);
+            setValue("references", [
               {
-                age: '',
-                mobileNo: '',
-                name: '',
+                age: "",
+                mobileNo: "",
+                name: "",
               },
-            ])
+            ]);
           },
         }}
         selectField={{
           options: [
-            { id: LEADER_IDS.leaderID, value: 'leader' },
-            { id: LEADER_IDS.emergingLeaderID, value: 'emerging leader' },
+            { id: LEADER_IDS.leaderID, value: "leader" },
+            { id: LEADER_IDS.emergingLeaderID, value: "emerging leader" },
           ],
-          title: 'select leader type',
+          title: "select leader type",
         }}
       />
     </>
-  )
-}
+  );
+};
 
 /*
   familySupportedForPolitics: string
