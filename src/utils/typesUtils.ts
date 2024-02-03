@@ -26,12 +26,12 @@ export interface RegisterFormFields {
 }
 
 export interface LoginData {
-  email: string; 
+  email: string;
   password: string
 }
 
 export interface RegisterData {
-  email: string; 
+  email: string;
   password: string;
   name: string;
   mobile: string;
@@ -258,6 +258,7 @@ export interface PostDetails {
   media: MediaPost[] | string
   comments: Comment[] | string
   likes: Like[] | string
+  leaderid: string
 }
 
 export interface NewPostFields {

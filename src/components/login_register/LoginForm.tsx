@@ -56,7 +56,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const formSubmitHandler = async (
     data: LoginFormFields | RegisterFormFields
   ) => {
-    console.log(data, "formSubmitHandler");
+    
 
     setLoggingIn(true);
     setErr({ errTxt: "", isErr: false });
@@ -71,12 +71,14 @@ export const LoginForm: FC<LoginFormProps> = () => {
 
       const loginResponse = response as any; // Type assertion
       const { success, message, data } = loginResponse;
-      console.log(data);
+      
 
       if (success) {
         if (data?.leader_detail?.is_profile_complete) {
           // router.push("/user");
-          if (data?.leader_detail?.request_status === "approved") {
+          if (data?.leader_detail?.request_status === "Approved") {
+           
+            
             router.push("/user");
             dispatch(authActions.setUserData(loginResponse));
           } else {

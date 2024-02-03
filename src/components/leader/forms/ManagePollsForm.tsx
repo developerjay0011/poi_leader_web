@@ -87,7 +87,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
     console.log(data)
   }
 
-  console.log(minDateLimit)
+  
 
   return (
     <>

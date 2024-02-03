@@ -10,7 +10,7 @@ import { ContactInfoField } from "./ContactInfoField";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux_store";
 import { cusSelector } from "@/redux_store/cusHooks";
-import { fetchAddLeadersDropdown } from "../api/auth";
+import { fetchAddEditLeader, fetchAddLeadersDropdown } from "../api/auth";
 
 export interface LeaderFormFields {
   username: string;
@@ -261,7 +261,7 @@ const reducerFn: (
   return init;
 };
 
-/* interface ModifiedData {
+/* interface ModifiedData {s
   id: string;
   username: string;
   email: string;
@@ -342,11 +342,13 @@ const reducerFn: (
 } */
 
 export const AddLeaderPage: FC = () => {
-  const userDetails = cusSelector((state: RootState) => state.auth.userDetails);
+  const userDetails: any = cusSelector(
+    (state: RootState) => state.auth.userDetails
+  );
   const [leaderOption, setLeaderOption] = useState<any>({});
   const [state, dispatchFn] = useReducer(reducerFn, init);
 
-  console.log(userDetails);
+
 
   const {
     register,
@@ -366,94 +368,99 @@ export const AddLeaderPage: FC = () => {
     mode: "onTouched",
   });
 
-  const formSubmitHandler = (data: LeaderFormFields) => {
-    console.log("inside this function");
-
-    console.log(data, "formSubmitHandler userMenegment");
-
-   /*  const bodyData: ModifiedData = {
-      id: "string",
+  const formSubmitHandler = async (data: LeaderFormFields) => {
+    const bodyData = {
+      id: userDetails?.data?.user_detail?.id,
       username: data?.username,
-      email: "string",
-      mobile: "string",
-      image: "string",
-      leadertype: "string",
-      password: "string",
-      request_status: "string",
-      isactive: true,
-      is_profile_complete: true,
-      created_date: "2024-02-02T07:46:43.423Z",
-      modified_date: "2024-02-02T07:46:43.423Z",
+      email: data?.email,
+      mobile: userDetails?.data?.user_detail?.mobile || "",
+      image: userDetails?.data?.user_detail?.image || "",
+      leadertype: data?.leaderType,
+      password: data?.password,
+      request_status: userDetails?.data?.leader_detail?.request_status,
+      isactive: userDetails?.data?.user_detail?.isactive,
+      is_profile_complete:
+        userDetails?.data?.leader_detail?.is_profile_complete,
+      created_date: userDetails?.data?.user_detail?.createddate,
+      modified_date: userDetails?.data?.leader_detail?.modified_date,
       personal_info: {
-        first_name: "string",
-        middle_name: "string",
-        last_name: "string",
-        gender: "string",
-        blood_group: "string",
-        father_name: "string",
-        mother_name: "string",
-        dob: "2024-02-02T07:46:43.423Z",
-        place_of_birth: "string",
-        marital_status: "string",
-        higher_education: "string",
-        profession: "string",
-        hobbies: "string",
-        assets: "string",
+        first_name: data?.firstName,
+        middle_name: data?.middleName,
+        last_name: data?.lastName,
+        gender: data?.gender,
+        blood_group: data?.bloodGroup,
+        father_name: data?.fatherName,
+        mother_name: data?.motherName,
+        dob: data?.dob,
+        place_of_birth: data?.placeOfBirth,
+        marital_status: data?.maritalStatus,
+        higher_education: data?.higherEduction,
+        profession: data?.profession,
+        hobbies: data?.hobbies,
+        assets: data?.assests,
       },
       contact_info: {
-        permanent_address: "string",
-        permanent_state_id: "string",
-        permanent_district_id: "string",
-        permanent_pincode: "string",
+        permanent_address: data?.pAddress,
+        permanent_state_id: data?.pState,
+        permanent_district_id: data?.pDistrict,
+        permanent_pincode: "",
         is_same_as_permanent: true,
-        present_address: "string",
-        present_state_id: "string",
-        present_district_id: "string",
-        present_pincode: "string",
-        telephones: "string",
-        mobile_nos: "string",
-        fb_link: "string",
-        insta_link: "string",
-        twitter_link: "string",
+        present_address: data?.pAddress,
+        present_state_id: data?.pState,
+        present_district_id: data?.pDistrict,
+        present_pincode: "",
+        telephones: data?.telePhoneNos,
+        mobile_nos: data?.mobileNos,
+        fb_link: data?.socialMedia?.facebook,
+        insta_link: data?.socialMedia?.instagram,
+        twitter_link: data?.socialMedia?.twitter,
       },
       political_info: {
-        political_party_id: "string",
-        designation_id: "string",
-        parliament_house: "string",
-        stateid: "string",
+        political_party_id: data?.politicalParty,
+        designation_id: data?.designation,
+        parliament_house: data?.parliamentHouse,
+        stateid: "data?.pState",
         assemblyid: "string",
         parliamentaryid: "string",
         is_hold_ministry: true,
-        ministries: [
-          {
-            ministryid: "string",
-            ministrytype: "string",
-          },
-        ],
+        ministries: data?.ministries.map((el) => ({
+          ministryid: el.name,
+          ministrytype: el.type,
+        })),
         is_nominated: true,
-        joined_date: "2024-02-02T07:46:43.423Z",
-        post_in_party: "string",
+        joined_date: data?.joinedDate,
+        post_in_party: data?.postInParty,
         achievements: "string",
         why_join_politics: "string",
         is_participated_in_elections: true,
         is_prepare_for_elections: true,
         done_any_political_activity: true,
         does_family_supports: true,
-        people_in_team: "string",
-        referencies: [
-          {
-            name: "string",
-            age: 0,
-            mobile: "string",
-          },
-        ],
+        people_in_team: data?.peopleInTeam,
+        referencies: data?.references?.map((el) => ({
+          name: el?.name,
+          age: +el?.age,
+          mobile: el?.mobileNo,
+        })),
       },
       general_setting: {
         enable_follow_me: true,
         show_agendas: true,
         send_me_notifications: true,
       },
-    }; */
+    };
+
+    try {
+      const copalateProfile = await fetchAddEditLeader(bodyData);
+      
+      console.log(copalateProfile, "copalateProfile");
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+    
+
   };
 
   useEffect(() => {
@@ -484,7 +491,7 @@ export const AddLeaderPage: FC = () => {
         <form
           className="mt-10 flex flex-col gap-10"
           noValidate
-          // onSubmit={handleSubmit(formSubmitHandler)}
+          onSubmit={handleSubmit(formSubmitHandler)}
         >
           {/* BASIC INFO */}
           <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
@@ -554,7 +561,7 @@ export const AddLeaderPage: FC = () => {
 
           <div className="flex gap-2 justify-end">
             <button
-              onClick={handleSubmit(formSubmitHandler)}
+              // onClick={handleSubmit(formSubmitHandler)}
               type="submit"
               className="px-5 py-1 rounded-full bg-cyan-500 text-cyan-50"
             >

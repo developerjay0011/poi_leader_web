@@ -91,7 +91,7 @@ export const registerUser =
         },
       })
 
-      console.log(body)
+     
 
       const response = await ConnectToAPI(userInp.userType, body)
     } catch (err) {

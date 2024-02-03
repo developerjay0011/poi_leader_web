@@ -30,7 +30,7 @@ export const fetchRegister = async (resBody: RegisterData) => {
         body: JSON.stringify(resBody),
       }
     );
-    console.log("Register", res);
+    
     return res.json();
   } catch (error) {
     return error;
@@ -84,6 +84,25 @@ export const fetchAddLeadersDropdown = async () => {
         headers: {
           "Content-Type": "application/json",
         },
+      }
+    );
+    return res.json();
+  } catch (error) {
+    return error;
+  }
+};
+
+
+export const fetchAddEditLeader = async (bodyData: any) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Leader/AddEditLeader`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
       }
     );
     return res.json();

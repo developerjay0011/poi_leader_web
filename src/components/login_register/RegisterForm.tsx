@@ -53,8 +53,6 @@ export const RegisterForm: FC = () => {
       const userData = getValues() as RegisterFormFields;
       setRegistering(true);
 
-      console.log(userData);
-
       // await dispatch(registerUser({ data: userData }));
 
       // Starts a OTP resend Timer
@@ -81,7 +79,6 @@ export const RegisterForm: FC = () => {
 
     clearInterval(interval); // clearing resend timer
     setResendOTPTime(OTP_TIME); // Reset OTP time
-    console.log(userData, otp);
 
     try {
       const VerifyOtp = {
@@ -135,7 +132,7 @@ export const RegisterForm: FC = () => {
 
         const sandOTP = await fetchSendOtp(otpBody);
 
-        console.log(sandOTP);
+    
 
         if (sandOTP?.success) {
           // Starts a OTP resend Timer

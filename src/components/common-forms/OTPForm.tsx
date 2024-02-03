@@ -62,7 +62,7 @@ export const OTPForm: FC<OTPFormProps> = ({
 
     const otp = OTP.join('')
 
-    console.log(otp.length)
+    
 
     if (otp.length !== 6)
       return setErr({ errTxt: 'please enter a valid otp', isErr: true })
@@ -72,7 +72,7 @@ export const OTPForm: FC<OTPFormProps> = ({
 
   useEffect(() => {
     if (!registering && otpVerified && !verifyingOTP) {
-      console.log('i am here')
+     
       onClose()
       router.push('/login')
     }

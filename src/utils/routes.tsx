@@ -28,13 +28,13 @@ export const LEFT_NAV_ROUTES = [
   {
     id: GenerateId(),
     link: '/user/profile/networks',
-    name: 'groups',
+    name: 'Manage Group',
     Icon: LuNetwork,
   },
   {
     id: GenerateId(),
     link: '/user/profile/directory',
-    name: 'directory',
+    name: 'Manage Directory',
     Icon: MdContacts,
   },
   {

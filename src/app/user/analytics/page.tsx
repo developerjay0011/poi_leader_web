@@ -143,7 +143,7 @@ const AdminAccountStatsPage: FC = () => {
                   id='graphFilter'
                   value={graphTypeVal}
                   onChange={(e) => {
-                    console.log(e.target.value)
+                    
                     setGraphTypeVal(e.target.value as Graph)
                   }}
                   className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md cursor-pointer capitalize'>

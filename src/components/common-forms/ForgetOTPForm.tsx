@@ -40,7 +40,7 @@ export const ForgetOTPForm: FC<ForgetOTPFormProps> = ({
 
     const otp = OTP.join('')
 
-    console.log(otp.length)
+    
 
     if (otp.length !== 6) return
 

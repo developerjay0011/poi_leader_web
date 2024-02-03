@@ -72,7 +72,7 @@ export const FullPost: FC<FullPostProps> = ({
   }
 
   const likeOnCommentPerPostHandler = (id: string) => {
-    console.log('i am getting called')
+
     dispatch(
       changeNestedLike({
         id,

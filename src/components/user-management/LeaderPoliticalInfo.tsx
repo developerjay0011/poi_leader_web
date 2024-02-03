@@ -55,9 +55,6 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
     name: "ministries",
   });
 
-  console.log(parties);
-  console.log(assemblyConstituency);
-
   const [hasMinistry, setHasMinistry] = useState(false);
   const designation = watch("designation");
   const parliamentHouse = watch("parliamentHouse");

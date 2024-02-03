@@ -54,8 +54,6 @@ export const PoliticalInfo: FC<PoliticalInfoProps> = ({
 }) => {
   const leaderType = watch("leaderType");
 
-  console.log(parties);
-
   const Leader = leaderType
     ? leaderType === LEADER_IDS.leaderID
       ? "leader"
