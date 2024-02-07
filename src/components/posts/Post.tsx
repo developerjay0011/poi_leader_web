@@ -1,4 +1,5 @@
 "use client";
+
 import { Comment, Like, MediaPost, PostDetails } from "@/utils/typesUtils";
 import { dateConverter } from "@/utils/utility";
 import Image from "next/image";
@@ -34,10 +35,8 @@ export const Post: FC<PostProps> = ({
   userId,
   createdDatetime,
   leaderid,
+  updatePost,
 }) => {
-  console.log(leaderid);
-  console.log(id);
-
   const [firstTime, setFirstTime] = useState(true);
   const [showPostDetials, setShowPostDetials] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -83,10 +82,6 @@ export const Post: FC<PostProps> = ({
     );
 
   const deletePostHandler = async (leaderid: string, id: string) => {
-    console.log("delete");
-    console.log(id);
-    console.log(leaderid);
-
     const postBody = {
       id: id,
       leaderid: leaderid,
@@ -95,6 +90,15 @@ export const Post: FC<PostProps> = ({
 
     try {
       const data = await fetchDeletePost(postBody, token);
+
+      /*  data: null;
+      message: "deleted successfully.";
+      success: true; */
+
+      if (data?.success) {
+        updatePost(data);
+        setShowMorePostOptions(false);
+      }
     } catch (error) {
       console.log(error);
     }

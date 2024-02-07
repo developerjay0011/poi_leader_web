@@ -9,6 +9,7 @@ import MODI from "@/assets/politicians-images/narendar_modi.jpg";
 import RAHUL from "@/assets/politicians-images/Rahul-Gandhi.jpg";
 import {
   fetchFollowLeader,
+  fetchFollowingList,
   fetchTrendingLeaderList,
 } from "../api/followLeader";
 import { cusSelector } from "@/redux_store/cusHooks";
@@ -21,36 +22,28 @@ interface Leader {
 }
 
 interface TrendingUsersProps {
-  handleFollowers: any;
+  followers: any;
 }
-export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
+export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
   const [trendingLeaders, setTrendingLeaders] = useState([]);
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
 
-  console.log(trendingLeaders);
-
-  console.log(userDetails);
-
   useEffect(() => {
     if (userDetails && userDetails?.success) {
       (async () => {
         const token = userDetails?.token;
-        const data = await fetchTrendingLeaderList(token);
+        const leaderid = userDetails?.data?.leader_detail?.id;
+        const data = await fetchFollowingList(leaderid, token);
         console.log(data);
 
         if (data.length > 0) {
           setTrendingLeaders(data);
-          handleFollowers(data);
         }
       })();
     }
-  }, [userDetails]);
-
-  const following = (data: any) => {
-    handleFollowers(data);
-  };
+  }, [userDetails, followers]);
 
   return (
     <>
@@ -58,25 +51,11 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
         className={`border rounded-md w-full bg-white text-sky-950 max-h-[25rem] overflow-hidden flex flex-col`}
       >
         <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-6 py-3 border-b font-[500] text-[16px] capitalize">
-          Trending Leaders
+          Following Leaders
         </h2>
 
         <div className="overflow-y-scroll flex-1 main_scrollbar">
           <ul className="flex flex-col">
-            {/* <TrendingUser
-              userImg={MODI}
-              designation="prime minister"
-              username="narendar modi"
-              id=""
-              following={following}
-            />
-            <TrendingUser
-              userImg={RAHUL}
-              designation=" chairperson of the Indian Youth Congress"
-              username="rahul gandhi"
-              id=""
-              following={following}
-            /> */}
             {trendingLeaders?.length > 0 &&
               trendingLeaders?.map((item: Leader, index: number) => {
                 return (
@@ -86,7 +65,6 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
                     username={item?.username || ""}
                     id={item?.id || ""}
                     key={index}
-                    following={following}
                   />
                 );
               })}
@@ -101,7 +79,6 @@ interface TrendingUserProps {
   username: string;
   userImg: string | StaticImageData;
   id: string;
-  following: any;
 }
 
 const TrendingUser: FC<TrendingUserProps> = ({
@@ -109,14 +86,13 @@ const TrendingUser: FC<TrendingUserProps> = ({
   designation,
   username,
   id,
-  following,
 }) => {
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
 
-  const handleFollower = async (id: string) => {
-    const token = userDetails?.token;
+  const handleFollowers = async (id: string) => {
+    /* const token = userDetails?.token;
     const postBody = {
       senderid: userDetails?.data?.leader_detail?.id,
       receiverid: id,
@@ -124,11 +100,7 @@ const TrendingUser: FC<TrendingUserProps> = ({
 
     const followedLeader = await fetchFollowLeader(postBody, token);
 
-    console.log(followedLeader);
-
-    if (followedLeader?.success) {
-      following(followedLeader);
-    }
+    console.log(followedLeader); */
   };
 
   return (
@@ -149,9 +121,9 @@ const TrendingUser: FC<TrendingUserProps> = ({
       <button
         type="button"
         className="text-orange-500 hover:underline ml-auto text-[15px]"
-        onClick={() => handleFollower(id)}
+        onClick={() => handleFollowers(id)}
       >
-        Follow
+        UnFollow
       </button>
     </li>
   );

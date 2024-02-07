@@ -16,6 +16,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
   const dispatch = cusDispatch();
   const { posts } = cusSelector((st) => st.posts);
   const [postData, setPostData] = useState([]);
+  const [upPost, setUpPost] = useState();
 
   useEffect(() => {
     dispatch(fetchAllPosts());
@@ -28,8 +29,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
   );
 
   console.log(userData);
-  console.log(userData?.token);
-  console.log(userData?.data?.leader_detail?.id);
+  
 
   useEffect(() => {
     const leaderid = userData?.data?.leader_detail?.id;
@@ -49,14 +49,19 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
         console.log(error);
       }
     })();
-  }, []);
+  }, [upPost, userData]);
+
+  const updatePost = (data: any) => {
+    console.log(data);
+    setUpPost(data);
+  }
 
   return (
     <>
       {/* CENTER FEED */}
       <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
         <StoriesBox />
-        <NewPostBox />
+        <NewPostBox updatePost={updatePost} />
 
         <Post
           createdDatetime="2023-11-05"
@@ -65,6 +70,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           writtenText="Hello there"
           id="13213"
           leaderid=""
+          updatePost=""
           media={[
             {
               comments: [
@@ -108,6 +114,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           id="13213"
           media={[]}
           leaderid=""
+          updatePost=""
           comments={[
             {
               comments: [
@@ -165,7 +172,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           userId=""
         />
 
-        {posts.map((el) => {
+        {/* {posts.map((el) => {
           if (el.type === "post")
             return (
               <Post
@@ -176,9 +183,9 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
                 likes={JSON.parse(el.likes as string)}
               />
             );
-        })}
+        })} */}
 
-        <div>gszdhkilsuhvfsbk</div>
+        
 
         {postData.map((el: any) => {
           if (el.type === "post")
@@ -191,6 +198,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
                 likes={el.likes as string}
                 createdDatetime={el.createddate as string}
                 writtenText={el.written_text as string}
+                updatePost={updatePost}
               />
             );
         })}

@@ -259,6 +259,7 @@ export interface PostDetails {
   comments: Comment[] | string
   likes: Like[] | string
   leaderid: string
+  updatePost: any
 }
 
 export interface NewPostFields {

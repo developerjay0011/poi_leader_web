@@ -13,7 +13,7 @@ const AdminProfileFeedsPage = () => {
         <div className="flex gap-5">
           {/* LEFT FEED */}
           <div className="flex flex-col gap-5 self-start max-[1200px]:hidden w-[24%]">
-            <TrendingUsers />
+            <TrendingUsers handleFollowers="" />
             <ShortcutsBox />
           </div>
 

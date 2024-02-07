@@ -11,13 +11,18 @@ import { BsImageFill } from "react-icons/bs";
 import { FaCamera } from "react-icons/fa";
 import { fetchAddPost } from "../api/posts";
 import { RootState } from "@/redux_store";
+import { PostTypes } from "./PostTypes";
 
-interface NewPostBoxProps {}
+interface NewPostBoxProps {
+  updatePost: any;
+}
 
-export const NewPostBox: FC<NewPostBoxProps> = () => {
+export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
   const [media, setMedia] = useState<NewPostFields[]>([]);
   const [textPost, setTextPost] = useState("");
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
+  const [showMorePostOptions, setShowMorePostOptions] = useState(false);
+  const [accessType, setAccessType] = useState("");
   const dispatch = cusDispatch();
   const { creatingPost } = cusSelector((st) => st.posts);
   const { userDetails } = cusSelector((st) => st.UI);
@@ -25,9 +30,6 @@ export const NewPostBox: FC<NewPostBoxProps> = () => {
   const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
-
-  console.log(userData);
-  console.log(userData?.data?.leader_detail?.id);
 
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -47,7 +49,7 @@ export const NewPostBox: FC<NewPostBoxProps> = () => {
     const postBody = {
       leaderid: userData?.data?.leader_detail?.id || "",
       written_text: textPost || "",
-      access_type: "post",
+      access_type: accessType,
       media: media?.map((item) => ({
         type: item?.type,
         media: item?.media,
@@ -58,20 +60,18 @@ export const NewPostBox: FC<NewPostBoxProps> = () => {
       const data = await fetchAddPost(postBody, token);
       console.log(data);
       if (data?.success) {
-       /*  {
-          "success": true,
-          "message": "added successfully.",
-          "data": null
-      } */
+        updatePost(data);
       }
-      
     } catch (error) {
       console.log(error);
     }
-    console.log(textPost);
 
     setMedia([]);
     setTextPost("");
+  };
+
+  const accessTypeOptions = (data: any) => {
+    setAccessType(data);
   };
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -157,21 +157,37 @@ export const NewPostBox: FC<NewPostBoxProps> = () => {
             ></textarea>
           </div>
 
-          <div className="flex items-center gap-3">
-            <label htmlFor="liveMedia">
-              <FaCamera className="text-sky-950 text-xl text-opacity-70" />
-            </label>
+          <div className="flex items-center justify-between px-3">
+            <div className="flex items-center gap-3">
+              <label htmlFor="liveMedia">
+                <FaCamera className="text-sky-950 text-xl text-opacity-70" />
+              </label>
 
-            <label htmlFor="media">
-              <input
-                type="file"
-                className="hidden"
-                id="media"
-                multiple
-                onChange={mediaChangeHandler}
-              />
-              <BsImageFill className="text-sky-950 text-xl text-opacity-70" />
-            </label>
+              <label htmlFor="media">
+                <input
+                  type="file"
+                  className="hidden"
+                  id="media"
+                  multiple
+                  onChange={mediaChangeHandler}
+                />
+                <BsImageFill className="text-sky-950 text-xl text-opacity-70" />
+              </label>
+            </div>
+            <div className="ml-auto relative " id="moreOptions">
+              <div
+                className="cursor-pointer"
+                onClick={() => setShowMorePostOptions(!showMorePostOptions)}
+              >
+                Post Type
+              </div>
+              {showMorePostOptions && (
+                <PostTypes
+                  onClose={() => setShowMorePostOptions(false)}
+                  accessTypeOptions={accessTypeOptions}
+                />
+              )}
+            </div>
           </div>
 
           {postErr.isErr && (
