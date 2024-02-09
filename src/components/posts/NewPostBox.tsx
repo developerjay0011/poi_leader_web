@@ -19,6 +19,7 @@ interface NewPostBoxProps {
 
 export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
   const [media, setMedia] = useState<NewPostFields[]>([]);
+  const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
   const [textPost, setTextPost] = useState("");
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
@@ -31,34 +32,42 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
     (state: RootState) => state.auth.userDetails
   );
 
+
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (textPost.trim().length === 0 && media.length === 0)
+    if (
+      textPost.trim().length === 0 &&
+      media.length === 0 &&
+      accessType?.length === 0
+    )
       return setPostErr({ errTxt: "post can't be empty", isErr: true });
 
-    dispatch(
+/*     dispatch(
       createNewPost({
         media: media,
         type: "post",
         writtenText: textPost,
       })
-    );
+    ); */
 
     const token = userData?.token;
-    const postBody = {
-      leaderid: userData?.data?.leader_detail?.id || "",
-      written_text: textPost || "",
-      access_type: accessType,
-      media: media?.map((item) => ({
-        type: item?.type,
-        media: item?.media,
-      })),
-    };
+
+    const formData = new FormData();
+
+    formData.append("leaderid", userData?.data?.leader_detail?.id || "");
+    formData.append("written_text", textPost || "");
+    formData.append("access_type", accessType);
+
+
+    for (let i = 0; i < apimedia.length; i++) {
+      const item: any = apimedia[i];
+      
+      formData.append("media",  item?.media );
+    }
 
     try {
-      const data = await fetchAddPost(postBody, token);
-      console.log(data);
+      const data = await fetchAddPost(formData, token);
       if (data?.success) {
         updatePost(data);
       }
@@ -67,6 +76,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
     }
 
     setMedia([]);
+    setApiMedia([]);
     setTextPost("");
   };
 
@@ -101,9 +111,26 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
       // converting data into base 64
       const convertedData = await convertFileToBase64(uploadData);
 
+      setApiMedia((lst) => {
+        const oldData = [...lst];
+
+        oldData.push({
+          type: uploadData.type.split("/")[0] as PostType,
+          media: uploadData as any,
+          id: GenerateId(),
+        });
+
+        return oldData;
+      });
+
       setMedia((lst) => {
         const oldData = [...lst];
 
+        /* oldData.push({
+          type: uploadData.type.split("/")[0] as PostType,
+          media: uploadData as any,
+          id: GenerateId(),
+        }); */
         oldData.push({
           type: uploadData.type.split("/")[0] as PostType,
           media: convertedData as string,
@@ -163,11 +190,11 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
                 <FaCamera className="text-sky-950 text-xl text-opacity-70" />
               </label>
 
-              <label htmlFor="media">
+              <label htmlFor="medias">
                 <input
                   type="file"
                   className="hidden"
-                  id="media"
+                  id="medias"
                   multiple
                   onChange={mediaChangeHandler}
                 />

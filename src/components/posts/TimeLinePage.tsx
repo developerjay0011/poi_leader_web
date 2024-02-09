@@ -22,14 +22,9 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
     dispatch(fetchAllPosts());
   }, [dispatch, userDetails]);
 
-  console.log(posts);
-
   const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
-
-  console.log(userData);
-  
 
   useEffect(() => {
     const leaderid = userData?.data?.leader_detail?.id;
@@ -39,10 +34,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
       try {
         const data = await fetchGetLeaderAddedPosts(leaderid, token);
 
-        console.log(data);
-
         if (data?.length > 0) {
-          console.log(data);
           setPostData(data);
         }
       } catch (error) {
@@ -52,9 +44,8 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
   }, [upPost, userData]);
 
   const updatePost = (data: any) => {
-    console.log(data);
     setUpPost(data);
-  }
+  };
 
   return (
     <>
@@ -70,7 +61,9 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           writtenText="Hello there"
           id="13213"
           leaderid=""
-          updatePost=""
+          updatePost={updatePost}
+          types={[]}
+          allData=""
           media={[
             {
               comments: [
@@ -83,6 +76,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
                   userId: "123c",
                   userImg: "",
                   username: "fde",
+                  allData: "",
                 },
               ],
               id: "dafd",
@@ -101,6 +95,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
               userId: "123c",
               userImg: "",
               username: "fde",
+              allData: "",
             },
           ]}
           likes={[{ userId: "dsadf" }]}
@@ -114,7 +109,9 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           id="13213"
           media={[]}
           leaderid=""
-          updatePost=""
+          updatePost={updatePost}
+          types={[]}
+          allData=""
           comments={[
             {
               comments: [
@@ -135,6 +132,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
               userId: "123c",
               userImg: "",
               username: "fde",
+              allData: "",
             },
           ]}
           likes={[{ userId: "dsadf" }]}
@@ -185,22 +183,26 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
             );
         })} */}
 
-        
-
         {postData.map((el: any) => {
-          if (el.type === "post")
-            return (
-              <Post
-                {...el}
-                key={el.id}
-                media={el.media as string}
-                comments={el.comments as string}
-                likes={el.likes as string}
-                createdDatetime={el.createddate as string}
-                writtenText={el.written_text as string}
-                updatePost={updatePost}
-              />
-            );
+          console.log(el);
+
+          return (
+            <Post
+              {...el}
+              key={el.id}
+              media={el.media?.map(
+                (file: any) =>
+                  `http://203.92.43.166:4005${file.media}` as string
+              )}
+              comments={el.media?.flatMap((file: any) => file?.comments) as string}
+              likes={el.likes as string}
+              createdDatetime={el.createddate as string}
+              writtenText={el.written_text as string}
+              updatePost={updatePost}
+              types={el.media?.map((file: any) => file.type as string)}
+              allData={el}
+            />
+          );
         })}
       </div>
     </>

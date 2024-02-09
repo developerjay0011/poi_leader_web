@@ -233,6 +233,7 @@ export interface Comment {
   commentText: string
   createdDate: string
   comments: NestedComment[]
+  allData: any
 }
 
 export interface NestedComment {
@@ -259,13 +260,15 @@ export interface PostDetails {
   comments: Comment[] | string
   likes: Like[] | string
   leaderid: string
-  updatePost: any
+  updatePost: (data:any) => void;
+  types: any[]
+  allData:any
 }
 
 export interface NewPostFields {
   type: string
   id: string
-  media: string
+  media: any
 }
 
 export interface NewPostData {

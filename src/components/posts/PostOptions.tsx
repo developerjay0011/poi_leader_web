@@ -29,10 +29,13 @@ export const PostOptions: FC<PostOptionsProps> = ({
         exit={{ opacity: 0 }}
         className="flex flex-col z-50 bg-white rounded-sm shadow-lg absolute top-full right-0"
       >
-        <button className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all">
+        <button 
+        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+        onClick={() => onClose()}
+        >
           <MdReport className="text-xl" /> report
         </button>
-        {userId === userDetails?.id && (
+        
           <button
             onClick={() => {
               setShowConfirmBox(true);
@@ -41,7 +44,7 @@ export const PostOptions: FC<PostOptionsProps> = ({
           >
             <BsTrash3Fill /> delete
           </button>
-        )}
+        
       </m.div>
 
       <AnimatePresence mode="wait">

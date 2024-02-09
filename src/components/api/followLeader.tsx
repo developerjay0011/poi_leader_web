@@ -19,6 +19,27 @@ export const fetchFollowLeader = async (postBody: any, token: any) => {
   }
 };
 
+export const fetchUnFollowLeader = async (postBody: any, token: any) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Leader/UnFollowLeader`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify(postBody),
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const fetchFollowingList = async (leaderid: any, token: any) => {
   try {
     const res = await fetch(

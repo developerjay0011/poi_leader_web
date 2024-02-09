@@ -11,14 +11,17 @@ import {
   fetchFollowLeader,
   fetchFollowingList,
   fetchTrendingLeaderList,
+  fetchUnFollowLeader,
 } from "../api/followLeader";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { RootState } from "@/redux_store";
 interface Leader {
   image: string;
   designation: string;
-  username: string;
-  id: string;
+  name: string;
+  leaderid: string;
+  handleunfollow: (data: any) => void;
+  
 }
 
 interface TrendingUsersProps {
@@ -26,9 +29,13 @@ interface TrendingUsersProps {
 }
 export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
   const [trendingLeaders, setTrendingLeaders] = useState([]);
+  const [unfollow, setUnfollow] = useState({});
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
+
+  console.log(trendingLeaders);
+  
 
   useEffect(() => {
     if (userDetails && userDetails?.success) {
@@ -36,14 +43,17 @@ export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
         const token = userDetails?.token;
         const leaderid = userDetails?.data?.leader_detail?.id;
         const data = await fetchFollowingList(leaderid, token);
-        console.log(data);
 
         if (data.length > 0) {
           setTrendingLeaders(data);
         }
       })();
     }
-  }, [userDetails, followers]);
+  }, [userDetails, followers, unfollow]);
+
+  const handleunfollow = (data : any) => {
+    setUnfollow(data);
+  }
 
   return (
     <>
@@ -62,9 +72,10 @@ export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
                   <TrendingUser
                     userImg={item?.image || ""}
                     designation={item?.designation || ""}
-                    username={item?.username || ""}
-                    id={item?.id || ""}
+                    username={item?.name || ""}
+                    id={item?.leaderid || ""}
                     key={index}
+                    handleunfollow={handleunfollow}
                   />
                 );
               })}
@@ -79,6 +90,7 @@ interface TrendingUserProps {
   username: string;
   userImg: string | StaticImageData;
   id: string;
+  handleunfollow: (data: any) => void;
 }
 
 const TrendingUser: FC<TrendingUserProps> = ({
@@ -86,21 +98,26 @@ const TrendingUser: FC<TrendingUserProps> = ({
   designation,
   username,
   id,
+  handleunfollow
 }) => {
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
 
   const handleFollowers = async (id: string) => {
-    /* const token = userDetails?.token;
+    const token = userDetails?.token;
     const postBody = {
       senderid: userDetails?.data?.leader_detail?.id,
       receiverid: id,
     };
 
-    const followedLeader = await fetchFollowLeader(postBody, token);
+    const followedLeader = await fetchUnFollowLeader(postBody, token);
 
-    console.log(followedLeader); */
+    console.log(followedLeader);
+    if(followedLeader?.success){
+      handleunfollow(followedLeader)
+    }
+
   };
 
   return (

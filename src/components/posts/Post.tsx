@@ -21,7 +21,11 @@ import { NewCommentForm } from "../common-forms/NewCommentForm";
 import { SingleComment } from "./SingleComment";
 import { MoreThan4ColumnImgLayout } from "./MoreThan4ColumnLayout";
 import { FourColumnImgLayout } from "./FourColumnLayout";
-import { fetchDeletePost } from "../api/posts";
+import {
+  fetchDeletePost,
+  fetchLikePost,
+  fetchUnlikePostorStory,
+} from "../api/posts";
 import { RootState } from "@/redux_store";
 
 interface PostProps extends PostDetails {}
@@ -36,10 +40,13 @@ export const Post: FC<PostProps> = ({
   createdDatetime,
   leaderid,
   updatePost,
+  types,
+  allData,
 }) => {
   const [firstTime, setFirstTime] = useState(true);
   const [showPostDetials, setShowPostDetials] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [updateComment, setUpdateComment] = useState(false);
 
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const dispatch = cusDispatch();
@@ -91,10 +98,6 @@ export const Post: FC<PostProps> = ({
     try {
       const data = await fetchDeletePost(postBody, token);
 
-      /*  data: null;
-      message: "deleted successfully.";
-      success: true; */
-
       if (data?.success) {
         updatePost(data);
         setShowMorePostOptions(false);
@@ -109,6 +112,11 @@ export const Post: FC<PostProps> = ({
       setFirstTime(true);
     };
   }, []);
+
+  useEffect(() => {
+    updatePost(updateComment);
+    setShowComments(false);
+  }, [updateComment]);
 
   // to show count at frontend and calling api behind
   useEffect(() => {
@@ -135,6 +143,44 @@ export const Post: FC<PostProps> = ({
         username: userDetails?.username as string,
       })
     );
+  };
+
+  const handleLike = async (allData: any) => {
+    const mediaId = allData.media.map((m: any) => m.id).flat();
+
+    const postid = allData?.id;
+
+    const likeBody = {
+      postid: postid,
+      post_leaderid: allData?.leaderid,
+      userid: userData?.data?.leader_detail?.id,
+      mediaid: mediaId[0],
+      usertype: "citizen",
+    };
+
+    const UnlikeBody = {
+      postid: postid,
+      post_leaderid: allData?.leaderid,
+      userid: userData?.data?.leader_detail?.id,
+    };
+
+    const token = userData?.token;
+
+    try {
+      if (!showLikeAnimation) {
+        const data = await fetchLikePost(likeBody, token);
+        if (data?.success) {
+          console.log(data);
+        }
+      } else {
+        const data = await fetchUnlikePostorStory(UnlikeBody, token);
+        if (data?.success) {
+          console.log(data);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -185,58 +231,73 @@ export const Post: FC<PostProps> = ({
             <section className="w-full">
               {media.length === 1 && (
                 <figure className="w-full relative" onClick={showFullPost}>
-                  {(media as MediaPost[]).map((el) => {
-                    if (el.type === "image")
-                      return (
-                        <Image
-                          key={el.id}
-                          src={el.media}
-                          width={1000}
-                          height={1000}
-                          alt="user post"
-                          className="object-cover object-center w-full h-full"
-                        />
-                      );
-
-                    if (el.type === "video")
-                      return (
-                        <video
-                          key={el.id}
-                          src={el.media}
-                          className="object-cover object-center w-full h-full"
-                          controls
-                        />
-                      );
+                  {(media as MediaPost[]).map((el: any, index) => {
+                    const mediaType = types[index]; // Assuming types correspond to each media item
+                    return mediaType === "image/jpeg" ? (
+                      <Image
+                        key={index}
+                        src={el}
+                        width={1000}
+                        height={1000}
+                        alt="user post"
+                        className="object-cover object-center w-full h-[500px]"
+                      />
+                    ) : (
+                      <video
+                        key={el.id}
+                        src={el.media}
+                        className="object-cover object-center w-full h-full"
+                        controls
+                      />
+                    );
                   })}
                 </figure>
               )}
               {media.length === 2 && (
-                <figure
-                  className="w-full relative gap-1 grid grid-cols-2"
-                  onClick={showFullPost}
-                >
-                  {(media as MediaPost[]).map((el) => {
-                    if (el.type === "image")
-                      return (
-                        <Image
-                          key={el.id}
-                          src={el.media}
-                          width={1000}
-                          height={1000}
-                          alt="user post"
-                          className="object-cover object-center w-full h-full"
-                        />
-                      );
-
-                    if (el.type === "video")
-                      return (
-                        <video
-                          key={el.id}
-                          src={el.media}
-                          className="object-cover object-center w-full h-full"
-                          controls
-                        />
-                      );
+                <figure className="w-full relative" onClick={showFullPost}>
+                  {(media as MediaPost[]).map((el: any, index) => {
+                    const mediaType = types[index]; // Assuming types correspond to each media item
+                    return mediaType === "image/jpeg" ? (
+                      <Image
+                        key={index}
+                        src={el}
+                        width={1000}
+                        height={1000}
+                        alt="user post"
+                        className="object-cover object-center w-full h-[500px]"
+                      />
+                    ) : (
+                      <video
+                        key={el.id}
+                        src={el.media}
+                        className="object-cover object-center w-full h-full"
+                        controls
+                      />
+                    );
+                  })}
+                </figure>
+              )}
+              {media.length === 3 && (
+                <figure className="w-full relative" onClick={showFullPost}>
+                  {(media as MediaPost[]).map((el: any, index) => {
+                    const mediaType = types[index]; // Assuming types correspond to each media item
+                    return mediaType === "image/jpeg" ? (
+                      <Image
+                        key={index}
+                        src={el}
+                        width={1000}
+                        height={1000}
+                        alt="user post"
+                        className="object-cover object-center w-full h-[500px]"
+                      />
+                    ) : (
+                      <video
+                        key={el.id}
+                        src={el.media}
+                        className="object-cover object-center w-full h-full"
+                        controls
+                      />
+                    );
                   })}
                 </figure>
               )}
@@ -276,6 +337,7 @@ export const Post: FC<PostProps> = ({
               likeChangeHandler();
               setFirstTime(false);
               setShowLikeAnimation((lst) => !lst);
+              handleLike(allData);
             }}
           >
             <BsFillHeartFill className="text-lg" />
@@ -324,18 +386,23 @@ export const Post: FC<PostProps> = ({
             >
               {/* comments box */}
               <ul className="flex flex-col gap-5">
-                {(comments as Comment[]).map((el) => (
+                {(comments as Comment[]).map((el, index) => (
                   <SingleComment
                     {...el}
-                    key={el.id}
+                    key={index}
                     postId={id}
                     likeChangeHandler={postCommentLikeHandler}
                     newNestedCommentHandler={commentReplyHandler}
+                    allData={el}
                   />
                 ))}
               </ul>
 
-              <NewCommentForm CommentHandler={addNewPostComment} />
+              <NewCommentForm
+                CommentHandler={addNewPostComment}
+                allData={allData}
+                setUpdateComment={setUpdateComment}
+              />
             </m.div>
           )}
         </AnimatePresence>

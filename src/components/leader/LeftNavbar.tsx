@@ -40,7 +40,7 @@ export const LeftNavbar: FC = () => {
 
   const [routeData, setRouteData] = useState([]);
 
-  console.log(userDetails);
+
 
   useEffect(() => {
     const userid = userDetails?.data?.user_detail?.id;
@@ -48,7 +48,7 @@ export const LeftNavbar: FC = () => {
 
     (async () => {
       const data = await fetchAccessTabs(userid, token);
-      console.log(data);
+      
       if (data?.length > 0) {
         setRouteData(data);
       }

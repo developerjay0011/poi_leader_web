@@ -29,16 +29,12 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
     (state: RootState) => state.auth.userDetails
   );
 
-  console.log(trendingLeaders);
-
-  console.log(userDetails);
 
   useEffect(() => {
     if (userDetails && userDetails?.success) {
       (async () => {
         const token = userDetails?.token;
         const data = await fetchTrendingLeaderList(token);
-        console.log(data);
 
         if (data.length > 0) {
           setTrendingLeaders(data);
@@ -123,8 +119,6 @@ const TrendingUser: FC<TrendingUserProps> = ({
     };
 
     const followedLeader = await fetchFollowLeader(postBody, token);
-
-    console.log(followedLeader);
 
     if (followedLeader?.success) {
       following(followedLeader);
