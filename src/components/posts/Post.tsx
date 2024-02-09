@@ -128,7 +128,6 @@ export const Post: FC<PostProps> = ({
 
         return lst - 1;
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showLikeAnimation]);
 
   const commentReplyHandler = (commentId: string, commentReply: string) => {

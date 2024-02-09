@@ -19,7 +19,7 @@ const LeftNavLink: FC<{
     <CusLink
       activeLinkClasses="bg-sky-950 text-sky-50"
       normalClasses="text-sky-950 bg-sky-100"
-      href={matchedData ? link : ""}
+      href={matchedData ? link : link}
       target={target}
       className="rounded-full w-12 aspect-square flex items-center justify-center text-2xl relative cus_link"
     >

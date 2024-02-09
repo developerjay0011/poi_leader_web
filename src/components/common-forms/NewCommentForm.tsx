@@ -7,7 +7,7 @@ import { BiRightArrow } from "react-icons/bi";
 import { fetchCommentPost } from "../api/posts";
 
 interface NewCommentFormProps {
-  CommentHandler: (comment: string) => void;
+  CommentHandler: (comment: any) => void;
   allData: any;
   setUpdateComment: any;
 }
