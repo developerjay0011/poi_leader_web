@@ -144,3 +144,25 @@ export const fetchCommentPost = async (commentBody: any, token: any) => {
     return error;
   }
 };
+
+
+export const fetchReplyToComment = async (commentBody: any, token: any) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/ReplyToComment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify(commentBody),
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    return error;
+  }
+};

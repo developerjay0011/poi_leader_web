@@ -1,16 +1,12 @@
 'use client'
 import { FC, ReactNode, useEffect } from 'react'
-import { Metadata } from 'next'
 import { TopNavbar } from '@/components/leader/TopNavbar'
 import { LeftNavbar } from '@/components/leader/LeftNavbar'
 import { RightNavbar } from '@/components/leader/RightNavbar'
 import { usePathname } from 'next/navigation'
 import { localStorageKeys } from '@/utils/utility'
 
-export const metadata: Metadata = {
-  title: 'Politician of India - Home',
-  description: 'Politician of india',
-}
+
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const pathname = usePathname()

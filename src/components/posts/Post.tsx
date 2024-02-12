@@ -62,6 +62,9 @@ export const Post: FC<PostProps> = ({
     (likes as Like[]).some((el) => el.userId === userDetails?.id)
   );
 
+  console.log(allData);
+  
+
   const [likeCount, setLikeCount] = useState(likes.length); // in order to show updated like count on frontend
 
   const userData: any = cusSelector(
@@ -385,16 +388,20 @@ export const Post: FC<PostProps> = ({
             >
               {/* comments box */}
               <ul className="flex flex-col gap-5">
-                {(comments as Comment[]).map((el, index) => (
-                  <SingleComment
-                    {...el}
-                    key={index}
-                    postId={id}
-                    likeChangeHandler={postCommentLikeHandler}
-                    newNestedCommentHandler={commentReplyHandler}
-                    allData={el}
-                  />
-                ))}
+                {(comments as Comment[]).map((el, index) => {
+                  console.log(el, "test");
+
+                  return (
+                    <SingleComment
+                      {...el}
+                      key={index}
+                      postId={id}
+                      likeChangeHandler={postCommentLikeHandler}
+                      newNestedCommentHandler={commentReplyHandler}
+                      allData={el}
+                    />
+                  );
+                })}
               </ul>
 
               <NewCommentForm

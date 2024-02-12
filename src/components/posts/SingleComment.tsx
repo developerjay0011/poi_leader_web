@@ -14,6 +14,7 @@ import { RiReplyFill } from "react-icons/ri";
 import { motion as m } from "framer-motion";
 import { BiPlusCircle } from "react-icons/bi";
 import { RootState } from "@/redux_store";
+import { fetchReplyToComment } from "../api/posts";
 
 interface SingleCommentProps extends Comment {
   postId: string;
@@ -58,6 +59,10 @@ export const SingleComment: FC<SingleCommentProps> = ({
     };
   }, []);
 
+  console.log(userData);
+  console.log(allData);
+  
+
   // to show count at frontend and calling api behind
   useEffect(() => {
     // if animation is true and component doesn't load for first then we increase like count
@@ -73,11 +78,28 @@ export const SingleComment: FC<SingleCommentProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showLikeAnimation]);
 
-
   const addNewNestedComment = (e: FormEvent) => {
     e.preventDefault();
 
-    
+   /*  console.log(commentReply);
+
+    const commentBody = {
+      commentid: "string",
+      postid: "string",
+      post_leaderid: "string",
+      userid: "string",
+      usertype: "string",
+      username: "string",
+      userimg: "string",
+      comment_text: "string",
+    };
+    const token = userData?.token;
+
+    try {
+      const data = fetchReplyToComment(commentBody, token);
+      console.log(data);
+      
+    } catch (error) {} */
 
     if (commentReply.length === 0) return;
 
@@ -124,7 +146,9 @@ export const SingleComment: FC<SingleCommentProps> = ({
 
               <section className="flex items-center gap-3">
                 <strong className="text-[14px] text-sky-950 font-medium">
-                  {allData?.created_date?.length > 0 ? dateConverter(allData?.created_date) || "" : dateConverter(createdDate) || ""}
+                  {allData?.created_date?.length > 0
+                    ? dateConverter(allData?.created_date) || ""
+                    : dateConverter(createdDate) || ""}
                 </strong>
                 <button
                   className={`flex flex-col gap-3 relative transition-all ${

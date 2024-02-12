@@ -1,3 +1,5 @@
+'use client'
+
 import { BriefProfileInfoBox } from "@/components/timlineComponents/BriefProfileInfoBox";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { TrendingUsers } from "@/components/timlineComponents/TrendingUsers";
@@ -7,13 +9,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux_store";
 
 const AdminProfileFeedsPage = () => {
+  const handleFollowers = (data: any) => {
+    console.log(data);
+  };
+
   return (
     <>
       <section className="w-full">
         <div className="flex gap-5">
           {/* LEFT FEED */}
           <div className="flex flex-col gap-5 self-start max-[1200px]:hidden w-[24%]">
-            <TrendingUsers handleFollowers="" />
+            <TrendingUsers handleFollowers={handleFollowers} />
             <ShortcutsBox />
           </div>
 
