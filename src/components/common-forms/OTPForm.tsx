@@ -6,6 +6,7 @@ import { motion as m } from 'framer-motion'
 import { ErrObj } from '@/utils/typesUtils'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { useRouter } from 'next/navigation'
+import { AuthRoutes } from '@/constants/routes'
 
 interface OTPFormProps {
   onClose: () => void
@@ -59,10 +60,7 @@ export const OTPForm: FC<OTPFormProps> = ({
 
   const otpSubmitHandler = (e: FormEvent) => {
     e.preventDefault()
-
     const otp = OTP.join('')
-
-    
 
     if (otp.length !== 6)
       return setErr({ errTxt: 'please enter a valid otp', isErr: true })
@@ -74,7 +72,7 @@ export const OTPForm: FC<OTPFormProps> = ({
     if (!registering && otpVerified && !verifyingOTP) {
      
       onClose()
-      router.push('/login')
+      router.push(AuthRoutes.login);
     }
   }, [onClose, otpVerified, router, verifyingOTP, registering])
 

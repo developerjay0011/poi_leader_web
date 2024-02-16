@@ -1,11 +1,12 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { BiUser } from "react-icons/bi";
 import { LuLock } from "react-icons/lu";
 import { AiOutlineKey } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { setCookie } from "cookies-next";
 import Logo from "@/assets/favicon.png";
 import { useForm } from "react-hook-form";
 import {
@@ -14,55 +15,19 @@ import {
   RegisterFormFields,
 } from "@/utils/typesUtils";
 import { LPInputField } from "@/utils/LPInputField";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
-import { userLogin } from "@/redux_store/auth/authAPI";
 import { fetchLogin } from "../api/auth";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { RootState } from "@/redux_store";
-import { useSelector } from "react-redux";
-
-interface LoginResponse {
-  success: boolean;
-  message: string;
-  data: any;
-}
+import { TOKEN_KEY } from "@/constants/common";
+import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
 
 interface LoginFormProps {}
 export const LoginForm: FC<LoginFormProps> = () => {
   const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
   const dispatch = cusDispatch();
-  const [ipAddress, setIpAddress] = useState("");
-
-  /* useEffect(() => {
-    fetch("https://api.ipify.org?format=json")
-      .then((response) => response.json())
-      .then((data) => {
-        setIpAddress(data.ip);
-      })
-      .catch((error) => {
-        console.error("Error fetching IP address:", error);
-      });
-  }, []); */
-
-  console.log(ipAddress);
-
-  // 192.168.171.12
-
-  /* useEffect(() => {
-    fetch("https://ipapi.co/json")
-      .then((response) => response.json())
-      .then((data) => {
-        setIpAddress(data?.ip);
-      })
-      .catch((error) => {
-        console.error("Error fetching IP address:", error);
-      });
-  }, []); */
-
-  console.log(ipAddress);
 
   const [showForgetPassForm, setShowForgetPassForm] = useState(false);
   const [err, setErr] = useState<ErrObj>({ isErr: false, errTxt: "" });
@@ -84,7 +49,6 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const formSubmitHandler = async (
     data: LoginFormFields | RegisterFormFields
   ) => {
-    setLoggingIn(true);
     setErr({ errTxt: "", isErr: false });
 
     const resBody = {
@@ -99,24 +63,22 @@ export const LoginForm: FC<LoginFormProps> = () => {
     try {
       const response = await fetchLogin(resBody);
 
-      const loginResponse = response as any; // Type assertion
+      const loginResponse = response as any;
       const { success, message, data } = loginResponse;
-      console.log(loginResponse);
 
       if (success) {
         if (data?.leader_detail?.is_profile_complete) {
-          // router.push("/user");
           if (data?.leader_detail?.request_status === "Approved") {
-            router.push("/user");
+            router.push(ProtectedRoutes.user);
             dispatch(authActions.setUserData(loginResponse));
 
             const userData = {
               id: loginResponse.data.leader_detail.id,
               userId: loginResponse.data.user_detail.id,
-              name: loginResponse.data.leader_detail.username,
+              username: loginResponse.data.leader_detail.username,
               email: loginResponse.data.leader_detail.email,
               mobile: loginResponse.data.leader_detail.mobile,
-              image: loginResponse.data.leader_detail.image,
+              displayPic: loginResponse.data.leader_detail.image,
               personal_info: loginResponse.data.leader_detail.personal_info,
               fcm_tokens: loginResponse.data.user_detail.fcm_tokens,
               token: loginResponse.token,
@@ -125,27 +87,22 @@ export const LoginForm: FC<LoginFormProps> = () => {
             const serializedData = JSON.stringify(userData);
 
             // Store the serialized data in session storage
-            sessionStorage.setItem("user Data", serializedData);
+            setCookie('userData', serializedData);
+            setCookie(TOKEN_KEY, userData.token);
           } else {
             setErr({
-              errTxt: `Your Requast Is ${data?.leader_detail?.request_status} `,
+              errTxt: `Your Request Is ${data?.leader_detail?.request_status} `,
               isErr: true,
             });
           }
         } else {
-          router.push("/userManagement");
+          router.push(ProtectedRoutes.userManagement);
         }
       } else {
         setErr({ errTxt: message, isErr: true });
-        /* if (!data?.leader_detail?.is_profile_complete) {
-          router.push("/userManagement");
-          dispatch(authActions.setUserData(loginResponse));
-        } */
       }
-      // router.push("/user");
       setLoggingIn(false);
     } catch (error: any) {
-      console.error(error);
       setLoggingIn(false);
       setErr({ errTxt: error.message, isErr: true });
     }
@@ -241,7 +198,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
 
           <p className="mt-5 max-[500px]:ml-3">
             Dont have an account?{" "}
-            <Link href="/register" className="underline hover:font-[600]">
+            <Link href={AuthRoutes.register} className="underline hover:font-[600]">
               Register with us
             </Link>
           </p>

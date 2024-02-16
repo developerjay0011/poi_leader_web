@@ -7,7 +7,6 @@ import { LuNetwork } from "react-icons/lu";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { uiActions } from "@/redux_store/UI/uiSlice";
 import { HiSpeakerphone } from "react-icons/hi";
-import { FaUserGroup } from "react-icons/fa6";
 import { TfiStatsUp } from "react-icons/tfi";
 import { MdContacts, MdSpaceDashboard } from "react-icons/md";
 import { AnimatePresence } from "framer-motion";
@@ -15,7 +14,6 @@ import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { fetchCloseAccount, fetchDeactiveAccount } from "../api/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux_store";
-import { UserData } from "@/utils/utility";
 
 export const ShortcutsBox: FC = () => {
   const dispatch = cusDispatch();
@@ -23,34 +21,18 @@ export const ShortcutsBox: FC = () => {
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [showCloseConfirmBox, setShowCloseConfirmBox] = useState(false);
 
-  const userDetails: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
+  const { userDetails } = cusSelector(
+    (state: RootState) => state.auth
   );
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
 
   const onClose = () => {
     setShowConfirmBox(false);
     setShowCloseConfirmBox(false);
   };
   const deactiveAccountHandler = async () => {
-    const citizenid = userData?.id || "";
-    const token = userData?.token || "";
+    const citizenid = userDetails?.id || "";
 
-    const data = await fetchDeactiveAccount(citizenid, token);
-
-    console.log(data);
+    const data = await fetchDeactiveAccount(citizenid);
 
     if (data?.success) {
       setShowConfirmBox(false);
@@ -58,12 +40,8 @@ export const ShortcutsBox: FC = () => {
     }
   };
   const CloseAccountHandler = async () => {
-    const citizenid = userData?.id;
-    const token = userData?.token;
-
-    const data = await fetchCloseAccount(citizenid, token);
-
-    console.log(data);
+    const citizenid = userDetails?.id;
+    const data = await fetchCloseAccount(citizenid);
     if (data?.success) {
       setShowCloseConfirmBox(false);
       router.push("/");

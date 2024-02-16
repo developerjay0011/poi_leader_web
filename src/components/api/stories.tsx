@@ -1,14 +1,13 @@
-import axios from "axios";
+import Axios from "@/config/axios";
 
-export const fetchAddStory = async (formData: any, token: any) => {
+export const fetchAddStory = async (formData: any) => {
   try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/AddStory`,
+    const response = await Axios.post(
+      `/api/Post/AddStory`,
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "Bearer " + token,
+          "Content-Type": "multipart/form-data"
         },
       }
     );
@@ -20,41 +19,20 @@ export const fetchAddStory = async (formData: any, token: any) => {
 };
 
 export const fetchGetLeaderAddedStories = async (
-  leaderid: string,
-  token: string
+  leaderid: string
 ) => {
   try {
-    const respomse = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/GetLeaderAddedStories/${leaderid}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    return respomse.data;
+    const response = await Axios.get(`/api/Post/GetLeaderAddedStories/${leaderid}`);
+    return response.data;
   } catch (error) {
     throw error; // You can throw or handle the error as
   }
 };
 
-export const fetchDeleteStory = async (postBody: any, token: any) => {
+export const fetchDeleteStory = async (postBody: any) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/DeleteStory`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          body: JSON.stringify(postBody),
-        }
-      );
-  
-      const data = await res.json();
-      return data;
+      const res = await Axios.post('/api/Post/DeleteStory', { body: JSON.stringify(postBody) });
+      return res.data;
     } catch (error) {
       return error;
     }

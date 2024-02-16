@@ -13,10 +13,10 @@ import { LPInputField } from "@/utils/LPInputField";
 import { cusDispatch } from "@/redux_store/cusHooks";
 import { MdLock, MdMail, MdPerson, MdPhone } from "react-icons/md";
 import { USER_TYPE } from "@/utils/utility";
-import { registerUser, verifyRegisterOTP } from "@/redux_store/auth/authAPI";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchRegister, fetchSendOtp, fetchVerifyOtp } from "../api/auth";
+import { AuthRoutes } from "@/constants/routes";
 
 let interval: NodeJS.Timer;
 let OTP_TIME = 120;
@@ -27,9 +27,6 @@ export const RegisterForm: FC = () => {
   const [resendOTPTime, setResendOTPTime] = useState(OTP_TIME);
   const [registering, setRegistering] = useState(false);
   const [verifying, setVerifying] = useState(false);
-
-  // const { registering, verifyingOTP } = cusSelector((st) => st.UI)
-  const dispatch = cusDispatch();
 
   const openOTPForm = () => setShowOTPForm(true);
   const closeOTPForm = () => {
@@ -50,11 +47,7 @@ export const RegisterForm: FC = () => {
 
   const resendOTP = async () => {
     try {
-      const userData = getValues() as RegisterFormFields;
       setRegistering(true);
-
-      // await dispatch(registerUser({ data: userData }));
-
       // Starts a OTP resend Timer
       interval = setInterval(() => {
         if (resendOTPTime > 0)
@@ -101,11 +94,12 @@ export const RegisterForm: FC = () => {
             Registered Successfully
           </p>
         ));
-        router.push("/"); // redirecting back to login
+        router.push(AuthRoutes.login);
+      } else {
+        setVerifying(false);
       }
 
     } catch (err) {
-      console.error(err);
       setVerifying(false);
     }
   };
@@ -129,12 +123,9 @@ export const RegisterForm: FC = () => {
         const otpBody = {
           mobile: data?.phoneNo as "string",
         };
+        const sendOTP = await fetchSendOtp(otpBody);
 
-        const sandOTP = await fetchSendOtp(otpBody);
-
-    
-
-        if (sandOTP?.success) {
+        if (sendOTP?.success) {
           // Starts a OTP resend Timer
           interval = setInterval(() => {
             if (resendOTPTime > 0)
@@ -336,7 +327,7 @@ export const RegisterForm: FC = () => {
 
           <p className="mt-8">
             Already Registered ?{" "}
-            <Link href="/" className="underline hover:font-[600]">
+            <Link href={AuthRoutes.login} className="underline hover:font-[600]">
               Login
             </Link>
           </p>

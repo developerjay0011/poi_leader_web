@@ -7,50 +7,25 @@ import { fetchAllPosts } from "@/redux_store/posts/postAPI";
 import { StoriesBox } from "../timlineComponents/StoriesBox";
 import { PollPost } from "./polls/PollPost";
 import { AgendaPost } from "./AgendaPost";
-import { RootState } from "@/redux_store";
 import { fetchGetLeaderAddedPosts } from "../api/posts";
-import { UserData } from "@/utils/utility";
 
 interface TimeLinePageProps {}
 export const TimeLinePage: FC<TimeLinePageProps> = () => {
-  const { userDetails } = cusSelector((st) => st.UI);
+  const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-  const { posts } = cusSelector((st) => st.posts);
   const [postData, setPostData] = useState([]);
   const [upPost, setUpPost] = useState();
-
-  console.log(postData);
-  
 
   useEffect(() => {
     dispatch(fetchAllPosts());
   }, [dispatch, userDetails]);
 
- /*  const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
- */
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-useEffect(() => {
-  const serializedData = sessionStorage.getItem("user Data");
-
-  if (serializedData) {
-    const userDataFromStorage: UserData = JSON.parse(serializedData);
-    setUserData(userDataFromStorage);
-  }
-}, []);
-
-console.log(userData);
-console.log(userData?.token);
-
   useEffect(() => {
-    const leaderid = userData?.id;
-    const token = userData?.token;
+    const leaderid = userDetails?.id;
 
     (async () => {
       try {
-        const data = await fetchGetLeaderAddedPosts(leaderid, token);
+        const data = await fetchGetLeaderAddedPosts(leaderid);
 
         console.log(data);
         
@@ -62,7 +37,7 @@ console.log(userData?.token);
         console.log(error);
       }
     })();
-  }, [upPost, userData]);
+  }, [userDetails]);
 
   const updatePost = (data: any) => {
     setUpPost(data);
@@ -191,19 +166,6 @@ console.log(userData?.token);
           userId=""
         />
 
-        {/* {posts.map((el) => {
-          if (el.type === "post")
-            return (
-              <Post
-                {...el}
-                key={el.id}
-                media={JSON.parse(el.media as string)}
-                comments={JSON.parse(el.comments as string)}
-                likes={JSON.parse(el.likes as string)}
-              />
-            );
-        })} */}
-
         {postData.map((el: any) => {
           console.log(el);
 
@@ -213,7 +175,7 @@ console.log(userData?.token);
               key={el.id}
               media={el.media?.map(
                 (file: any) =>
-                  `http://203.92.43.166:4005${file.media}` as string
+                  `${process.env.NEXT_PUBLIC_BASE_URL}${file.media}` as string
               )}
               comments={el.media?.flatMap((file: any) => file?.comments) as string}
               likes={el.likes as string}

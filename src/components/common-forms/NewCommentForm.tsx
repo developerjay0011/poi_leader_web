@@ -1,5 +1,4 @@
 "use client";
-import { RootState } from "@/redux_store";
 import { cusSelector } from "@/redux_store/cusHooks";
 import Image from "next/image";
 import { FC, FormEvent, useEffect, useState } from "react";
@@ -18,28 +17,8 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
   allData,
   setUpdateComment,
 }) => {
-  /* const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  ); */
 
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
-  console.log(allData?.id);
-  console.log(allData);
-  console.log(allData?.leaderid);
-  console.log(userData?.id);
-
-  const { userDetails } = cusSelector((st) => st.UI);
+  const { userDetails } = cusSelector((state) => state.auth);
   const [commentText, setCommentText] = useState("");
 
   const addNewCommentHandler = async (e: FormEvent) => {
@@ -52,18 +31,16 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
     const commentBody = {
       postid: postid,
       post_leaderid: allData?.leaderid,
-      userid: userData?.id,
+      userid: userDetails?.id,
       mediaid: mediaId[0],
       usertype: "leader",
-      username: userData?.name,
-      userimg: userData?.image || "",
+      username: userDetails?.username,
+      userimg: userDetails?.image || "",
       comment_text: commentText,
     };
 
-    const token = userData?.token;
-
     try {
-      const data = await fetchCommentPost(commentBody, token);
+      const data = await fetchCommentPost(commentBody);
 
       if (data?.success) {
         setUpdateComment(data);

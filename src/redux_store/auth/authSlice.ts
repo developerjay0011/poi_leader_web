@@ -1,12 +1,17 @@
+import { deleteCookie, getCookie } from "cookies-next";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserDetails } from '@/utils/typesUtils'; // Import UserDetails type
+import { TOKEN_KEY } from "@/constants/common";
 
 interface AuthState {
   userDetails: UserDetails | null;
 }
 
+let userDetails: any = getCookie("userData");
+userDetails = userDetails && JSON.parse(userDetails);
+
 const initialState: AuthState = {
-  userDetails: null,
+  userDetails
 };
 
 export const authSlice = createSlice({
@@ -14,13 +19,15 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUserData(state, action: PayloadAction<UserDetails | null>) {
-      state.userDetails = action.payload; // Update userDetails based on the action payload
-      console.log(action.payload, "action.payload");
-
+      state.userDetails = action.payload;
     },
     clearUserData(state) {
       state.userDetails = null; // Clear userDetails
     },
+    logout(state) {
+      state.userDetails = null;
+      deleteCookie(TOKEN_KEY);
+    }
   },
 });
 

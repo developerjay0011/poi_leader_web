@@ -1,35 +1,13 @@
-import axios from "axios";
+import Axios from "@/config/axios";
 
-/* export const fetchAddPost = async (formData: any, token: any) => {
+export const fetchAddPost = async (formData: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/AddPost`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: formData,
-      }
-    );
-
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return error;
-  }
-}; */
-
-export const fetchAddPost = async (formData: any, token: any) => {
-  try {
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/AddPost`,
+    const response = await Axios.post(
+      `/api/Post/AddPost`,
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: "Bearer " + token,
+          "Content-Type": "multipart/form-data"
         },
       }
     );
@@ -40,128 +18,80 @@ export const fetchAddPost = async (formData: any, token: any) => {
   }
 };
 
-export const fetchGetLeaderAddedPosts = async (leaderid: any, token: any) => {
+export const fetchGetLeaderAddedPosts = async (leaderid: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/GetLeaderAddedPosts/${leaderid}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-
-    const data = await res.json();
-    return data;
+    const res = await Axios.get(`/api/Post/GetLeaderAddedPosts/${leaderid}`);
+    return res.data;
   } catch (error) {
     return error;
   }
 };
 
-export const fetchDeletePost = async (postBody: any, token: any) => {
+export const fetchDeletePost = async (postBody: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/DeletePost`,
+    const res = await Axios.post(`/api/Post/DeletePost`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
         body: JSON.stringify(postBody),
       }
     );
-
-    const data = await res.json();
-    return data;
+    return res.data;
   } catch (error) {
     return error;
   }
 };
 
-
-export const fetchLikePost = async (likeBody: any, token: any) => {
+export const fetchLikePost = async (likeBody: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/LikePost`,
+    const res = await Axios.post(`/api/Post/LikePost`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
         body: JSON.stringify(likeBody),
       }
     );
 
-    const data = await res.json();
-    return data;
+    return res.data;
   } catch (error) {
     return error;
   }
 };
 
-export const fetchUnlikePostorStory = async (UnlikeBody: any, token: any) => {
+export const fetchUnlikePostorStory = async (UnlikeBody: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/UnlikePostorStory`,
+    const res = await Axios.post(`/api/Post/UnlikePostorStory`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
         body: JSON.stringify(UnlikeBody),
       }
     );
 
-    const data = await res.json();
-    return data;
+    return res.data;
   } catch (error) {
     return error;
   }
 };
 
-export const fetchCommentPost = async (commentBody: any, token: any) => {
+export const fetchCommentPost = async (commentBody: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/CommentPost`,
+    const res = await Axios.post(`/api/Post/CommentPost`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
         body: JSON.stringify(commentBody),
       }
     );
 
-    const data = await res.json();
-    return data;
+    return res.data;
   } catch (error) {
     return error;
   }
 };
 
 
-export const fetchReplyToComment = async (commentBody: any, token: any) => {
+export const fetchReplyToComment = async (commentBody: any) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Post/ReplyToComment`,
+    const res = await Axios.post(`/api/Post/ReplyToComment`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
         body: JSON.stringify(commentBody),
       }
     );
 
-    const data = await res.json();
-    return data;
+    return res.data;
   } catch (error) {
     return error;
   }

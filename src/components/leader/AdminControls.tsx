@@ -1,5 +1,6 @@
 'use client'
 import { uiActions } from '@/redux_store/UI/uiSlice'
+import { authActions } from '@/redux_store/auth/authSlice'
 import { cusDispatch } from '@/redux_store/cusHooks'
 import { ShortcutBtn } from '@/utils/ShortcutBtn'
 import { FC } from 'react'
@@ -29,7 +30,7 @@ export const AdminControls: FC<AdminControlsProps> = () => {
           title='account settings'
           route={`/user/profile/settings/general`}
         />
-        <button onClick={() => dispatch(uiActions.setLogin(false))}>
+        <button onClick={() => dispatch(authActions.logout())}>
           <ShortcutBtn Icon={FaPowerOff} title='log out' route='/' />
         </button>
       </aside>

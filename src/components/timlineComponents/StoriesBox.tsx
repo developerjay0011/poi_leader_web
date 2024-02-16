@@ -1,8 +1,5 @@
-import { RootState } from "@/redux_store";
-import { cusSelector } from "@/redux_store/cusHooks";
 import { CommonBox } from "@/utils/CommonBox";
-import { PostType } from "@/utils/typesUtils";
-import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
+import { GenerateId, UserData } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, FC, useEffect, useState } from "react";
@@ -13,19 +10,9 @@ import {
   fetchGetLeaderAddedStories,
 } from "../api/stories";
 import { PostOptions } from "../posts/PostOptions";
+import { cusSelector } from "@/redux_store/cusHooks";
 
 interface StoriesBoxProps {}
-
-const IMAGES = [
-  "https://images.unsplash.com/photo-1665395806066-d47f41e6aa6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1682686578456-69ae00b0ecbd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1696430484960-543301cda6d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1696587522095-1d0b522b3e36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1665395806066-d47f41e6aa6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1682686578456-69ae00b0ecbd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1696430484960-543301cda6d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-  "https://images.unsplash.com/photo-1696587522095-1d0b522b3e36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-];
 
 export const StoriesBox: FC<StoriesBoxProps> = () => {
   const [storyMedia, setStoryMedia] = useState<Media[]>([]);
@@ -33,22 +20,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   const [getStories, setGetStories] = useState([]);
   const [updateStory, setUpdateStory] = useState({});
   const id = GenerateId();
-  /*  const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
- */
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
+  const { userDetails } = cusSelector(state => state.auth);
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setStoryMedia([]);
@@ -61,10 +33,6 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
 
       // checking for media type
       const type = uploadData.type.split("/")[0];
-
-      // converting data into base 64
-      const convertedData = await convertFileToBase64(uploadData);
-
       newMedia.push({
         type: type,
         media: uploadData,
@@ -73,12 +41,8 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
     }
 
     setStoryMedia((oldMedia) => [...oldMedia, ...newMedia]);
-
-    const token = userData?.token;
-
     const formData = new FormData();
-
-    formData.append("leaderid", userData?.id || "");
+    formData.append("leaderid", userDetails?.id || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", "open");
 
@@ -89,7 +53,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
     }
 
     try {
-      const data = await fetchAddStory(formData, token);
+      const data = await fetchAddStory(formData);
 
       if (data?.success) {
         setUpdateStory(data);
@@ -100,12 +64,11 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   };
 
   useEffect(() => {
-    const leaderid = userData?.id || "";
-    const token = userData?.token || "";
+    const leaderid = userDetails?.id || "";
 
     (async () => {
       try {
-        const data = await fetchGetLeaderAddedStories(leaderid, token);
+        const data = await fetchGetLeaderAddedStories(leaderid);
 
         if (data?.length > 0) {
           setGetStories(data);
@@ -114,18 +77,16 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
         console.log(error);
       }
     })();
-  }, [userData, updateStory]);
+  }, [userDetails]);
 
   const handleDelete = async (leaderid: string, id: string) => {
-    const token = userData?.token;
-
     const postBody = {
       id: id,
       leaderid: leaderid,
     };
 
     try {
-      const data = await fetchDeleteStory(postBody, token);
+      const data = await fetchDeleteStory(postBody);
       if (data) {
         setUpdateStory(data);
       }
@@ -181,7 +142,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
 
             {getStories.map((el: { media?: any[]; id: string } | undefined) =>
               el?.media?.map((item: any, index: number) => {
-                const imageUrl = `http://203.92.43.166:4005${item?.media}`;
+                const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${item?.media}`;
                 return (
                   <Story
                     key={index}
@@ -192,12 +153,6 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
                 );
               })
             )}
-
-            {/* {IMAGES.slice(0, 5).map((el, index) => {
-              console.log(el);
-
-              return <Story key={index} img={el} id="" />;
-            })} */}
           </ul>
         </div>
       </CommonBox>
@@ -231,8 +186,6 @@ const Story: FC<StoryProps> = ({ img, id, handleDelete }) => {
       setUserData(userDataFromStorage);
     }
   }, []);
-
-  console.log(userData);
 
   const leaderid = userData?.id || "";
 

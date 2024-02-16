@@ -1,7 +1,7 @@
 "use client";
 
 import { Comment, Like, MediaPost, PostDetails } from "@/utils/typesUtils";
-import { UserData, dateConverter } from "@/utils/utility";
+import { dateConverter } from "@/utils/utility";
 import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import { BiGlobe, BiShareAlt, BiSolidMessageAltDetail } from "react-icons/bi";
@@ -13,7 +13,6 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import {
   addNewComment,
   addNewNestedComment,
-  deletePost,
   changeNestedLike,
   updateLike,
 } from "@/redux_store/posts/postAPI";
@@ -26,7 +25,6 @@ import {
   fetchLikePost,
   fetchUnlikePostorStory,
 } from "../api/posts";
-import { RootState } from "@/redux_store";
 
 interface PostProps extends PostDetails {}
 
@@ -50,7 +48,7 @@ export const Post: FC<PostProps> = ({
 
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const dispatch = cusDispatch();
-  const { userDetails } = cusSelector((st) => st.UI);
+  const { userDetails } = cusSelector((state) => state.auth);
 
   const showFullPost = () => setShowPostDetials(true);
   const hideFullPost = () => setShowPostDetials(false);
@@ -62,26 +60,7 @@ export const Post: FC<PostProps> = ({
     (likes as Like[]).some((el) => el.userId === userDetails?.id)
   );
 
-  console.log(allData, "check comment");
-
   const [likeCount, setLikeCount] = useState(likes.length); // in order to show updated like count on frontend
-
-  /* const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  ); */
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
 
   const addNewPostComment = (comment: string) =>
     dispatch(
@@ -108,10 +87,8 @@ export const Post: FC<PostProps> = ({
       id: id,
       leaderid: leaderid,
     };
-    const token = userData?.token;
-
     try {
-      const data = await fetchDeletePost(postBody, token);
+      const data = await fetchDeletePost(postBody);
 
       if (data?.success) {
         updatePost(data);
@@ -167,29 +144,27 @@ export const Post: FC<PostProps> = ({
     const likeBody = {
       postid: postid,
       post_leaderid: allData?.leaderid,
-      userid: userData?.id,
+      userid: userDetails?.id,
       mediaid: mediaId[0],
       usertype: "citizen",
-      username: userData?.name,
-      userimg: userData?.image,
+      username: userDetails?.username,
+      userimg: userDetails?.displayPic,
     };
 
     const UnlikeBody = {
       postid: postid,
       post_leaderid: allData?.leaderid,
-      userid: userData?.id,
+      userid: userDetails?.id,
     };
-
-    const token = userData?.token;
 
     try {
       if (!showLikeAnimation) {
-        const data = await fetchLikePost(likeBody, token);
+        const data = await fetchLikePost(likeBody);
         if (data?.success) {
           console.log(data);
         }
       } else {
-        const data = await fetchUnlikePostorStory(UnlikeBody, token);
+        const data = await fetchUnlikePostorStory(UnlikeBody);
         if (data?.success) {
           console.log(data);
         }

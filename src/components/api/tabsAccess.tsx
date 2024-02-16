@@ -1,18 +1,9 @@
-export const fetchAccessTabs = async (userid: any, token: any) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Leader/GetAccessTabs/${userid}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+import Axios from "@/config/axios";
 
-    const data = await res.json();
-    return data;
+export const fetchAccessTabs = async (userid: any) => {
+  try {
+    const res = await Axios.get(`/api/Leader/GetAccessTabs/${userid}`);
+    return res.data;
   } catch (error) {
     return error;
   }

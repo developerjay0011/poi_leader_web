@@ -35,37 +35,21 @@ const LeftNavLink: FC<{
 };
 
 export const LeftNavbar: FC = () => {
-  /*   const userDetails: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  ); */
+  const { userDetails } = cusSelector((state) => state.auth);
 
   const [routeData, setRouteData] = useState([]);
 
-  const [userData, setUserData] = useState<UserData | null>(null);
-
   useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
-
-  useEffect(() => {
-    const userid = userData?.id;
-    const token = userData?.token;
+    const userid = userDetails?.id;
 
     (async () => {
-      const data = await fetchAccessTabs(userid, token);
+      const data = await fetchAccessTabs(userid);
 
       if (data?.length > 0) {
         setRouteData(data);
       }
     })();
-  }, [userData]);
+  }, [userDetails]);
 
   return (
     <section className="py-8 px-3 bg-white flex flex-col shadow_left gap-5 h-full max-[1000px]:hidden">

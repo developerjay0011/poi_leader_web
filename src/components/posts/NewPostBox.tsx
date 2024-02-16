@@ -24,26 +24,8 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const [accessType, setAccessType] = useState("");
-  const dispatch = cusDispatch();
   const { creatingPost } = cusSelector((st) => st.posts);
-  const { userDetails } = cusSelector((st) => st.UI);
-
-  /* const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  ); */
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
+  const { userDetails } = cusSelector((state) => state.auth);
 
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -55,19 +37,9 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
     )
       return setPostErr({ errTxt: "post can't be empty", isErr: true });
 
-    /*     dispatch(
-      createNewPost({
-        media: media,
-        type: "post",
-        writtenText: textPost,
-      })
-    ); */
-
-    const token = userData?.token;
-
     const formData = new FormData();
 
-    formData.append("leaderid", userData?.id || "");
+    formData.append("leaderid", userDetails?.id || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", accessType);
 
@@ -78,7 +50,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
     }
 
     try {
-      const data = await fetchAddPost(formData, token);
+      const data = await fetchAddPost(formData);
       if (data?.success) {
         updatePost(data);
       }

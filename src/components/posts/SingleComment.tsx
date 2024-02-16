@@ -45,32 +45,18 @@ export const SingleComment: FC<SingleCommentProps> = ({
   const [showCommentOptions, setShowCommentOptions] = useState(false);
   const [likeCount, setLikeCount] = useState(likes.length); // in order to show updated like count on frontend
   const dispatch = cusDispatch();
-  const { userDetails } = cusSelector((st) => st.UI);
+  const { userDetails } = cusSelector((state) => state.auth);
   const [showLikeAnimation, setShowLikeAnimation] = useState(
     (likes as Like[]).some((el) => el.userId === userDetails?.id)
   );
   const [commentReply, setCommentReply] = useState("");
   const deleteCommentHandler = () => dispatch(deletePostComment(postId, id));
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
 
   useEffect(() => {
     return () => {
       setFirstTime(true);
     };
   }, []);
-
-  console.log(allData);
 
   // to show count at frontend and calling api behind
   useEffect(() => {
@@ -87,31 +73,23 @@ export const SingleComment: FC<SingleCommentProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showLikeAnimation]);
 
-  console.log(allData);
-  console.log(postId);
-  console.log(userData);
-  console.log(fullPostData);
-
   const addNewNestedComment = (e: FormEvent) => {
     e.preventDefault();
-
-    console.log(commentReply);
 
     const commentBody = {
       commentid: allData?.id,
       postid: postId,
       post_leaderid: fullPostData?.leaderid,
-      userid: userData?.userId,
+      userid: userDetails?.id,
       usertype: "leader",
-      username: userData?.name,
-      userimg: userData?.image || "",
+      username: userDetails?.username,
+      userimg: userDetails?.image || "",
       comment_text: commentReply,
     };
-    const token = userData?.token;
 
     try {
-      const data = fetchReplyToComment(commentBody, token);
-      console.log(data);
+      const data = fetchReplyToComment(commentBody);
+      console.log(data)
     } catch (error) {}
 
     if (commentReply.length === 0) return;
