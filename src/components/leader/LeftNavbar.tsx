@@ -5,6 +5,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { fetchAccessTabs } from "../api/tabsAccess";
 import { RootState } from "@/redux_store";
 import { cusSelector } from "@/redux_store/cusHooks";
+import { UserData } from "@/utils/utility";
 
 const LeftNavLink: FC<{
   children: ReactNode;
@@ -34,26 +35,37 @@ const LeftNavLink: FC<{
 };
 
 export const LeftNavbar: FC = () => {
-  const userDetails: any = cusSelector(
+  /*   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
-  );
+  ); */
 
   const [routeData, setRouteData] = useState([]);
 
-
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    const userid = userDetails?.data?.user_detail?.id;
-    const token = userDetails?.token;
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
+
+  useEffect(() => {
+    const userid = userData?.id;
+    const token = userData?.token;
 
     (async () => {
       const data = await fetchAccessTabs(userid, token);
-      
+
       if (data?.length > 0) {
         setRouteData(data);
       }
     })();
-  }, [userDetails]);
+  }, [userData]);
 
   return (
     <section className="py-8 px-3 bg-white flex flex-col shadow_left gap-5 h-full max-[1000px]:hidden">

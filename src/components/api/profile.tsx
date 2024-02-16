@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchGetSingleCitizen = async (citizenid: any, token: any) => {
+/* export const fetchGetSingleCitizen = async (citizenid: any, token: any) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/Citizen/getSingleCitizen/${citizenid}`,
@@ -18,9 +18,9 @@ export const fetchGetSingleCitizen = async (citizenid: any, token: any) => {
 
     return error;
   }
-};
+}; */
 
-export const fetchEditCitizenProfile = async (postBody: any, token: any) => {
+/* export const fetchEditCitizenProfile = async (postBody: any, token: any) => {
   try {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/Citizen/EditCitizenProfile`,
@@ -38,7 +38,7 @@ export const fetchEditCitizenProfile = async (postBody: any, token: any) => {
     console.log(error);
     return error;
   }
-};
+}; */
 
 
 

@@ -148,6 +148,16 @@ export interface UserDetails {
   telePhoneNos: string
   mobileNos: string
   workEmails: string
+
+  Name:string;
+  Phone:string;
+  Email:string;
+
+
+  title:string
+  description:string
+  documents:string
+  attachments:string
 }
 
 export const LEADER_IDS = {

@@ -1,6 +1,6 @@
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { Comment, Like, NestedComment } from "@/utils/typesUtils";
-import { dateConverter } from "@/utils/utility";
+import { UserData, dateConverter } from "@/utils/utility";
 import Image from "next/image";
 import { FC, FormEvent, useEffect, useState } from "react";
 import { BsFillHeartFill, BsThreeDots } from "react-icons/bs";
@@ -21,6 +21,7 @@ interface SingleCommentProps extends Comment {
   likeChangeHandler: (id: string) => void;
   newNestedCommentHandler?: (commentId: string, commentReply: string) => void;
   postPerMedia?: boolean;
+  fullPostData: any;
 }
 
 export const SingleComment: FC<SingleCommentProps> = ({
@@ -37,6 +38,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
   postPerMedia,
   newNestedCommentHandler,
   allData,
+  fullPostData,
 }) => {
   const [firstTime, setFirstTime] = useState(true);
   const [showNestedComments, setShowNestedComments] = useState(false);
@@ -47,11 +49,20 @@ export const SingleComment: FC<SingleCommentProps> = ({
   const [showLikeAnimation, setShowLikeAnimation] = useState(
     (likes as Like[]).some((el) => el.userId === userDetails?.id)
   );
-  const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
   const [commentReply, setCommentReply] = useState("");
   const deleteCommentHandler = () => dispatch(deletePostComment(postId, id));
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   useEffect(() => {
     return () => {
@@ -59,9 +70,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
     };
   }, []);
 
-  console.log(userData);
   console.log(allData);
-  
 
   // to show count at frontend and calling api behind
   useEffect(() => {
@@ -78,28 +87,32 @@ export const SingleComment: FC<SingleCommentProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showLikeAnimation]);
 
+  console.log(allData);
+  console.log(postId);
+  console.log(userData);
+  console.log(fullPostData);
+
   const addNewNestedComment = (e: FormEvent) => {
     e.preventDefault();
 
-   /*  console.log(commentReply);
+    console.log(commentReply);
 
     const commentBody = {
-      commentid: "string",
-      postid: "string",
-      post_leaderid: "string",
-      userid: "string",
-      usertype: "string",
-      username: "string",
-      userimg: "string",
-      comment_text: "string",
+      commentid: allData?.id,
+      postid: postId,
+      post_leaderid: fullPostData?.leaderid,
+      userid: userData?.userId,
+      usertype: "leader",
+      username: userData?.name,
+      userimg: userData?.image || "",
+      comment_text: commentReply,
     };
     const token = userData?.token;
 
     try {
       const data = fetchReplyToComment(commentBody, token);
       console.log(data);
-      
-    } catch (error) {} */
+    } catch (error) {}
 
     if (commentReply.length === 0) return;
 

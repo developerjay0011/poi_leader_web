@@ -1,7 +1,7 @@
 "use client";
 
 import { Comment, Like, MediaPost, PostDetails } from "@/utils/typesUtils";
-import { dateConverter } from "@/utils/utility";
+import { UserData, dateConverter } from "@/utils/utility";
 import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import { BiGlobe, BiShareAlt, BiSolidMessageAltDetail } from "react-icons/bi";
@@ -62,14 +62,26 @@ export const Post: FC<PostProps> = ({
     (likes as Like[]).some((el) => el.userId === userDetails?.id)
   );
 
-  console.log(allData);
-  
+  console.log(allData, "check comment");
 
   const [likeCount, setLikeCount] = useState(likes.length); // in order to show updated like count on frontend
 
-  const userData: any = cusSelector(
+  /* const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
-  );
+  ); */
+
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   const addNewPostComment = (comment: string) =>
     dispatch(
@@ -155,15 +167,17 @@ export const Post: FC<PostProps> = ({
     const likeBody = {
       postid: postid,
       post_leaderid: allData?.leaderid,
-      userid: userData?.data?.leader_detail?.id,
+      userid: userData?.id,
       mediaid: mediaId[0],
       usertype: "citizen",
+      username: userData?.name,
+      userimg: userData?.image,
     };
 
     const UnlikeBody = {
       postid: postid,
       post_leaderid: allData?.leaderid,
-      userid: userData?.data?.leader_detail?.id,
+      userid: userData?.id,
     };
 
     const token = userData?.token;
@@ -399,6 +413,7 @@ export const Post: FC<PostProps> = ({
                       likeChangeHandler={postCommentLikeHandler}
                       newNestedCommentHandler={commentReplyHandler}
                       allData={el}
+                      fullPostData={allData}
                     />
                   );
                 })}

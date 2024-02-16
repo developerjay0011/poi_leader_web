@@ -1,18 +1,13 @@
 "use client";
 
 import { CommonBox } from "@/utils/CommonBox";
-import { user2Img } from "@/utils/utility";
+import { UserData, user2Img } from "@/utils/utility";
 import Image, { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
 import ARVIND from "@/assets/politicians-images/ARVIND_KEJRIWAL.jpg";
 import MODI from "@/assets/politicians-images/narendar_modi.jpg";
 import RAHUL from "@/assets/politicians-images/Rahul-Gandhi.jpg";
-import {
-  fetchFollowLeader,
-  fetchFollowingList,
-  fetchTrendingLeaderList,
-  fetchUnFollowLeader,
-} from "../api/followLeader";
+import { fetchFollowingList, fetchUnFollowLeader } from "../api/followLeader";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { RootState } from "@/redux_store";
 interface Leader {
@@ -21,7 +16,6 @@ interface Leader {
   name: string;
   leaderid: string;
   handleunfollow: (data: any) => void;
-  
 }
 
 interface TrendingUsersProps {
@@ -35,13 +29,24 @@ export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
   );
 
   console.log(trendingLeaders);
-  
+
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    if (userDetails && userDetails?.success) {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if ( userData && Object.keys(userData).length > 0 ) {
       (async () => {
-        const token = userDetails?.token;
-        const leaderid = userDetails?.data?.leader_detail?.id;
+        const token = userData?.token;
+        const leaderid = userData?.id;
         const data = await fetchFollowingList(leaderid, token);
 
         if (data.length > 0) {
@@ -49,11 +54,11 @@ export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
         }
       })();
     }
-  }, [userDetails, followers, unfollow]);
+  }, [userData, followers, unfollow]);
 
-  const handleunfollow = (data : any) => {
+  const handleunfollow = (data: any) => {
     setUnfollow(data);
-  }
+  };
 
   return (
     <>
@@ -98,26 +103,37 @@ const TrendingUser: FC<TrendingUserProps> = ({
   designation,
   username,
   id,
-  handleunfollow
+  handleunfollow,
 }) => {
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   const handleFollowers = async (id: string) => {
-    const token = userDetails?.token;
+    const token = userData?.token;
     const postBody = {
-      senderid: userDetails?.data?.leader_detail?.id,
+      senderid: userData?.id,
       receiverid: id,
     };
 
     const followedLeader = await fetchUnFollowLeader(postBody, token);
 
     console.log(followedLeader);
-    if(followedLeader?.success){
-      handleunfollow(followedLeader)
+    if (followedLeader?.success) {
+      handleunfollow(followedLeader);
     }
-
   };
 
   return (

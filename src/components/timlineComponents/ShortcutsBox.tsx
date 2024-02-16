@@ -15,6 +15,7 @@ import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { fetchCloseAccount, fetchDeactiveAccount } from "../api/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux_store";
+import { UserData } from "@/utils/utility";
 
 export const ShortcutsBox: FC = () => {
   const dispatch = cusDispatch();
@@ -25,16 +26,28 @@ export const ShortcutsBox: FC = () => {
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
-  console.log(userDetails);
+
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   const onClose = () => {
     setShowConfirmBox(false);
     setShowCloseConfirmBox(false);
   };
   const deactiveAccountHandler = async () => {
-    const citizenid = userDetails?.data?.leader_detail?.id || "";
-    const token = userDetails?.token || "";
- 
+    const citizenid = userData?.id || "";
+    const token = userData?.token || "";
+
     const data = await fetchDeactiveAccount(citizenid, token);
 
     console.log(data);
@@ -45,8 +58,8 @@ export const ShortcutsBox: FC = () => {
     }
   };
   const CloseAccountHandler = async () => {
-    const citizenid = userDetails?.data?.leader_detail?.id;
-    const token = userDetails?.token;
+    const citizenid = userData?.id;
+    const token = userData?.token;
 
     const data = await fetchCloseAccount(citizenid, token);
 

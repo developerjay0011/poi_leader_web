@@ -1,7 +1,7 @@
 "use client";
 
 import { CommonBox } from "@/utils/CommonBox";
-import { user2Img } from "@/utils/utility";
+import { UserData, user2Img } from "@/utils/utility";
 import Image, { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
 import ARVIND from "@/assets/politicians-images/ARVIND_KEJRIWAL.jpg";
@@ -29,11 +29,23 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
     (state: RootState) => state.auth.userDetails
   );
 
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    if (userDetails && userDetails?.success) {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
+
+  useEffect(() => {
+    if (userData && Object.keys(userData).length > 0) {
       (async () => {
-        const token = userDetails?.token;
+        const token = userData?.token;
         const data = await fetchTrendingLeaderList(token);
 
         if (data.length > 0) {
@@ -42,7 +54,7 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
         }
       })();
     }
-  }, [userDetails]);
+  }, [userData]);
 
   const following = (data: any) => {
     handleFollowers(data);
@@ -107,14 +119,27 @@ const TrendingUser: FC<TrendingUserProps> = ({
   id,
   following,
 }) => {
-  const userDetails: any = cusSelector(
+  /* const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
-  );
+  ); */
+
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   const handleFollower = async (id: string) => {
-    const token = userDetails?.token;
+    const token = userData?.token;
     const postBody = {
-      senderid: userDetails?.data?.leader_detail?.id,
+      senderid: userData?.id,
       receiverid: id,
     };
 

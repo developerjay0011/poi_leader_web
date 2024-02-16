@@ -9,6 +9,7 @@ import { PollPost } from "./polls/PollPost";
 import { AgendaPost } from "./AgendaPost";
 import { RootState } from "@/redux_store";
 import { fetchGetLeaderAddedPosts } from "../api/posts";
+import { UserData } from "@/utils/utility";
 
 interface TimeLinePageProps {}
 export const TimeLinePage: FC<TimeLinePageProps> = () => {
@@ -18,21 +19,41 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
   const [postData, setPostData] = useState([]);
   const [upPost, setUpPost] = useState();
 
+  console.log(postData);
+  
+
   useEffect(() => {
     dispatch(fetchAllPosts());
   }, [dispatch, userDetails]);
 
-  const userData: any = cusSelector(
+ /*  const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
+ */
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+useEffect(() => {
+  const serializedData = sessionStorage.getItem("user Data");
+
+  if (serializedData) {
+    const userDataFromStorage: UserData = JSON.parse(serializedData);
+    setUserData(userDataFromStorage);
+  }
+}, []);
+
+console.log(userData);
+console.log(userData?.token);
 
   useEffect(() => {
-    const leaderid = userData?.data?.leader_detail?.id;
+    const leaderid = userData?.id;
     const token = userData?.token;
 
     (async () => {
       try {
         const data = await fetchGetLeaderAddedPosts(leaderid, token);
+
+        console.log(data);
+        
 
         if (data?.length > 0) {
           setPostData(data);

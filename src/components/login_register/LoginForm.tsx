@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BiUser } from "react-icons/bi";
 import { LuLock } from "react-icons/lu";
 import { AiOutlineKey } from "react-icons/ai";
@@ -34,7 +34,35 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
   const dispatch = cusDispatch();
-  
+  const [ipAddress, setIpAddress] = useState("");
+
+  /* useEffect(() => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => {
+        setIpAddress(data.ip);
+      })
+      .catch((error) => {
+        console.error("Error fetching IP address:", error);
+      });
+  }, []); */
+
+  console.log(ipAddress);
+
+  // 192.168.171.12
+
+  /* useEffect(() => {
+    fetch("https://ipapi.co/json")
+      .then((response) => response.json())
+      .then((data) => {
+        setIpAddress(data?.ip);
+      })
+      .catch((error) => {
+        console.error("Error fetching IP address:", error);
+      });
+  }, []); */
+
+  console.log(ipAddress);
 
   const [showForgetPassForm, setShowForgetPassForm] = useState(false);
   const [err, setErr] = useState<ErrObj>({ isErr: false, errTxt: "" });
@@ -56,14 +84,16 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const formSubmitHandler = async (
     data: LoginFormFields | RegisterFormFields
   ) => {
-    
-
     setLoggingIn(true);
     setErr({ errTxt: "", isErr: false });
 
     const resBody = {
       email: data?.userId,
       password: data?.password,
+      fcm_token: {
+        deviceid: "123",
+        token: "",
+      },
     };
 
     try {
@@ -71,16 +101,31 @@ export const LoginForm: FC<LoginFormProps> = () => {
 
       const loginResponse = response as any; // Type assertion
       const { success, message, data } = loginResponse;
-      
+      console.log(loginResponse);
 
       if (success) {
         if (data?.leader_detail?.is_profile_complete) {
           // router.push("/user");
           if (data?.leader_detail?.request_status === "Approved") {
-           
-            
             router.push("/user");
             dispatch(authActions.setUserData(loginResponse));
+
+            const userData = {
+              id: loginResponse.data.leader_detail.id,
+              userId: loginResponse.data.user_detail.id,
+              name: loginResponse.data.leader_detail.username,
+              email: loginResponse.data.leader_detail.email,
+              mobile: loginResponse.data.leader_detail.mobile,
+              image: loginResponse.data.leader_detail.image,
+              personal_info: loginResponse.data.leader_detail.personal_info,
+              fcm_tokens: loginResponse.data.user_detail.fcm_tokens,
+              token: loginResponse.token,
+            };
+
+            const serializedData = JSON.stringify(userData);
+
+            // Store the serialized data in session storage
+            sessionStorage.setItem("user Data", serializedData);
           } else {
             setErr({
               errTxt: `Your Requast Is ${data?.leader_detail?.request_status} `,

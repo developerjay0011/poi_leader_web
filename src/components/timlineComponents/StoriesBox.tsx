@@ -2,7 +2,7 @@ import { RootState } from "@/redux_store";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { CommonBox } from "@/utils/CommonBox";
 import { PostType } from "@/utils/typesUtils";
-import { GenerateId, convertFileToBase64 } from "@/utils/utility";
+import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
 import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, FC, useEffect, useState } from "react";
@@ -33,9 +33,22 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   const [getStories, setGetStories] = useState([]);
   const [updateStory, setUpdateStory] = useState({});
   const id = GenerateId();
-  const userData: any = cusSelector(
+  /*  const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
+ */
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setStoryMedia([]);
@@ -65,7 +78,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
 
     const formData = new FormData();
 
-    formData.append("leaderid", userData?.data?.leader_detail?.id || "");
+    formData.append("leaderid", userData?.id || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", "open");
 
@@ -87,8 +100,8 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   };
 
   useEffect(() => {
-    const leaderid = userData?.data?.leader_detail?.id;
-    const token = userData?.token;
+    const leaderid = userData?.id || "";
+    const token = userData?.token || "";
 
     (async () => {
       try {
@@ -208,15 +221,22 @@ interface Media {
 const Story: FC<StoryProps> = ({ img, id, handleDelete }) => {
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
 
-  const userData: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
+  const [userData, setUserData] = useState<UserData | null>(null);
 
-  const leaderid = userData?.data?.leader_detail?.id;
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
 
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
+
+  const leaderid = userData?.id || "";
 
   const deletePostHandler = async (leaderid: string, id: string) => {
-
     handleDelete(leaderid, id);
     setShowMorePostOptions(false);
   };

@@ -3,9 +3,9 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { createNewPost } from "@/redux_store/posts/postAPI";
 import { CommonBox } from "@/utils/CommonBox";
 import { ErrObj, MediaPost, NewPostFields, PostType } from "@/utils/typesUtils";
-import { GenerateId, convertFileToBase64 } from "@/utils/utility";
+import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
 import Image from "next/image";
-import { FC, FormEvent, useState, ChangeEvent } from "react";
+import { FC, FormEvent, useState, ChangeEvent, useEffect } from "react";
 import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { FaCamera } from "react-icons/fa";
@@ -28,10 +28,22 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
   const { creatingPost } = cusSelector((st) => st.posts);
   const { userDetails } = cusSelector((st) => st.UI);
 
-  const userData: any = cusSelector(
+  /* const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
-  );
+  ); */
 
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
 
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -43,7 +55,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
     )
       return setPostErr({ errTxt: "post can't be empty", isErr: true });
 
-/*     dispatch(
+    /*     dispatch(
       createNewPost({
         media: media,
         type: "post",
@@ -55,15 +67,14 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
 
     const formData = new FormData();
 
-    formData.append("leaderid", userData?.data?.leader_detail?.id || "");
+    formData.append("leaderid", userData?.id || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", accessType);
 
-
     for (let i = 0; i < apimedia.length; i++) {
       const item: any = apimedia[i];
-      
-      formData.append("media",  item?.media );
+
+      formData.append("media", item?.media);
     }
 
     try {
@@ -125,12 +136,6 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
 
       setMedia((lst) => {
         const oldData = [...lst];
-
-        /* oldData.push({
-          type: uploadData.type.split("/")[0] as PostType,
-          media: uploadData as any,
-          id: GenerateId(),
-        }); */
         oldData.push({
           type: uploadData.type.split("/")[0] as PostType,
           media: convertedData as string,

@@ -2,9 +2,10 @@
 import { RootState } from "@/redux_store";
 import { cusSelector } from "@/redux_store/cusHooks";
 import Image from "next/image";
-import { FC, FormEvent, useState } from "react";
+import { FC, FormEvent, useEffect, useState } from "react";
 import { BiRightArrow } from "react-icons/bi";
 import { fetchCommentPost } from "../api/posts";
+import { UserData } from "@/utils/utility";
 
 interface NewCommentFormProps {
   CommentHandler: (comment: any) => void;
@@ -17,9 +18,26 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
   allData,
   setUpdateComment,
 }) => {
-  const userData: any = cusSelector(
+  /* const userData: any = cusSelector(
     (state: RootState) => state.auth.userDetails
-  );
+  ); */
+
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    const serializedData = sessionStorage.getItem("user Data");
+
+    if (serializedData) {
+      const userDataFromStorage: UserData = JSON.parse(serializedData);
+      setUserData(userDataFromStorage);
+    }
+  }, []);
+
+  console.log(userData);
+  console.log(allData?.id);
+  console.log(allData);
+  console.log(allData?.leaderid);
+  console.log(userData?.id);
 
   const { userDetails } = cusSelector((st) => st.UI);
   const [commentText, setCommentText] = useState("");
@@ -34,11 +52,11 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
     const commentBody = {
       postid: postid,
       post_leaderid: allData?.leaderid,
-      userid: userData?.data?.leader_detail?.id,
+      userid: userData?.id,
       mediaid: mediaId[0],
       usertype: "leader",
-      username: userData?.data?.user_detail?.name,
-      userimg: userData?.data?.user_detail?.image || "",
+      username: userData?.name,
+      userimg: userData?.image || "",
       comment_text: commentText,
     };
 

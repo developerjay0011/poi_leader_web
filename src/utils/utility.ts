@@ -4,6 +4,18 @@ import { store } from '@/redux_store'
 import { uiActions } from '@/redux_store/UI/uiSlice'
 import { AES, mode, pad, enc } from 'crypto-js'
 
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  mobile: string;
+  image: string;
+  personal_info: string;
+  fcm_tokens: string;
+  token: string;
+  userId: string;
+}
+
 // UTILITY FUNCTION to Connect to API
 export const ConnectToAPI = async (
   enpointORurl: string,
@@ -101,21 +113,21 @@ export const convertFileToBase64: (u: File) => Promise<string> = (
     }
   })
 
-  // Function to convert files in base64
+// Function to convert files in base64
 export const convertFileToBase64Emergin: (
   file: File
 ) => Promise<{ base64: string }> = (userInpFile: File) =>
-  new Promise((resolve) => {
-    const reader = new FileReader()
+    new Promise((resolve) => {
+      const reader = new FileReader()
 
-    reader.readAsDataURL(userInpFile)
+      reader.readAsDataURL(userInpFile)
 
-    reader.onload = () => {
-      resolve({
-        base64: reader.result as string,
-      })
-    }
-  })
+      reader.onload = () => {
+        resolve({
+          base64: reader.result as string,
+        })
+      }
+    })
 
 // FUNCTION TO CALCULATE CURRENT DATE
 export const calCurrentDate = (userInpDate: string) => {
