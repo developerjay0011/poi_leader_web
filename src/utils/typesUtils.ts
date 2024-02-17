@@ -36,7 +36,6 @@ export interface RegisterData {
   name: string;
   mobile: string;
   leadertype: string;
-
 }
 
 export interface ErrObj {

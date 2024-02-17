@@ -22,7 +22,7 @@ export const authSlice = createSlice({
       state.userDetails = action.payload;
     },
     clearUserData(state) {
-      state.userDetails = null; // Clear userDetails
+      state.userDetails = null;
     },
     logout(state) {
       state.userDetails = null;

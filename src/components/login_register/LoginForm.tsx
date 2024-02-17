@@ -17,11 +17,11 @@ import { LPInputField } from "@/utils/LPInputField";
 import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
-import { fetchLogin } from "../api/auth";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { TOKEN_KEY } from "@/constants/common";
 import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
+import { userLogin } from "@/redux_store/auth/authAPI";
 
 interface LoginFormProps {}
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -61,7 +61,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
     };
 
     try {
-      const response = await fetchLogin(resBody);
+      const response = await userLogin(resBody);
 
       const loginResponse = response as any;
       const { success, message, data } = loginResponse;
@@ -106,7 +106,6 @@ export const LoginForm: FC<LoginFormProps> = () => {
       setLoggingIn(false);
       setErr({ errTxt: error.message, isErr: true });
     }
-    setLoggingIn(false);
   };
 
   return (

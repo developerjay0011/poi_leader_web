@@ -1,16 +1,16 @@
-import { FC, useEffect, useReducer, useState } from "react";
+import { FC, useEffect, useReducer } from "react";
 import { useForm } from "react-hook-form";
 
 import { motion as m } from "framer-motion";
-import { ConnectToAPI } from "../../utils/utility";
 import { BasicLeaderInfo } from "./BasicLeaderInfo";
 import { PoliticalInfo } from "./PoliticalInfo";
 import { PersonalLeaderInfo } from "./PersonalLeaderInfo";
 import { ContactInfoField } from "./ContactInfoField";
-import { useSelector } from "react-redux";
 import { RootState } from "@/redux_store";
-import { cusSelector } from "@/redux_store/cusHooks";
-import { fetchAddEditLeader, fetchAddLeadersDropdown } from "../api/auth";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { getLeadersOptions } from "@/redux_store/common/commonAPI";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { submitLeaderForm } from "@/redux_store/APIFunctions";
 
 export interface LeaderFormFields {
   username: string;
@@ -209,16 +209,6 @@ interface LeaderFormAction {
     | ProfessionDetails[];
 }
 
-interface UserDetails {
-  data: {
-    user_detail: {
-      username: string;
-      email: string;
-      password: string;
-    };
-  };
-}
-
 const reducerFn: (
   state: LeaderFormState,
   action: LeaderFormAction
@@ -261,94 +251,13 @@ const reducerFn: (
   return init;
 };
 
-/* interface ModifiedData {s
-  id: string;
-  username: string;
-  email: string;
-  mobile: string;
-  image: string | null;
-  leadertype: string;
-  password: string;
-  request_status: string;
-  isactive: boolean;
-  is_profile_complete: boolean;
-  created_date: string;
-  modified_date: string | null;
-  personal_info: {
-    first_name: string;
-    middle_name: string;
-    last_name: string;
-    gender: string;
-    blood_group: string;
-    father_name: string;
-    mother_name: string;
-    dob: string; // This should be string or Date, depending on how you handle dates in your application
-    place_of_birth: string;
-    marital_status: string;
-    higher_education: string;
-    profession: string;
-    hobbies: string;
-    assets: string;
-  };
-  contact_info: {
-    permanent_address: string;
-    permanent_state_id: string;
-    permanent_district_id: string;
-    permanent_pincode: string;
-    is_same_as_permanent: boolean;
-    present_address: string;
-    present_state_id: string;
-    present_district_id: string;
-    present_pincode: string;
-    telephones: string;
-    mobile_nos: string;
-    fb_link: string;
-    insta_link: string;
-    twitter_link: string;
-  };
-  political_info: {
-    political_party_id: string;
-    designation_id: string;
-    parliament_house: string;
-    stateid: string;
-    assemblyid: string;
-    parliamentaryid: string;
-    is_hold_ministry: boolean;
-    ministries: {
-      ministryid: string;
-      ministrytype: string;
-    }[];
-    is_nominated: boolean;
-    joined_date: string; // This should be string or Date, depending on how you handle dates in your application
-    post_in_party: string;
-    achievements: string;
-    why_join_politics: string;
-    is_participated_in_elections: boolean;
-    is_prepare_for_elections: boolean;
-    done_any_political_activity: boolean;
-    does_family_supports: boolean;
-    people_in_team: string;
-    referencies: {
-      name: string;
-      age: number;
-      mobile: string;
-    }[];
-  };
-  general_setting: {
-    enable_follow_me: boolean;
-    show_agendas: boolean;
-    send_me_notifications: boolean;
-  };
-} */
-
 export const AddLeaderPage: FC = () => {
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
-  const [leaderOption, setLeaderOption] = useState<any>({});
   const [state, dispatchFn] = useReducer(reducerFn, init);
-
-
+  const dispatch = cusDispatch();
+  const { leaderOptions } = cusSelector((state) => state.common)
 
   const {
     register,
@@ -451,24 +360,18 @@ export const AddLeaderPage: FC = () => {
     };
 
     try {
-      const copalateProfile = await fetchAddEditLeader(bodyData);
-      
-      console.log(copalateProfile, "copalateProfile");
+      await submitLeaderForm(bodyData);
     } catch (error) {
       console.log(error);
-      
     }
-
-    
-
   };
 
   useEffect(() => {
     (async () => {
-      const LeadersDropdown = await fetchAddLeadersDropdown();
-      setLeaderOption(LeadersDropdown);
+      const LeadersDropdown = await getLeadersOptions();
+      dispatch(commonActions.setLeaderOptions(LeadersDropdown))
     })();
-  }, []);
+  }, [dispatch]);
 
   return (
     <m.section
@@ -479,104 +382,93 @@ export const AddLeaderPage: FC = () => {
       className="w-[95%] m-auto relative my-7 border bg-white border-gray-300 shadow-md rounded-md py-8 px-7 max-lg:w-[98%] max-lg:my-5"
     >
       <h1 className="text-4xl font-bold capitalize">add new leader</h1>
-      {/* {state.loading && (
-        <div className="flex flex-col gap-3 items-center py-10">
-          <span className="formLoader" />
-          <p className="text-cyan-700 animate-pulse">Loading Assets...</p>
+      <form
+        className="mt-10 flex flex-col gap-10"
+        noValidate
+        onSubmit={handleSubmit(formSubmitHandler)}
+      >
+        {/* BASIC INFO */}
+        <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
+          <h2 className="text-3xl font-semibold">Basic Information</h2>
+
+          <section className="grid grid-cols-3 gap-x-4 gap-y-5">
+            <BasicLeaderInfo
+              register={register}
+              errors={errors}
+              watch={watch}
+              setValue={setValue}
+            />
+          </section>
         </div>
-      )} */}
 
-      {/* {!state.loading && state.assemblyConstituency.length > 0 && ( */}
-      {true && (
-        <form
-          className="mt-10 flex flex-col gap-10"
-          noValidate
-          onSubmit={handleSubmit(formSubmitHandler)}
-        >
-          {/* BASIC INFO */}
-          <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
-            <h2 className="text-3xl font-semibold">Basic Information</h2>
+        {/* Political Info */}
+        <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
+          <h2 className="text-3xl font-semibold">Political Information</h2>
 
-            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
-              <BasicLeaderInfo
-                register={register}
-                errors={errors}
-                watch={watch}
-                setValue={setValue}
-              />
-            </section>
-          </div>
+          <section className="grid grid-cols-3 gap-x-4 gap-y-5">
+            <PoliticalInfo
+              register={register}
+              errors={errors}
+              watch={watch}
+              setValue={setValue}
+              control={control}
+              assemblyConstituency={leaderOptions.assemblies}
+              parliamentaryConstituency={leaderOptions.parliamentries}
+              states={leaderOptions.states}
+              designations={leaderOptions?.designations}
+              parties={leaderOptions?.politicalparty}
+            />
+          </section>
+        </div>
 
-          {/* Political Info */}
-          <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
-            <h2 className="text-3xl font-semibold">Political Information</h2>
+        {/* Personal Info */}
+        <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
+          <h2 className="text-3xl font-semibold">Personal Information</h2>
 
-            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
-              <PoliticalInfo
-                register={register}
-                errors={errors}
-                watch={watch}
-                setValue={setValue}
-                control={control}
-                assemblyConstituency={leaderOption.assemblies}
-                parliamentaryConstituency={leaderOption.parliamentries}
-                states={leaderOption.states}
-                designations={leaderOption?.designations}
-                parties={leaderOption?.politicalparty}
-              />
-            </section>
-          </div>
+          <section className="grid grid-cols-3 gap-x-4 gap-y-5">
+            <PersonalLeaderInfo
+              register={register}
+              errors={errors}
+              watch={watch}
+              setValue={setValue}
+              professions={state.professions}
+            />
+          </section>
+        </div>
 
-          {/* Personal Info */}
-          <div className="border border-zinc-200 px-6 py-7 rounded-md flex flex-col gap-6">
-            <h2 className="text-3xl font-semibold">Personal Information</h2>
+        {/* Contact Info */}
+        <div className="border border-zinc-200 px-6 py-7 rounded-md">
+          <h2 className="text-3xl font-semibold mb-7">Contact Information</h2>
 
-            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
-              <PersonalLeaderInfo
-                register={register}
-                errors={errors}
-                watch={watch}
-                setValue={setValue}
-                professions={state.professions}
-              />
-            </section>
-          </div>
+          <section className="grid grid-cols-3 gap-x-4 gap-y-5">
+            <ContactInfoField
+              register={register}
+              errors={errors}
+              watch={watch}
+              setValue={setValue}
+              districts={leaderOptions.districts}
+              states={leaderOptions.states}
+            />
+          </section>
+        </div>
 
-          {/* Contact Info */}
-          <div className="border border-zinc-200 px-6 py-7 rounded-md">
-            <h2 className="text-3xl font-semibold mb-7">Contact Information</h2>
-
-            <section className="grid grid-cols-3 gap-x-4 gap-y-5">
-              <ContactInfoField
-                register={register}
-                errors={errors}
-                watch={watch}
-                setValue={setValue}
-                districts={leaderOption.states}
-                states={leaderOption.districts}
-                pincodes={state.pincodes}
-              />
-            </section>
-          </div>
-
-          <div className="flex gap-2 justify-end">
-            <button
-              // onClick={handleSubmit(formSubmitHandler)}
-              type="submit"
-              className="px-5 py-1 rounded-full bg-cyan-500 text-cyan-50"
-            >
-              Submit
-            </button>
-            <button
-              // onClick={() => navigate('/admin/user-management/manage-leaders')} // By passing -1 in navigate function this will redirect to the previous route
-              type="button"
-              className="px-5 py-1 rounded-full text-cyan-500 bg-cyan-100 transition-all hover:bg-cyan-500 hover:text-cyan-50"
-            >
-              Close
-            </button>
-          </div>
-        </form>
-      )}
+        <div className="flex gap-2 justify-end">
+          <button
+            // onClick={handleSubmit(formSubmitHandler)}
+            type="submit"
+            className="px-5 py-1 rounded-full bg-cyan-500 text-cyan-50"
+          >
+            Submit
+          </button>
+          <button
+            // onClick={() => navigate('/admin/user-management/manage-leaders')} // By passing -1 in navigate function this will redirect to the previous route
+            type="button"
+            className="px-5 py-1 rounded-full text-cyan-500 bg-cyan-100 transition-all hover:bg-cyan-500 hover:text-cyan-50"
+          >
+            Close
+          </button>
+        </div>
+      </form>
     </m.section>
   );
 };

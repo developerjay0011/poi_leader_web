@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { FC, useState } from "react";
 import Link from "next/link";
@@ -13,9 +12,9 @@ import { MdLock, MdMail, MdPerson, MdPhone } from "react-icons/md";
 import { USER_TYPE } from "@/utils/utility";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { fetchRegister, fetchSendOtp, fetchVerifyOtp } from "../api/auth";
 import { AuthRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
+import { registerUser, sendOtp, verifyOtp } from "@/redux_store/auth/authAPI";
 
 let interval: NodeJS.Timer;
 let OTP_TIME = 120;
@@ -73,12 +72,12 @@ export const RegisterForm: FC = () => {
     setResendOTPTime(OTP_TIME); // Reset OTP time
 
     try {
-      const VerifyOtp = {
+      const payload = {
         mobile: userData.phoneNo,
         otp: otp,
       };
 
-      const res = await fetchVerifyOtp(VerifyOtp);
+      const res = await verifyOtp(payload);
       if (res?.success) {
         // stopping verifying and registering
         setVerifying(false);
@@ -116,15 +115,15 @@ export const RegisterForm: FC = () => {
     };
 
     try {
-      const response = await fetchRegister(resBody);
+      const response = await registerUser(resBody);
 
       if (response?.success) {
         const otpBody = {
           mobile: data?.phoneNo as "string",
         };
-        const sendOTP = await fetchSendOtp(otpBody);
+        const sendOTPRes = await sendOtp(otpBody);
 
-        if (sendOTP?.success) {
+        if (sendOTPRes?.success) {
           // Starts a OTP resend Timer
           interval = setInterval(() => {
             if (resendOTPTime > 0)

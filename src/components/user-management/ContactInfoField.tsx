@@ -27,7 +27,6 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
   watch,
   setValue,
   districts,
-  pincodes,
   states,
 }) => {
   const bothAddressIsSame = watch('bothAddressIsSame')
@@ -99,7 +98,7 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
         selectField={{
           title: 'Select District',
           options: districts
-            // .filter((el) => (pState ? el.stateid === pState : el))
+            .filter((el) => (pState && el.stateid === pState))
             ?.map((el) => ({ id: el.id, value: el.district })),
         }}
       />
@@ -108,13 +107,9 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
         register={register}
         title='Pincode'
         id='pPincode'
-        type='select'
-        selectField={{
-          title: 'Select Pincode',
-          options:
-            pincodes
-              .find((el) => el.districtId === pDistrict)
-              ?.pincodes.map((el) => ({ id: el, value: el })) || [],
+        type='text'
+        validations={{
+          required: 'Pincode is required',
         }}
       />
 
@@ -208,7 +203,7 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
             selectField={{
               title: 'Select District',
               options: districts
-                // .filter((el) => (cState ? el.stateid === cState : el))
+                .filter((el) => (cState && el.stateid === cState))
                 ?.map((el) => ({ id: el.id, value: el.district })),
             }}
           />
@@ -217,13 +212,9 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
             register={register}
             title='Pincode'
             id='cPincode'
-            type='select'
-            selectField={{
-              title: 'Select Pincode',
-              options:
-                pincodes
-                  .find((el) => el.districtId === cDistrict)
-                  ?.pincodes.map((el) => ({ id: el, value: el })) || [],
+            type='text'
+            validations={{
+              required: 'Pincode is required',
             }}
           />
         </>
