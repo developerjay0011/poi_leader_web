@@ -1,13 +1,30 @@
 'use client'
-import { ReactNode, FC } from 'react'
+import { ReactNode, FC, useEffect } from 'react'
 import Link from 'next/link'
 import { AdminProfileNavbar } from '@/components/leader/AdminProfileNavbar'
-import { cusSelector } from '@/redux_store/cusHooks'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { MdVerified } from 'react-icons/md'
 import CustomImage from '@/utils/CustomImage'
+import { leaderActions } from '@/redux_store/leader/leaderSlice'
+import { getFollowers, getProfile } from '@/redux_store/leader/leaderAPI'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { userDetails } = cusSelector((st) => st.UI)
+  const { leader: { leaderProfile }, auth: { userDetails } } = cusSelector((state) => state);
+  const dispatch = cusDispatch();
+
+  useEffect(() => {
+    (async () => {
+      if(userDetails?.id) {
+        // Get Leader Profiles
+        const res = await getProfile(userDetails?.id);
+        dispatch(leaderActions.setLeaderProfile(res));
+        
+        // Get Followers of Leader
+        const followersRes = await getFollowers(userDetails?.id);
+        dispatch(leaderActions.setFollowers(followersRes));
+      }
+    })()
+  }, [dispatch, userDetails])
 
   return (
     <>
@@ -17,7 +34,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
             {/* USER PIC and BG pic*/}
             <figure className='relative rounded-tr-lg rounded-tl-lg overflow-hidden'>
               <CustomImage
-                src={userDetails?.backgroundPic as string}
+                src={leaderProfile?.bgimage as string}
                 alt='bg image'
                 width={1000}
                 height={1000}
@@ -25,7 +42,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
               />
 
               <CustomImage
-                src={userDetails?.displayPic as string}
+                src={leaderProfile?.image as string}
                 alt='display image'
                 width={1000}
                 height={1000}
@@ -37,7 +54,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
               <Link href={'/leader/profile'}>
                 <h5 className='flex flex-col items-center text-xl font-[600] capitalize'>
                   <span className='flex items-center gap-2'>
-                    R.K Singh{' '}
+                    {leaderProfile?.username}
                     <MdVerified className='text-2xl text-orange-500' />
                   </span>
                   <span className='text-[14px] font-normal max[1100px]:text-center'>

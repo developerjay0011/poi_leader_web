@@ -4,11 +4,13 @@ import { postSlice } from './posts/postSlice'
 import { agendaSlice } from './agenda/agendaSlice'
 import { authSlice } from './auth/authSlice'
 import { commonSlice } from './common/commonSlice'
+import { leaderSlice } from './leader/leaderSlice'
 
 export const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     common: commonSlice.reducer,
+    leader: leaderSlice.reducer,
     UI: uiSlice.reducer,
     posts: postSlice.reducer,
     agenda: agendaSlice.reducer,

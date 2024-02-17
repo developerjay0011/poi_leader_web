@@ -2,10 +2,11 @@
 import { useState } from 'react'
 import { PeoplesComponentWrapper } from '@/utils/PeoplesComponentWrapper'
 import { user2Img } from '@/utils/utility'
-import { BsThreeDots } from 'react-icons/bs'
 import { Follower } from '@/components/peoples/Follower'
+import { cusSelector } from '@/redux_store/cusHooks'
 
 const AdminFollowersPage = () => {
+  const { followers } = cusSelector((state) => state.leader);
   const [searchString, setSearchString] = useState('')
 
   const changeSearchString = (val: string) => setSearchString(val)
@@ -15,7 +16,12 @@ const AdminFollowersPage = () => {
       searchStr={searchString}
       setSearchStr={changeSearchString}>
       <ul className='grid grid-cols-4 gap-2 mb-3'>
-        <Follower displayImg={user2Img} />
+        {
+          followers.length && 
+          followers.map((item: any, index: number) => (
+                <Follower key={index} name={item.name} displayImg={item.image} />
+              ))
+            }
       </ul>
     </PeoplesComponentWrapper>
   )

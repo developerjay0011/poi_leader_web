@@ -3,7 +3,8 @@ export const ProtectedRoutes = {
   userManagement: "/user-management",
   userProfile: "/user/profile",
   editUserProfile: "/user/profile/settings/personal-information",
-  accountSetting: "/user/profile/settings/general"
+  accountSetting: "/user/profile/settings/general",
+  followers: "/user/profile/followers"
 };
 
 export const AuthRoutes = {
@@ -24,4 +25,6 @@ export const APIRoutes = {
   register: `${API_Prefix}/Leader/Registration`,
   upsertLeaders: `${API_Prefix}/Leader/AddEditLeader`,
   getAccessTabs: `${API_Prefix}/Leader/GetAccessTabs/{{userId}}`,
+  getProfile: `${API_Prefix}/Leader/GetSingleLeader/{{userId}}`,
+  getFollowers: `${API_Prefix}/Leader/FollowerList/{{userId}}`,
 }
