@@ -1,6 +1,5 @@
 import { CommonBox } from "@/utils/CommonBox";
 import { GenerateId, UserData } from "@/utils/utility";
-import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { BsPlusCircle, BsThreeDots } from "react-icons/bs";
@@ -11,6 +10,7 @@ import {
 } from "../api/stories";
 import { PostOptions } from "../posts/PostOptions";
 import { cusSelector } from "@/redux_store/cusHooks";
+import CustomImage from "@/utils/CustomImage";
 
 interface StoriesBoxProps {}
 
@@ -123,7 +123,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
                 <BsPlusCircle className="absolute top-3 left-3 z-10 text-white text-[38px] shadow" />
 
                 <figure className="absolute top-0 left-0 w-full h-full object-cover object-center story_img">
-                  <Image
+                  <CustomImage
                     src={
                       storyMedia?.length > 0
                         ? URL.createObjectURL(storyMedia[0]?.media)
@@ -199,7 +199,7 @@ const Story: FC<StoryProps> = ({ img, id, handleDelete }) => {
       <li className="w-44 h-[300px]  aspect-[9/16] rounded-lg relative ">
         {/* User Img */}
 
-        <Image
+        <CustomImage
           src={img}
           width={1000}
           height={1000}
@@ -209,7 +209,7 @@ const Story: FC<StoryProps> = ({ img, id, handleDelete }) => {
 
         {/* Story Image */}
         <figure className="absolute top-0 left-0 w-full h-full object-cover object-center story_img">
-          <Image
+          <CustomImage
             src={img}
             alt=""
             width={1000}

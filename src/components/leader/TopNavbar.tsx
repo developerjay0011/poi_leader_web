@@ -2,12 +2,11 @@
 import { FC, useEffect, useState } from "react";
 import POILogo from "@/assets/poi_logo_1.png";
 import MODI from "@/assets/politicians-images/narendar_modi.jpg";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import { FaSearch, FaBell, FaHamburger } from "react-icons/fa";
 import { useRouter, usePathname } from "next/navigation";
 import { AdminControls } from "./AdminControls";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { uiActions } from "@/redux_store/UI/uiSlice";
 import { BriefNotifications } from "./BriefNotifications";
 import Link from "next/link";
 import { BsExclamationCircleFill, BsHouseFill } from "react-icons/bs";
@@ -15,7 +14,8 @@ import { RiUserAddFill } from "react-icons/ri";
 import { AnimatePresence, motion as m } from "framer-motion";
 import { MobileLeftNavbar } from "./MobileLeftNavbar";
 import { MdSpaceDashboard } from "react-icons/md";
-import { UserData } from "@/utils/utility";
+import { RootState } from "@/redux_store";
+import CustomImage from "@/utils/CustomImage";
 
 export const TopNavbar: FC = () => {
   const router = useRouter();
@@ -23,22 +23,10 @@ export const TopNavbar: FC = () => {
   const dispatch = cusDispatch();
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { isLoggedIn, userType, userDetails } = cusSelector((st) => st.UI);
+  const { userDetails } = cusSelector((state: RootState) => state.auth);
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showWarningMsg, setShowWarningMsg] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
 
   useEffect(() => {
     document.addEventListener("click", (e) => {
@@ -63,7 +51,7 @@ export const TopNavbar: FC = () => {
     <>
       <nav className="py-3 px-8 bg-sky-950 text-orange-50 flex items-center gap-5 max-[1000px]:hidden">
         {/* LOGO */}
-        <Image
+        <CustomImage
           src={POILogo}
           alt="poi logo"
           className="h-12 w-auto"
@@ -159,12 +147,12 @@ export const TopNavbar: FC = () => {
             )}
           </AnimatePresence>
 
-          <p className="capitalize">{userData?.name || ""}</p>
+          <p className="capitalize">{""}</p>
           <button
             id="userDisplayPic"
             onClick={() => setShowAdminMenu((lst) => !lst)}
           >
-            <Image
+            <CustomImage
               src={userDetails?.displayPic as string}
               alt="user pic"
               className="w-14 aspect-square object-cover object-center rounded-full"
@@ -189,7 +177,7 @@ export const TopNavbar: FC = () => {
             onClick={() => setShowMobileNav(true)}
           />
 
-          <Image
+          <CustomImage
             src={POILogo}
             alt="poi logo"
             className="h-12 w-auto"
@@ -197,7 +185,7 @@ export const TopNavbar: FC = () => {
           />
 
           <button id="userMobileDisplayPic">
-            <Image
+            <CustomImage
               src={userDetails?.displayPic as string}
               alt="user pic"
               className="w-14 aspect-square object-cover object-center rounded-full"
@@ -244,7 +232,7 @@ const BriefUserInfo: FC<{
     <>
       <Link href={"#"}>
         <li className="flex items-center p-4 last_noti gap-2 hover:bg-gray-100">
-          <Image
+          <CustomImage
             src={userPic}
             alt="user dp"
             width={1000}

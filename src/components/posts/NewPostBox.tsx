@@ -1,17 +1,15 @@
 "use client";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { createNewPost } from "@/redux_store/posts/postAPI";
+import { cusSelector } from "@/redux_store/cusHooks";
 import { CommonBox } from "@/utils/CommonBox";
-import { ErrObj, MediaPost, NewPostFields, PostType } from "@/utils/typesUtils";
-import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
-import Image from "next/image";
+import { ErrObj,  NewPostFields, PostType } from "@/utils/typesUtils";
+import { GenerateId, convertFileToBase64 } from "@/utils/utility";
 import { FC, FormEvent, useState, ChangeEvent, useEffect } from "react";
 import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { FaCamera } from "react-icons/fa";
 import { fetchAddPost } from "../api/posts";
-import { RootState } from "@/redux_store";
 import { PostTypes } from "./PostTypes";
+import CustomImage from "@/utils/CustomImage";
 
 interface NewPostBoxProps {
   updatePost: any;
@@ -142,7 +140,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
       <CommonBox title="create post">
         <form className="flex flex-col gap-4 py-4" onSubmit={formSubmitHandler}>
           <div className="flex items-start gap-3">
-            <Image
+            <CustomImage
               src={userDetails?.displayPic as string}
               alt="user image"
               width={1000}
@@ -211,7 +209,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
                 {media.map((el) => (
                   <div className="w-20 aspect-square relative" key={el.id}>
                     {el.type === "image" && (
-                      <Image
+                      <CustomImage
                         src={el.media}
                         width={1000}
                         height={1000}

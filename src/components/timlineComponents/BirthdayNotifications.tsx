@@ -6,6 +6,7 @@ import { BiSolidLeftArrow, BiSolidRightArrow } from 'react-icons/bi'
 import { GenerateId, calCurrentDate } from '@/utils/utility'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { MdVerified } from 'react-icons/md'
+import CustomImage from '@/utils/CustomImage'
 
 const birthdays = [
   {
@@ -69,7 +70,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
   return (
     <section className='border rounded-md bg-white text-sky-950 overflow-hidden'>
       <div className='flex gap-3 bg-violet-500 px-4 py-2 items-center text-violet-50'>
-        <Image
+        <CustomImage
           src={birthday.img}
           alt='display pic'
           width={1000}
@@ -89,7 +90,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
       </div>
 
       <ul className='py-4 px-10 relative'>
-        <Image
+        <CustomImage
           src={Sparkles}
           alt='background'
           className='absolute top-0 left-0 object-cover object-center w-full h-full'
@@ -116,7 +117,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
           className={`flex flex-col items-center transition-all relative z-10`}>
           {/*  */}
 
-          <Image
+          <CustomImage
             src={'https://wpkixx.com/html/pitnik/images/resources/dob-cake.gif'}
             alt='birthday gif'
             unoptimized={true}

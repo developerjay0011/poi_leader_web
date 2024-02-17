@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import CustomImage from '@/utils/CustomImage'
 import { FC } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
 
@@ -12,7 +12,7 @@ export const Follower: FC<FollowerProps> = ({ displayImg }) => {
       <button className='absolute top-2 right-3 text-xl'>
         <BsThreeDots />
       </button>
-      <Image
+      <CustomImage
         src={displayImg}
         alt='user display pic'
         width={1000}

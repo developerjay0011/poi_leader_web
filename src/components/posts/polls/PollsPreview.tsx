@@ -1,10 +1,10 @@
 import { cusSelector } from '@/redux_store/cusHooks'
-import Image from 'next/image'
 import { FC } from 'react'
 import { PollOption } from './PollOption'
 import { motion as m } from 'framer-motion'
 import { NewPollsFormFields } from '@/components/leader/forms/ManagePollsForm'
 import { dateConverter } from '@/utils/utility'
+import CustomImage from '@/utils/CustomImage'
 
 interface PollsPreviewProps {
   pollDetails: NewPollsFormFields
@@ -32,7 +32,7 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
           }`}>
           <section className='border shadow-sm rounded-md px-5 py-2 bg-white w-1/2 max-[650px]:w-[80%] self-center'>
             <div className='flex items-center gap-3 py-4 text-sky-950 border-b'>
-              <Image
+              <CustomImage
                 src={userDetails?.displayPic as string}
                 alt='user pic'
                 className='w-12 aspect-square object-cover object-center rounded-full'

@@ -1,7 +1,6 @@
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { Comment, Like, NestedComment } from "@/utils/typesUtils";
 import { UserData, dateConverter } from "@/utils/utility";
-import Image from "next/image";
 import { FC, FormEvent, useEffect, useState } from "react";
 import { BsFillHeartFill, BsThreeDots } from "react-icons/bs";
 import { PostCommentOptions } from "./PostCommentOptions";
@@ -13,8 +12,8 @@ import {
 import { RiReplyFill } from "react-icons/ri";
 import { motion as m } from "framer-motion";
 import { BiPlusCircle } from "react-icons/bi";
-import { RootState } from "@/redux_store";
 import { fetchReplyToComment } from "../api/posts";
+import CustomImage from "@/utils/CustomImage";
 
 interface SingleCommentProps extends Comment {
   postId: string;
@@ -114,7 +113,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
   return (
     <>
       <li className="flex items-start gap-5 border-b pb-3 max-[400px]:gap-3">
-        <Image
+        <CustomImage
           alt="user pic"
           src={allData?.userimg || ""}
           width={1000}
@@ -224,7 +223,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
                 className="flex items-end bg-white gap-3 pt-3"
                 onSubmit={addNewNestedComment}
               >
-                <Image
+                <CustomImage
                   src={userImg}
                   alt="user dp"
                   width={1000}
@@ -303,7 +302,7 @@ const NestedCommentCmp: FC<NestedCommentCmpProps> = ({
       exit={{ opacity: 0 }}
       className="flex items-start gap-5 last_noti p-2"
     >
-      <Image
+      <CustomImage
         alt="user pic"
         src={userImg}
         width={1000}

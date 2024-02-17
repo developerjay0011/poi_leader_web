@@ -15,7 +15,7 @@ import { BsImageFill } from "react-icons/bs";
 import { FaCamera } from "react-icons/fa6";
 import { NewPostFields, PostType } from "@/utils/typesUtils";
 import { BiX } from "react-icons/bi";
-import Image from "next/image";
+import CustomImage from "@/utils/CustomImage";
 
 const AdminProfileGalleryPage = () => {
   const [searchStr, setSearchStr] = useState("");
@@ -259,7 +259,7 @@ const AdminProfileGalleryPage = () => {
                             key={el.id}
                           >
                             {el.type === "image" && (
-                              <Image
+                              <CustomImage
                                 src={el.media}
                                 width={1000}
                                 height={1000}

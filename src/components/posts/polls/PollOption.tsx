@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import CustomImage from '@/utils/CustomImage'
 import { FC } from 'react'
 
 export const PollOption: FC<{
@@ -21,7 +21,7 @@ export const PollOption: FC<{
           !pollImg ? 'py-3 px-5 capitalize' : ''
         } rounded-md overflow-hidden flex items-center gap-2`}>
         {pollImg && (
-          <Image
+          <CustomImage
             alt='poll Img'
             height={1000}
             width={1000}

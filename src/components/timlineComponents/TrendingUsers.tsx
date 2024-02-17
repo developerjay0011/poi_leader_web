@@ -2,7 +2,7 @@
 
 import { CommonBox } from "@/utils/CommonBox";
 import { UserData, user2Img } from "@/utils/utility";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
 import ARVIND from "@/assets/politicians-images/ARVIND_KEJRIWAL.jpg";
 import MODI from "@/assets/politicians-images/narendar_modi.jpg";
@@ -13,6 +13,7 @@ import {
 } from "../api/followLeader";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { RootState } from "@/redux_store";
+import CustomImage from "@/utils/CustomImage";
 interface Leader {
   image: string;
   designation: string;
@@ -39,8 +40,6 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
       setUserData(userDataFromStorage);
     }
   }, []);
-
-  console.log(userData);
 
   useEffect(() => {
     if (userData && Object.keys(userData).length > 0) {
@@ -71,20 +70,6 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
 
         <div className="overflow-y-scroll flex-1 main_scrollbar">
           <ul className="flex flex-col">
-            {/* <TrendingUser
-              userImg={MODI}
-              designation="prime minister"
-              username="narendar modi"
-              id=""
-              following={following}
-            />
-            <TrendingUser
-              userImg={RAHUL}
-              designation=" chairperson of the Indian Youth Congress"
-              username="rahul gandhi"
-              id=""
-              following={following}
-            /> */}
             {trendingLeaders?.length > 0 &&
               trendingLeaders?.map((item: Leader, index: number) => {
                 return (
@@ -134,8 +119,6 @@ const TrendingUser: FC<TrendingUserProps> = ({
     }
   }, []);
 
-  console.log(userData);
-
   const handleFollower = async (id: string) => {
     const token = userData?.token;
     const postBody = {
@@ -152,7 +135,7 @@ const TrendingUser: FC<TrendingUserProps> = ({
 
   return (
     <li className="flex gap-3 py-3 px-3 last_noti items-center">
-      <Image
+      <CustomImage
         src={userImg}
         alt="trending user"
         width={1000}

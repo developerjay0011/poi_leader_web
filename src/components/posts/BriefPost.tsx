@@ -1,11 +1,11 @@
 import { UserData, userImg } from "@/utils/utility";
-import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
 import { RiCheckboxMultipleBlankFill } from "react-icons/ri";
 import { PostOptions } from "./PostOptions";
 import { DeleteGalleryMedia } from "../api/gallery";
+import CustomImage from "@/utils/CustomImage";
 
 interface BriefPostProps {
   userMedia: any;
@@ -25,11 +25,7 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
     }
   }, []);
 
-  console.log(userData);
-
   const deletePostHandler = async (id: string) => {
-    console.log(id);
-
     try {
       const DeleteGalleryIds = {
         leaderid: userData?.id || "",
@@ -88,7 +84,7 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
             </p>
           </div>
         </div>
-        <Image
+        <CustomImage
           width={1000}
           height={1000}
           className="w-full h-full object-cover object-center"

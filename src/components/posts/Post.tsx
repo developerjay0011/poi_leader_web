@@ -2,7 +2,6 @@
 
 import { Comment, Like, MediaPost, PostDetails } from "@/utils/typesUtils";
 import { dateConverter } from "@/utils/utility";
-import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import { BiGlobe, BiShareAlt, BiSolidMessageAltDetail } from "react-icons/bi";
 import { BsFillHeartFill, BsThreeDots } from "react-icons/bs";
@@ -25,6 +24,7 @@ import {
   fetchLikePost,
   fetchUnlikePostorStory,
 } from "../api/posts";
+import CustomImage from "@/utils/CustomImage";
 
 interface PostProps extends PostDetails {}
 
@@ -179,7 +179,7 @@ export const Post: FC<PostProps> = ({
       <section className="border rounded-md bg-white px-5">
         {/* User details and Date */}
         <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
-          <Image
+          <CustomImage
             src={userDetails?.displayPic as string}
             alt="user pic"
             className="w-12 aspect-square object-cover object-center rounded-full"
@@ -225,7 +225,7 @@ export const Post: FC<PostProps> = ({
                   {(media as MediaPost[]).map((el: any, index) => {
                     const mediaType = types[index]; // Assuming types correspond to each media item
                     return mediaType === "image/jpeg" ? (
-                      <Image
+                      <CustomImage
                         key={index}
                         src={el}
                         width={1000}
@@ -249,7 +249,7 @@ export const Post: FC<PostProps> = ({
                   {(media as MediaPost[]).map((el: any, index) => {
                     const mediaType = types[index]; // Assuming types correspond to each media item
                     return mediaType === "image/jpeg" ? (
-                      <Image
+                      <CustomImage
                         key={index}
                         src={el}
                         width={1000}
@@ -273,7 +273,7 @@ export const Post: FC<PostProps> = ({
                   {(media as MediaPost[]).map((el: any, index) => {
                     const mediaType = types[index]; // Assuming types correspond to each media item
                     return mediaType === "image/jpeg" ? (
-                      <Image
+                      <CustomImage
                         key={index}
                         src={el}
                         width={1000}

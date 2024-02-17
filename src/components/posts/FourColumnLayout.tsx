@@ -1,8 +1,8 @@
-import { Like, MediaPost } from '@/utils/typesUtils'
+import { MediaPost } from '@/utils/typesUtils'
 import { AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import { FC } from 'react'
 import { FullPost } from './FullPost'
+import CustomImage from '@/utils/CustomImage'
 
 export const FourColumnImgLayout: FC<{
   onClick: () => void
@@ -20,7 +20,7 @@ export const FourColumnImgLayout: FC<{
         {media.map((el) => {
           if (el.type === 'image')
             return (
-              <Image
+              <CustomImage
                 key={el.id}
                 src={el.media}
                 width={1000}

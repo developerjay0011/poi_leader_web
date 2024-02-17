@@ -1,15 +1,11 @@
 "use client";
-
-import { CommonBox } from "@/utils/CommonBox";
-import { UserData, user2Img } from "@/utils/utility";
-import Image, { StaticImageData } from "next/image";
+import { UserData } from "@/utils/utility";
+import { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
-import ARVIND from "@/assets/politicians-images/ARVIND_KEJRIWAL.jpg";
-import MODI from "@/assets/politicians-images/narendar_modi.jpg";
-import RAHUL from "@/assets/politicians-images/Rahul-Gandhi.jpg";
 import { fetchFollowingList, fetchUnFollowLeader } from "../api/followLeader";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { RootState } from "@/redux_store";
+import CustomImage from "@/utils/CustomImage";
 interface Leader {
   image: string;
   designation: string;
@@ -24,11 +20,9 @@ interface TrendingUsersProps {
 export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
   const [trendingLeaders, setTrendingLeaders] = useState([]);
   const [unfollow, setUnfollow] = useState({});
-  const userDetails: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
+  const userDetails = cusSelector(
+    (state: RootState) => state.auth
   );
-
-  console.log(trendingLeaders);
 
   const [userData, setUserData] = useState<UserData | null>(null);
 
@@ -119,8 +113,6 @@ const TrendingUser: FC<TrendingUserProps> = ({
     }
   }, []);
 
-  console.log(userData);
-
   const handleFollowers = async (id: string) => {
     const token = userData?.token;
     const postBody = {
@@ -138,7 +130,7 @@ const TrendingUser: FC<TrendingUserProps> = ({
 
   return (
     <li className="flex gap-3 py-3 px-3 last_noti items-center">
-      <Image
+      <CustomImage
         src={userImg}
         alt="trending user"
         width={1000}

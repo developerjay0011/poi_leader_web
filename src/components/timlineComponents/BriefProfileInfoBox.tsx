@@ -2,7 +2,6 @@
 import { FC, useState } from 'react'
 import { CommonBox } from '@/utils/CommonBox'
 import { CountBubble } from '@/utils/CountBubble'
-import Image from 'next/image'
 import {
   FaMessage,
   FaBell,
@@ -15,6 +14,7 @@ import {
 import Link from 'next/link'
 import { FaEdit } from 'react-icons/fa'
 import { cusSelector } from '@/redux_store/cusHooks'
+import CustomImage from '@/utils/CustomImage'
 
 interface BriefProfileInfoBoxProps {}
 
@@ -30,7 +30,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
       <CommonBox title='profile' width='sticky top-0 right-0'>
         {/* Profile info and pic */}
         <section className='flex items-center my-5 gap-3 text-sky-950 max-[1400px]:gap-2'>
-          <Image
+          <CustomImage
             src={userDetails?.displayPic as string}
             alt='profile pic'
             width={100}

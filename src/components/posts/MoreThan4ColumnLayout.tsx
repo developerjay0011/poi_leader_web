@@ -1,9 +1,8 @@
-import { Like, MediaPost } from '@/utils/typesUtils'
+import { MediaPost } from '@/utils/typesUtils'
 import { AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import { FC } from 'react'
 import { FullPost } from './FullPost'
-import { VoidExpression } from 'typescript'
+import CustomImage from '@/utils/CustomImage'
 
 export const MoreThan4ColumnImgLayout: FC<{
   onClick: () => void
@@ -22,7 +21,7 @@ export const MoreThan4ColumnImgLayout: FC<{
           if (i < 3) {
             if (el.type === 'image')
               return (
-                <Image
+                <CustomImage
                   key={el.id}
                   src={el.media}
                   width={1000}
@@ -46,7 +45,7 @@ export const MoreThan4ColumnImgLayout: FC<{
           if (i === 3)
             return (
               <div className='relative' key={el.id}>
-                <Image
+                <CustomImage
                   src={el.media}
                   width={1000}
                   height={1000}

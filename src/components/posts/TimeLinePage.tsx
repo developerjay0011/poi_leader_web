@@ -2,8 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import { NewPostBox } from "./NewPostBox";
 import { Post } from "./Post";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { fetchAllPosts } from "@/redux_store/posts/postAPI";
+import { cusSelector } from "@/redux_store/cusHooks";
 import { StoriesBox } from "../timlineComponents/StoriesBox";
 import { PollPost } from "./polls/PollPost";
 import { AgendaPost } from "./AgendaPost";
@@ -12,13 +11,8 @@ import { fetchGetLeaderAddedPosts } from "../api/posts";
 interface TimeLinePageProps {}
 export const TimeLinePage: FC<TimeLinePageProps> = () => {
   const { userDetails } = cusSelector((state) => state.auth);
-  const dispatch = cusDispatch();
   const [postData, setPostData] = useState([]);
   const [upPost, setUpPost] = useState();
-
-  useEffect(() => {
-    dispatch(fetchAllPosts());
-  }, [dispatch, userDetails]);
 
   useEffect(() => {
     const leaderid = userDetails?.id;
@@ -26,10 +20,6 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
     (async () => {
       try {
         const data = await fetchGetLeaderAddedPosts(leaderid);
-
-        console.log(data);
-        
-
         if (data?.length > 0) {
           setPostData(data);
         }

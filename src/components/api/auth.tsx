@@ -1,112 +1,61 @@
+import Axios from "@/config/axios";
+import { tryCatch } from "@/config/try-catch";
+import { APIRoutes } from "@/constants/routes";
 import { LoginData, RegisterData } from "@/utils/typesUtils";
 
-export const fetchLogin = async (resBody: LoginData) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Leader/Login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(resBody),
-      }
-    );
-    return res.json();
-  } catch (error) {
-    return error;
-  }
+export const fetchLogin = async (body: LoginData) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.login, body);
+      return res.data;
+    }
+  );
 };
 
-export const fetchRegister = async (resBody: RegisterData) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Leader/Registration`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(resBody),
-      }
-    );
-    
-    return res.json();
-  } catch (error) {
-    return error;
-  }
+export const fetchRegister = async (body: RegisterData) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.register, body);
+      return res.data;
+    }
+  );
 };
 
-export const fetchSendOtp = async (resBody: { mobile: "string" }) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Common/SendOtp`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(resBody),
-      }
-    );
-    return res.json();
-  } catch (error) {
-    return error;
-  }
+export const fetchSendOtp = async (body: { mobile: "string" }) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.sendOTP, body);
+      return res.data;
+    }
+  );
 };
 
-export const fetchVerifyOtp = async (VerifyOtp: {
+export const fetchVerifyOtp = async (body: {
   mobile: string;
   otp: string;
 }) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Common/VerifyOtp`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(VerifyOtp),
-      }
-    );
-    return res.json();
-  } catch (error) {
-    return error;
-  }
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.verifyOTP, body);
+      return res.data;
+    }
+  );
 };
+
 export const fetchAddLeadersDropdown = async () => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Common/GetAddLeadersDropdown`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return res.json();
-  } catch (error) {
-    return error;
-  }
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(APIRoutes.getLeadersForDropdown);
+      return res.data;
+    }
+  );
 };
 
-
-export const fetchAddEditLeader = async (bodyData: any) => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Leader/AddEditLeader`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyData),
-      }
-    );
-    return res.json();
-  } catch (error) {
-    return error;
-  }
+export const fetchAddEditLeader = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.getAddEditLeaders, body);
+      return res.data;
+    }
+  );
 };

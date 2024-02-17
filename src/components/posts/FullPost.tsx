@@ -1,7 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { MediaPost } from "@/utils/typesUtils";
-import Image from "next/image";
 import { SingleComment } from "./SingleComment";
 import { NewCommentForm } from "../common-forms/NewCommentForm";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
@@ -14,6 +13,7 @@ import {
 } from "@/redux_store/posts/postAPI";
 import { motion as m } from "framer-motion";
 import { IoIosArrowForward } from "react-icons/io";
+import CustomImage from "@/utils/CustomImage";
 
 interface FullPostProps {
   onClose: () => void;
@@ -122,7 +122,7 @@ export const FullPost: FC<FullPostProps> = ({
 
             <div className="w-full h-full p-10 overflow-hidden">
               {curPost.type === "image" && (
-                <Image
+                <CustomImage
                   src={curPost.media}
                   alt={`post ${curPostIndex}`}
                   width={1000}
@@ -154,7 +154,7 @@ export const FullPost: FC<FullPostProps> = ({
 
           <div className="bg-white flex flex-col p-4 w-[40%] max-[1150px]:w-full">
             <div className="flex items-center gap-3 border-b py-3">
-              <Image
+              <CustomImage
                 src={userImg}
                 alt="post user dp"
                 width={1000}

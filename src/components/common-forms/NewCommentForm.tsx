@@ -1,10 +1,9 @@
 "use client";
 import { cusSelector } from "@/redux_store/cusHooks";
-import Image from "next/image";
 import { FC, FormEvent, useEffect, useState } from "react";
 import { BiRightArrow } from "react-icons/bi";
 import { fetchCommentPost } from "../api/posts";
-import { UserData } from "@/utils/utility";
+import CustomImage from "@/utils/CustomImage";
 
 interface NewCommentFormProps {
   CommentHandler: (comment: any) => void;
@@ -35,7 +34,7 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
       mediaid: mediaId[0],
       usertype: "leader",
       username: userDetails?.username,
-      userimg: userDetails?.image || "",
+      userimg: userDetails?.displayPic || "",
       comment_text: commentText,
     };
 
@@ -62,7 +61,7 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
         className="flex items-start py-4 gap-5 mt-2 mb-1 relative max-[400px]:gap-3"
         onSubmit={addNewCommentHandler}
       >
-        <Image
+        <CustomImage
           alt="user dp"
           src={userDetails?.displayPic as string}
           width={1000}

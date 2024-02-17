@@ -6,8 +6,6 @@ import { RightNavbar } from '@/components/leader/RightNavbar'
 import { usePathname } from 'next/navigation'
 import { localStorageKeys } from '@/utils/utility'
 
-
-
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const pathname = usePathname()
 

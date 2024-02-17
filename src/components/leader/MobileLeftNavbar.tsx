@@ -1,8 +1,6 @@
 import { CusLink } from '@/utils/CusLink'
 import { motion as m } from 'framer-motion'
-import Image from 'next/image'
 import { FC } from 'react'
-import { BsActivity, BsHouseFill } from 'react-icons/bs'
 import POILogo from '@/assets/poi_logo_1.png'
 import Link from 'next/link'
 import { FaBell, FaClipboard, FaUser } from 'react-icons/fa'
@@ -11,6 +9,7 @@ import { FaUserGroup } from 'react-icons/fa6'
 import { HiSpeakerphone } from 'react-icons/hi'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { MdSpaceDashboard } from 'react-icons/md'
+import CustomImage from '@/utils/CustomImage'
 
 interface MobileLeftNavbarProps {
   onClose: () => void
@@ -44,7 +43,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose }) => {
           <Link
             href={'/user'}
             className='w-full text-center bg-sky-950 flex justify-center py-2'>
-            <Image src={POILogo} alt='poi logo' className='h-12 w-auto' />
+            <CustomImage src={POILogo} alt='poi logo' className='h-12 w-auto' />
           </Link>
           <li>
             <CusLink

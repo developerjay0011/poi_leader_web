@@ -5,7 +5,6 @@ import { LuLock } from "react-icons/lu";
 import { AiOutlineKey } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { setCookie } from "cookies-next";
 import Logo from "@/assets/favicon.png";
 import { useForm } from "react-hook-form";
@@ -22,6 +21,7 @@ import { fetchLogin } from "../api/auth";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { TOKEN_KEY } from "@/constants/common";
 import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
+import CustomImage from "@/utils/CustomImage";
 
 interface LoginFormProps {}
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -117,7 +117,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
         className="text-sky-800 rounded-xl shadow-xl bg-sky-50 flex flex-col items-center  py-9 px-7 gap-5 font-[500] max-[500px]:px-4 max-lg:w-full"
       >
         {/* For Screens less than 1090px */}
-        <Image
+        <CustomImage
           src={Logo}
           alt="poi logo"
           className="hidden w-auto self-start m-auto max-lg:block h-[10rem]"

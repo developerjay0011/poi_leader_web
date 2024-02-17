@@ -10,11 +10,11 @@ import {
   dateConverter,
   userImg,
 } from "@/utils/utility";
-import Image from "next/image";
 import { AgendaDetails } from "@/redux_store/agenda/agendaSlice";
 import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
 import { AnimatePresence } from "framer-motion";
 import { MdTimeline } from "react-icons/md";
+import CustomImage from "@/utils/CustomImage";
 
 interface AgendaPostProps extends AgendaDetails {
   userId: string;
@@ -54,7 +54,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
 
         <section className="flex flex-col pr-5 w-full max-[700px]:px-5">
           <div className="flex items-center gap-3 py-4 text-sky-950 border-b max-[650px]:flex-wrap">
-            <Image
+            <CustomImage
               src={userImg}
               alt="user pic"
               className="w-12 aspect-square object-cover object-center rounded-full"

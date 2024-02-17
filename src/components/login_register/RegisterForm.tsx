@@ -4,19 +4,18 @@ import { FC, useState } from "react";
 import Link from "next/link";
 import { HiUserAdd } from "react-icons/hi";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
 import Logo from "@/assets/favicon.png";
 import { OTPForm } from "../common-forms/OTPForm";
 import { AnimatePresence } from "framer-motion";
 import { LoginFormFields, RegisterFormFields } from "@/utils/typesUtils";
 import { LPInputField } from "@/utils/LPInputField";
-import { cusDispatch } from "@/redux_store/cusHooks";
 import { MdLock, MdMail, MdPerson, MdPhone } from "react-icons/md";
 import { USER_TYPE } from "@/utils/utility";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { fetchRegister, fetchSendOtp, fetchVerifyOtp } from "../api/auth";
 import { AuthRoutes } from "@/constants/routes";
+import CustomImage from "@/utils/CustomImage";
 
 let interval: NodeJS.Timer;
 let OTP_TIME = 120;
@@ -159,7 +158,7 @@ export const RegisterForm: FC = () => {
       >
         {/* For Screens less than 1090px */}
 
-        <Image
+        <CustomImage
           src={Logo}
           alt="poi logo"
           className="hidden w-auto self-start m-auto max-lg:block h-[10rem]"

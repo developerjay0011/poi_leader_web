@@ -1,6 +1,6 @@
 import { CommonBox } from '@/utils/CommonBox'
+import CustomImage from '@/utils/CustomImage'
 import { friendImg, userImg } from '@/utils/utility'
-import Image from 'next/image'
 import Link from 'next/link'
 import { FC } from 'react'
 import { FaUserAltSlash } from 'react-icons/fa'
@@ -70,7 +70,7 @@ const FriendBox: FC<FriendBoxProps> = ({ name, followersCount, friendImg }) => {
   return (
     <li className='border rounded-md overflow-hidden shadow-sm flex flex-col w-max'>
       <figure className='friend_box'>
-        <Image src={friendImg} alt='friend image' width={1000} height={1000} />
+        <CustomImage src={friendImg} alt='friend image' width={1000} height={1000} />
       </figure>
 
       {/* Friend brief details */}

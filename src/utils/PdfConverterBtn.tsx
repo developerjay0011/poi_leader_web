@@ -101,30 +101,6 @@ const MyDocument: React.FC<PDFData> = ({
   return (
     <Document>
       <Page size='A4' style={styles.letterPage}>
-        {/* <View>
-          <Text style={styles.no}>
-            {dateConverterNumeric(new Date(date).toDateString())}
-          </Text>
-        </View>
-
-        <View>
-          <Text style={styles.bold}>To</Text>
-          <Text style={styles.bold}>{name}</Text>
-          <Text style={styles.bold}>{designation}</Text>
-        </View>
-
-        <View style={styles.subject}>
-          <Text style={styles.bold}>Subject:</Text>
-
-          <Text>{subject}</Text>
-        </View>
-
-        <View>
-          <Text style={styles.bold}>Dear Sir/{"Ma'am"}:</Text>
-          <Text style={{ fontSize: '12pt' }}>
-            <Html>{description}</Html>
-          </Text>
-        </View> */}
         <Html>{html}</Html>
       </Page>
     </Document>
@@ -132,54 +108,3 @@ const MyDocument: React.FC<PDFData> = ({
 }
 
 export default PdfConverterBtn
-
-{
-  /* <div className='letter_preview'>
-              <p className='self-end'>
-                req/comp no/{dateConverterNumeric(new Date().toDateString())}
-              </p>
-
-              <div className='flex flex-col capitalize'>
-                <strong>To</strong>
-                {to && (
-                  <>
-                    <strong>{to.name}</strong>
-                    <strong>{to.designation}</strong>
-                  </>
-                )}
-              </div>
-
-              <p className='flex gap-2'>
-                <strong>Subject:</strong>
-                <span>{subject}</span>
-              </p>
-
-              <div className='text-justify'>
-                <p>
-                  <strong className=''>Dear Sir/{"Ma'am"},</strong>
-                </p>
-                <div
-                  className='mt-[.25cm]'
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
-              </div>
-
-              <div className='self-end'>
-                <strong className='block'>Your Sincerely,</strong>
-                {signature.length > 0 && (
-                  <Image
-                    src={signature}
-                    width={1000}
-                    height={1000}
-                    alt='signature'
-                    className='w-full h-[4cm] object-contain'
-                  />
-                )}
-                <p>{userDetails?.fullName}</p>
-              </div>
-
-              {attachments !== 0 && (
-                <p className='mt-auto text-center'>{attachments} attachments</p>
-              )}
-            </div> */
-}

@@ -1,10 +1,10 @@
 'use client'
-import Image from 'next/image'
 import { ReactNode, FC } from 'react'
 import Link from 'next/link'
 import { AdminProfileNavbar } from '@/components/leader/AdminProfileNavbar'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { MdVerified } from 'react-icons/md'
+import CustomImage from '@/utils/CustomImage'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { userDetails } = cusSelector((st) => st.UI)
@@ -16,7 +16,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
           <section className='flex flex-col text-sky-950 border-b border-l border-r w-full'>
             {/* USER PIC and BG pic*/}
             <figure className='relative rounded-tr-lg rounded-tl-lg overflow-hidden'>
-              <Image
+              <CustomImage
                 src={userDetails?.backgroundPic as string}
                 alt='bg image'
                 width={1000}
@@ -24,7 +24,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 className='w-full h-[25rem] object-cover object-center max-[750px]:h-[16rem]'
               />
 
-              <Image
+              <CustomImage
                 src={userDetails?.displayPic as string}
                 alt='display image'
                 width={1000}

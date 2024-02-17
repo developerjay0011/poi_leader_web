@@ -1,7 +1,6 @@
 'use client'
 import { FC, useState } from 'react'
 import { AnimatePresence, motion as m } from 'framer-motion'
-import Image from 'next/image'
 import Logo from '@/assets/favicon.png'
 import { ForgetUserIdField } from '../forgetPassword/ForgetUserIdField'
 import { BiX } from 'react-icons/bi'
@@ -14,6 +13,7 @@ import {
 } from '@/redux_store/auth/authAPI'
 import toast from 'react-hot-toast'
 import { ForgetOTPForm } from './ForgetOTPForm'
+import CustomImage from '@/utils/CustomImage'
 
 interface ForgetPasswordProps {
   onClose: () => void
@@ -80,7 +80,7 @@ export const ForgetPassword: FC<ForgetPasswordProps> = ({ onClose }) => {
             <BiX className='text-3xl' />
           </button>
 
-          <Image src={Logo} alt='poi logo' className='w-auto h-[8rem]' />
+          <CustomImage src={Logo} alt='poi logo' className='w-auto h-[8rem]' />
           <AnimatePresence mode='wait'>
             {curFormPos === 1 && (
               <ForgetUserIdField

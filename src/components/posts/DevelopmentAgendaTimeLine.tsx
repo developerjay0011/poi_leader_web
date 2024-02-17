@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { BiX } from 'react-icons/bi'
 import { motion as m } from 'framer-motion'
-import Image from 'next/image'
+import CustomImage from '@/utils/CustomImage'
 
 interface AgendaTimelineProps {
   onClose: () => void
@@ -100,7 +100,7 @@ const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status }) => {
         />
 
         <div className='flex items-start gap-3 ml-5 flex-row-reverse'>
-          <Image
+          <CustomImage
             src=''
             alt=''
             className='w-14 aspect-square rounded-full bg-rose-200'
