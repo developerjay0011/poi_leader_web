@@ -1,3 +1,4 @@
+// PAGE Routes
 export const ProtectedRoutes = {
   user: "/user",
   userManagement: "/user-management",
@@ -12,19 +13,21 @@ export const AuthRoutes = {
   register: "/register"
 }
 
+// API Routes
 export const API_Prefix = "/api";
 
 export const APIRoutes = {
   // Common ENdpoints
-  sendOTP: `${API_Prefix}/Common/SendOtp`,
-  verifyOTP: `${API_Prefix}/Common/VerifyOtp`,
-  getLeadersForDropdown: `${API_Prefix}/Common/GetAddLeadersDropdown`,
+  sendOTP: `${API_Prefix}/common/sendOtp`,
+  verifyOTP: `${API_Prefix}/common/verifyOtp`,
+  getLeadersForDropdown: `${API_Prefix}/common/getAddLeadersDropdown`,
 
   // Leader Endpoints
-  login: `${API_Prefix}/Leader/Login`,
-  register: `${API_Prefix}/Leader/Registration`,
-  upsertLeaders: `${API_Prefix}/Leader/AddEditLeader`,
-  getAccessTabs: `${API_Prefix}/Leader/GetAccessTabs/{{userId}}`,
-  getProfile: `${API_Prefix}/Leader/GetSingleLeader/{{userId}}`,
-  getFollowers: `${API_Prefix}/Leader/FollowerList/{{userId}}`,
+  login: `${API_Prefix}/leader/login`,
+  register: `${API_Prefix}/leader/registration`,
+  upsertLeaders: `${API_Prefix}/leader/addEditLeader`,
+  getAccessTabs: `${API_Prefix}/leader/getAccessTabs/{{userId}}`,
+  getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{userId}}`,
+  getFollowers: `${API_Prefix}/leader/followerList/{{userId}}`,
+  uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
 }

@@ -22,7 +22,7 @@ export const fetchGetLeaderAddedStories = async (
   leaderid: string
 ) => {
   try {
-    const response = await Axios.get(`/api/Post/GetLeaderAddedStories/${leaderid}`);
+    const response = await Axios.get(`/api/post/getLeaderAddedStories/${leaderid}`);
     return response.data;
   } catch (error) {
     throw error; // You can throw or handle the error as

@@ -20,3 +20,16 @@ export const getFollowers = async (userId: string) => {
     }
   );
 };
+
+export const uploadProfileImage = async (formData: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.uploadProfile, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      return res.data;
+    }
+  );
+}

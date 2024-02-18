@@ -42,7 +42,9 @@ export interface ProfileInfo {
 export interface ContactInfo {
   permanent_address: string
   permanent_state_id: string
+  permanent_state: string
   permanent_district_id: string
+  permanent_distric: string
   permanent_pincode: string
   is_same_as_permanent: number
   present_address: string
@@ -58,11 +60,16 @@ export interface ContactInfo {
 
 export interface PoliticalInfo {
   political_party_id: string
+  political_party: string
   designation_id: string
+  designation: string
   parliament_house: string
   stateid: string
+  state: string
   assemblyid: string
+  assembly: string
   parliamentaryid: string
+  parliamentary: string
   is_hold_ministry: boolean
   ministries: MinistriesInfo[]
   is_nominated: boolean

@@ -21,7 +21,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   const [updateStory, setUpdateStory] = useState({});
   const id = GenerateId();
   const { userDetails } = cusSelector(state => state.auth);
-
+  console.log("userDetails => ", userDetails)
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setStoryMedia([]);
     const data = e.target.files as FileList;
@@ -66,17 +66,19 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   useEffect(() => {
     const leaderid = userDetails?.id || "";
 
-    (async () => {
-      try {
-        const data = await fetchGetLeaderAddedStories(leaderid);
-
-        if (data?.length > 0) {
-          setGetStories(data);
+    if(leaderid) {
+      (async () => {
+        try {
+          const data = await fetchGetLeaderAddedStories(leaderid);
+  
+          if (data?.length > 0) {
+            setGetStories(data);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+      })();
+    }
   }, [userDetails]);
 
   const handleDelete = async (leaderid: string, id: string) => {

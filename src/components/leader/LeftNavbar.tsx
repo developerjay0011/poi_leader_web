@@ -41,14 +41,15 @@ export const LeftNavbar: FC = () => {
 
   useEffect(() => {
     const userid = userDetails?.id;
-
-    (async () => {
-      const data = await fetchAccessTabs(userid);
-
-      if (data?.length > 0) {
-        setRouteData(data);
-      }
-    })();
+    if(userid) {
+      (async () => {
+        const data = await fetchAccessTabs(userid);
+  
+        if (data?.length > 0) {
+          setRouteData(data);
+        }
+      })();
+    }
   }, [userDetails]);
 
   return (

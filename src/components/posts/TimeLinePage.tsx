@@ -16,17 +16,18 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
 
   useEffect(() => {
     const leaderid = userDetails?.id;
-
-    (async () => {
-      try {
-        const data = await fetchGetLeaderAddedPosts(leaderid);
-        if (data?.length > 0) {
-          setPostData(data);
+    if(leaderid) {
+      (async () => {
+        try {
+          const data = await fetchGetLeaderAddedPosts(leaderid);
+          if (data?.length > 0) {
+            setPostData(data);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+      })();
+    };
   }, [userDetails]);
 
   const updatePost = (data: any) => {

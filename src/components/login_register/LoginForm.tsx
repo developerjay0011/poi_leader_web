@@ -69,9 +69,6 @@ export const LoginForm: FC<LoginFormProps> = () => {
       if (success) {
         if (data?.leader_detail?.is_profile_complete) {
           if (data?.leader_detail?.request_status === "Approved") {
-            router.push(ProtectedRoutes.user);
-            dispatch(authActions.setUserData(loginResponse));
-
             const userData = {
               id: loginResponse.data.leader_detail.id,
               userId: loginResponse.data.user_detail.id,
@@ -89,6 +86,9 @@ export const LoginForm: FC<LoginFormProps> = () => {
             // Store the serialized data in session storage
             setCookie('userData', serializedData);
             setCookie(TOKEN_KEY, userData.token);
+
+            dispatch(authActions.setUserData(userData));
+            router.push(ProtectedRoutes.user);
           } else {
             setErr({
               errTxt: `Your Request Is ${data?.leader_detail?.request_status} `,

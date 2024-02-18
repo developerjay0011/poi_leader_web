@@ -18,8 +18,11 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUserData(state, action: PayloadAction<UserDetails | null>) {
-      state.userDetails = action.payload;
+    setUserData(state, action: PayloadAction<any | null>) {
+      state.userDetails = {
+        ...state.userDetails,
+        ...action.payload
+      };
     },
     clearUserData(state) {
       state.userDetails = null;

@@ -68,7 +68,7 @@ export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
 
             <PersonalBriefInfo
               Icon={BiBriefcaseAlt}
-              data={leaderProfile.political_info?.designation_id}
+              data={leaderProfile.political_info?.designation}
               heading='Designation: '
               className='col-span-full'
             />

@@ -16,7 +16,10 @@ export const leaderSlice = createSlice({
   initialState,
   reducers: {
     setLeaderProfile(state, action: PayloadAction<LeaderProfile>) {
-      state.leaderProfile = action.payload;
+      state.leaderProfile = {
+        ...state.leaderProfile,
+        ...action.payload
+      };
     },
     setFollowers(state, action: PayloadAction<any[]>) {
       state.followers = action.payload;
