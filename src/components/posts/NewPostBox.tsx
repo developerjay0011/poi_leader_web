@@ -141,7 +141,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
         <form className="flex flex-col gap-4 py-4" onSubmit={formSubmitHandler}>
           <div className="flex items-start gap-3">
             <CustomImage
-              src={userDetails?.displayPic as string}
+              src={userDetails?.image as string}
               alt="user image"
               width={1000}
               height={1000}

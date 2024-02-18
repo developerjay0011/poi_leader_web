@@ -67,7 +67,7 @@ export const Post: FC<PostProps> = ({
       addNewComment({
         postId: id,
         commentText: comment,
-        userImg: userDetails?.displayPic as string,
+        userImg: userDetails?.image as string,
       })
     );
 
@@ -130,7 +130,7 @@ export const Post: FC<PostProps> = ({
         id: commentId,
         postId: id,
         userId: userDetails?.id as string,
-        userImg: userDetails?.displayPic as string,
+        userImg: userDetails?.image as string,
         username: userDetails?.username as string,
       })
     );
@@ -148,7 +148,7 @@ export const Post: FC<PostProps> = ({
       mediaid: mediaId[0],
       usertype: "citizen",
       username: userDetails?.username,
-      userimg: userDetails?.displayPic,
+      userimg: userDetails?.image,
     };
 
     const UnlikeBody = {
@@ -180,7 +180,7 @@ export const Post: FC<PostProps> = ({
         {/* User details and Date */}
         <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
           <CustomImage
-            src={userDetails?.displayPic as string}
+            src={userDetails?.image as string}
             alt="user pic"
             className="w-12 aspect-square object-cover object-center rounded-full"
             width={100}

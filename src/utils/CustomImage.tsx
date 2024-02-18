@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from "react";
 import Image, { ImageProps } from 'next/image';
 import NoImg from '@/assets/No_image_available.png'
@@ -10,6 +10,10 @@ interface CustomImageProps extends ImageProps {
 
 const CustomImage: React.FC<CustomImageProps> = ({ src, alt, ...props }) => {
   const [imageError, setImageError] = useState(!src ? true : false);
+
+  useEffect(() => {
+    setImageError(!src ? true : false)
+  }, [src]);
 
   // Customize the image wrapper here if needed
   return (

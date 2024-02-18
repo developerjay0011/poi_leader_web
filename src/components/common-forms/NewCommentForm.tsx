@@ -34,7 +34,7 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
       mediaid: mediaId[0],
       usertype: "leader",
       username: userDetails?.username,
-      userimg: userDetails?.displayPic || "",
+      userimg: userDetails?.image || "",
       comment_text: commentText,
     };
 
@@ -63,7 +63,7 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({
       >
         <CustomImage
           alt="user dp"
-          src={userDetails?.displayPic as string}
+          src={userDetails?.image as string}
           width={1000}
           height={1000}
           className="w-10 aspect-square rounded-full object-center object-cover"

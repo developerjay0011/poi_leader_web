@@ -16,6 +16,7 @@ import { MobileLeftNavbar } from "./MobileLeftNavbar";
 import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
+import { getImageUrl } from "@/config/get-image-url";
 
 export const TopNavbar: FC = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ export const TopNavbar: FC = () => {
   const dispatch = cusDispatch();
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { userDetails } = cusSelector((state: RootState) => state.auth);
+  const { leaderProfile } = cusSelector((state: RootState) => state.leader);
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showWarningMsg, setShowWarningMsg] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
@@ -153,7 +154,7 @@ export const TopNavbar: FC = () => {
             onClick={() => setShowAdminMenu((lst) => !lst)}
           >
             <CustomImage
-              src={userDetails?.displayPic as string}
+              src={getImageUrl(leaderProfile?.image) as string}
               alt="user pic"
               className="w-14 aspect-square object-cover object-center rounded-full"
               width={100}
@@ -186,7 +187,7 @@ export const TopNavbar: FC = () => {
 
           <button id="userMobileDisplayPic">
             <CustomImage
-              src={userDetails?.displayPic as string}
+              src={getImageUrl(leaderProfile?.image) as string}
               alt="user pic"
               className="w-14 aspect-square object-cover object-center rounded-full"
               width={100}

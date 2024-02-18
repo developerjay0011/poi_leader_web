@@ -65,7 +65,7 @@ export const FullPost: FC<FullPostProps> = ({
         id: curPost.id,
         postId,
         userId,
-        userImg: userDetails?.displayPic as string,
+        userImg: userDetails?.image as string,
         username: '',
       })
     ) */

@@ -49,8 +49,8 @@ export interface UserDetails {
   email: string
   password: string
   leaderType: string
-  displayPic: string
-  backgroundPic: string
+  image: string
+  bgimage: string
 
   // Personal Information
   firstName: string

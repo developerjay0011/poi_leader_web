@@ -21,7 +21,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   const [updateStory, setUpdateStory] = useState({});
   const id = GenerateId();
   const { userDetails } = cusSelector(state => state.auth);
-  console.log("userDetails => ", userDetails)
+
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setStoryMedia([]);
     const data = e.target.files as FileList;

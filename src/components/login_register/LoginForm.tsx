@@ -22,6 +22,7 @@ import { TOKEN_KEY } from "@/constants/common";
 import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
 
 interface LoginFormProps {}
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -70,14 +71,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
         if (data?.leader_detail?.is_profile_complete) {
           if (data?.leader_detail?.request_status === "Approved") {
             const userData = {
-              id: loginResponse.data.leader_detail.id,
-              userId: loginResponse.data.user_detail.id,
-              username: loginResponse.data.leader_detail.username,
-              email: loginResponse.data.leader_detail.email,
-              mobile: loginResponse.data.leader_detail.mobile,
-              displayPic: loginResponse.data.leader_detail.image,
-              personal_info: loginResponse.data.leader_detail.personal_info,
-              fcm_tokens: loginResponse.data.user_detail.fcm_tokens,
+              ...data.user_detail,
               token: loginResponse.token,
             };
 
@@ -88,6 +82,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
             setCookie(TOKEN_KEY, userData.token);
 
             dispatch(authActions.setUserData(userData));
+            dispatch(leaderActions.setLeaderProfile(data.leader_detail));
             router.push(ProtectedRoutes.user);
           } else {
             setErr({

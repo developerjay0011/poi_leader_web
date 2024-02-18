@@ -9,6 +9,8 @@ import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { getFollowers, getProfile, uploadProfileImage } from '@/redux_store/leader/leaderAPI'
 import { BsPencilSquare } from 'react-icons/bs'
 import { ProtectedRoutes } from '@/constants/routes'
+import { getImageUrl } from '@/config/get-image-url'
+import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leader: { leaderProfile, followers }, auth: { userDetails } } = cusSelector((state) => state);
@@ -26,7 +28,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
         dispatch(leaderActions.setFollowers(followersRes));
       }
     })()
-  }, [dispatch, userDetails]);
+  }, [dispatch, userDetails?.id]);
 
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const files = e.target.files as FileList;
@@ -35,7 +37,12 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
       formData.append("leaderid", leaderProfile?.id || "");
       formData.append(fieldName, files[0] || "");
       const profileRes = await uploadProfileImage(formData);
+      // Leader data update in redux
       dispatch(leaderActions.setLeaderProfile({
+        [fieldName]: profileRes.data
+      }));
+      // User data update in redux
+      dispatch(authActions.setUserData({
         [fieldName]: profileRes.data
       }))
     }
@@ -59,7 +66,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 <BsPencilSquare className="absolute top-3 right-3 z-10 text-orange-500 text-[25px] shadow" />
               </label>
               <CustomImage
-                src={leaderProfile?.bgimage as string}
+                src={getImageUrl(leaderProfile?.bgimage) as string}
                 alt='bg image'
                 width={1000}
                 height={1000}
@@ -67,13 +74,13 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
               />
 
               <CustomImage
-                src={leaderProfile?.image as string}
+                src={getImageUrl(leaderProfile?.image) as string}
                 alt='display image'
                 width={1000}
                 height={1000}
                 className='w-[9rem] border-4 aspect-square object-cover object-center rounded-full shadow-lg absolute bottom-5 left-8 max-[750px]:w-[7.5rem] max-[750px]:border-2 max-[450px]:left-1/2 max-[450px]:translate-x-[-50%]'
               />
-              <label htmlFor="image" className='hover:opacity-100 hover:text-orange-500 hover:bg-opacity-90 hover:bg-white text-transparent transition-all cursor-pointer absolute aspect-square border-4 bottom-5 flex items-center justify-center left-8 max-[450px]:left-1/2 max-[450px]:translate-x-[-50%] max-[750px]:border-2 max-[750px]:w-[7.5rem] object-center object-cover rounded-full shadow-lg w-[9rem]'>
+              <label htmlFor="image" className='hover:opacity-100 hover:text-orange-500 hover:bg-opacity-70 hover:bg-white text-transparent transition-all cursor-pointer absolute aspect-square border-4 bottom-5 flex items-center justify-center left-8 max-[450px]:left-1/2 max-[450px]:translate-x-[-50%] max-[750px]:border-2 max-[750px]:w-[7.5rem] object-center object-cover rounded-full shadow-lg w-[9rem]'>
                 <input
                   type="file"
                   className="hidden"

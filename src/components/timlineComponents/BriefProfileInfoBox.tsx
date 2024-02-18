@@ -31,7 +31,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
         {/* Profile info and pic */}
         <section className='flex items-center my-5 gap-3 text-sky-950 max-[1400px]:gap-2'>
           <CustomImage
-            src={userDetails?.displayPic as string}
+            src={userDetails?.image as string}
             alt='profile pic'
             width={100}
             height={100}

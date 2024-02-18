@@ -36,7 +36,7 @@ export const PollPost: FC<PollPostProps> = ({
       <section className='border shadow-sm rounded-md px-5 py-2 bg-white'>
         <div className='flex items-center gap-3 py-4 text-sky-950 border-b'>
           <CustomImage
-            src={userDetails?.displayPic as string}
+            src={userDetails?.image as string}
             alt='user pic'
             className='w-12 aspect-square object-cover object-center rounded-full'
             width={100}
