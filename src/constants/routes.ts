@@ -28,6 +28,7 @@ export const APIRoutes = {
   upsertLeaders: `${API_Prefix}/leader/addEditLeader`,
   getAccessTabs: `${API_Prefix}/leader/getAccessTabs/{{userId}}`,
   getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{userId}}`,
+  getDropDownList: `${API_Prefix}/common/GetAddLeadersDropdown`,
   getFollowers: `${API_Prefix}/leader/followerList/{{userId}}`,
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
 }

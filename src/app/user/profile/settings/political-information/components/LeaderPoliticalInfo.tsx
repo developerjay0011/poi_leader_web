@@ -126,8 +126,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
                 title: 'select constituency',
                 // filtering assembly constituency based on mla State
                 options: assemblyConstituency
-                  .filter((el) => el.stateId === mlaState)
-                  .map((el) => ({ id: el.assemblyId, value: el.assemblyName })),
+                  .filter((el) => el.stateid === mlaState)
+                  .map((el) => ({ id: el.id, value: el.assembly_name })),
               }}
             />
           )}

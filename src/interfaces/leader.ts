@@ -36,7 +36,8 @@ export interface ProfileInfo {
   higher_education: string
   profession: string
   hobbies: string
-  assets: string
+  assets: string,
+  about_me:string
 }
 
 export interface ContactInfo {
@@ -44,12 +45,14 @@ export interface ContactInfo {
   permanent_state_id: string
   permanent_state: string
   permanent_district_id: string
-  permanent_distric: string
+  permanent_district: string
   permanent_pincode: string
   is_same_as_permanent: number
   present_address: string
   present_state_id: string
+  present_state: string
   present_district_id: string
+  present_district: string
   present_pincode: string
   telephones: string
   mobile_nos: string
@@ -74,6 +77,7 @@ export interface PoliticalInfo {
   ministries: MinistriesInfo[]
   is_nominated: boolean
   joined_date: string
+  activity_pictures: ActivityPictures[]
   post_in_party: string
   achievements: string
   why_join_politics: string
@@ -84,7 +88,10 @@ export interface PoliticalInfo {
   people_in_team: string
   referencies: References[]
 }
-
+export interface ActivityPictures {
+  pictures: string[],
+  description: string
+}
 export interface MinistriesInfo {
   ministryid: string
   ministrytype: string

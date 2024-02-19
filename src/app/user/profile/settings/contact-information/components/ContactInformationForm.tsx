@@ -1,5 +1,5 @@
 'use client'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import {
@@ -11,7 +11,13 @@ import {
 import { Input } from '@/components/Input'
 import { YesNoField } from '@/components/YesNoField'
 import Link from 'next/link'
-
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { getLeadersOptions } from '@/redux_store/common/commonAPI'
+import { submitLeaderForm } from '@/redux_store/APIFunctions'
+import toast from "react-hot-toast"
+import { getProfile } from '@/redux_store/leader/leaderAPI'
+import { leaderActions } from '@/redux_store/leader/leaderSlice'
 export const ContactForm: FC = () => {
   const {
     register,
@@ -25,7 +31,9 @@ export const ContactForm: FC = () => {
     },
     mode: 'onTouched',
   })
+  const { leaderOptions } = cusSelector((state) => state.common)
 
+  const { leaderProfile } = cusSelector((state) => state.leader);
   const districts: DistrictDetails[] = [],
     pincodes: PincodeDetails[] = [],
     states: StateDetails[] = []
@@ -37,11 +45,75 @@ export const ContactForm: FC = () => {
   const pPincode = watch('pPincode')
   const cState = watch('cState')
   const cDistrict = watch('cDistrict')
+  const dispatch = cusDispatch();
 
-  const formSubmitHandler = (data: UserDetails) => {
-   console.log(data)
+  const formSubmitHandler = async(data: UserDetails) => {
+    console.log(data)
+    const resBody = {
+      permanent_address: data?.pAddress,
+      permanent_state: data?.pState,
+      permanent_district: data?.pDistrict,
+      permanent_pincode: data?.pPincode,
+      is_same_as_permanent: data?.bothAddressIsSame == "yes" ? true :false,
+      present_address: data?.cAddress,
+      present_state: data?.cState,
+      present_district: data?.cDistrict,
+      present_pincode: data?.cPincode,
+      telephones: data?.telePhoneNos,
+      mobile_nos: data?.mobileNos,
+      fb_link: data?.fb_link,
+      insta_link: data?.insta_link,
+      twitter_link: data?.twitter_link,
+    
+    };
+
+    try {
+      const response = await submitLeaderForm({
+        ...leaderProfile, 'contact_info': resBody, political_info: { activity_pictures: leaderProfile?.political_info?.activity_pictures || [],}
+      });
+
+      if (response?.success) {
+        toast.success(() => (
+          <p>
+            {response.message}
+          </p>
+        ));
+        const res = await getProfile(leaderProfile?.id);
+        dispatch(leaderActions.setLeaderProfile(res));
+      } 
+
+
+    } catch (error) {
+      console.log(error);
+
+    }
   }
+  useEffect(() => {
+    (async () => {
+      const LeadersDropdown = await getLeadersOptions();
+      dispatch(commonActions.setLeaderOptions(LeadersDropdown))
 
+    })();
+  }, [dispatch]);
+  useEffect(() => {
+
+    setValue('pAddress', leaderProfile?.contact_info?.permanent_address || '');
+    setValue('pState', leaderProfile?.contact_info?.permanent_state || '');
+    setValue('pDistrict', leaderProfile?.contact_info?.permanent_district || '');
+    setValue('pPincode', leaderProfile?.contact_info?.permanent_pincode || '');
+    setValue('bothAddressIsSame', leaderProfile?.contact_info?.is_same_as_permanent ?'yes':'no');
+    setValue('cAddress', leaderProfile?.contact_info?.present_address || '');
+    setValue('cState', leaderProfile?.contact_info?.present_state || '');
+    setValue('cDistrict', leaderProfile?.contact_info?.present_district || '');
+    setValue('cPincode', leaderProfile?.contact_info?.present_pincode || '');
+    setValue('telePhoneNos', leaderProfile?.contact_info?.telephones || '');
+    setValue('mobileNos', leaderProfile?.contact_info?.mobile_nos || '');
+    setValue('fb_link', leaderProfile?.contact_info?.fb_link || '');
+    setValue('insta_link', leaderProfile?.contact_info?.insta_link || '');
+    setValue('twitter_link', leaderProfile?.contact_info?.twitter_link || '');
+
+  }, []);
+  
   return (
     <>
       <form
@@ -93,9 +165,9 @@ export const ContactForm: FC = () => {
           }}
           selectField={{
             title: 'Select State',
-            options: states.map((el) => ({
-              id: el.stateId,
-              value: el.stateName,
+            options: leaderOptions?.states.map((el) => ({
+              id: el.state,
+              value: el.state,
             })),
           }}
         />
@@ -111,9 +183,9 @@ export const ContactForm: FC = () => {
           }}
           selectField={{
             title: 'Select District',
-            options: districts
-              .filter((el) => (pState ? el.stateId === pState : el))
-              .map((el) => ({ id: el.districtId, value: el.districtName })),
+            options: leaderOptions?.districts
+              .filter((el) => (pState ? el.state === pState : el))
+              .map((el) => ({ id: el.district, value: el.district })),
           }}
         />
         <Input
@@ -121,14 +193,8 @@ export const ContactForm: FC = () => {
           register={register}
           title='Pincode'
           id='pPincode'
-          type='select'
-          selectField={{
-            title: 'Select Pincode',
-            options:
-              pincodes
-                .find((el) => el.districtId === pDistrict)
-                ?.pincodes.map((el) => ({ id: el, value: el })) || [],
-          }}
+          type='text'
+         
         />
 
         <YesNoField
@@ -274,7 +340,7 @@ export const ContactForm: FC = () => {
           errors={errors}
           register={register}
           title='Facebook Account Link'
-          id={'socialMedia.facebook' as keyof UserDetails}
+          id={'fb_link'}
           type='url'
           placeholder='www.facebook.com/user'
         />
@@ -282,7 +348,7 @@ export const ContactForm: FC = () => {
           errors={errors}
           register={register}
           title='Instagram Account Link'
-          id={'socialMedia.instagram' as keyof UserDetails}
+          id={'insta_link'}
           type='url'
           placeholder='www.instagram.com/user'
         />
@@ -290,7 +356,7 @@ export const ContactForm: FC = () => {
           errors={errors}
           register={register}
           title='X / Twitter Account Link'
-          id={'socialMedia.twitter' as keyof UserDetails}
+          id={'twitter_link'}
           type='url'
           placeholder='www.twitter.com/user'
         />

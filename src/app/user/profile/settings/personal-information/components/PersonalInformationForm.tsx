@@ -1,10 +1,17 @@
 'use client'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { UserDetails } from '@/utils/typesUtils'
 import { Input } from '@/components/Input'
 import { BLOOD_GROUPS } from '@/utils/utility'
 import Link from 'next/link'
+import { dateConverterNumeric } from '@/utils/utility';
+import moment from 'moment';
+import { submitLeaderForm } from '@/redux_store/APIFunctions'
+import toast from "react-hot-toast"
+import { getProfile } from '@/redux_store/leader/leaderAPI'
+import { leaderActions } from '@/redux_store/leader/leaderSlice'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 
 export const PersonalInformationForm: FC = () => {
   const {
@@ -15,10 +22,74 @@ export const PersonalInformationForm: FC = () => {
     handleSubmit,
   } = useForm<UserDetails>()
   const maritalStatus = watch('maritalStatus')
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
 
-  const formSubmitHandler = (data: UserDetails) => {
-    console.log(data)
+  const formSubmitHandler =async (data: UserDetails) => {
+
+    const resBody = {
+      first_name: data?.firstName,
+      middle_name: data?.middleName,
+      last_name: data?.lastName,
+      gender: data?.gender,
+      blood_group: data?.bloodGroup,
+      father_name: data?.fatherName,
+      mother_name: data?.motherName,
+      dob: data?.dob,
+      place_of_birth: data?.placeOfBirth,
+      marital_status: data?.maritalStatus,
+      hobbies: data?.hobbies,
+      assets: data?.assests,
+      higher_education: data?.higherEduction,
+      no_of_daughters: data?.noOfDaughters,
+      no_of_sons: data?.noOfSons,
+    };
+
+    try {
+      const response = await submitLeaderForm({
+        ...leaderProfile,'personal_info':resBody});
+
+      if (response?.success) {
+        toast.success(() => (
+          <p>
+            {response.message}
+          </p>
+        ));
+        const res = await getProfile(leaderProfile?.id);
+        dispatch(leaderActions.setLeaderProfile(res));
+      } else {
+        toast.error(() => (
+          <p>
+            {response.message}
+          </p>
+        ));
+      }
+ 
+
+    } catch (error) {
+      console.log(error);
+
+    }
   }
+
+  useEffect(() => {
+    setValue('firstName', leaderProfile?.personal_info?.first_name || '');
+    setValue('middleName', leaderProfile?.personal_info?.middle_name || '');
+    setValue('lastName', leaderProfile?.personal_info?.last_name || '');
+    setValue('gender', leaderProfile?.personal_info?.gender || '');
+    setValue('bloodGroup', leaderProfile?.personal_info?.blood_group || '');
+    setValue('fatherName', leaderProfile?.personal_info?.father_name || '');
+    setValue('motherName', leaderProfile?.personal_info?.mother_name || '');
+    setValue('dob', moment(leaderProfile?.personal_info?.dob).format("YYYY-MM-DD"));
+    setValue('placeOfBirth', leaderProfile?.personal_info?.place_of_birth || '');
+    setValue('maritalStatus', leaderProfile?.personal_info?.marital_status || '');
+    setValue('hobbies', leaderProfile?.personal_info?.hobbies || '');
+    setValue('assests', leaderProfile?.personal_info?.assets || '');
+    setValue('higherEduction', leaderProfile?.personal_info?.higher_education || '');
+    setValue('noOfDaughters', leaderProfile?.personal_info?.no_of_daughters || 0);
+    setValue('noOfSons', leaderProfile?.personal_info?.no_of_sons || 0);
+
+  }, []);
 
   return (
     <>
@@ -161,8 +232,8 @@ export const PersonalInformationForm: FC = () => {
                 value: 'married',
               },
               {
-                id: 'un-married',
-                value: 'un married',
+                id: 'Unmarried',
+                value: 'Unmarried',
               },
               {
                 id: 'divorced',

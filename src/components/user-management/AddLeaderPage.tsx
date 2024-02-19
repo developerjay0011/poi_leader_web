@@ -53,6 +53,10 @@ export interface LeaderFormFields {
     name: string;
     type: string;
   }[];
+  activity_pictures: {
+    pictures: string[],
+    description: string
+  }[];
 
   // Emerging Leader Political Info
   joinedDate: string;
@@ -346,6 +350,7 @@ export const AddLeaderPage: FC = () => {
         done_any_political_activity: true,
         does_family_supports: true,
         people_in_team: data?.peopleInTeam,
+        activity_pictures: data?.activity_pictures,
         referencies: data?.references?.map((el) => ({
           name: el?.name,
           age: +el?.age,

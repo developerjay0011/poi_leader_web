@@ -87,7 +87,12 @@ export interface UserDetails {
     name: string
     type: string
   }[]
-
+  activity_pictures: {
+    pictures: [
+      string
+    ],
+    description: string
+  }[]
   // Emerging Leader Political Info
   joinedDate: string
   postInParty: string
@@ -138,11 +143,11 @@ export interface UserDetails {
   cPincode: string
   cDistrict: string
 
-  socialMedia: {
-    facebook: string
-    instagram: string
-    twitter: string
-  }
+
+  fb_link: string
+  insta_link: string
+  twitter_link: string
+  
 
   telePhoneNos: string
   mobileNos: string
@@ -169,9 +174,9 @@ export const LEADER_IDS = {
 }
 
 export interface AssemblyConstituencyDetails {
-  assemblyName: string
-  assemblyId: string
-  stateId: string
+  assembly_name: string
+  id: string
+  stateid: string
 }
 
 export interface DesignationDetails {
@@ -191,8 +196,8 @@ export interface StateDetails {
 }
 
 export interface PartyDetails {
-  partyid: string
-  partyname: string
+  id: string
+  party_name: string
 }
 
 export interface DistrictDetails {
