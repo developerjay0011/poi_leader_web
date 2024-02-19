@@ -3,9 +3,6 @@ import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import {
-  DistrictDetails,
-  PincodeDetails,
-  StateDetails,
   UserDetails,
 } from '@/utils/typesUtils'
 import { Input } from '@/components/Input'
@@ -15,14 +12,19 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { getLeadersOptions } from '@/redux_store/common/commonAPI'
 import { submitLeaderForm } from '@/redux_store/APIFunctions'
-import toast from "react-hot-toast"
-import { getProfile } from '@/redux_store/leader/leaderAPI'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
+import { tryCatch } from '@/config/try-catch'
+import { ContactInfo } from '@/interfaces/leader'
+import { ToastType } from '@/constants/common'
+import { ProtectedRoutes } from '@/constants/routes'
 export const ContactForm: FC = () => {
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { leaderOptions } = cusSelector((state) => state.common);
+  const dispatch = cusDispatch();
   const {
     register,
-    watch,
     setValue,
+    watch,
     formState: { errors },
     handleSubmit,
   } = useForm<UserDetails>({
@@ -30,89 +32,80 @@ export const ContactForm: FC = () => {
       bothAddressIsSame: 'yes',
     },
     mode: 'onTouched',
-  })
-  const { leaderOptions } = cusSelector((state) => state.common)
+  });
 
-  const { leaderProfile } = cusSelector((state) => state.leader);
-  const districts: DistrictDetails[] = [],
-    pincodes: PincodeDetails[] = [],
-    states: StateDetails[] = []
-
-  const bothAddressIsSame = watch('bothAddressIsSame')
-  const pAddress = watch('pAddress')
-  const pState = watch('pState')
-  const pDistrict = watch('pDistrict')
-  const pPincode = watch('pPincode')
-  const cState = watch('cState')
-  const cDistrict = watch('cDistrict')
-  const dispatch = cusDispatch();
+  const bothAddressIsSame = watch('bothAddressIsSame');
+  const pAddress = watch('pAddress');
+  const pState = watch('pState');
+  const pDistrict = watch('pDistrict');
+  const pPincode = watch('pPincode');
+  const cState = watch('cState');
 
   const formSubmitHandler = async(data: UserDetails) => {
-    console.log(data)
-    const resBody = {
+    const resBody: ContactInfo = {
       permanent_address: data?.pAddress,
-      permanent_state: data?.pState,
-      permanent_district: data?.pDistrict,
+      permanent_state_id: data?.pState,
+      permanent_district_id: data?.pDistrict,
       permanent_pincode: data?.pPincode,
       is_same_as_permanent: data?.bothAddressIsSame == "yes" ? true :false,
       present_address: data?.cAddress,
-      present_state: data?.cState,
-      present_district: data?.cDistrict,
+      present_state_id: data?.cState,
+      present_district_id: data?.cDistrict,
       present_pincode: data?.cPincode,
       telephones: data?.telePhoneNos,
       mobile_nos: data?.mobileNos,
       fb_link: data?.fb_link,
       insta_link: data?.insta_link,
       twitter_link: data?.twitter_link,
-    
     };
 
-    try {
-      const response = await submitLeaderForm({
-        ...leaderProfile, 'contact_info': resBody, political_info: { activity_pictures: leaderProfile?.political_info?.activity_pictures || [],}
-      });
-
-      if (response?.success) {
-        toast.success(() => (
-          <p>
-            {response.message}
-          </p>
-        ));
-        const res = await getProfile(leaderProfile?.id);
-        dispatch(leaderActions.setLeaderProfile(res));
-      } 
-
-
-    } catch (error) {
-      console.log(error);
-
-    }
+    tryCatch(
+      async () => {
+        const response = await submitLeaderForm({
+          ...leaderProfile,
+          'contact_info': resBody,
+          political_info: {
+            ...leaderProfile?.political_info?.activity_pictures,
+            activity_pictures: leaderProfile?.political_info?.activity_pictures || []
+          }
+        });
+    
+        if (response?.success) {
+          // Update only contact info in redux store
+          dispatch(leaderActions.setLeaderProfile({
+            contact_info: resBody
+          }));
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+      }
+    );
   }
+
   useEffect(() => {
     (async () => {
       const LeadersDropdown = await getLeadersOptions();
-      dispatch(commonActions.setLeaderOptions(LeadersDropdown))
-
+      dispatch(commonActions.setLeaderOptions(LeadersDropdown));
     })();
   }, [dispatch]);
-  useEffect(() => {
 
+  useEffect(() => {
     setValue('pAddress', leaderProfile?.contact_info?.permanent_address || '');
-    setValue('pState', leaderProfile?.contact_info?.permanent_state || '');
-    setValue('pDistrict', leaderProfile?.contact_info?.permanent_district || '');
+    setValue('pState', leaderProfile?.contact_info?.permanent_state_id || '');
+    setValue('pDistrict', leaderProfile?.contact_info?.permanent_district_id || '');
     setValue('pPincode', leaderProfile?.contact_info?.permanent_pincode || '');
     setValue('bothAddressIsSame', leaderProfile?.contact_info?.is_same_as_permanent ?'yes':'no');
     setValue('cAddress', leaderProfile?.contact_info?.present_address || '');
-    setValue('cState', leaderProfile?.contact_info?.present_state || '');
-    setValue('cDistrict', leaderProfile?.contact_info?.present_district || '');
+    setValue('cState', leaderProfile?.contact_info?.present_state_id || '');
+    setValue('cDistrict', leaderProfile?.contact_info?.present_district_id || '');
     setValue('cPincode', leaderProfile?.contact_info?.present_pincode || '');
     setValue('telePhoneNos', leaderProfile?.contact_info?.telephones || '');
     setValue('mobileNos', leaderProfile?.contact_info?.mobile_nos || '');
     setValue('fb_link', leaderProfile?.contact_info?.fb_link || '');
     setValue('insta_link', leaderProfile?.contact_info?.insta_link || '');
     setValue('twitter_link', leaderProfile?.contact_info?.twitter_link || '');
-
-  }, []);
+  }, [leaderProfile, setValue]);
   
   return (
     <>
@@ -166,7 +159,7 @@ export const ContactForm: FC = () => {
           selectField={{
             title: 'Select State',
             options: leaderOptions?.states.map((el) => ({
-              id: el.state,
+              id: el.id,
               value: el.state,
             })),
           }}
@@ -184,8 +177,8 @@ export const ContactForm: FC = () => {
           selectField={{
             title: 'Select District',
             options: leaderOptions?.districts
-              .filter((el) => (pState ? el.state === pState : el))
-              .map((el) => ({ id: el.district, value: el.district })),
+              .filter((el) => (pState ? el.stateid === pState : el))
+              .map((el) => ({ id: el.id, value: el.district })),
           }}
         />
         <Input
@@ -194,7 +187,6 @@ export const ContactForm: FC = () => {
           title='Pincode'
           id='pPincode'
           type='text'
-         
         />
 
         <YesNoField
@@ -268,9 +260,9 @@ export const ContactForm: FC = () => {
               }}
               selectField={{
                 title: 'Select State',
-                options: states.map((el) => ({
-                  id: el.stateId,
-                  value: el.stateName,
+                options: leaderOptions?.states.map((el) => ({
+                  id: el.id,
+                  value: el.state,
                 })),
               }}
             />
@@ -286,9 +278,9 @@ export const ContactForm: FC = () => {
               }}
               selectField={{
                 title: 'Select District',
-                options: districts
-                  .filter((el) => (cState ? el.stateId === cState : el))
-                  .map((el) => ({ id: el.districtId, value: el.districtName })),
+                options: leaderOptions?.districts
+                  .filter((el) => (cState ? el.stateid === cState : el))
+                  .map((el) => ({ id: el.id, value: el.district })),
               }}
             />
             <Input
@@ -296,14 +288,7 @@ export const ContactForm: FC = () => {
               register={register}
               title='Pincode'
               id='cPincode'
-              type='select'
-              selectField={{
-                title: 'Select Pincode',
-                options:
-                  pincodes
-                    .find((el) => el.districtId === cDistrict)
-                    ?.pincodes.map((el) => ({ id: el, value: el })) || [],
-              }}
+              type='text'
             />
           </>
         )}
@@ -363,7 +348,7 @@ export const ContactForm: FC = () => {
 
         <div className='flex justify-end col-span-full gap-2 mt-5'>
           <Link
-            href={'/user/profile'}
+            href={ProtectedRoutes.userProfile}
             className='rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50'>
             close
           </Link>

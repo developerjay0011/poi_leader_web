@@ -72,6 +72,8 @@ export const LoginForm: FC<LoginFormProps> = () => {
           if (data?.leader_detail?.request_status === "Approved") {
             const userData = {
               ...data.user_detail,
+              leaderId: data?.leader_detail.id,
+              leader_detail: data?.leader_detail,
               token: loginResponse.token,
             };
 

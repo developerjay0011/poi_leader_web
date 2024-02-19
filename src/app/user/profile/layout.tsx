@@ -13,7 +13,7 @@ import { getImageUrl } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { leader: { leaderProfile, followers }, auth: { userDetails } } = cusSelector((state) => state);
+  const { leaderProfile, followers } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
 
   useEffect(() => {

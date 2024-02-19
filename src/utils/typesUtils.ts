@@ -162,6 +162,7 @@ export interface UserDetails {
   description:string
   documents:string
   attachments:string
+  leaderId?: string
 }
 
 export const LEADER_IDS = {
