@@ -1,6 +1,4 @@
-import { CommonBox } from '@/utils/CommonBox'
 import { FC } from 'react'
-import { FiClock } from 'react-icons/fi'
 
 interface BriefEventsBoxProps {}
 export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
@@ -18,14 +16,6 @@ export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
             <h4 className='capitalize text-xl'>event - 1</h4>
             <div className='flex gap-3 flex-col'>
               <p className='text-sm text_wrap'>Hello world!!</p>
-
-              {/* {props.eventType === 'event' && (
-                  <p className='flex items-center gap-2 self-end text-sm'>
-                    <FiClock /> {dateTimeConverter(props.startDateTime)}
-                    <strong> to </strong>
-                    {dateTimeConverter(props.endDateTime)}
-                  </p>
-                )} */}
             </div>
           </li>
           <li
@@ -33,14 +23,6 @@ export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
             <h4 className='capitalize text-xl'>event - 2</h4>
             <div className='flex gap-3 flex-col'>
               <p className='text-sm text_wrap'>Hello world!!</p>
-
-              {/* {props.eventType === 'event' && (
-                  <p className='flex items-center gap-2 self-end text-sm'>
-                    <FiClock /> {dateTimeConverter(props.startDateTime)}
-                    <strong> to </strong>
-                    {dateTimeConverter(props.endDateTime)}
-                  </p>
-                )} */}
             </div>
           </li>
           <li
@@ -48,14 +30,6 @@ export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
             <h4 className='capitalize text-xl'>event - 2</h4>
             <div className='flex gap-3 flex-col'>
               <p className='text-sm text_wrap'>Hello world!!</p>
-
-              {/* {props.eventType === 'event' && (
-                  <p className='flex items-center gap-2 self-end text-sm'>
-                    <FiClock /> {dateTimeConverter(props.startDateTime)}
-                    <strong> to </strong>
-                    {dateTimeConverter(props.endDateTime)}
-                  </p>
-                )} */}
             </div>
           </li>
           <li
@@ -63,14 +37,6 @@ export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
             <h4 className='capitalize text-xl'>event - 2</h4>
             <div className='flex gap-3 flex-col'>
               <p className='text-sm text_wrap'>Hello world!!</p>
-
-              {/* {props.eventType === 'event' && (
-                  <p className='flex items-center gap-2 self-end text-sm'>
-                    <FiClock /> {dateTimeConverter(props.startDateTime)}
-                    <strong> to </strong>
-                    {dateTimeConverter(props.endDateTime)}
-                  </p>
-                )} */}
             </div>
           </li>
           <li
@@ -78,14 +44,6 @@ export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
             <h4 className='capitalize text-xl'>event - 2</h4>
             <div className='flex gap-3 flex-col'>
               <p className='text-sm text_wrap'>Hello world!!</p>
-
-              {/* {props.eventType === 'event' && (
-                  <p className='flex items-center gap-2 self-end text-sm'>
-                    <FiClock /> {dateTimeConverter(props.startDateTime)}
-                    <strong> to </strong>
-                    {dateTimeConverter(props.endDateTime)}
-                  </p>
-                )} */}
             </div>
           </li>
         </ul>

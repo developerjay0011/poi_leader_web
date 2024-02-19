@@ -22,7 +22,7 @@ import { ErrorMessage } from '@hookform/error-message'
 import { RiGalleryFill } from 'react-icons/ri'
 import { BiX } from 'react-icons/bi'
 import { convertFileToBase64 } from '@/utils/utility'
-import Image from 'next/image'
+import CustomImage from '@/utils/CustomImage'
 
 interface EmerginLeaderInfoProps {
   watch: UseFormWatch<UserDetails>
@@ -492,7 +492,7 @@ const Activity: FC<{
               <BiX />
             </button>
 
-            <Image
+            <CustomImage
               src={activityImg}
               alt=''
               className='w-36 aspect-square bg-red-500 object-cover object-center'

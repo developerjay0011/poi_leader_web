@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import { FC, useState, ChangeEvent } from 'react'
 import { BiMinusCircle, BiX } from 'react-icons/bi'
 import { BsCameraFill } from 'react-icons/bs'
@@ -11,6 +10,7 @@ import {
 } from 'react-hook-form'
 import { convertFileToBase64 } from '@/utils/utility'
 import { NewPollsFormFields } from './ManagePollsForm'
+import CustomImage from '@/utils/CustomImage'
 
 interface ImagePlusTextInputProps {
   id: string
@@ -62,7 +62,7 @@ export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({
             <>
               {/* Preview Img box */}
               <div className='relative'>
-                <Image
+                <CustomImage
                   src={previewImg}
                   alt='user dp'
                   width={1000}

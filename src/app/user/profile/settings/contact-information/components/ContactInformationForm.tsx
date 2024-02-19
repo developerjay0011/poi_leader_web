@@ -39,7 +39,7 @@ export const ContactForm: FC = () => {
   const cDistrict = watch('cDistrict')
 
   const formSubmitHandler = (data: UserDetails) => {
-    console.log(data)
+   console.log(data)
   }
 
   return (

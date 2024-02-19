@@ -1,101 +1,51 @@
-import { LoginFormFields, RegisterFormFields } from '@/utils/typesUtils'
-import { AESEncrypt, ConnectToAPI, GenerateId } from '@/utils/utility'
-
-const delay = async (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time))
+import Axios from '@/config/axios'
+import { tryCatch } from '@/config/try-catch'
+import { APIRoutes } from '@/constants/routes'
+import { LoginData, RegisterData } from '@/utils/typesUtils'
+import { ConnectToAPI } from '@/utils/utility'
 
 const LOGIN_URL = 'http://dev-api.sourceinfosys.in:30702'
 
-// Register User
-type Register = (obj: { data: RegisterFormFields }) => () => Promise<string>
-
-export const registerUser: Register =
-  ({ data }) =>
-  async () => {
-    const id = GenerateId().substring(0, 16) // this ID will be used to encrypt addInfo for registeration
-
-    // Converting AddInfo object in JSON string
-    const addInfo = JSON.stringify({
-      full_name: data.fullName,
-      email_id: data.email,
-      mobile_no: data.phoneNo,
-      pass: data.password,
-      userType: data.userType,
-    })
-
-    // Encrypting above data with a unique/random id
-    const encData = AESEncrypt(addInfo, id)
-
-    const body = JSON.stringify({
-      eventID: '1',
-      addInfo: {
-        encData,
-        id,
-      },
-    })
-
-    const res = await ConnectToAPI(`${LOGIN_URL}/login`, body)
-
-    return res
+export const registerUser =
+  async (body: RegisterData) => {
+    return tryCatch(
+      async () => {
+        const res = await Axios.post(APIRoutes.register, body);
+        return res.data;
+      }
+    );
   }
 
-// Verify OTP
-type VerifyOTP = (
-  data: RegisterFormFields,
-  otp: string
-) => () => Promise<string>
-
-export const verifyRegisterOTP: VerifyOTP = (data, otp) => async () => {
-  const id = GenerateId().substring(0, 16) // this ID will be used to encrypt addInfo for registeration
-
-  const addInfo = JSON.stringify({
-    mobile_no: data.phoneNo,
-    otp,
-    email_id: data.email,
-    userType: data.userType,
-  })
-
-  const encData = AESEncrypt(addInfo, id)
-
-  const body = JSON.stringify({
-    eventID: '2',
-    addInfo: {
-      encData,
-      id,
-    },
-  })
-
-  const res = await ConnectToAPI(`${LOGIN_URL}/login`, body)
-
-  return res
-}
-
 // Log user in
-export const userLogin = (data: LoginFormFields) => async () => {
-  const id = GenerateId().substring(0, 16) // this ID will be used to encrypt addInfo for login
-
-  const addInfo = JSON.stringify({
-    userId: data.userId,
-    pass: data.password,
-    userType: '',
-  })
-
-  const encData = AESEncrypt(addInfo, id)
-
-  const body = JSON.stringify({
-    eventID: '3',
-    addInfo: {
-      encData,
-      id,
-    },
-  })
-
-  const res = await ConnectToAPI(`${LOGIN_URL}/login`, body)
-
-  console.log(res)
-
-  return res
+export const userLogin = async (body: LoginData) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.login, body);
+      return res.data;
+    }
+  );
 }
+
+export const sendOtp = async (body: { mobile: "string" }) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.sendOTP, body);
+      return res.data;
+    }
+  );
+};
+
+export const verifyOtp = async (body: {
+  mobile: string;
+  otp: string;
+}) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.verifyOTP, body);
+      return res.data;
+    }
+  );
+};
 
 export const verifyUserId = (phoneNo: string, guid: string) => async () => {
   const body = JSON.stringify({

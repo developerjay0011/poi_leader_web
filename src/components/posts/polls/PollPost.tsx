@@ -1,11 +1,10 @@
 'use client'
 import { dateConverter } from '@/utils/utility'
-import Image from 'next/image'
 import { FC } from 'react'
 import { PollDetails } from '@/utils/typesUtils'
 import { cusSelector } from '@/redux_store/cusHooks'
-import { AnimatePresence } from 'framer-motion'
 import { PollOption } from './PollOption'
+import CustomImage from '@/utils/CustomImage'
 
 interface PollPostProps extends PollDetails {
   username: string
@@ -36,8 +35,8 @@ export const PollPost: FC<PollPostProps> = ({
     <>
       <section className='border shadow-sm rounded-md px-5 py-2 bg-white'>
         <div className='flex items-center gap-3 py-4 text-sky-950 border-b'>
-          <Image
-            src={userDetails?.displayPic as string}
+          <CustomImage
+            src={userDetails?.image as string}
             alt='user pic'
             className='w-12 aspect-square object-cover object-center rounded-full'
             width={100}

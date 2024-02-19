@@ -33,7 +33,6 @@ export const PostCommentOptions: FC<PostCommentOptionsProps> = ({
         {userId === userDetails?.id && (
           <button
             onClick={() => {
-              console.log('i am clicked')
               setShowConfirmBox(true)
             }}
             className='flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all'>

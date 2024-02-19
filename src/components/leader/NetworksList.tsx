@@ -1,6 +1,8 @@
+"use client";
+import { ProtectedRoutes } from '@/constants/routes';
+import { cusSelector } from '@/redux_store/cusHooks';
 import { CommonBox } from '@/utils/CommonBox'
-import { friendImg, userImg } from '@/utils/utility'
-import Image from 'next/image'
+import CustomImage from '@/utils/CustomImage'
 import Link from 'next/link'
 import { FC } from 'react'
 import { FaUserAltSlash } from 'react-icons/fa'
@@ -9,13 +11,15 @@ import { FaMessage } from 'react-icons/fa6'
 interface NetworksListProps {}
 
 export const NetworksList: FC<NetworksListProps> = () => {
+  const { followers } = cusSelector((state) => state.leader);
+
   return (
     <>
       <CommonBox
-        title={"Follower's (3)"}
+        title={`Follower's (${followers.length})`}
         cusJSX={[
           <Link
-            href='/leader/profile/followers'
+            href={ProtectedRoutes.followers}
             key={Math.random()}
             className='text-orange-600 text-[14px] hover:underline'>
             See all
@@ -23,36 +27,18 @@ export const NetworksList: FC<NetworksListProps> = () => {
         ]}>
         <div className='w-full py-5 overflow-x-scroll x_cusScroll'>
           <ul className='flex gap-5 w-max'>
-            <FriendBox
-              friendImg={friendImg}
-              name='narendra modi'
-              followersCount={0}
-            />
-            <FriendBox
-              friendImg={friendImg}
-              name='narendra modi'
-              followersCount={0}
-            />
-            <FriendBox
-              friendImg={friendImg}
-              name='narendra modi'
-              followersCount={0}
-            />
-            <FriendBox
-              friendImg={friendImg}
-              name='narendra modi'
-              followersCount={0}
-            />
-            <FriendBox
-              friendImg={friendImg}
-              name='narendra modi'
-              followersCount={0}
-            />
-            <FriendBox
-              friendImg={friendImg}
-              name='narendra modi'
-              followersCount={0}
-            />
+            {
+              followers.length && 
+              followers.map((item: any, index: number) => (
+                <FriendBox
+                  key={index}
+                  friendImg={item.image}
+                  name={item.name}
+                  followersCount={0}
+                />
+
+              ))
+            }
           </ul>
         </div>
       </CommonBox>
@@ -70,7 +56,7 @@ const FriendBox: FC<FriendBoxProps> = ({ name, followersCount, friendImg }) => {
   return (
     <li className='border rounded-md overflow-hidden shadow-sm flex flex-col w-max'>
       <figure className='friend_box'>
-        <Image src={friendImg} alt='friend image' width={1000} height={1000} />
+        <CustomImage src={friendImg} alt='friend image' width={1000} height={1000} />
       </figure>
 
       {/* Friend brief details */}

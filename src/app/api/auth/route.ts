@@ -7,8 +7,6 @@ export const POST = async (req: Request) => {
 
     const id = crypto.randomBytes(8).toString()
 
-    console.log(id)
-
     const data = { name: 'gaurav' }
 
     NextResponse.json(data, { status: 200 })

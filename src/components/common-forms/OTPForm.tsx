@@ -1,11 +1,12 @@
 'use client'
 import { ChangeEvent, FC, FormEvent, useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
 import Logo from '@/assets/favicon.png'
 import { motion as m } from 'framer-motion'
 import { ErrObj } from '@/utils/typesUtils'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { useRouter } from 'next/navigation'
+import { AuthRoutes } from '@/constants/routes'
+import CustomImage from '@/utils/CustomImage'
 
 interface OTPFormProps {
   onClose: () => void
@@ -59,10 +60,7 @@ export const OTPForm: FC<OTPFormProps> = ({
 
   const otpSubmitHandler = (e: FormEvent) => {
     e.preventDefault()
-
     const otp = OTP.join('')
-
-    console.log(otp.length)
 
     if (otp.length !== 6)
       return setErr({ errTxt: 'please enter a valid otp', isErr: true })
@@ -72,9 +70,9 @@ export const OTPForm: FC<OTPFormProps> = ({
 
   useEffect(() => {
     if (!registering && otpVerified && !verifyingOTP) {
-      console.log('i am here')
+     
       onClose()
-      router.push('/login')
+      router.push(AuthRoutes.login);
     }
   }, [onClose, otpVerified, router, verifyingOTP, registering])
 
@@ -100,7 +98,7 @@ export const OTPForm: FC<OTPFormProps> = ({
           exit={{ rotateX: -80 }}
           transition={{ ease: 'easeOut' }}
           className='bg-sky-50 origin-top rounded-md shadow-md z-30 w-max relative m-auto px-10 py-8 flex flex-col items-center gap-10 mt-10'>
-          <Image src={Logo} alt='poi logo' className='w-auto h-[8rem]' />
+          <CustomImage src={Logo} alt='poi logo' className='w-auto h-[8rem]' />
 
           <form
             className='text-sky-950 flex flex-col gap-3'

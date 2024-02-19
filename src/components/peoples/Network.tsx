@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import CustomImage from '@/utils/CustomImage'
 import { FC } from 'react'
 
 interface NetworkProps {
@@ -11,7 +11,7 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg }) => {
     <li className='border rounded-md overflow-hidden w-full bg-white shadow-sm'>
       <figure className='relative'>
         {/* BG Image */}
-        <Image
+        <CustomImage
           src={backgroundImg}
           alt='background pic'
           width={1000}
@@ -25,7 +25,7 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg }) => {
         </p>
 
         {/* User pic */}
-        <Image
+        <CustomImage
           src={displayImg}
           alt='user pic'
           width={1000}

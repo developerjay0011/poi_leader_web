@@ -1,12 +1,12 @@
+import CustomImage from '@/utils/CustomImage'
 import { user2Img } from '@/utils/utility'
-import Image from 'next/image'
 import { FC } from 'react'
 import { BiSolidTrashAlt } from 'react-icons/bi'
 
 export const Notification: FC = () => {
   return (
     <li className='py-5 last_noti flex items-center gap-5'>
-      <Image
+      <CustomImage
         src={user2Img}
         alt='user 2 pic'
         width={1000}

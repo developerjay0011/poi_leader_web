@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { FC, ReactNode } from 'react'
 import BackgroundImg from '@/assets/background.jpg'
 import Logo from '@/assets/favicon.png'
@@ -8,6 +7,7 @@ import { MdDynamicFeed } from 'react-icons/md'
 import { BsAndroid2, BsApple } from 'react-icons/bs'
 import QRCode from 'react-qr-code'
 import Link from 'next/link'
+import CustomImage from '@/utils/CustomImage'
 
 interface LoginPageProps {
   children: ReactNode
@@ -18,7 +18,7 @@ export const LoginLayout: FC<LoginPageProps> = ({ children }) => {
     <>
       <section className='min-h-[100dvh] w-full flex  items-center justify-center relative'>
         {/* BG IMAGE */}
-        <Image
+        <CustomImage
           src={BackgroundImg}
           alt='background'
           className='w-full h-full absolute top-0 left-0 -z-10 object-cover object-center opacity-40'
@@ -28,7 +28,7 @@ export const LoginLayout: FC<LoginPageProps> = ({ children }) => {
           <div className='w-[65%] flex flex-col gap-3 max-lg:hidden'>
             {/* POI LOGO */}
             <Link href={'/'} className='self-start'>
-              <Image
+              <CustomImage
                 src={Logo}
                 alt='poi logo'
                 className='h-[13rem] w-auto self-start max-lg:m-auto max-lg:h-[10rem]'

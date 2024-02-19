@@ -1,4 +1,7 @@
+"use client";
+import { cusSelector } from '@/redux_store/cusHooks'
 import { CommonBox } from '@/utils/CommonBox'
+import { dateConverterNumeric } from '@/utils/utility';
 import { FC } from 'react'
 import { BiBriefcaseAlt, BiLogoGmail } from 'react-icons/bi'
 import { FaTransgenderAlt } from 'react-icons/fa'
@@ -13,6 +16,8 @@ import { MdBloodtype } from 'react-icons/md'
 
 interface PersonalInfoBoxProps {}
 export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
+  const { leaderProfile } = cusSelector((state) => state.leader);
+
   return (
     <>
       <CommonBox title='Personal info' width=''>
@@ -32,46 +37,48 @@ export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
             />
             <PersonalBriefInfo
               Icon={FaCakeCandles}
-              data='sep 2021'
+              data={leaderProfile?.personal_info?.dob && dateConverterNumeric(leaderProfile?.personal_info?.dob)}
               heading='Date of Birth:'
             />
 
             <PersonalBriefInfo
               Icon={FaPhone}
-              data='+91 9958478521'
+              data={`+91 ${leaderProfile?.mobile}`}
               heading='(IN) Phone no:'
             />
 
             <PersonalBriefInfo
               Icon={FaTransgenderAlt}
-              data='male'
+              data={leaderProfile?.personal_info?.gender}
               heading='Gender: '
             />
 
             <PersonalBriefInfo
               Icon={MdBloodtype}
-              data='A+'
+              data={leaderProfile.personal_info?.blood_group}
               heading='Blood Group: '
             />
 
             <PersonalBriefInfo
-              Icon={BiBriefcaseAlt}
-              data='Minister of power (I/C)'
-              heading='Designation: '
+              Icon={BiLogoGmail}
+              data={leaderProfile?.email}
+              heading='Email: '
+              className='col-span-full'
             />
 
             <PersonalBriefInfo
-              Icon={FaHandshake}
-              data='18-feb-2023'
-              heading='Joined: '
+              Icon={BiBriefcaseAlt}
+              data={leaderProfile.political_info?.designation}
+              heading='Designation: '
+              className='col-span-full'
             />
 
             <PersonalBriefInfo Icon={FaGlobe} data='India' heading='Country' />
 
             <PersonalBriefInfo
-              Icon={BiLogoGmail}
-              data='rksingh@poi.com'
-              heading='Email: '
+              Icon={FaHandshake}
+              data={leaderProfile.political_info?.joined_date && dateConverterNumeric(leaderProfile.political_info?.joined_date)}
+              heading='Joined: '
             />
           </div>
         </section>
@@ -82,8 +89,8 @@ export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
 
 const PersonalBriefInfo: FC<{
   Icon: JSX.ElementType
-  heading: string
-  data: string
+  heading?: string
+  data?: any
   className?: React.ComponentProps<'div'>['className'] // this is just a workaround to get intellisence of tailwind classes
 }> = ({ Icon, data, heading, className }) => {
   return (
@@ -96,9 +103,9 @@ const PersonalBriefInfo: FC<{
         </p>
         <p
           className={`text-[14px] pl-7 ${
-            heading.toLowerCase().includes('about') && 'text-justify'
+            heading?.toLowerCase().includes('about') && 'text-justify'
           }`}>
-          {data}
+          {data || 'N/A'}
         </p>
       </article>
     </>

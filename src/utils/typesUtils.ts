@@ -4,7 +4,12 @@ export interface LoginFormFields {
   userId: string
   password: string
   remember: boolean
+  fullName: string
+  email: string
+  phoneNo: string
+  userType: string
 }
+
 
 export interface ErrObj {
   isErr: boolean
@@ -17,6 +22,20 @@ export interface RegisterFormFields {
   phoneNo: string
   password: string
   userType: string
+  userId: string
+}
+
+export interface LoginData {
+  email: string;
+  password: string
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  name: string;
+  mobile: string;
+  leadertype: string;
 }
 
 export interface ErrObj {
@@ -30,8 +49,8 @@ export interface UserDetails {
   email: string
   password: string
   leaderType: string
-  displayPic: string
-  backgroundPic: string
+  image: string
+  bgimage: string
 
   // Personal Information
   firstName: string
@@ -128,6 +147,16 @@ export interface UserDetails {
   telePhoneNos: string
   mobileNos: string
   workEmails: string
+
+  Name:string;
+  Phone:string;
+  Email:string;
+
+
+  title:string
+  description:string
+  documents:string
+  attachments:string
 }
 
 export const LEADER_IDS = {
@@ -213,6 +242,7 @@ export interface Comment {
   commentText: string
   createdDate: string
   comments: NestedComment[]
+  allData: any
 }
 
 export interface NestedComment {
@@ -238,12 +268,16 @@ export interface PostDetails {
   media: MediaPost[] | string
   comments: Comment[] | string
   likes: Like[] | string
+  leaderid: string
+  updatePost: (data:any) => void;
+  types: any[]
+  allData:any
 }
 
 export interface NewPostFields {
   type: string
   id: string
-  media: string
+  media: any
 }
 
 export interface NewPostData {

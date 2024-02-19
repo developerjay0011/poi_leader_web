@@ -4,6 +4,18 @@ import { store } from '@/redux_store'
 import { uiActions } from '@/redux_store/UI/uiSlice'
 import { AES, mode, pad, enc } from 'crypto-js'
 
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  mobile: string;
+  image: string;
+  personal_info: string;
+  fcm_tokens: string;
+  token: string;
+  userId: string;
+}
+
 // UTILITY FUNCTION to Connect to API
 export const ConnectToAPI = async (
   enpointORurl: string,
@@ -76,6 +88,9 @@ export const ConnectToAPI = async (
   return data.rData
 }
 
+
+
+
 // Function to convert date in easy to read format
 export const dateConverter = (date: string) =>
   new Intl.DateTimeFormat('en-IN', {
@@ -97,6 +112,22 @@ export const convertFileToBase64: (u: File) => Promise<string> = (
       resolve(reader.result as string)
     }
   })
+
+// Function to convert files in base64
+export const convertFileToBase64Emergin: (
+  file: File
+) => Promise<{ base64: string }> = (userInpFile: File) =>
+    new Promise((resolve) => {
+      const reader = new FileReader()
+
+      reader.readAsDataURL(userInpFile)
+
+      reader.onload = () => {
+        resolve({
+          base64: reader.result as string,
+        })
+      }
+    })
 
 // FUNCTION TO CALCULATE CURRENT DATE
 export const calCurrentDate = (userInpDate: string) => {
@@ -154,6 +185,8 @@ export const dateConverterNumeric = (date: string) =>
     .join('-')
 
 export const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+
+export const BLOOG_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 export const GenerateId = () => v4().split('-').join('') // Function to generate Random and Unique ID
 

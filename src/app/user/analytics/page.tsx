@@ -4,13 +4,13 @@ import { BsFilePdf } from 'react-icons/bs'
 import { FaUsers } from 'react-icons/fa'
 import { HiUserAdd } from 'react-icons/hi'
 import Banner from '@/assets/statistics_banner.jpg'
-import Image from 'next/image'
 import { AiFillLike } from 'react-icons/ai'
 import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 import { CusAreaChart } from '@/components/charts/CusAreaChart'
 import { CusLineChart } from '@/components/charts/CusLineChart'
 import { CusPieChart } from '@/components/charts/CusPieChart'
 import { CusBarChart } from '@/components/charts/CusBarChart'
+import CustomImage from '@/utils/CustomImage'
 
 type Graph = 'LINE' | 'AREA' | 'PIE' | 'BAR'
 const GraphType = [
@@ -27,7 +27,7 @@ const AdminAccountStatsPage: FC = () => {
     <>
       {/* BANNER */}
       <div className='w-full mb-10 py-28 relative text-sky-950'>
-        <Image
+        <CustomImage
           src={Banner}
           alt='stats banner'
           className='absolute top-0 left-0 w-full h-full object-top object-cover opacity-50 z-[5]'
@@ -143,7 +143,7 @@ const AdminAccountStatsPage: FC = () => {
                   id='graphFilter'
                   value={graphTypeVal}
                   onChange={(e) => {
-                    console.log(e.target.value)
+                    
                     setGraphTypeVal(e.target.value as Graph)
                   }}
                   className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md cursor-pointer capitalize'>
