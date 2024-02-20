@@ -1,6 +1,7 @@
 import { DropdownOptions } from "@/interfaces/common";
 
 export const TOKEN_KEY = "token";
+export const USER_INFO = "userDetails";
 export const DEFAULT_CONTENT_TYPE = 'application/json';
 
 export enum ToastType {
@@ -26,7 +27,7 @@ export const GenderDropdowns: DropdownOptions[] = [
 ];
 
 export const MaritalStatusDropdowns: DropdownOptions[] = [
-  { id: 'Married', value: 'Married' },
-  { id: 'Unmarried', value: 'Unmarried' },
-  { id: 'Divorced', value: 'Divorced' }
+  { id: 'married', value: 'married' },
+  { id: 'unmarried', value: 'unmarried' },
+  { id: 'divorced', value: 'divorced' }
 ];

@@ -5,7 +5,6 @@ import { UserDetails } from '@/utils/typesUtils'
 import { Input } from '@/components/Input'
 import { BLOOD_GROUPS } from '@/utils/utility'
 import Link from 'next/link'
-import { dateConverterNumeric } from '@/utils/utility';
 import moment from 'moment';
 import { submitLeaderForm } from '@/redux_store/APIFunctions'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
@@ -18,34 +17,31 @@ import { commonActions } from '@/redux_store/common/commonSlice'
 export const PersonalInformationForm: FC = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
+
   const {
     register,
-    setValue,
     watch,
     formState: { errors },
+    reset,
     handleSubmit,
-  } = useForm<UserDetails>();
-  const maritalStatus = watch('maritalStatus')
+  } = useForm<UserDetails>({
+    defaultValues: {
+      ...leaderProfile.personal_info
+    }
+  });
+
+  const maritalStatus = watch('marital_status');
+
+  useEffect(() => {
+    const { personal_info } = leaderProfile;
+    reset({
+      ...personal_info,
+      dob: moment(personal_info?.dob).format("YYYY-MM-DD")
+    })
+  }, [leaderProfile]);
 
   const formSubmitHandler =async (data: UserDetails) => {
-    const resBody: ProfileInfo = {
-      first_name: data?.firstName,
-      middle_name: data?.middleName,
-      last_name: data?.lastName,
-      gender: data?.gender,
-      blood_group: data?.bloodGroup,
-      father_name: data?.fatherName,
-      mother_name: data?.motherName,
-      dob: data?.dob,
-      place_of_birth: data?.placeOfBirth,
-      marital_status: data?.maritalStatus,
-      hobbies: data?.hobbies,
-      assets: data?.assests,
-      higher_education: data?.higherEduction,
-      no_of_daughters: data?.noOfDaughters,
-      no_of_sons: data?.noOfSons,
-      spouse_name: data?.spouseName
-    };
+    const resBody: ProfileInfo = {...data};
 
     tryCatch(
       async () => {
@@ -71,26 +67,6 @@ export const PersonalInformationForm: FC = () => {
     );
   }
 
-  useEffect(() => {
-    const { personal_info } = leaderProfile;
-    setValue('firstName', personal_info?.first_name || '');
-    setValue('middleName', personal_info?.middle_name || '');
-    setValue('lastName', personal_info?.last_name || '');
-    setValue('gender', personal_info?.gender?.toLowerCase() || '');
-    setValue('bloodGroup', personal_info?.blood_group || '');
-    setValue('fatherName', personal_info?.father_name || '');
-    setValue('motherName', personal_info?.mother_name || '');
-    setValue('dob', moment(personal_info?.dob).format("YYYY-MM-DD"));
-    setValue('placeOfBirth', personal_info?.place_of_birth || '');
-    setValue('maritalStatus', personal_info?.marital_status?.toLowerCase() || '');
-    setValue('hobbies', personal_info?.hobbies || '');
-    setValue('assests', personal_info?.assets || '');
-    setValue('higherEduction', personal_info?.higher_education || '');
-    setValue('noOfDaughters', personal_info?.no_of_daughters || 0);
-    setValue('noOfSons', personal_info?.no_of_sons || 0);
-    setValue('spouseName', personal_info?.spouse_name || '');
-  }, [leaderProfile, setValue]);
-
   return (
     <>
       <form
@@ -102,7 +78,7 @@ export const PersonalInformationForm: FC = () => {
 
         <Input
           errors={errors}
-          id='firstName'
+          id="first_name"
           placeholder='narendar'
           register={register}
           title='First Name'
@@ -114,14 +90,14 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='middleName'
+          id='middle_name'
           register={register}
           title='Middle Name'
           type='text'
         />
         <Input
           errors={errors}
-          id='lastName'
+          id='last_name'
           placeholder='modi'
           register={register}
           title='Last Name'
@@ -148,7 +124,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='bloodGroup'
+          id='blood_group'
           selectField={{
             title: 'select blood group',
             options: BLOOD_GROUPS.map((el) => ({ id: el, value: el })),
@@ -163,7 +139,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='fatherName'
+          id='father_name'
           placeholder='Damodardas Mulchand Modi'
           register={register}
           title='Father Name'
@@ -175,7 +151,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='motherName'
+          id='mother_name'
           placeholder='Heeraben Modi'
           register={register}
           title='Mother Name'
@@ -198,7 +174,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='placeOfBirth'
+          id='place_of_birth'
           placeholder='Vadnagar'
           register={register}
           title='Place of Birth'
@@ -210,7 +186,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='maritalStatus'
+          id='marital_status'
           selectField={{
             title: 'select marital status',
             options: MaritalStatusDropdowns,
@@ -228,7 +204,7 @@ export const PersonalInformationForm: FC = () => {
           <>
             <Input
               errors={errors}
-              id='spouseName'
+              id='spouse_name'
               placeholder='Jashodaben Modi'
               register={register}
               title='Spouse Name'
@@ -241,7 +217,7 @@ export const PersonalInformationForm: FC = () => {
 
             <Input
               errors={errors}
-              id='noOfDaughters'
+              id='no_of_daughters'
               placeholder=''
               register={register}
               title='No of Daughters'
@@ -254,7 +230,7 @@ export const PersonalInformationForm: FC = () => {
 
             <Input
               errors={errors}
-              id='noOfSons'
+              id='no_of_sons'
               placeholder=''
               register={register}
               title='No of Sons'
@@ -276,7 +252,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='assests'
+          id='assets'
           placeholder=''
           register={register}
           title='Assest & Liability'
@@ -284,7 +260,7 @@ export const PersonalInformationForm: FC = () => {
         />
         <Input
           errors={errors}
-          id='higherEduction'
+          id='higher_education'
           required
           validations={{ required: 'Higher Education is required' }}
           register={register}

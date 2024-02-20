@@ -18,7 +18,7 @@ import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { TOKEN_KEY } from "@/constants/common";
+import { TOKEN_KEY, USER_INFO } from "@/constants/common";
 import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
@@ -72,16 +72,14 @@ export const LoginForm: FC<LoginFormProps> = () => {
           if (data?.leader_detail?.request_status === "Approved") {
             const userData = {
               ...data.user_detail,
-              leaderId: data?.leader_detail.id,
-              leader_detail: data?.leader_detail,
-              token: loginResponse.token,
+              leaderId: data?.leader_detail.id
             };
 
             const serializedData = JSON.stringify(userData);
 
             // Store the serialized data in session storage
-            setCookie('userData', serializedData);
-            setCookie(TOKEN_KEY, userData.token);
+            setCookie(USER_INFO, serializedData);
+            setCookie(TOKEN_KEY, loginResponse.token);
 
             dispatch(authActions.setUserData(userData));
             dispatch(leaderActions.setLeaderProfile(data.leader_detail));
