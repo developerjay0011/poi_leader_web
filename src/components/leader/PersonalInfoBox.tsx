@@ -27,11 +27,7 @@ export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
             {/* ABOUT */}
             <PersonalBriefInfo
               Icon={FaUser}
-              data='R.K. Singh is known for his expertise in the energy sector and has
-              been actively involved in implementing policies related to power
-              and renewable energy in India. He has been instrumental in
-              promoting clean and sustainable energy sources and driving
-              initiatives for electricity access and affordability'
+              data={leaderProfile?.personal_info?.about_me}
               heading='About me:'
               className='col-span-full'
             />

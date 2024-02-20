@@ -13,22 +13,23 @@ import { getImageUrl } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { leader: { leaderProfile, followers }, auth: { userDetails } } = cusSelector((state) => state);
+  const { leaderProfile, followers } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
 
   useEffect(() => {
     (async () => {
-      if(userDetails?.id) {
+      if (leaderProfile?.id) {
         // Get Leader Profiles
-        const res = await getProfile(userDetails?.id);
+        const res = await getProfile(leaderProfile?.id);
+       
         dispatch(leaderActions.setLeaderProfile(res));
         
         // Get Followers of Leader
-        const followersRes = await getFollowers(userDetails?.id);
+        const followersRes = await getFollowers(leaderProfile?.id);
         dispatch(leaderActions.setFollowers(followersRes));
       }
     })()
-  }, [dispatch, userDetails?.id]);
+  }, [dispatch, leaderProfile?.id]);
 
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const files = e.target.files as FileList;

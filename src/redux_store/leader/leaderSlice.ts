@@ -1,13 +1,19 @@
 import { LeaderProfile } from '@/interfaces/leader';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getCookie } from 'cookies-next';
 
 interface LeaderState {
   leaderProfile: LeaderProfile;
   followers: any[];
 }
 
+let userDetails: any = getCookie("userData");
+userDetails = userDetails && JSON.parse(userDetails) || { leader_detail: {} };
+
 const initialState: LeaderState = {
-  leaderProfile: {},
+  leaderProfile: {
+    ...userDetails.leader_detail
+  },
   followers: []
 };
 

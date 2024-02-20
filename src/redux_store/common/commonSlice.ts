@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import toast from 'react-hot-toast';
 
 interface CommonState {
   leaderOptions: {
@@ -30,6 +31,9 @@ export const commonSlice = createSlice({
   reducers: {
     setLeaderOptions(state, action: PayloadAction<any>) {
       state.leaderOptions = action.payload;
+    },
+    showNotification(state, action: PayloadAction<{ message: string, type: 'success' | 'error' }>) {
+      toast[action.payload.type](action.payload.message);
     }
   },
 });

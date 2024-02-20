@@ -15,7 +15,7 @@ import {
   AssemblyConstituencyDetails,
   DesignationDetails,
 } from '@/utils/typesUtils'
-import { ChangeEvent, FC, useState } from 'react'
+import { ChangeEvent, FC, useState,useEffect } from 'react'
 import { Input } from '../../../../../../components/Input'
 import { YesNoField } from '../../../../../../components/YesNoField'
 import { ErrorMessage } from '@hookform/error-message'
@@ -23,6 +23,8 @@ import { RiGalleryFill } from 'react-icons/ri'
 import { BiX } from 'react-icons/bi'
 import { convertFileToBase64 } from '@/utils/utility'
 import CustomImage from '@/utils/CustomImage'
+import { cusSelector } from '@/redux_store/cusHooks'
+import moment from 'moment'
 
 interface EmerginLeaderInfoProps {
   watch: UseFormWatch<UserDetails>
@@ -49,12 +51,13 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
   parties,
   states,
 }) => {
+
   const participatedInElection = watch('participatedInElection')
   const election = watch('election') || watch('targetElection')
   const electionState = watch('electionState')
   const targetElection = watch('targetElection')
   const doneAnyPoliticalActivity = watch('doneAnyPoliticalActivity')
-
+  const { leaderProfile } = cusSelector((state) => state.leader);
   const { fields, append, remove } = useFieldArray({
     name: 'activities',
     control,
@@ -68,6 +71,16 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
     name: 'references',
     control,
   })
+  useEffect(() => {
+    setValue('politicalParty', leaderProfile?.political_info?.political_party || '');
+    setValue('joinedDate', moment(leaderProfile?.political_info?.joined_date).format("YYYY-MM-DD"));
+    setValue('postInParty', leaderProfile?.political_info?.post_in_party || '');
+    setValue('politicalAchievements', leaderProfile?.political_info?.achievements || '');
+    setValue('whyYouJoinedPolitics', leaderProfile?.political_info?.why_join_politics || '');
+    setValue('participatedInElection',leaderProfile?.political_info?.is_participated_in_elections ? 'yes' : 'no');
+
+
+  }, [parties]);
 
   return (
     <>
@@ -82,9 +95,9 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         selectField={{
           title: 'select political party',
           // Rendering party List
-          options: parties.map((el) => ({
-            id: el.partyid,
-            value: el.partyname,
+          options: parties?.map((el) => ({
+            id: el.party_name,
+            value: el.party_name,
           })),
         }}
       />

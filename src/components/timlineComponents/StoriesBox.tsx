@@ -64,7 +64,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   };
 
   useEffect(() => {
-    const leaderid = userDetails?.id || "";
+    const leaderid = userDetails?.leaderId || "";
 
     if(leaderid) {
       (async () => {

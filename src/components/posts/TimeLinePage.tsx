@@ -15,7 +15,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
   const [upPost, setUpPost] = useState();
 
   useEffect(() => {
-    const leaderid = userDetails?.id;
+    const leaderid = userDetails?.leaderId;
     if(leaderid) {
       (async () => {
         try {

@@ -1,24 +1,96 @@
 'use client'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { UserDetails } from '@/utils/typesUtils'
 import { Input } from '@/components/Input'
 import { BLOOD_GROUPS } from '@/utils/utility'
 import Link from 'next/link'
+import { dateConverterNumeric } from '@/utils/utility';
+import moment from 'moment';
+import { submitLeaderForm } from '@/redux_store/APIFunctions'
+import { getProfile } from '@/redux_store/leader/leaderAPI'
+import { leaderActions } from '@/redux_store/leader/leaderSlice'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns, ToastType } from '@/constants/common'
+import { ProfileInfo } from '@/interfaces/leader'
+import { tryCatch } from '@/config/try-catch'
+import { commonActions } from '@/redux_store/common/commonSlice'
 
 export const PersonalInformationForm: FC = () => {
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
   const {
     register,
     setValue,
     watch,
     formState: { errors },
     handleSubmit,
-  } = useForm<UserDetails>()
+  } = useForm<UserDetails>();
   const maritalStatus = watch('maritalStatus')
 
-  const formSubmitHandler = (data: UserDetails) => {
-    console.log(data)
+  const formSubmitHandler =async (data: UserDetails) => {
+    const resBody: ProfileInfo = {
+      first_name: data?.firstName,
+      middle_name: data?.middleName,
+      last_name: data?.lastName,
+      gender: data?.gender,
+      blood_group: data?.bloodGroup,
+      father_name: data?.fatherName,
+      mother_name: data?.motherName,
+      dob: data?.dob,
+      place_of_birth: data?.placeOfBirth,
+      marital_status: data?.maritalStatus,
+      hobbies: data?.hobbies,
+      assets: data?.assests,
+      higher_education: data?.higherEduction,
+      no_of_daughters: data?.noOfDaughters,
+      no_of_sons: data?.noOfSons,
+      spouse_name: data?.spouseName
+    };
+
+    tryCatch(
+      async () => {
+        const response = await submitLeaderForm({
+          ...leaderProfile,
+          'personal_info':resBody,
+          political_info: {
+            ...leaderProfile?.political_info?.activity_pictures,
+            activity_pictures: leaderProfile?.political_info?.activity_pictures || []
+          }
+        });
+    
+        if (response?.success) {
+          // Update only personal info in redux store
+          dispatch(leaderActions.setLeaderProfile({
+            personal_info: resBody
+          }));
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+      }
+    );
   }
+
+  useEffect(() => {
+    const { personal_info } = leaderProfile;
+    setValue('firstName', personal_info?.first_name || '');
+    setValue('middleName', personal_info?.middle_name || '');
+    setValue('lastName', personal_info?.last_name || '');
+    setValue('gender', personal_info?.gender?.toLowerCase() || '');
+    setValue('bloodGroup', personal_info?.blood_group || '');
+    setValue('fatherName', personal_info?.father_name || '');
+    setValue('motherName', personal_info?.mother_name || '');
+    setValue('dob', moment(personal_info?.dob).format("YYYY-MM-DD"));
+    setValue('placeOfBirth', personal_info?.place_of_birth || '');
+    setValue('maritalStatus', personal_info?.marital_status?.toLowerCase() || '');
+    setValue('hobbies', personal_info?.hobbies || '');
+    setValue('assests', personal_info?.assets || '');
+    setValue('higherEduction', personal_info?.higher_education || '');
+    setValue('noOfDaughters', personal_info?.no_of_daughters || 0);
+    setValue('noOfSons', personal_info?.no_of_sons || 0);
+    setValue('spouseName', personal_info?.spouse_name || '');
+  }, [leaderProfile, setValue]);
 
   return (
     <>
@@ -65,20 +137,7 @@ export const PersonalInformationForm: FC = () => {
           id='gender'
           selectField={{
             title: 'select gender',
-            options: [
-              {
-                id: 'male',
-                value: 'male',
-              },
-              {
-                id: 'female',
-                value: 'female',
-              },
-              {
-                id: 'others',
-                value: 'others',
-              },
-            ],
+            options: GenderDropdowns,
           }}
           register={register}
           title='Gender'
@@ -155,20 +214,7 @@ export const PersonalInformationForm: FC = () => {
           id='maritalStatus'
           selectField={{
             title: 'select marital status',
-            options: [
-              {
-                id: 'married',
-                value: 'married',
-              },
-              {
-                id: 'un-married',
-                value: 'un married',
-              },
-              {
-                id: 'divorced',
-                value: 'divorced',
-              },
-            ],
+            options: MaritalStatusDropdowns,
           }}
           register={register}
           title='Marital Status'
@@ -247,34 +293,9 @@ export const PersonalInformationForm: FC = () => {
           type='select'
           selectField={{
             title: 'Select Higher Education',
-            options: [
-              { id: 'below 10th', value: 'below 10th' },
-              { id: '10th pass', value: '10th pass' },
-              { id: '12th pass', value: '12th pass' },
-              { id: 'under graduate', value: 'under graduate' },
-              { id: 'post graduate', value: 'post graduate' },
-              { id: 'p.h.d', value: 'p.h.d' },
-              { id: 'certificate', value: 'certificate' },
-              { id: 'others', value: 'others' },
-            ],
+            options: EducationDropdowns,
           }}
         />
-
-        {/* <MultiSelectInput
-          defaultValues={[]}
-          id='profession'
-          limit={5}
-          options={professions.map((el) => ({
-            id: el.professionId,
-            val: el.professionName,
-          }))}
-          setValue={(val) =>
-            setValue('profession', val.map((el) => el.val).join(', ') as string)
-          }
-          title='Profession'
-          required
-        /> */}
-
         <div className='flex justify-end col-span-full gap-2 mt-5'>
           <Link
             href={'/user/profile'}

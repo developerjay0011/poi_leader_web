@@ -14,7 +14,6 @@ interface GeneralInfoBoxProps {}
 
 export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
-
   const socialNetworks: JSX.Element[] = [
     <Link
       target='_blank'

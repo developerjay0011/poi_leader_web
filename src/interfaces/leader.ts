@@ -20,42 +20,45 @@ export interface LeaderProfile {
 }
 
 export interface ProfileInfo {
-  first_name: string
-  middle_name: string
-  last_name: string
-  gender: string
-  blood_group: string
-  father_name: string
-  mother_name: string
-  dob: string
-  place_of_birth: string
-  marital_status: string
-  spouse_name: string
-  no_of_daughters: number
-  no_of_sons: number
-  higher_education: string
-  profession: string
-  hobbies: string
-  assets: string
+  first_name?: string
+  middle_name?: string
+  last_name?: string
+  gender?: string
+  blood_group?: string
+  father_name?: string
+  mother_name?: string
+  dob?: string
+  place_of_birth?: string
+  marital_status?: string
+  spouse_name?: string
+  no_of_daughters?: number
+  no_of_sons?: number
+  higher_education?: string
+  profession?: string
+  hobbies?: string
+  assets?: string,
+  about_me?: string
 }
 
 export interface ContactInfo {
-  permanent_address: string
-  permanent_state_id: string
-  permanent_state: string
-  permanent_district_id: string
-  permanent_distric: string
-  permanent_pincode: string
-  is_same_as_permanent: number
-  present_address: string
-  present_state_id: string
-  present_district_id: string
-  present_pincode: string
-  telephones: string
-  mobile_nos: string
-  fb_link: string
-  insta_link: string
-  twitter_link: string
+  permanent_address?: string
+  permanent_state_id?: string
+  permanent_state?: string
+  permanent_district_id?: string
+  permanent_district?: string
+  permanent_pincode?: string
+  is_same_as_permanent?: boolean
+  present_address?: string
+  present_state_id?: string
+  present_state?: string
+  present_district_id?: string
+  present_district?: string
+  present_pincode?: string
+  telephones?: string
+  mobile_nos?: string
+  fb_link?: string
+  insta_link?: string
+  twitter_link?: string
 }
 
 export interface PoliticalInfo {
@@ -74,6 +77,7 @@ export interface PoliticalInfo {
   ministries: MinistriesInfo[]
   is_nominated: boolean
   joined_date: string
+  activity_pictures: ActivityPictures[]
   post_in_party: string
   achievements: string
   why_join_politics: string
@@ -84,7 +88,10 @@ export interface PoliticalInfo {
   people_in_team: string
   referencies: References[]
 }
-
+export interface ActivityPictures {
+  pictures: string[],
+  description: string
+}
 export interface MinistriesInfo {
   ministryid: string
   ministrytype: string
