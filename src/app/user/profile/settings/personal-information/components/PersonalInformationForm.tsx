@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { dateConverterNumeric } from '@/utils/utility';
 import moment from 'moment';
 import { submitLeaderForm } from '@/redux_store/APIFunctions'
-import { getProfile } from '@/redux_store/leader/leaderAPI'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns, ToastType } from '@/constants/common'

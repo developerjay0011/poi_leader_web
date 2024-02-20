@@ -1,5 +1,5 @@
 "use client";
-
+import { useEffect } from "react";
 import { BriefProfileInfoBox } from "@/components/timlineComponents/BriefProfileInfoBox";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { TrendingUsers } from "@/components/timlineComponents/TrendingUsers";
@@ -8,14 +8,32 @@ import { BriefEventsBox } from "@/components/timlineComponents/BriefEventsBox";
 import { BirthdayNotifications } from "@/components/timlineComponents/BirthdayNotifications";
 import { FollowedLeader } from "@/components/timlineComponents/FollowedLeader";
 import { useState } from "react";
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { getFollowers, getProfile } from "@/redux_store/leader/leaderAPI";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
 
 const AdminHomePage = () => {
   const [followers, setFollowers] = useState<any>({});
-
+  const { userDetails } = cusSelector((state) => state.auth);
+  const dispatch = cusDispatch();
   const handleFollowers = (data: any) => {
     setFollowers(data);
   };
 
+  useEffect(() => {
+    (async () => {
+      if (userDetails?.leaderid) {
+        // Get Leader Profiles
+        const res = await getProfile(userDetails?.leaderid);
+
+        dispatch(leaderActions.setLeaderProfile(res));
+
+        // Get Followers of Leader
+        const followersRes = await getFollowers(userDetails?.leaderid);
+        dispatch(leaderActions.setFollowers(followersRes));
+      }
+    })()
+  }, []);
   return (
     <>
       <section className="m-auto my-10 w-[75%] relative main_scrollbar max-[1770px]:w-[80%] max-[1570px]:w-[88%] max-[1440px]:w-[95%] max-[1200px]:w-[85%] max-[1000px]:w-[88%] max-md:w-[90%] max-sm:w-[93%] max-sm:my-5">

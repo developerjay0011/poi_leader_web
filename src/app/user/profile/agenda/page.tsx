@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import { AgendaPost } from "@/components/posts/AgendaPost";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { fetchAllAgendas } from "@/redux_store/agenda/agendaApi";
+import {  getAgenda } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import AgendaForm from "@/components/posts/AgendaForm";
+import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 
 const AdminAgendaPage = () => {
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
@@ -20,20 +21,26 @@ const AdminAgendaPage = () => {
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((st) => st.auth);
   const { categories, agendas } = cusSelector((st) => st.agenda);
+  const { leaderProfile, followers } = cusSelector((state) => state.leader);
 
-  useEffect(() => {
-    dispatch(fetchAllAgendas(userDetails?.id as string));
+  useEffect( () => {
+    (async () => {
+    const data = await getAgenda(leaderProfile?.id as string);
+      dispatch(agendaAction.storeAgendas(data))
+      console.log("agendaListagendaList",data)
+      // dispatch(agendaAction.storeCategories(data.categoryList))
+    })()
   }, [userDetails, dispatch]);
 
-  const filterDataOnPriority = agendas.filter((el) =>
+  const filterDataOnPriority = agendas?.filter((el) =>
     priorityFilter ? el.priority === priorityFilter : el
   );
 
-  const filterDataOnStatus = filterDataOnPriority.filter((el) =>
+  const filterDataOnStatus = filterDataOnPriority?.filter((el) =>
     statusFilter ? el.status === statusFilter : el
   );
 
-  const filterData = filterDataOnStatus.filter((el) =>
+  const filterData = filterDataOnStatus?.filter((el) =>
     categoryFilter ? el.category === categoryFilter : el
   );
 
@@ -58,7 +65,7 @@ const AdminAgendaPage = () => {
     filterData.length > 0 &&
     filterData.map((el) => <AgendaPost userId={el.id} {...el} key={el.id} />) */
 
-  const agendaJSX = data.map((el) => (
+  const agendaJSX = filterData?.map((el) => (
     <AgendaPost userId={el.id} {...el} key={el.id} />
   ));
 
@@ -77,7 +84,7 @@ const AdminAgendaPage = () => {
           <section className="flex justify-between flex-col">
             <div className="flex justify-between">
               <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-4 text-[22px] font-semibold capitalize">
-                Agendas
+                Agenda
               </h2>
             </div>
 
@@ -112,7 +119,7 @@ const AdminAgendaPage = () => {
                       className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                     >
                       <option value="">All</option>
-                      {categories.map((el) => (
+                      {categories?.map((el) => (
                         <option key={el._id} value={el._id}>
                           {el.category_name}
                         </option>
@@ -168,7 +175,7 @@ const AdminAgendaPage = () => {
                 exit={{ scale: 0.7, opacity: 0 }}
                 className="shadow-md border rounded-md border-gray-200 py-8 px-20 z-30 bg-white relative flex flex-col items-center"
               >
-                <h2 className="mt-4 mb-8 text-3xl">Add Directory</h2>
+                <h2 className="mt-4 mb-8 text-3xl">Add Agenda</h2>
 
                 <AgendaForm onCancel={onCancel} />
               </m.div>

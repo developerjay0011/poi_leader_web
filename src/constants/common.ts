@@ -26,7 +26,7 @@ export const GenderDropdowns: DropdownOptions[] = [
 ];
 
 export const MaritalStatusDropdowns: DropdownOptions[] = [
-  { id: 'married', value: 'married' },
+  { id: 'Married', value: 'Married' },
   { id: 'Unmarried', value: 'Unmarried' },
-  { id: 'divorced', value: 'divorced' }
+  { id: 'Divorced', value: 'Divorced' }
 ];
