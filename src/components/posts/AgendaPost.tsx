@@ -16,8 +16,10 @@ import { AnimatePresence } from "framer-motion";
 import { MdTimeline } from "react-icons/md";
 import CustomImage from "@/utils/CustomImage";
 import moment from 'moment'
+import { TimeLineDetails } from "@/utils/typesUtils";
 interface AgendaPostProps extends AgendaDetails {
   userId: string;
+  timeline:TimeLineDetails[]
 }
 
 export const AgendaPost: FC<AgendaPostProps> = ({

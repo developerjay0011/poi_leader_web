@@ -101,7 +101,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
         </div>
 
         <div className="flex items-center justify-center gap-5">
-          <Input
+          {/* <Input
             errors={errors}
             id="documents"
             placeholder="documents"
@@ -112,8 +112,8 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
             validations={{
               required: "documents is required",
             }}
-          />
-          {/* <Input
+          /> */}
+          <Input
             errors={errors}
             id="attachments"
             placeholder="attachments"
@@ -124,7 +124,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
             validations={{
               required: "attachments is required",
             }}
-          /> */}
+          />
         </div>
 
         <div className="flex items-center justify-center gap-5">

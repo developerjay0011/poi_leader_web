@@ -24,6 +24,8 @@
     "chart.js": "^4.3.2",
     "cookies-next": "^4.1.1",
     "crypto-js": "^4.1.1",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.1.0",
     "framer-motion": "^10.12.20",
     "html-to-jsx-transform": "^1.1.0",
     "html2canvas": "^1.4.1",

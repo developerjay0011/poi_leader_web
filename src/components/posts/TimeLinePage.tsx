@@ -143,11 +143,11 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           username="R.K Singh"
         />
 
-        <AgendaPost
+        {/* <AgendaPost
           access=""
           attachments=""
           category=""
-          createDate="2023-12-05"
+          created_date="2023-12-05"
           description=""
           documents=""
           id=""
@@ -155,7 +155,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           status="0"
           title=""
           userId=""
-        />
+        /> */}
 
         {postData.map((el: any) => {
           console.log(el);

@@ -1,3 +1,4 @@
+import { TimeLineDetails } from '@/utils/typesUtils'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface AgendaDetails {
@@ -12,7 +13,7 @@ export interface AgendaDetails {
   title: string
   id: string,
   created_by_type: string,
-  timeline: string[]
+  timeline: TimeLineDetails[]
 }
 
 export interface CategoryFilter {

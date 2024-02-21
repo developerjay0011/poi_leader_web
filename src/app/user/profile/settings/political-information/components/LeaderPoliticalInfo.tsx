@@ -269,8 +269,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             title: 'select political party',
             // Rendering party List
             options: parties.map((el) => ({
-              id: el.partyid,
-              value: el.partyname,
+              id: el.id,
+              value: el.party_name,
             })),
           }}
         />
@@ -341,8 +341,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
                   title: 'select ministry type',
                   // Rendering party List
                   options: parties.map((el) => ({
-                    id: el.partyid,
-                    value: el.partyname,
+                    id: el.id,
+                    value: el.party_name,
                   })),
                 }}
               />
