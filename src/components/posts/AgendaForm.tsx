@@ -41,30 +41,30 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
   const formSubmitHandler = async (data: UserDetails) => {
     console.log(data);
 
-     try {
-      const currentDate = new Date().toISOString();
-    const formData = new FormData();
+    //  try {
+    //   const currentDate = new Date().toISOString();
+    // const formData = new FormData();
 
-    formData.append("id", userData?.id || "");
-    formData.append("leaderid", userData?.userId || "");
-    formData.append("categoryid", userData?.id || "");
-    formData.append("title", data?.title || "");
-    formData.append("description", data?.description || "");
-    formData.append("attachments", data?.attachments || "");
-    formData.append("priority", priority || "");
-    formData.append("access", access || "");
-    formData.append("creation_date", currentDate || "");
-    formData.append("saved_by_type", userData?.id || "");
-    formData.append("saved_by", userData?.id || "");
-    formData.append("deletedDocs", userData?.id || "");
+    // formData.append("id", userData?.id || "");
+    // formData.append("leaderid", userData?.userId || "");
+    // formData.append("categoryid", userData?.id || "");
+    // formData.append("title", data?.title || "");
+    // formData.append("description", data?.description || "");
+    // formData.append("attachments", data?.attachments || "");
+    // formData.append("priority", priority || "");
+    // formData.append("access", access || "");
+    // formData.append("creation_date", currentDate || "");
+    // formData.append("saved_by_type", userData?.id || "");
+    // formData.append("saved_by", userData?.id || "");
+    // formData.append("deletedDocs", userData?.id || "");
 
-    const token = userData?.token;
+    // const token = userData?.token;
 
-    //   const Data = await fetchSaveAgenda(formData, token);
-    } catch (error) {
-        console.log(error);
+    // //   const Data = await fetchSaveAgenda(formData, token);
+    // } catch (error) {
+    //     console.log(error);
         
-    }
+    // }
   };
 
   return (
@@ -119,14 +119,40 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
             placeholder="attachments"
             register={register}
             title="attachments"
-            type="text"
+            type="file"
             required
             validations={{
               required: "attachments is required",
             }}
           />
+          <Input
+            errors={errors}
+            id='creation_date'
+            register={register}
+            title='Creation Date'
+            type='date'
+            required
+            validations={{
+              required: 'Date of Birth is required',
+            }}
+          />
         </div>
-
+        <Input
+          errors={errors}
+          register={register}
+          validations={{ required: 'State is required' }}
+          id='category'
+          title='Category'
+          type='select'
+          required
+          selectField={{
+            title: 'select cartegory',
+            options: ['ss','ss'].map((el) => ({
+              id: el,
+              value: el,
+            })),
+          }}
+        />
         <div className="flex items-center justify-center gap-5">
           <label className="flex gap-2 items-center" htmlFor="priority">
             <span className="font-medium">Priority</span>
