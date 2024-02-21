@@ -8,12 +8,6 @@
     "start": "next start -p 3003",
     "lint": "next lint"
   },
-  "eslintConfig": {
-    "rules": {
-        "jsx-a11y/accessible-emoji": "off"
-    }
-},
-
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@ckeditor/ckeditor5-react": "^6.1.0",
