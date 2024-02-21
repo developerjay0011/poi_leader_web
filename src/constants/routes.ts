@@ -30,4 +30,5 @@ export const APIRoutes = {
   getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{userId}}`,
   getFollowers: `${API_Prefix}/leader/followerList/{{userId}}`,
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
+  getAgenda: `${API_Prefix}/leader/getagendas/{{userId}}`,
 }

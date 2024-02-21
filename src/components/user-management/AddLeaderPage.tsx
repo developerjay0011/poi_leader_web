@@ -8,8 +8,6 @@ import { PersonalLeaderInfo } from "./PersonalLeaderInfo";
 import { ContactInfoField } from "./ContactInfoField";
 import { RootState } from "@/redux_store";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { getLeadersOptions } from "@/redux_store/common/commonAPI";
-import { commonActions } from "@/redux_store/common/commonSlice";
 import { submitLeaderForm } from "@/redux_store/APIFunctions";
 
 export interface LeaderFormFields {
@@ -370,13 +368,6 @@ export const AddLeaderPage: FC = () => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    (async () => {
-      const LeadersDropdown = await getLeadersOptions();
-      dispatch(commonActions.setLeaderOptions(LeadersDropdown))
-    })();
-  }, [dispatch]);
 
   return (
     <m.section

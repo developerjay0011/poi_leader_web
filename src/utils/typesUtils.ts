@@ -53,24 +53,24 @@ export interface UserDetails {
   bgimage: string
 
   // Personal Information
-  firstName: string
-  middleName: string
-  lastName: string
+  first_name: string
+  middle_name: string
+  last_name: string
   dob: string
   gender: string
-  motherName: string
-  fatherName: string
+  mother_name: string
+  father_name: string
   hobbies: string
   about: string
-  maritalStatus: string
-  spouseName: string
-  noOfDaughters: number
-  noOfSons: number
-  bloodGroup: string
-  criminalCases: number
-  assests: string
-  placeOfBirth: string
-  higherEduction: string
+  marital_status: string
+  spouse_name: string
+  no_of_daughters: number
+  no_of_sons: number
+  blood_group: string
+  criminal_cases: number
+  assets: string
+  place_of_birth: string
+  higher_education: string
   profession: string
 
   //  Political Info
@@ -131,17 +131,18 @@ export interface UserDetails {
   peopleInTeam: string
 
   // Contact Information
-  pAddress: string
-  pState: string
-  pDistrict: string
-  pPincode: string
+  permanent_address: string
+  permanent_state_id: string
+  permanent_district_id: string
+  permanent_pincode: string
 
   bothAddressIsSame: string
+  is_same_as_permanent: boolean
 
-  cAddress: string
-  cState: string
-  cPincode: string
-  cDistrict: string
+  present_address: string
+  present_state_id: string
+  present_district_id: string
+  present_pincode: string
 
 
   fb_link: string
@@ -149,8 +150,8 @@ export interface UserDetails {
   twitter_link: string
   
 
-  telePhoneNos: string
-  mobileNos: string
+  telephones: string
+  mobile_nos: string
   workEmails: string
 
   Name:string;

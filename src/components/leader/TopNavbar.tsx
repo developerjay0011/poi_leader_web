@@ -17,6 +17,10 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl } from "@/config/get-image-url";
+import { getProfile } from "@/redux_store/leader/leaderAPI";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { getLeadersOptions } from "@/redux_store/common/commonAPI";
+import { commonActions } from "@/redux_store/common/commonSlice";
 
 export const TopNavbar: FC = () => {
   const router = useRouter();
@@ -24,6 +28,7 @@ export const TopNavbar: FC = () => {
   const dispatch = cusDispatch();
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { userDetails } = cusSelector((state: RootState) => state.auth);
   const { leaderProfile } = cusSelector((state: RootState) => state.leader);
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showWarningMsg, setShowWarningMsg] = useState(false);
@@ -40,6 +45,18 @@ export const TopNavbar: FC = () => {
         setShowNotifications(false);
     });
   }, [dispatch]);
+
+  // Initialize login user info from below API
+  useEffect(() => {
+    (async() => {
+      const LeadersDropdown = await getLeadersOptions();
+      dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+      if(userDetails?.leaderId) {
+        const leaderRes = await getProfile(userDetails?.leaderId);
+        dispatch(leaderActions.setLeaderProfile(leaderRes));
+      }
+    })();
+  }, [dispatch, userDetails?.leaderId])
 
   // Converting pathname to heading
   let heading = curRoute?.split("/").at(-1)?.includes("-")

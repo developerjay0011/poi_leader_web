@@ -15,7 +15,7 @@ import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
 import { AnimatePresence } from "framer-motion";
 import { MdTimeline } from "react-icons/md";
 import CustomImage from "@/utils/CustomImage";
-
+import moment from 'moment'
 interface AgendaPostProps extends AgendaDetails {
   userId: string;
 }
@@ -26,7 +26,9 @@ export const AgendaPost: FC<AgendaPostProps> = ({
   title,
   status,
   userId,
-  createDate,
+  created_date,
+  created_by_type,
+  timeline
 }) => {
 
 
@@ -54,30 +56,22 @@ export const AgendaPost: FC<AgendaPostProps> = ({
 
         <section className="flex flex-col pr-5 w-full max-[700px]:px-5">
           <div className="flex items-center gap-3 py-4 text-sky-950 border-b max-[650px]:flex-wrap">
-            <CustomImage
-              src={userImg}
-              alt="user pic"
-              className="w-12 aspect-square object-cover object-center rounded-full"
-              width={100}
-              height={100}
-            />
+          
 
             {/* Info and date of publish */}
             <div>
-              <h4 className="font-[600] text-lg text-orange-500">R.K Singh</h4>
+              <h4 className="font-[600] text-lg text-orange-500">Created by : {created_by_type}</h4>
               <p className="flex items-center capitalize gap-2 text-sm font-[500]">
-                <span>created an agenda: {dateConverter(createDate)}</span>
+                <span>created an agenda: {moment(created_date).format("YYYY-MM-DD")}</span>
               </p>
             </div>
 
             {/* Actions */}
             <div className="flex items-center ml-auto gap-5 max-[700px]:flex-col-reverse max-[700px]:items-end">
               <label
-                className={`ml-auto border text-[13px] rounded-full px-5 py-[2px] uppercase ${
-                  AGENDA_STATUS[status as AGENDA_VAL].classes
-                }`}
+                className={`ml-auto border text-[13px] rounded-full px-5 py-[2px] uppercase `}
               >
-                {AGENDA_STATUS[status as AGENDA_VAL].name}
+                {status}
               </label>
 
               <button
@@ -107,7 +101,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
                   onClick={() => setShowTimeline(true)}
                   className="hover:text-orange-500 underline text-sm capitalize"
                 >
-                  timeline
+                  {timeline?.length != 0? "timeline" : "add timeline"} 
                 </button>
               </h2>
               <p
@@ -122,6 +116,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
       <AnimatePresence mode="wait">
         {showTimeline && (
           <DevelopmentAgendaTimeLine
+            timeline={timeline}
             onClose={() => setShowTimeline(false)}
             title={title}
           />

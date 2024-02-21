@@ -10,7 +10,6 @@ import { YesNoField } from '@/components/YesNoField'
 import Link from 'next/link'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { getLeadersOptions } from '@/redux_store/common/commonAPI'
 import { submitLeaderForm } from '@/redux_store/APIFunctions'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { tryCatch } from '@/config/try-catch'
@@ -25,38 +24,28 @@ export const ContactForm: FC = () => {
     register,
     setValue,
     watch,
+    reset,
     formState: { errors },
     handleSubmit,
   } = useForm<UserDetails>({
     defaultValues: {
-      bothAddressIsSame: 'yes',
+      ...leaderProfile.contact_info,
+      bothAddressIsSame: 'yes'
     },
     mode: 'onTouched',
   });
 
   const bothAddressIsSame = watch('bothAddressIsSame');
-  const pAddress = watch('pAddress');
-  const pState = watch('pState');
-  const pDistrict = watch('pDistrict');
-  const pPincode = watch('pPincode');
-  const cState = watch('cState');
+  const pAddress = watch("permanent_address");
+  const pState = watch("permanent_state_id");
+  const pDistrict = watch("permanent_district_id");
+  const pPincode = watch("permanent_pincode");
+  const cState = watch("present_state_id");
 
   const formSubmitHandler = async(data: UserDetails) => {
     const resBody: ContactInfo = {
-      permanent_address: data?.pAddress,
-      permanent_state_id: data?.pState,
-      permanent_district_id: data?.pDistrict,
-      permanent_pincode: data?.pPincode,
-      is_same_as_permanent: data?.bothAddressIsSame == "yes" ? true :false,
-      present_address: data?.cAddress,
-      present_state_id: data?.cState,
-      present_district_id: data?.cDistrict,
-      present_pincode: data?.cPincode,
-      telephones: data?.telePhoneNos,
-      mobile_nos: data?.mobileNos,
-      fb_link: data?.fb_link,
-      insta_link: data?.insta_link,
-      twitter_link: data?.twitter_link,
+      ...data,
+      is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false,
     };
 
     tryCatch(
@@ -84,29 +73,12 @@ export const ContactForm: FC = () => {
   }
 
   useEffect(() => {
-    (async () => {
-      const LeadersDropdown = await getLeadersOptions();
-      dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-    })();
-  }, [dispatch]);
+    const { contact_info } = leaderProfile;
+    reset({
+      ...contact_info
+    })
+  }, [leaderProfile]);
 
-  useEffect(() => {
-    setValue('pAddress', leaderProfile?.contact_info?.permanent_address || '');
-    setValue('pState', leaderProfile?.contact_info?.permanent_state_id || '');
-    setValue('pDistrict', leaderProfile?.contact_info?.permanent_district_id || '');
-    setValue('pPincode', leaderProfile?.contact_info?.permanent_pincode || '');
-    setValue('bothAddressIsSame', leaderProfile?.contact_info?.is_same_as_permanent ?'yes':'no');
-    setValue('cAddress', leaderProfile?.contact_info?.present_address || '');
-    setValue('cState', leaderProfile?.contact_info?.present_state_id || '');
-    setValue('cDistrict', leaderProfile?.contact_info?.present_district_id || '');
-    setValue('cPincode', leaderProfile?.contact_info?.present_pincode || '');
-    setValue('telePhoneNos', leaderProfile?.contact_info?.telephones || '');
-    setValue('mobileNos', leaderProfile?.contact_info?.mobile_nos || '');
-    setValue('fb_link', leaderProfile?.contact_info?.fb_link || '');
-    setValue('insta_link', leaderProfile?.contact_info?.insta_link || '');
-    setValue('twitter_link', leaderProfile?.contact_info?.twitter_link || '');
-  }, [leaderProfile, setValue]);
-  
   return (
     <>
       <form
@@ -121,19 +93,19 @@ export const ContactForm: FC = () => {
         </h3>
 
         <label
-          htmlFor={`pAddress`}
+          htmlFor={`permanent_address`}
           className='col-span-full flex flex-col gap-2'>
           <span>
             Full Address <strong className='text-red-500'>*</strong>
           </span>
           <textarea
-            {...register(`pAddress`, {
+            {...register(`permanent_address`, {
               required: 'Address is required',
             })}
             placeholder=''
-            id={`pAddress`}
+            id={"permanent_address"}
             className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-              errors.pAddress
+              errors.permanent_address
                 ? 'bg-red-100 text-red-500 border-red-400'
                 : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
             }`}
@@ -141,7 +113,7 @@ export const ContactForm: FC = () => {
           <ErrorMessage
             as={'span'}
             errors={errors}
-            name='pAddress'
+            name='permanent_address'
             className='text-sm text-red-500'
           />
         </label>
@@ -150,7 +122,7 @@ export const ContactForm: FC = () => {
           errors={errors}
           register={register}
           title='State'
-          id='pState'
+          id='permanent_state_id'
           type='select'
           required
           validations={{
@@ -168,7 +140,7 @@ export const ContactForm: FC = () => {
           errors={errors}
           register={register}
           title='District'
-          id='pDistrict'
+          id='permanent_district_id'
           type='select'
           required
           validations={{
@@ -185,7 +157,7 @@ export const ContactForm: FC = () => {
           errors={errors}
           register={register}
           title='Pincode'
-          id='pPincode'
+          id='permanent_pincode'
           type='text'
         />
 
@@ -202,15 +174,15 @@ export const ContactForm: FC = () => {
               // If both address is same then we will set the present Addresses values to permanent Address
               if (val === 'yes') {
                 // below conditions will either set the permanent address values or empty strings.
-                setValue('cAddress', pAddress || '')
-                setValue('cState', pState || '')
-                setValue('cDistrict', pDistrict || '')
-                setValue('cPincode', pPincode || '')
+                setValue('present_address', pAddress || '')
+                setValue('present_state_id', pState || '')
+                setValue('present_district_id', pDistrict || '')
+                setValue('present_pincode', pPincode || '')
               } else {
-                setValue('cAddress', '')
-                setValue('cDistrict', '')
-                setValue('cPincode', '')
-                setValue('cState', '')
+                setValue('present_address', '')
+                setValue('present_district_id', '')
+                setValue('present_pincode', '')
+                setValue('present_state_id', '')
               }
             },
           }}
@@ -223,19 +195,19 @@ export const ContactForm: FC = () => {
             </h3>
 
             <label
-              htmlFor={`cAddress`}
+              htmlFor={`present_address`}
               className='col-span-full flex flex-col gap-2'>
               <span>
                 Full Address <strong className='text-red-500'>*</strong>{' '}
               </span>
               <textarea
-                {...register(`cAddress`, {
+                {...register(`present_address`, {
                   required: 'Address is required',
                 })}
                 placeholder=''
-                id={`cAddress`}
+                id="present_address"
                 className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-                  errors.cAddress
+                  errors.present_address
                     ? 'bg-red-100 text-red-500 border-red-400'
                     : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
                 }`}
@@ -243,7 +215,7 @@ export const ContactForm: FC = () => {
               <ErrorMessage
                 as={'span'}
                 errors={errors}
-                name='cAddress'
+                name='present_address'
                 className='text-sm text-red-500'
               />
             </label>
@@ -252,7 +224,7 @@ export const ContactForm: FC = () => {
               errors={errors}
               register={register}
               title='State'
-              id='cState'
+              id='present_state_id'
               type='select'
               required
               validations={{
@@ -270,7 +242,7 @@ export const ContactForm: FC = () => {
               errors={errors}
               register={register}
               title='District'
-              id='cDistrict'
+              id='present_district_id'
               type='select'
               required
               validations={{
@@ -287,7 +259,7 @@ export const ContactForm: FC = () => {
               errors={errors}
               register={register}
               title='Pincode'
-              id='cPincode'
+              id='present_pincode'
               type='text'
             />
           </>
@@ -299,7 +271,7 @@ export const ContactForm: FC = () => {
           type='number'
           errors={errors}
           register={register}
-          id='telePhoneNos'
+          id='telephones'
           title="Telephone / Landline No's"
           required
           validations={{
@@ -312,7 +284,7 @@ export const ContactForm: FC = () => {
           type='number'
           errors={errors}
           register={register}
-          id='mobileNos'
+          id='mobile_nos'
           title={"Mobile No's"}
           required
           validations={{

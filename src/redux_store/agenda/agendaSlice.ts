@@ -4,13 +4,15 @@ export interface AgendaDetails {
   access: string
   attachments: string
   category: string
-  createDate: string
+  created_date: string
   description: string
   documents: string
   priority: string
   status: string
   title: string
-  id: string
+  id: string,
+  created_by_type: string,
+  timeline: string[]
 }
 
 export interface CategoryFilter {

@@ -12,7 +12,7 @@ userDetails = userDetails && JSON.parse(userDetails) || { leader_detail: {} };
 
 const initialState: LeaderState = {
   leaderProfile: {
-    ...userDetails.leader_detail
+    id: userDetails?.leaderId
   },
   followers: []
 };

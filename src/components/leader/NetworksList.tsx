@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { FC } from 'react'
 import { FaUserAltSlash } from 'react-icons/fa'
 import { FaMessage } from 'react-icons/fa6'
+import { getImageUrl } from '@/config/get-image-url'
 
 interface NetworksListProps {}
 
@@ -32,7 +33,7 @@ export const NetworksList: FC<NetworksListProps> = () => {
               followers.map((item: any, index: number) => (
                 <FriendBox
                   key={index}
-                  friendImg={item.image}
+                  friendImg={getImageUrl(item.image)}
                   name={item.name}
                   followersCount={0}
                 />

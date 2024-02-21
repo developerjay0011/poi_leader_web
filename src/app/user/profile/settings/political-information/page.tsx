@@ -1,15 +1,10 @@
 'use client'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { LeaderPoliticalInfo } from './components/LeaderPoliticalInfo'
 import { UserDetails } from '@/utils/typesUtils'
 import { EmerginLeaderInfo } from './components/EmergingLeaderInfo'
 import Link from 'next/link'
-import { commonActions } from "@/redux_store/common/commonSlice";
-
-import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { cusSelector, cusDispatch } from '@/redux_store/cusHooks'
-import { getLeadersOptions } from '@/redux_store/common/commonAPI'
 
 const PoliticalInformationPage: FC = () => {
   const {
@@ -24,13 +19,6 @@ const PoliticalInformationPage: FC = () => {
   const { leaderOptions } = cusSelector((state) => state.common)
   const dispatch = cusDispatch();
   
-  useEffect(() => {
-    (async () => {
-      const LeadersDropdown = await getLeadersOptions();
-      dispatch(commonActions.setLeaderOptions(LeadersDropdown))
- 
-    })();
-  }, [dispatch]);
   return (
     <form className='grid grid-cols-2 gap-x-4 gap-y-5'>
       <h2 className='text-4xl font-semibold col-span-full mb-5'>

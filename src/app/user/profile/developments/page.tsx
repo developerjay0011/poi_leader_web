@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { AgendaPost } from '@/components/posts/AgendaPost'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { fetchAllAgendas } from '@/redux_store/agenda/agendaApi'
+// import { fetchAllAgendas } from '@/redux_store/agenda/agendaApi'
 import { AGENDA_STATUS, AGENDA_VAL } from '@/utils/utility'
 import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 
@@ -16,9 +16,9 @@ const AdminDevelopmentPage = () => {
   const { userDetails } = cusSelector((st) => st.UI)
   const { categories, agendas } = cusSelector((st) => st.agenda)
 
-  useEffect(() => {
-    dispatch(fetchAllAgendas(userDetails?.id as string))
-  }, [userDetails, dispatch])
+  // useEffect(() => {
+  //   dispatch(fetchAllAgendas(userDetails?.id as string))
+  // }, [userDetails, dispatch])
 
   const filterDataOnPriority = agendas.filter((el) =>
     priorityFilter ? el.priority === priorityFilter : el
