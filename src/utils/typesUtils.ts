@@ -164,6 +164,8 @@ export interface UserDetails {
   documents:string
   attachments:string
   leaderId?: string
+  creation_date: string
+  category:string
 }
 
 export const LEADER_IDS = {

@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { FaEdit } from 'react-icons/fa'
 import { cusSelector } from '@/redux_store/cusHooks'
 import CustomImage from '@/utils/CustomImage'
+import { getImageUrl } from '@/config/get-image-url'
 
 interface BriefProfileInfoBoxProps {}
 
@@ -32,7 +33,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
         {/* Profile info and pic */}
         <section className='flex items-center my-5 gap-3 text-sky-950 max-[1400px]:gap-2'>
           <CustomImage
-            src={leaderProfile?.image as string}
+            src={getImageUrl(leaderProfile?.image)}
             alt='profile pic'
             width={100}
             height={100}

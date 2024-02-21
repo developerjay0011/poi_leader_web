@@ -107,7 +107,8 @@ interface TimeLineDataProps {
   title: string
   status: string,
   created_date: string,
-  attachments:string[]
+  attachments: string[]
+  
 }
 
 const colors = {
