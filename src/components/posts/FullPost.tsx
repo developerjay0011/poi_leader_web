@@ -183,7 +183,7 @@ export const FullPost: FC<FullPostProps> = ({
             <div className="flex flex-col overflow-y-scroll main_scrollbar">
               {/* comments box */}
               <ul className="flex flex-col gap-5 bg-white mt-4">
-                {curPost.comments.map((el) => (
+                {/* {curPost.comments.map((el) => (
                   <SingleComment
                     {...el}
                     key={el.id}
@@ -191,7 +191,7 @@ export const FullPost: FC<FullPostProps> = ({
                     likeChangeHandler={likeOnCommentPerPostHandler}
                     postPerMedia
                   />
-                ))}
+                ))} */}
               </ul>
               <NewCommentForm
                 CommentHandler={createNewComment}

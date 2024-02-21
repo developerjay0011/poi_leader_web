@@ -30,7 +30,7 @@ const AdminAgendaPage = () => {
       console.log("agendaListagendaList",data)
       // dispatch(agendaAction.storeCategories(data.categoryList))
     })()
-  }, [userDetails, dispatch]);
+  }, [userDetails, dispatch, leaderProfile?.id]);
 
   const filterDataOnPriority = agendas?.filter((el) =>
     priorityFilter ? el.priority === priorityFilter : el
@@ -66,7 +66,7 @@ const AdminAgendaPage = () => {
     filterData.map((el) => <AgendaPost userId={el.id} {...el} key={el.id} />) */
 
   const agendaJSX = filterData?.map((el) => (
-    <AgendaPost userId={el.id} {...el} key={el.id} />
+    <AgendaPost userId={el.id}  {...el} key={el.id} />
   ));
 
   const onCancel = () => {

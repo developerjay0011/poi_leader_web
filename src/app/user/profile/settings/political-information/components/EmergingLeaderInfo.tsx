@@ -268,10 +268,10 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                                 value: el.parliamentaryName,
                               }))
                           : assemblyConstituency
-                              .filter((el) => el.stateId === electionState)
+                            .filter((el) => el?.stateid === electionState)
                               .map((el) => ({
-                                id: el.assemblyId,
-                                value: el.assemblyName,
+                                id: el?.id,
+                                value: el?.assembly_name,
                               })),
                     }}
                   />
@@ -450,7 +450,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                 validate: {
                   validMobileNo(no) {
                     return (
-                      no.toString().length === 10 ||
+                      no?.toString().length === 10 ||
                       'Please Enter a Valid Number'
                     )
                   },

@@ -4,11 +4,15 @@ import { motion as m } from 'framer-motion'
 import moment from 'moment'
 import { FaFileAlt } from "react-icons/fa";
 import { getImageUrl } from '@/config/get-image-url';
+import {
+
+TimeLineDetails
+} from '@/utils/typesUtils'
 
 interface AgendaTimelineProps {
   onClose: () => void
   title: string,
-  timeline:string[]
+  timeline: TimeLineDetails[]
 }
 
 export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
@@ -43,6 +47,7 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
 
            {   timeline?.map((el) => (
              <TimeLineData
+               key={el.milestone}
                status={el?.status}
                details={el?.description}
                title={el?.milestone}
@@ -130,7 +135,7 @@ const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, created_d
 
         <div className='flex items-start gap-3 ml-5 flex-row-reverse'>
           {attachments?.map((el) => (
-            <a href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
+            <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
               <FaFileAlt />
             </a>
             ))}

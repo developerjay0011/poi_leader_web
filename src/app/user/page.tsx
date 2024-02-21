@@ -20,20 +20,6 @@ const AdminHomePage = () => {
     setFollowers(data);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (userDetails?.leaderid) {
-        // Get Leader Profiles
-        const res = await getProfile(userDetails?.leaderid);
-
-        dispatch(leaderActions.setLeaderProfile(res));
-
-        // Get Followers of Leader
-        const followersRes = await getFollowers(userDetails?.leaderid);
-        dispatch(leaderActions.setFollowers(followersRes));
-      }
-    })()
-  }, []);
   return (
     <>
       <section className="m-auto my-10 w-[75%] relative main_scrollbar max-[1770px]:w-[80%] max-[1570px]:w-[88%] max-[1440px]:w-[95%] max-[1200px]:w-[85%] max-[1000px]:w-[88%] max-md:w-[90%] max-sm:w-[93%] max-sm:my-5">

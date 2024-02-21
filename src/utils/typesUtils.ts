@@ -201,7 +201,13 @@ export interface PartyDetails {
   id: string
   party_name: string
 }
-
+export interface TimeLineDetails {
+    status : string
+  description : string
+  milestone: string
+  created_date: string
+  attachments: string[]
+}
 export interface DistrictDetails {
   districtId: string
   districtName: string

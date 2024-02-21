@@ -441,6 +441,7 @@ export const AddLeaderPage: FC = () => {
               register={register}
               errors={errors}
               watch={watch}
+
               setValue={setValue}
               districts={leaderOptions.districts}
               states={leaderOptions.states}

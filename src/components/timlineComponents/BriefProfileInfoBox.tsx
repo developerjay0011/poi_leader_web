@@ -20,6 +20,7 @@ interface BriefProfileInfoBoxProps {}
 
 export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
   const { userDetails } = cusSelector((st) => st.UI)
+  const { leaderProfile } = cusSelector((state) => state.leader);
   const [showLikes, setShowLikes] = useState(true)
 
   const showLike = () => setShowLikes(true)
@@ -31,7 +32,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
         {/* Profile info and pic */}
         <section className='flex items-center my-5 gap-3 text-sky-950 max-[1400px]:gap-2'>
           <CustomImage
-            src={userDetails?.image as string}
+            src={leaderProfile?.image as string}
             alt='profile pic'
             width={100}
             height={100}
@@ -42,7 +43,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
             <Link
               href={`/user/profile`}
               className='text-lg font-[600] max-[1300px]:text-[1.05rem] hover:text-orange-500 transition-all capitalize'>
-              {userDetails?.firstName}
+              {leaderProfile?.username}
             </Link>
 
             {/* Messages */}

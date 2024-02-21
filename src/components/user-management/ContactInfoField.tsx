@@ -18,7 +18,7 @@ interface ContactInfoFieldProps {
   setValue: UseFormSetValue<LeaderFormFields>
   states: StateDetails[]
   districts: DistrictDetails[]
-  pincodes: PincodeDetails[]
+  // pincodes: PincodeDetails[]
 }
 
 export const ContactInfoField: FC<ContactInfoFieldProps> = ({
