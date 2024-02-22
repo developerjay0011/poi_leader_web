@@ -74,60 +74,69 @@ export interface UserDetails {
   profession: string
 
   //  Political Info
-  designation: string
-  parliamentHouse: string
-  politicalParty: string
-  lokSabhaState: string
-  lokSabhaConstituency: string
-  rajyaSabhaNominated: string
-  rajyaSabhaState: string
-  mlaState: string
-  mlaConstituency: string
-  ministries: {
-    name: string
-    type: string
+  lok_sabha_state: string
+  lok_sabha_constituency: string
+  rajya_sabha_nominated: string
+  rajya_sabha_state: string
+  mla_state: string
+  mla_constituency: string
+  ministries?: {
+    ministryid?: string
+    ministrytype?: string
   }[]
-  activity_pictures: {
-    pictures: [
-      string
-    ],
+  activity_pictures?: {
+    pictures?: string[]
     description: string
   }[]
+  political_party_id: string
+  designation_id: string
+  parliament_house: string
+  stateid: string
+  assemblyid: string
+  parliamentaryid: string
+  is_hold_ministry: boolean
+  is_nominated: boolean
+  is_participated_in_elections: boolean
+  is_prepare_for_elections: boolean
+
+  done_any_political_activity: boolean
+  does_family_supports: boolean
+  people_in_team: string
+  referencies: {
+    name?: string
+    age?: number
+    mobile?: string
+  }[]
+
   // Emerging Leader Political Info
-  joinedDate: string
-  postInParty: string
+  joined_date: string
+  post_in_party: string
 
   // Question
   participatedInElection: string
-  politicalAchievements: string
-  whyYouJoinedPolitics: string
+  achievements: string
+  why_join_politics: string
 
   // participatedInElection YES Field
-  election: string
-  electionYear: string
   position: string
   opponents: string
-  electionState: string
-  electionConstituency: string
+  elections: string
+  election_year: string
+  election_stateid: string
+  election_constituency_id: string
+  election_parliamentary_constituency_id: string
+
 
   // participatedInElection NO Field
-  targetElection: string
-  targetElectionYear: string
   targetElectionState: string
   targetElectionConstituency: string
-  topTenPriorities: string
+  
+  target_elections: string
+  target_election_year: string
+  top_priorities: string
 
   familySupportedForPolitics: string
   doneAnyPoliticalActivity: string
-  activities: {
-    img: string
-    description: string
-  }[]
-  references: {
-    name: string
-    age: string
-    mobileNo: string
-  }[]
   peopleInTeam: string
 
   // Contact Information
@@ -169,7 +178,8 @@ export interface UserDetails {
 }
 
 export const LEADER_IDS = {
-  mpID: '649ebf20c47c520495a02cbd',
+  // mpID: '649ebf20c47c520495a02cbd',
+  mpID: '65b252f4af64d588b642fb98',
   leaderID: '6486e2530b653899171a9bdb',
   emergingLeaderID: '649e8aedd33f7f84f03820f2',
   mlaID: '649ebf1bc47c520495a02cbb',
@@ -184,19 +194,19 @@ export interface AssemblyConstituencyDetails {
 }
 
 export interface DesignationDetails {
-  designationId: string
-  designationName: string
+  id: string
+  designation: string
 }
 
 export interface ParliamentaryConstituencyDetails {
-  parliamentaryId: string
-  parliamentaryName: string
-  stateId: string
+  id: string
+  parliamentary_name: string
+  stateid: string
 }
 
 export interface StateDetails {
-  stateId: string
-  stateName: string
+  id: string
+  state: string
 }
 
 export interface PartyDetails {

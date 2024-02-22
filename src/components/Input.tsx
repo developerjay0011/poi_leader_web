@@ -103,6 +103,7 @@ export const Input: FC<InputProps> = ({
         <select
           disabled={disabled}
           id={id}
+          key={id}
           {...register(id, {
             ...validations,
             required: {
