@@ -3,22 +3,11 @@ import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 
-export const getAgenda = async (userId: string) => {
+export const getAgenda = async (leaderId: string) => {
   return tryCatch(
     async () => {
-      const res = await Axios.get(insertVariables(APIRoutes.getAgenda, { userId }));
+      const res = await Axios.get(insertVariables(APIRoutes.getAgenda, { leaderId }));
       return res.data;
     }
   );
 };
-
-
-// export const registerUser =
-//   async (body: RegisterData) => {
-//     return tryCatch(
-//       async () => {
-//         const res = await Axios.post(APIRoutes.getCategories, body);
-//         return res.data;
-//       }
-//     );
-//   }

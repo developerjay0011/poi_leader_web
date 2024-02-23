@@ -1,23 +1,5 @@
 import Axios from "@/config/axios";
 
-export const fetchAddPost = async (formData: any) => {
-  try {
-    const response = await Axios.post(
-      `/api/Post/AddPost`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    throw error; // You can throw or handle the error as per your requirement
-  }
-};
-
 export const fetchGetLeaderAddedPosts = async (leaderid: any) => {
   try {
     const res = await Axios.get(`/api/Post/GetLeaderAddedPosts/${leaderid}`);

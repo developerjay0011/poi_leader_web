@@ -39,7 +39,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
       {/* CENTER FEED */}
       <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
         <StoriesBox />
-        <NewPostBox updatePost={updatePost} />
+        <NewPostBox />
 
         <Post
           createdDatetime="2023-11-05"

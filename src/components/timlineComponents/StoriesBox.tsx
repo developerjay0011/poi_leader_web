@@ -1,29 +1,28 @@
 import { CommonBox } from "@/utils/CommonBox";
-import { GenerateId, UserData } from "@/utils/utility";
+import { GenerateId } from "@/utils/utility";
 import Link from "next/link";
 import { ChangeEvent, FC, useEffect, useState } from "react";
-import { BsPlusCircle, BsThreeDots } from "react-icons/bs";
+import { BsPlusCircle } from "react-icons/bs";
 import {
-  fetchAddStory,
   fetchDeleteStory,
-  fetchGetLeaderAddedStories,
 } from "../api/stories";
-import { PostOptions } from "../posts/PostOptions";
-import { cusSelector } from "@/redux_store/cusHooks";
-import CustomImage from "@/utils/CustomImage";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { Story } from "./Story";
+import { Media } from "@/interfaces/story";
+import { addStories, deleteStory, getStoriesForLeader } from "@/redux_store/posts/postAPI";
+import { groupBy } from "@/config/groupby";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 
-interface StoriesBoxProps {}
-
-export const StoriesBox: FC<StoriesBoxProps> = () => {
-  const [storyMedia, setStoryMedia] = useState<Media[]>([]);
+export const StoriesBox: FC = () => {
+  const dispatch = cusDispatch();
   const [textPost, setTextPost] = useState("");
   const [getStories, setGetStories] = useState([]);
   const [updateStory, setUpdateStory] = useState({});
   const id = GenerateId();
-  const { userDetails } = cusSelector(state => state.auth);
+  const { userDetails } = cusSelector((state) => state.auth);
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-    setStoryMedia([]);
     const data = e.target.files as FileList;
     if (!data || data.length === 0) return;
     const newMedia: Media[] = [];
@@ -39,8 +38,6 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
         id: GenerateId(),
       });
     }
-
-    setStoryMedia((oldMedia) => [...oldMedia, ...newMedia]);
     const formData = new FormData();
     formData.append("leaderid", userDetails?.id || "");
     formData.append("written_text", textPost || "");
@@ -48,15 +45,16 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
 
     for (let i = 0; i < data.length; i++) {
       const item: any = data[i];
-
       formData.append("media", item);
     }
 
     try {
-      const data = await fetchAddStory(formData);
+      const response = await addStories(formData);
 
-      if (data?.success) {
-        setUpdateStory(data);
+      if (response?.success) {
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
       }
     } catch (error) {
       console.log(error);
@@ -64,14 +62,21 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
   };
 
   useEffect(() => {
-    const leaderid = userDetails?.leaderId || "";
-
-    if(leaderid) {
+    const leaderid = userDetails?.leaderId;
+    if (leaderid) {
       (async () => {
         try {
-          const data = await fetchGetLeaderAddedStories(leaderid);
-  
+          const data = await getStoriesForLeader(leaderid);
           if (data?.length > 0) {
+            // const groupByLeaderId = await groupBy(data, (item: any) => item.leaderid);
+            // let mergeAllPosts: any = []
+            // Object.keys(groupByLeaderId).forEach((el: any, index: number) => {
+            //   mergeAllPosts[index] = [];
+            //   groupByLeaderId[el].forEach(item => 
+            //     mergeAllPosts[index] = [...mergeAllPosts[index], ...item.posts]
+            //   );
+            // })
+            // console.log('groupByLeaderId => ', mergeAllPosts)
             setGetStories(data);
           }
         } catch (error) {
@@ -88,7 +93,7 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
     };
 
     try {
-      const data = await fetchDeleteStory(postBody);
+      const data = await deleteStory(postBody);
       if (data) {
         setUpdateStory(data);
       }
@@ -113,8 +118,8 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
       >
         <div className="w-[660px] ">
           <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
-            <li className=" w-44 h-[300px] aspect-[9/16] rounded-lg relative  ">
-              <label htmlFor="media">
+            <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
+              <label htmlFor="media" className="flex h-[80px] justify-center items-center rounded-full shadow">
                 <input
                   type="file"
                   className="hidden"
@@ -122,122 +127,24 @@ export const StoriesBox: FC<StoriesBoxProps> = () => {
                   multiple
                   onChange={mediaChangeHandler}
                 />
-                <BsPlusCircle className="absolute top-3 left-3 z-10 text-white text-[38px] shadow" />
-
-                <figure className="absolute top-0 left-0 w-full h-full object-cover object-center story_img">
-                  <CustomImage
-                    src={
-                      storyMedia?.length > 0
-                        ? URL.createObjectURL(storyMedia[0]?.media)
-                        : ""
-                    }
-                    alt=""
-                    width={1000}
-                    height={1000}
-                    className="w-full h-full object-cover object-center"
-                  />
-                  {/* Overlay */}
-                  <div className="absolute top-0 left-0 w-full bg-black bg-opacity-25 h-full"></div>
-                </figure>
+                <BsPlusCircle className="z-10 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center" />
               </label>
             </li>
-
-            {getStories.map((el: { media?: any[]; id: string } | undefined) =>
-              el?.media?.map((item: any, index: number) => {
-                const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${item?.media}`;
-                return (
-                  <Story
-                    key={index}
-                    img={imageUrl}
-                    id={el?.id}
-                    handleDelete={handleDelete}
-                  />
-                );
-              })
-            )}
+            {getStories.map((el: { media?: any[]; id: string } | undefined) => {
+              return (
+                <Story
+                  key={el?.id}
+                  userImage={`${userDetails?.image && process.env.NEXT_PUBLIC_BASE_URL + '' + userDetails?.image || ''}`}
+                  img={`${userDetails?.image && process.env.NEXT_PUBLIC_BASE_URL + '' + userDetails?.image || ''}`}
+                  stories={el?.media}
+                  id={el?.id || ''}
+                  handleDelete={handleDelete}
+                />
+              );
+            })}
           </ul>
         </div>
       </CommonBox>
-    </>
-  );
-};
-
-interface StoryProps {
-  img: string;
-  self?: boolean;
-  id: string;
-  handleDelete: any;
-}
-
-interface Media {
-  type: string;
-  media: File;
-  id: string;
-}
-
-const Story: FC<StoryProps> = ({ img, id, handleDelete }) => {
-  const [showMorePostOptions, setShowMorePostOptions] = useState(false);
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  const leaderid = userData?.id || "";
-
-  const deletePostHandler = async (leaderid: string, id: string) => {
-    handleDelete(leaderid, id);
-    setShowMorePostOptions(false);
-  };
-
-  return (
-    <>
-      <li className="w-44 h-[300px]  aspect-[9/16] rounded-lg relative ">
-        {/* User Img */}
-
-        <CustomImage
-          src={img}
-          width={1000}
-          height={1000}
-          alt="user display pic"
-          className="absolute top-3 left-3 border-2 border-white z-20 w-12 aspect-square rounded-full object-cover object-center shadow"
-        />
-
-        {/* Story Image */}
-        <figure className="absolute top-0 left-0 w-full h-full object-cover object-center story_img">
-          <CustomImage
-            src={img}
-            alt=""
-            width={1000}
-            height={1000}
-            className="w-full h-full object-cover object-center"
-          />
-          {/* Overlay */}
-          <div className="absolute top-0 left-0 w-full bg-black bg-opacity-25 h-full"></div>
-        </figure>
-        <div className="ml-auto relative" id="moreOptions">
-          <button
-            onClick={() => setShowMorePostOptions((lst) => !lst)}
-            className="absolute right-0 rotate-90 top-6"
-          >
-            <BsThreeDots className="text-2xl" />
-          </button>
-
-          {showMorePostOptions && (
-            <PostOptions
-              deletePostHandler={() => deletePostHandler(leaderid, id)}
-              userId={leaderid}
-              onClose={() => setShowMorePostOptions(false)}
-            />
-          )}
-        </div>
-      </li>
     </>
   );
 };
