@@ -62,45 +62,56 @@ export interface ContactInfo {
 }
 
 export interface PoliticalInfo {
-  political_party_id: string
-  political_party: string
-  designation_id: string
-  designation: string
-  parliament_house: string
-  stateid: string
-  state: string
-  assemblyid: string
-  assembly: string
-  parliamentaryid: string
-  parliamentary: string
-  is_hold_ministry: boolean
-  ministries: MinistriesInfo[]
-  is_nominated: boolean
-  joined_date: string
-  activity_pictures: ActivityPictures[]
-  post_in_party: string
-  achievements: string
-  why_join_politics: string
-  is_participated_in_elections: boolean
-  is_prepare_for_elections: boolean
-  done_any_political_activity: boolean
-  does_family_supports: boolean
-  people_in_team: string
+  political_party_id?: string
+  political_party?: string
+  designation_id?: string
+  designation?: string
+  parliament_house?: string
+  stateid?: string
+  state?: string
+  assemblyid?: string
+  assembly?: string
+  parliamentaryid?: string
+  parliamentary?: string
+  is_hold_ministry?: boolean
+  ministries?: MinistriesInfo[]
+  elections?: string
+  election_year?: string
+  election_stateid?: string
+  election_constituency_id?: string
+  election_parliamentary_constituency_id?: string
+  position?: string
+  opponents?: string
+  is_nominated?: boolean
+  joined_date?: string
+  activity_pictures?: ActivityPictures[]
+  post_in_party?: string
+  achievements?: string
+  why_join_politics?: string
+  is_participated_in_elections?: boolean
+  is_prepare_for_elections?: boolean
+  target_elections?: string
+  target_election_year?: string
+  top_priorities?: string
+  done_any_political_activity?: boolean
+  does_family_supports?: boolean
+  people_in_team?: string
   referencies: References[]
+  participated_in_election?: string
 }
 export interface ActivityPictures {
-  pictures: string[],
+  pictures?: string[],
   description: string
 }
 export interface MinistriesInfo {
-  ministryid: string
-  ministrytype: string
+  ministryid?: string
+  ministrytype?: string
 }
 
 export interface References {
-  name: string
-  age: number
-  mobile: string
+  name?: string
+  age?: number
+  mobile?: string
 }
 
 export interface GeneralSetting {

@@ -32,4 +32,5 @@ export const APIRoutes = {
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
   getAgenda: `${API_Prefix}/leader/getagendas/{{userId}}`,
   getCategories: `${API_Prefix}/leader/getcategories/{{userId}}`,
+  uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
 }

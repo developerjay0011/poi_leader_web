@@ -2,6 +2,7 @@ import {
   Control,
   FieldErrors,
   UseFormRegister,
+  UseFormReset,
   UseFormSetValue,
   UseFormWatch,
   useFieldArray,
@@ -18,16 +19,18 @@ import {
 import { ChangeEvent, FC, useState,useEffect } from 'react'
 import { Input } from '../../../../../../components/Input'
 import { YesNoField } from '../../../../../../components/YesNoField'
-import { ErrorMessage } from '@hookform/error-message'
 import { RiGalleryFill } from 'react-icons/ri'
 import { BiX } from 'react-icons/bi'
-import { convertFileToBase64 } from '@/utils/utility'
 import CustomImage from '@/utils/CustomImage'
 import { cusSelector } from '@/redux_store/cusHooks'
 import moment from 'moment'
+import { uploadActivityPictures } from '@/redux_store/leader/leaderAPI'
+import { ErrorMessage } from '@hookform/error-message'
+import { ActivityPictures } from '@/interfaces/leader'
 
 interface EmerginLeaderInfoProps {
   watch: UseFormWatch<UserDetails>
+  reset: UseFormReset<UserDetails>
   errors: FieldErrors<UserDetails>
   register: UseFormRegister<UserDetails>
   setValue: UseFormSetValue<UserDetails>
@@ -45,6 +48,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
   register,
   setValue,
   watch,
+  reset,
   assemblyConstituency,
   designations,
   parliamentaryConstituency,
@@ -53,34 +57,34 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
 }) => {
 
   const participatedInElection = watch('participatedInElection')
-  const election = watch('election') || watch('targetElection')
-  const electionState = watch('electionState')
-  const targetElection = watch('targetElection')
+  const election = watch('elections') || watch('target_elections')
+  const electionState = watch('election_stateid')
+  const targetElection = watch('target_elections')
   const doneAnyPoliticalActivity = watch('doneAnyPoliticalActivity')
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { fields, append, remove } = useFieldArray({
-    name: 'activities',
+    name: 'activity_pictures',
     control,
-  })
+  });
 
   const {
     fields: references,
     append: newRef,
     remove: removeRef,
   } = useFieldArray({
-    name: 'references',
+    name: 'referencies',
     control,
   })
   useEffect(() => {
-    setValue('politicalParty', leaderProfile?.political_info?.political_party || '');
-    setValue('joinedDate', moment(leaderProfile?.political_info?.joined_date).format("YYYY-MM-DD"));
-    setValue('postInParty', leaderProfile?.political_info?.post_in_party || '');
-    setValue('politicalAchievements', leaderProfile?.political_info?.achievements || '');
-    setValue('whyYouJoinedPolitics', leaderProfile?.political_info?.why_join_politics || '');
-    setValue('participatedInElection',leaderProfile?.political_info?.is_participated_in_elections ? 'yes' : 'no');
-
-
-  }, [parties]);
+    const { political_info } = leaderProfile;
+    reset({
+      ...political_info,
+      joined_date: moment(political_info?.joined_date).format("YYYY-MM-DD"),
+      participatedInElection: political_info?.is_participated_in_elections ? 'yes' : 'no',
+      doneAnyPoliticalActivity: leaderProfile.political_info?.done_any_political_activity ? 'yes' : 'no',
+      familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no'
+    });
+  }, [leaderProfile]);
 
   return (
     <>
@@ -89,7 +93,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         required
         register={register}
         validations={{ required: 'Political Party is required' }}
-        id='politicalParty'
+        id='political_party_id'
         title='Political Party'
         type='select'
         selectField={{
@@ -106,7 +110,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         required
         register={register}
         validations={{ required: 'Joined Date is required' }}
-        id='joinedDate'
+        id='joined_date'
         title='Joined Date'
         type='date'
       />
@@ -116,7 +120,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         required
         register={register}
         validations={{ required: 'Party Post is required' }}
-        id='postInParty'
+        id='post_in_party'
         title='Post in Party'
         type='text'
         placeholder='chief'
@@ -124,7 +128,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
 
       <Input
         errors={errors}
-        id='politicalAchievements'
+        id='achievements'
         register={register}
         title='Political Achievements'
         type='textarea'
@@ -135,7 +139,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
 
       <Input
         errors={errors}
-        id='whyYouJoinedPolitics'
+        id='why_join_politics'
         register={register}
         title='Why did you join Politics?'
         type='textarea'
@@ -149,8 +153,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         fullWidth
         validations={{
           onChange() {
-            setValue('targetElection', '')
-            setValue('election', '')
+            setValue('target_elections', '')
+            setValue('elections', '')
           },
         }}
         register={register}
@@ -170,7 +174,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
             }
             type='select'
             id={
-              participatedInElection === 'yes' ? 'election' : 'targetElection'
+              participatedInElection === 'yes' ? 'elections' : 'target_elections'
             }
             required
             validations={{
@@ -179,17 +183,17 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                 // Resetting all Fields
 
                 setValue('targetElectionConstituency', '')
-                setValue('electionState', '')
-                setValue('targetElectionYear', '')
-                setValue('electionYear', '')
-                setValue('electionConstituency', '')
+                setValue('election_stateid', '')
+                setValue('target_election_year', '')
+                setValue('election_year', '')
+                setValue('election_constituency_id', '')
               },
             }}
             selectField={{
               title: 'select election',
               options: designations.map((el) => ({
-                id: el.designationId,
-                value: el.designationName,
+                id: el.id,
+                value: el.designation,
               })),
             }}
           />
@@ -201,8 +205,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
             type='select'
             id={
               participatedInElection === 'yes'
-                ? 'electionYear'
-                : 'targetElectionYear'
+                ? 'election_year'
+                : 'target_election_year'
             }
             required
             validations={{
@@ -231,15 +235,15 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                   errors={errors}
                   register={register}
                   validations={{ required: 'State is required' }}
-                  id='electionState'
+                  id='election_stateid'
                   title='State'
                   type='select'
                   required
                   selectField={{
                     title: 'select state',
                     options: states.map((el) => ({
-                      id: el.stateId,
-                      value: el.stateName,
+                      id: el.id,
+                      value: el.state,
                     })),
                   }}
                 />
@@ -252,7 +256,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                     validations={{
                       required: 'Constituency is required',
                     }}
-                    id='electionConstituency'
+                    id='election_constituency_id'
                     title='Constituency'
                     type='select'
                     required
@@ -262,10 +266,10 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                       options:
                         election === LEADER_IDS.mpID
                           ? parliamentaryConstituency
-                              .filter((el) => el.stateId === electionState)
+                              .filter((el) => el.stateid === electionState)
                               .map((el) => ({
-                                id: el.parliamentaryId,
-                                value: el.parliamentaryName,
+                                id: el.id,
+                                value: el.parliamentary_name,
                               }))
                           : assemblyConstituency
                             .filter((el) => el?.stateid === electionState)
@@ -312,7 +316,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
 
       {participatedInElection && participatedInElection === 'no' && (
         <Input
-          id='topTenPriorities'
+          id='top_priorities'
           errors={errors}
           register={register}
           title={
@@ -324,8 +328,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                   {
                     // finding designation based on user selection then showing the designation in place of _____ (dash)
                     designations.find(
-                      (el) => el.designationId === targetElection
-                    )?.designationName
+                      (el) => el.id === targetElection
+                    )?.designation
                   }
                 </span>
               ) : (
@@ -351,7 +355,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
 
             if (val === 'yes') {
               remove()
-              append({ description: '', img: '' })
+              append({ description: '', pictures: [] })
             } else remove()
           },
         }}
@@ -371,13 +375,14 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                 key={el.id}
                 removeActivity={() => remove(i)}
                 setValue={setValue}
+                preserveValues={leaderProfile.political_info?.activity_pictures && leaderProfile.political_info?.activity_pictures[i]}
               />
             )
           })}
 
           <button
             type='button'
-            onClick={() => append({ img: '', description: '' })}
+            onClick={() => append({ pictures: [], description: '' })}
             className='outline-none self-start col-span-full text-sm mt-1 capitalize py-2 px-4 rounded bg-teal-500 text-teal-50 hover:bg-teal-600 transition-all'>
             add More
           </button>
@@ -421,7 +426,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
             <Input
               errors={errors}
               register={register}
-              id={`references.${i}.name` as keyof UserDetails}
+              id={`referencies.${i}.name` as keyof UserDetails}
+              key={`referencies.${i}.name` as keyof UserDetails}
               title='Name'
               type='text'
               required
@@ -430,7 +436,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
             <Input
               errors={errors}
               register={register}
-              id={`references.${i}.age` as keyof UserDetails}
+              id={`referencies.${i}.age` as keyof UserDetails}
+              key={`referencies.${i}.age` as keyof UserDetails}
               title='Age'
               type='text'
               required
@@ -440,7 +447,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
             <Input
               errors={errors}
               register={register}
-              id={`references.${i}.mobileNo` as keyof UserDetails}
+              id={`referencies.${i}.mobile` as keyof UserDetails}
+              key={`referencies.${i}.mobile` as keyof UserDetails}
               title='Mobile No'
               type='text'
               required
@@ -471,7 +479,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         {references.length < 5 && (
           <button
             type='button'
-            onClick={() => newRef({ age: '', mobileNo: '', name: '' })}
+            onClick={() => newRef({ age: undefined, mobile: undefined, name: undefined })}
             className='outline-none self-start col-span-full text-sm mt-1 capitalize py-2 px-4 rounded bg-teal-500 text-teal-50 hover:bg-teal-600 transition-all'>
             add Reference
           </button>
@@ -487,86 +495,105 @@ const Activity: FC<{
   index: number
   removeActivity: () => void
   setValue: UseFormSetValue<UserDetails>
-}> = ({ errors, register, index, removeActivity, setValue }) => {
-  const [activityImg, setActivityImg] = useState('')
+  preserveValues: any
+}> = ({ errors, register, index, removeActivity, setValue, preserveValues }) => {
+  const [activityImg, setActivityImg] = useState(preserveValues.pictures || []);
+  const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files as FileList;
+    if(files.length > 0) {
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append('pictures', files[i]); // Assuming the server expects an array with the name 'pictures[]'
+      }
+      const profileRes = await uploadActivityPictures(formData);
+      setValue(`activity_pictures.${index}.pictures`, profileRes.data);
+      setActivityImg(profileRes.data);
+    }
+  }
 
   return (
     <div className='w-full flex gap-4'>
-      <div className='flex flex-col gap-3 relative'>
-        {activityImg && (
-          <>
-            <button
-              type='button'
-              onClick={() => {
-                setActivityImg('')
-                setValue(`activities.${index}.img`, '')
-              }}
-              className='text-2xl absolute top-2 right-2 w-6 aspect-square rounded-full bg-opacity-50 bg-slate-500 flex justify-center items-center text-red-50 hover:bg-opacity-70'>
-              <BiX />
-            </button>
+      <div className='w-full flex flex-col gap-3 relative'>
+        <div className='flex flex-row gap-3 relative'>
+          {activityImg.length > 0 && (
+            activityImg.map((image: string) => {
+              return (
+                <div className='relative'>
+                  <button
+                    type='button'
+                    key={image}
+                    onClick={() => {
+                      const updatedImageList = activityImg?.filter((el: string) => el !== image);
+                      setActivityImg(updatedImageList);
+                      setValue(`activity_pictures.${index}.pictures`, updatedImageList);
+                    }}
+                    className='text-2xl absolute top-2 right-2 w-6 aspect-square rounded-full bg-opacity-50 bg-slate-500 flex justify-center items-center text-red-50 hover:bg-opacity-70'>
+                    <BiX />
+                  </button>
 
-            <CustomImage
-              src={activityImg}
-              alt=''
-              className='w-36 aspect-square bg-red-500 object-cover object-center'
+                  <CustomImage
+                    src={`${process.env.NEXT_PUBLIC_BASE_URL}${image}`}
+                    alt=''
+                    key={image}
+                    className='w-36 aspect-square bg-red-500 object-cover object-center'
+                    width={200}
+                    height={200}
+                  />
+                </div>
+              )
+            })
+          )}
+        </div>
+        <div className='w-full flex flex-row gap-3'>
+          <label
+            htmlFor={`activity_pictures.${index}.pictures`}
+            className='flex items-center gap-2 cursor-pointer mb-auto w-44'>
+            <input
+              id={`activity_pictures.${index}.pictures`}
+              type='file'
+              multiple
+              className='hidden'
+              {...register(`activity_pictures.${index}.pictures`, {
+                // required: 'Field is required',
+                onChange: async (e: ChangeEvent<HTMLInputElement>) => {
+                  onChangeHandler(e);
+                }
+              })}
             />
-          </>
+            <span>{activityImg.length > 0  ? 'Add' : 'Upload'} Picture</span>
+            <RiGalleryFill className='text-2xl' />
+          </label>
+
+          <label htmlFor={`activity_pictures.${index}.description`} className='w-full'>
+            <textarea
+              {...register(`activity_pictures.${index}.description`, {
+                required: 'Field is required',
+              })}
+              placeholder='description about the picture uploaded'
+              id={`activity_pictures.${index}.description`}
+              className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
+                errors.activity_pictures && errors.activity_pictures[index]?.description
+                  ? 'bg-red-100 text-red-500 border-red-400'
+                  : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+              }`}
+              rows={3}></textarea>
+          </label>
+        </div>
+        <ErrorMessage
+          as={'span'}
+          errors={errors}
+          name={`activity_pictures.${index}.pictures`}
+          className='text-sm text-red-500'
+        />
+        {index !== 0 && (
+          <button
+            type='button'
+            onClick={removeActivity}
+            className='text-2xl mb-auto w-6 aspect-square rounded-full bg-red-500 flex justify-center items-center text-red-50 hover:bg-red-600'>
+            <BiX />
+          </button>
         )}
-
-        <label
-          htmlFor={`activities.${index}.img`}
-          className='flex items-center gap-2 cursor-pointer mb-auto'>
-          <input
-            id={`activities.${index}.img`}
-            type='file'
-            // accept=''
-            className='hidden'
-            {...register(`activities.${index}.img`, {
-              required: 'Field is required',
-              onChange: async (e: ChangeEvent<HTMLInputElement>) => {
-                const file = (e.target.files as FileList)[0]
-
-                e.target.value = '' // resetting input field
-
-                if (!file) return
-
-                if (!file.type.includes('image')) return
-
-                const data = await convertFileToBase64(file)
-
-                setActivityImg(data)
-                setValue(`activities.${index}.img`, data)
-              },
-            })}
-          />
-          <span>Upload Picture</span>
-          <RiGalleryFill className='text-2xl' />
-        </label>
       </div>
-
-      <label htmlFor={`activities.${index}.description`} className=''>
-        <textarea
-          {...register(`activities.${index}.description`, {
-            required: 'Field is required',
-          })}
-          placeholder='description about the picture uploaded'
-          id={`activities.${index}.description`}
-          className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-            errors.activities
-              ? 'bg-red-100 text-red-500 border-red-400'
-              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-          }`}
-          rows={3}></textarea>
-      </label>
-
-      {index !== 0 && (
-        <button
-          type='button'
-          onClick={removeActivity}
-          className='text-2xl mb-auto w-6 aspect-square rounded-full bg-red-500 flex justify-center items-center text-red-50 hover:bg-red-600'>
-          <BiX />
-        </button>
-      )}
     </div>
   )
 }
@@ -582,7 +609,7 @@ const PeopleCount: FC<{
       <input
         type='radio'
         className='checkbox hidden'
-        {...register('peopleInTeam', {
+        {...register('people_in_team', {
           required: 'People Count is required',
         })}
         id={value}
