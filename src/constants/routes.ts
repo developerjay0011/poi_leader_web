@@ -32,6 +32,7 @@ export const APIRoutes = {
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
   getAgenda: `${API_Prefix}/leader/getagendas/{{leaderId}}`,
   getCategories: `${API_Prefix}/leader/getcategories/{{leaderId}}`,
+  saveAgenda: `${API_Prefix}/leader/saveagenda`,
   uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
 
   // Post Endpoint

@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../Input";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
-import { fetchSaveAgenda } from "../api/agendas";
-import { UserData } from "@/utils/utility";
+import toast from "react-hot-toast";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { getAgenda, saveAgenda } from "@/redux_store/agenda/agendaApi";
+import moment from "moment";
+import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 
 interface AgendaFormProps {
   onCancel: () => void; // Define the type of onCancel prop
@@ -12,21 +15,11 @@ interface AgendaFormProps {
 const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
   const [priority, setPriority] = useState("");
   const [access, setAccess] = useState("");
-  const [status, setStatus] = useState("");
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
-
+  const { categories } = cusSelector((st) => st.agenda);
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
+  const dispatch = cusDispatch();
   const {
     register,
     setValue,
@@ -34,37 +27,27 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
     formState: { errors },
     handleSubmit,
   } = useForm<UserDetails>();
-  console.log(priority);
-  console.log(access);
-  console.log(status);
 
   const formSubmitHandler = async (data: UserDetails) => {
-    console.log(data);
-
-    //  try {
-    //   const currentDate = new Date().toISOString();
-    // const formData = new FormData();
-
-    // formData.append("id", userData?.id || "");
-    // formData.append("leaderid", userData?.userId || "");
-    // formData.append("categoryid", userData?.id || "");
-    // formData.append("title", data?.title || "");
-    // formData.append("description", data?.description || "");
-    // formData.append("attachments", data?.attachments || "");
-    // formData.append("priority", priority || "");
-    // formData.append("access", access || "");
-    // formData.append("creation_date", currentDate || "");
-    // formData.append("saved_by_type", userData?.id || "");
-    // formData.append("saved_by", userData?.id || "");
-    // formData.append("deletedDocs", userData?.id || "");
-
-    // const token = userData?.token;
-
-    // //   const Data = await fetchSaveAgenda(formData, token);
-    // } catch (error) {
-    //     console.log(error);
+   
+    const body = { ...data, categoryid:categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
+     try {
+       const Data = await saveAgenda(body);  
+       if (Data?.success) {
+         toast.success(() => (
+           <p>
+             {Data?.message}
+           </p>
+         ));
+         const agendaData = await getAgenda(leaderProfile?.id as string);
+         dispatch(agendaAction.storeAgendas(agendaData))
+         onCancel()
+       }
+       console.log("Data", Data)
+    } catch (error) {
+        console.log(error);
         
-    // }
+    }
   };
 
   return (
@@ -137,7 +120,8 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
             }}
           />
         </div>
-        <Input
+        
+        {/* <Input
           errors={errors}
           register={register}
           validations={{ required: 'State is required' }}
@@ -147,13 +131,51 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
           required
           selectField={{
             title: 'select cartegory',
-            options: ['ss','ss'].map((el) => ({
-              id: el,
-              value: el,
+            options: categories.map((el) => ({
+              id: el.id,
+              value: el.category,
             })),
           }}
         />
+         */}
+       
+      {/* <label className="flex gap-1 items-center" htmlFor="category">
+        <span className='font-semibold'>
+            Category  <strong className='text-red-500'>*</strong>
+          </span>
+             </label>
+          <select
+            id="category"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="w-full capitalize num_inp text-base py-2 px-3 rounded-md outline-none border"
+          >
+            <option value="">All</option>
+            {categories?.map((el) => (
+              <option key={el.id} value={el.id}>
+                {el.category}
+              </option>
+            ))}
+          </select>
+    */}
+      
         <div className="flex items-center justify-center gap-5">
+          <label className="flex gap-2 items-center" htmlFor="category">
+            <span className="font-medium">Category</span>
+            <select
+              id="category"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+            >
+              <option value="">All</option>
+              {categories?.map((el) => (
+                <option key={el.id} value={el.id}>
+                  {el.category}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="flex gap-2 items-center" htmlFor="priority">
             <span className="font-medium">Priority</span>
             <select
@@ -169,7 +191,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
           </label>
 
           <label className="flex gap-2 items-center" htmlFor="priority">
-            <span className="font-medium">access</span>
+            <span className="font-medium">Access</span>
             <select
               id="access"
               value={access}

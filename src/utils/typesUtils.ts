@@ -51,7 +51,7 @@ export interface UserDetails {
   leaderType: string
   image: string
   bgimage: string
-
+  usertype:string
   // Personal Information
   first_name: string
   middle_name: string
@@ -174,7 +174,7 @@ export interface UserDetails {
   attachments:string
   leaderId?: string
   creation_date: string
-  category:string
+  categoryid:string
 }
 
 export const LEADER_IDS = {
@@ -331,7 +331,21 @@ export const REQUEST_STATUS = {
     classes: 'bg-rose-100 text-rose-500 border-rose-500',
   },
 }
+export interface AgendaFormFields {
+  leaderid: string
+  title: string
+  priority: string
+  access: string
+  categoryid: string
+  description: string
+  attachments: string
+  creation_date: string
+  documents: string
+  status: string
+  saved_by_type: string
+  saved_by:string
 
+}
 export interface Attachments {
   type: string
   file: string

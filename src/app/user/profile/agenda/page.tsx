@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { AgendaPost } from "@/components/posts/AgendaPost";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import {  getAgenda } from "@/redux_store/agenda/agendaApi";
+import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { AnimatePresence } from "framer-motion";
@@ -11,7 +11,7 @@ import AgendaForm from "@/components/posts/AgendaForm";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 
 const AdminAgendaPage = () => {
-  const [showMorePostOptions, setShowMorePostOptions] = useState(false);
+
 
   const [categoryFilter, setCategoryFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
@@ -23,12 +23,13 @@ const AdminAgendaPage = () => {
   const { categories, agendas } = cusSelector((st) => st.agenda);
   const { leaderProfile, followers } = cusSelector((state) => state.leader);
 
-  useEffect( () => {
+  useEffect(() => {
     (async () => {
-    const data = await getAgenda(leaderProfile?.id as string);
+      const data = await getAgenda(leaderProfile?.id as string);
       dispatch(agendaAction.storeAgendas(data))
-      console.log("agendaListagendaList",data)
-      // dispatch(agendaAction.storeCategories(data.categoryList))
+      const categories = await getCategory(leaderProfile?.id as string);
+      dispatch(agendaAction.storeCategories(categories)) 
+      console.log("categoriescategories", data)
     })()
   }, [userDetails, dispatch, leaderProfile?.id]);
 
@@ -41,29 +42,8 @@ const AdminAgendaPage = () => {
   );
 
   const filterData = filterDataOnStatus?.filter((el) =>
-    categoryFilter ? el.category === categoryFilter : el
+    categoryFilter ? el.categoryid === categoryFilter : el
   );
-
-  console.log(filterData);
-
-  const data = [
-    {
-      access: "public",
-      attachments: "1233",
-      category: "leader",
-      createDate: "12",
-      description: "bsdjhb ihfsnd sjh ifs   , hg b",
-      documents: "1234dcfd",
-      priority: "high",
-      status: "1",
-      title: "titalbgdkjsd135",
-      id: "13sdsdfs31",
-    },
-  ];
-
-  /* const agendaJSX =
-    filterData.length > 0 &&
-    filterData.map((el) => <AgendaPost userId={el.id} {...el} key={el.id} />) */
 
   const agendaJSX = filterData?.map((el) => (
     <AgendaPost userId={el.id}  {...el} key={el.id} />
@@ -120,8 +100,8 @@ const AdminAgendaPage = () => {
                     >
                       <option value="">All</option>
                       {categories?.map((el) => (
-                        <option key={el._id} value={el._id}>
-                          {el.category_name}
+                        <option key={el.id} value={el.id}>
+                          {el.category}
                         </option>
                       ))}
                     </select>
@@ -161,9 +141,8 @@ const AdminAgendaPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${
-                false ? "cursor-not-allowed" : ""
-              }`}
+              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
+                }`}
             >
               <div
                 className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"
