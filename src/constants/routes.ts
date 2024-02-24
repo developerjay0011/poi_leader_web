@@ -5,7 +5,8 @@ export const ProtectedRoutes = {
   userProfile: "/user/profile",
   editUserProfile: "/user/profile/settings/personal-information",
   accountSetting: "/user/profile/settings/general",
-  followers: "/user/profile/followers"
+  followers: "/user/profile/followers",
+  leader: "/leader"
 };
 
 export const AuthRoutes = {

@@ -37,7 +37,7 @@ export const addStories = async (formData: any) => {
 export const deleteStory = async (body: any) => {
   return tryCatch(
     async () => {
-      const res = await Axios.post(APIRoutes.deleteStory, { body });
+      const res = await Axios.post(APIRoutes.deleteStory, body);
       return res.data;
     }
   );

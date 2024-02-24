@@ -4,9 +4,9 @@ import Modal from "react-modal";
 import { cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
+import { TfiClose } from "react-icons/tfi";
 
 export const Story: FC<StoryProps> = ({
-  img,
   id,
   handleDelete,
   userImage,
@@ -14,7 +14,6 @@ export const Story: FC<StoryProps> = ({
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const { userDetails } = cusSelector((state) => state.auth);
-
   const leaderid = userDetails?.leaderId;
 
   const deletePostHandler = async () => {
@@ -40,6 +39,7 @@ export const Story: FC<StoryProps> = ({
         <Modal
           isOpen={modalIsOpen}
           // onAfterOpen={afterOpenModal}
+          ariaHideApp={false}
           onRequestClose={() => setIsOpen(false)}
           style={{
             content: {
@@ -56,15 +56,18 @@ export const Story: FC<StoryProps> = ({
           <div className="object-center">
             <Stories
               stories={stories?.map((item) => ({
-                url: `${process.env.NEXT_PUBLIC_BASE_URL}${item.media[0].media}`,
-                type: item.media[0].type == "video/mp4" ? "video" : "image",
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}${item.media}`,
+                type: item.type && (item.type.includes("image") ? "image" : "video") || '',
               }))}
               defaultInterval={1500}
               width={432}
               height={768}
+              onAllStoriesEnd={() => setIsOpen(false)}
             />
           </div>
-          <i className="ti-close" onClick={deletePostHandler}></i>
+          {/* <TfiClose
+            className="z-10 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
+            onClick={deletePostHandler} /> */}
         </Modal>
       )}
     </>

@@ -1,5 +1,4 @@
 export interface StoryProps {
-  img: string;
   self?: boolean;
   id: string;
   handleDelete: any;

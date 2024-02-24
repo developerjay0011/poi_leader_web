@@ -89,6 +89,7 @@ export interface UserDetails {
     description: string
   }[]
   political_party_id: string
+  designation: string
   designation_id: string
   parliament_house: string
   stateid: string
@@ -256,7 +257,7 @@ export interface MediaPost {
   comments: Comment[]
 }
 
-export type UserPostType = 'post' | 'agenda' | 'polls'
+export type UserPostType = 'post' | 'agenda' | 'polls' | 'story'
 
 export interface Comment {
   id: string

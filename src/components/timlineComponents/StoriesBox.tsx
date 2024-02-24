@@ -1,90 +1,69 @@
 import { CommonBox } from "@/utils/CommonBox";
 import { GenerateId } from "@/utils/utility";
 import Link from "next/link";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
-import {
-  fetchDeleteStory,
-} from "../api/stories";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import Modal from "react-modal";
+import { cusSelector } from "@/redux_store/cusHooks";
 import { Story } from "./Story";
-import { Media } from "@/interfaces/story";
-import { addStories, deleteStory, getStoriesForLeader } from "@/redux_store/posts/postAPI";
+import {
+  deleteStory,
+  getStoriesForLeader,
+} from "@/redux_store/posts/postAPI";
 import { groupBy } from "@/config/groupby";
-import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
+import { NewPostBox } from "../posts/NewPostBox";
+import { ProtectedRoutes } from "@/constants/routes";
 
 export const StoriesBox: FC = () => {
-  const dispatch = cusDispatch();
-  const [textPost, setTextPost] = useState("");
   const [getStories, setGetStories] = useState([]);
-  const [updateStory, setUpdateStory] = useState({});
+  const [openPopup, setOpenPopup] = useState(false);
   const id = GenerateId();
   const { userDetails } = cusSelector((state) => state.auth);
 
-  const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-    const data = e.target.files as FileList;
-    if (!data || data.length === 0) return;
-    const newMedia: Media[] = [];
-
-    for (let i = 0; i < data.length; i++) {
-      const uploadData = data[i];
-
-      // checking for media type
-      const type = uploadData.type.split("/")[0];
-      newMedia.push({
-        type: type,
-        media: uploadData,
-        id: GenerateId(),
-      });
-    }
-    const formData = new FormData();
-    formData.append("leaderid", userDetails?.id || "");
-    formData.append("written_text", textPost || "");
-    formData.append("access_type", "open");
-
-    for (let i = 0; i < data.length; i++) {
-      const item: any = data[i];
-      formData.append("media", item);
-    }
-
-    try {
-      const response = await addStories(formData);
-
-      if (response?.success) {
-        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-      } else {
-        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+  const fetchStories = async() => {
+    const leaderid = userDetails?.leaderId;
+    if(leaderid) {
+      const data = await getStoriesForLeader(leaderid);
+      if (data?.length > 0) {
+        let mergeAllPosts: any = [];
+        let allLeaderProfile: any = {};
+        data.forEach((item: any) => {
+          mergeAllPosts.push(...item.posts);
+          allLeaderProfile[item.leaderid] = item.image;
+        });
+        const groupByLeaderId = await groupBy(
+          mergeAllPosts,
+          (item: any) => item.leaderid
+        );
+  
+        let finalStories: Record<string, any> = {};
+        Object.keys(groupByLeaderId).forEach((stItem: string) => {
+          groupByLeaderId[stItem].map((item: any) => {
+            if (!finalStories[item.leaderid]) {
+              finalStories[item.leaderid] = {
+                id: "",
+                image: "",
+                leaderid: item.leaderid,
+                media: [],
+              };
+            }
+            finalStories[item.leaderid].id = item.id;
+            finalStories[item.leaderid].image =
+              allLeaderProfile[item.leaderid];
+            finalStories[item.leaderid].media = finalStories[
+              item.leaderid
+            ].media.concat(item.media);
+          });
+        });
+        mergeAllPosts = Object.values(finalStories);
+        setGetStories(mergeAllPosts);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   useEffect(() => {
-    const leaderid = userDetails?.leaderId;
-    if (leaderid) {
-      (async () => {
-        try {
-          const data = await getStoriesForLeader(leaderid);
-          if (data?.length > 0) {
-            // const groupByLeaderId = await groupBy(data, (item: any) => item.leaderid);
-            // let mergeAllPosts: any = []
-            // Object.keys(groupByLeaderId).forEach((el: any, index: number) => {
-            //   mergeAllPosts[index] = [];
-            //   groupByLeaderId[el].forEach(item => 
-            //     mergeAllPosts[index] = [...mergeAllPosts[index], ...item.posts]
-            //   );
-            // })
-            // console.log('groupByLeaderId => ', mergeAllPosts)
-            setGetStories(data);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      })();
-    }
-  }, [userDetails]);
+    fetchStories();
+  }, []);
 
   const handleDelete = async (leaderid: string, id: string) => {
     const postBody = {
@@ -94,8 +73,8 @@ export const StoriesBox: FC = () => {
 
     try {
       const data = await deleteStory(postBody);
-      if (data) {
-        setUpdateStory(data);
+      if (data?.success) {
+        fetchStories();
       }
     } catch (error) {
       console.log(error);
@@ -105,11 +84,11 @@ export const StoriesBox: FC = () => {
   return (
     <>
       <CommonBox
-        title="My Stories"
+        title="Stories"
         cusJSX={[
           <Link
             key={id}
-            href={"/leader"}
+            href={ProtectedRoutes.leader}
             className="text-sm font-normal hover:underline text-orange-500"
           >
             see all
@@ -119,32 +98,61 @@ export const StoriesBox: FC = () => {
         <div className="w-[660px] ">
           <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
             <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
-              <label htmlFor="media" className="flex h-[80px] justify-center items-center rounded-full shadow">
-                <input
-                  type="file"
-                  className="hidden"
-                  id="media"
-                  multiple
-                  onChange={mediaChangeHandler}
+              <label className="flex h-[80px] justify-center items-center rounded-full shadow">
+                <BsPlusCircle
+                  className="z-10 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
+                  onClick={() => setOpenPopup(true)}
                 />
-                <BsPlusCircle className="z-10 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center" />
               </label>
             </li>
-            {getStories.map((el: { media?: any[]; id: string } | undefined) => {
-              return (
-                <Story
-                  key={el?.id}
-                  userImage={`${userDetails?.image && process.env.NEXT_PUBLIC_BASE_URL + '' + userDetails?.image || ''}`}
-                  img={`${userDetails?.image && process.env.NEXT_PUBLIC_BASE_URL + '' + userDetails?.image || ''}`}
-                  stories={el?.media}
-                  id={el?.id || ''}
-                  handleDelete={handleDelete}
-                />
-              );
-            })}
+            {getStories.map(
+              (
+                el:
+                  | {
+                      media?: any[];
+                      id: string;
+                      leaderid: string;
+                      image: string;
+                    }
+                  | undefined
+              ) => {
+                return (
+                  <Story
+                    key={el?.id}
+                    userImage={`${
+                      (el?.image &&
+                        process.env.NEXT_PUBLIC_BASE_URL + "" + el.image) ||
+                      ""
+                    }`}
+                    stories={el?.media}
+                    id={el?.id || ""}
+                    handleDelete={handleDelete}
+                  />
+                );
+              }
+            )}
           </ul>
         </div>
       </CommonBox>
+      <Modal
+        isOpen={openPopup}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={() => setOpenPopup(false)}
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <div className="object-center w-96">
+          <NewPostBox type="story" handleClose={() => setOpenPopup(false)} />
+        </div>
+      </Modal>
     </>
   );
 };
