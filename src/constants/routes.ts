@@ -5,7 +5,8 @@ export const ProtectedRoutes = {
   userProfile: "/user/profile",
   editUserProfile: "/user/profile/settings/personal-information",
   accountSetting: "/user/profile/settings/general",
-  followers: "/user/profile/followers"
+  followers: "/user/profile/followers",
+  leader: "/leader"
 };
 
 export const AuthRoutes = {
@@ -27,10 +28,25 @@ export const APIRoutes = {
   register: `${API_Prefix}/leader/registration`,
   upsertLeaders: `${API_Prefix}/leader/addEditLeader`,
   getAccessTabs: `${API_Prefix}/leader/getAccessTabs/{{userId}}`,
-  getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{userId}}`,
-  getFollowers: `${API_Prefix}/leader/followerList/{{userId}}`,
+  getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{leaderId}}`,
+  getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
-  getAgenda: `${API_Prefix}/leader/getagendas/{{userId}}`,
-  getCategories: `${API_Prefix}/leader/getcategories/{{userId}}`,
   uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
+
+  // Post Endpoint
+  getLeaderAddedStories: `${API_Prefix}/post/getLeaderAddedStories/{{leaderId}}`,
+  getStoriesForLeader: `${API_Prefix}/post/getStoriesForLeader/{{leaderId}}`,
+  addStories: `${API_Prefix}/post/addStory`,
+  deleteStory: `${API_Prefix}/post/deleteStory`,
+  addPost: `${API_Prefix}/post/addPost`,
+
+  // Agenda Endpoint
+  getAgenda: `${API_Prefix}/leader/getagendas/{{leaderId}}`,
+  getCategories: `${API_Prefix}/leader/getcategories/{{leaderId}}`,
+  saveAgenda: `${API_Prefix}/leader/saveagenda`,
+  deleteAgenda: `${API_Prefix}/leader/deleteagenda`,
+  saveTimeLine: `${API_Prefix}/leader/savetimeline`,
+  deleteTimeLine: `${API_Prefix}/leader/deletetimeline`,
+
+
 }

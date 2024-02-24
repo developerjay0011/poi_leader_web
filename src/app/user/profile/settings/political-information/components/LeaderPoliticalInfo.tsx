@@ -86,8 +86,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
         selectField={{
           title: 'select designation',
           options: designations.map((el) => ({
-            id: el.designationId,
-            value: el.designationName,
+            id: el.id,
+            value: el.designation,
           })),
         }}
       />
@@ -106,8 +106,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             selectField={{
               title: 'select state',
               options: states.map((el) => ({
-                id: el.stateId,
-                value: el.stateName,
+                id: el.id,
+                value: el.state,
               })),
             }}
           />
@@ -188,8 +188,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             selectField={{
               title: 'select state',
               options: states.map((el) => ({
-                id: el.stateId,
-                value: el.stateName,
+                id: el.id,
+                value: el.state,
               })),
             }}
           />
@@ -210,10 +210,10 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
                 title: 'select constituency',
                 // filtering parliamentary constituency based on loksabha State
                 options: parliamentaryConstituency
-                  .filter((el) => el.stateId === lokSabhaState)
+                  .filter((el) => el.id === lokSabhaState)
                   .map((el) => ({
-                    id: el.parliamentaryId,
-                    value: el.parliamentaryName,
+                    id: el.id,
+                    value: el.parliamentary_name,
                   })),
               }}
             />
@@ -246,8 +246,8 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
               selectField={{
                 title: 'select state',
                 options: states.map((el) => ({
-                  id: el.stateId,
-                  value: el.stateName,
+                  id: el.id,
+                  value: el.state,
                 })),
               }}
             />
@@ -290,7 +290,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
               onChange={(e) => {
                 setHasMinistry(e.target.checked)
                 remove()
-                e.target.checked ? append({ name: '', type: '' }) : remove()
+                e.target.checked ? append({ ministryid: '', ministrytype: '' }) : remove()
               }}
               checked={hasMinistry}
             />
@@ -359,7 +359,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
 
           <button
             type='button'
-            onClick={() => append({ name: '', type: '' })}
+            onClick={() => append({ ministryid: '', ministrytype: '' })}
             className='outline-none self-start col-span-full text-sm mt-1 capitalize py-2 px-4 rounded bg-teal-500 text-teal-50 hover:bg-teal-600 transition-all'>
             add ministry
           </button>

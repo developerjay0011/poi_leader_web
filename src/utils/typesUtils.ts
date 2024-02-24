@@ -51,7 +51,7 @@ export interface UserDetails {
   leaderType: string
   image: string
   bgimage: string
-
+  usertype:string
   // Personal Information
   first_name: string
   middle_name: string
@@ -89,6 +89,7 @@ export interface UserDetails {
     description: string
   }[]
   political_party_id: string
+  designation: string
   designation_id: string
   parliament_house: string
   stateid: string
@@ -98,6 +99,15 @@ export interface UserDetails {
   is_nominated: boolean
   is_participated_in_elections: boolean
   is_prepare_for_elections: boolean
+
+  parliamentHouse: string
+  lokSabhaState: string
+  rajyaSabhaState: string
+  rajyaSabhaNominated: string
+  mlaConstituency: string
+  lokSabhaConstituency: string
+  politicalParty: string
+  mlaState: string
 
   done_any_political_activity: boolean
   does_family_supports: boolean
@@ -167,14 +177,15 @@ export interface UserDetails {
   Phone:string;
   Email:string;
 
-
+  status:string
   title:string
   description:string
   documents:string
   attachments:string
   leaderId?: string
   creation_date: string
-  category:string
+  categoryid: string
+  milestone:string
 }
 
 export const LEADER_IDS = {
@@ -214,6 +225,7 @@ export interface PartyDetails {
   party_name: string
 }
 export interface TimeLineDetails {
+  id:string
     status : string
   description : string
   milestone: string
@@ -256,7 +268,7 @@ export interface MediaPost {
   comments: Comment[]
 }
 
-export type UserPostType = 'post' | 'agenda' | 'polls'
+export type UserPostType = 'post' | 'agenda' | 'polls' | 'story'
 
 export interface Comment {
   id: string
@@ -331,7 +343,21 @@ export const REQUEST_STATUS = {
     classes: 'bg-rose-100 text-rose-500 border-rose-500',
   },
 }
+export interface AgendaFormFields {
+  leaderid: string
+  title: string
+  priority: string
+  access: string
+  categoryid: string
+  description: string
+  attachments: string
+  creation_date: string
+  documents: string
+  status: string
+  saved_by_type: string
+  saved_by:string
 
+}
 export interface Attachments {
   type: string
   file: string

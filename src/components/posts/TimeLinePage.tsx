@@ -39,9 +39,9 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
       {/* CENTER FEED */}
       <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
         <StoriesBox />
-        <NewPostBox updatePost={updatePost} />
+        <NewPostBox type="post" />
 
-        <Post
+        {/* <Post
           createdDatetime="2023-11-05"
           type="post"
           userId=""
@@ -141,7 +141,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
           title="dsaf"
           userId="dsaf"
           username="R.K Singh"
-        />
+        /> */}
 
         {/* <AgendaPost
           access=""
@@ -158,8 +158,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
         /> */}
 
         {postData.map((el: any) => {
-          console.log(el);
-
+          console.log(el)
           return (
             <Post
               {...el}

@@ -15,12 +15,16 @@ import toast from "react-hot-toast";
 import { AuthRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { registerUser, sendOtp, verifyOtp } from "@/redux_store/auth/authAPI";
+import { cusDispatch } from "@/redux_store/cusHooks";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 
 let interval: NodeJS.Timer;
 let OTP_TIME = 120;
 
 export const RegisterForm: FC = () => {
   const router = useRouter();
+  const dispatch = cusDispatch();
   const [showOTPForm, setShowOTPForm] = useState(false);
   const [resendOTPTime, setResendOTPTime] = useState(OTP_TIME);
   const [registering, setRegistering] = useState(false);
@@ -86,12 +90,7 @@ export const RegisterForm: FC = () => {
         closeOTPForm();
 
         // showing a message
-        toast.success(() => (
-          <p>
-            <strong className="capitalize">{userData.fullName}</strong>{" "}
-            Registered Successfully
-          </p>
-        ));
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: "Registered Successfully"}))
         router.push(AuthRoutes.login);
       } else {
         setVerifying(false);
@@ -122,7 +121,6 @@ export const RegisterForm: FC = () => {
           mobile: data?.phoneNo as "string",
         };
         const sendOTPRes = await sendOtp(otpBody);
-
         if (sendOTPRes?.success) {
           // Starts a OTP resend Timer
           interval = setInterval(() => {
@@ -138,9 +136,12 @@ export const RegisterForm: FC = () => {
           }, 1000);
 
           openOTPForm();
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
       }
-      openOTPForm();
       setRegistering(false);
     } catch (error) {
       console.log(error);

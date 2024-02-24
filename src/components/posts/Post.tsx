@@ -9,12 +9,12 @@ import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import { PostOptions } from "./PostOptions";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import {
-  addNewComment,
-  addNewNestedComment,
-  changeNestedLike,
-  updateLike,
-} from "@/redux_store/posts/postAPI";
+// import {
+//   addNewComment,
+//   addNewNestedComment,
+//   changeNestedLike,
+//   updateLike,
+// } from "@/redux_store/posts/postAPI";
 import { NewCommentForm } from "../common-forms/NewCommentForm";
 import { SingleComment } from "./SingleComment";
 import { MoreThan4ColumnImgLayout } from "./MoreThan4ColumnLayout";
@@ -54,7 +54,7 @@ export const Post: FC<PostProps> = ({
   const hideFullPost = () => setShowPostDetials(false);
 
   // const deletePostHandler = () => dispatch(deletePost(id))
-  const likeChangeHandler = () => dispatch(updateLike(id, userId));
+  const likeChangeHandler = () => alert("Like Reply");
 
   const [showLikeAnimation, setShowLikeAnimation] = useState(
     (likes as Like[]).some((el) => el.userId === userDetails?.id)
@@ -63,24 +63,19 @@ export const Post: FC<PostProps> = ({
   const [likeCount, setLikeCount] = useState(likes.length); // in order to show updated like count on frontend
 
   const addNewPostComment = (comment: string) =>
-    dispatch(
-      addNewComment({
-        postId: id,
-        commentText: comment,
-        userImg: userDetails?.image as string,
-      })
-    );
+    alert("Add New Coment")
 
   const postCommentLikeHandler = (commentId: string) =>
-    dispatch(
-      changeNestedLike({
-        id: commentId,
-        likeTypeStatus: "_comments",
-        postId: id,
-        userId,
-        eventID: "0008",
-      })
-    );
+    alert("Change Nested Like")
+    // dispatch(
+    //   changeNestedLike({
+    //     id: commentId,
+    //     likeTypeStatus: "_comments",
+    //     postId: id,
+    //     userId,
+    //     eventID: "0008",
+    //   })
+    // );
 
   const deletePostHandler = async (leaderid: string, id: string) => {
     const postBody = {
@@ -123,17 +118,18 @@ export const Post: FC<PostProps> = ({
   }, [showLikeAnimation]);
 
   const commentReplyHandler = (commentId: string, commentReply: string) => {
-    dispatch(
-      addNewNestedComment({
-        commentReplyText: commentReply,
-        commentTypeStatus: "_comments",
-        id: commentId,
-        postId: id,
-        userId: userDetails?.id as string,
-        userImg: userDetails?.image as string,
-        username: userDetails?.username as string,
-      })
-    );
+    alert("Comment Reply")
+    // dispatch(
+    //   addNewNestedComment({
+    //     commentReplyText: commentReply,
+    //     commentTypeStatus: "_comments",
+    //     id: commentId,
+    //     postId: id,
+    //     userId: userDetails?.id as string,
+    //     userImg: userDetails?.image as string,
+    //     username: userDetails?.username as string,
+    //   })
+    // );
   };
 
   const handleLike = async (allData: any) => {
@@ -180,7 +176,7 @@ export const Post: FC<PostProps> = ({
         {/* User details and Date */}
         <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
           <CustomImage
-            src={userDetails?.image as string}
+            src={`${userDetails?.image && process.env.NEXT_PUBLIC_BASE_URL + '' + userDetails?.image || ''}` as string}
             alt="user pic"
             className="w-12 aspect-square object-cover object-center rounded-full"
             width={100}
@@ -223,8 +219,8 @@ export const Post: FC<PostProps> = ({
               {media.length === 1 && (
                 <figure className="w-full relative" onClick={showFullPost}>
                   {(media as MediaPost[]).map((el: any, index) => {
-                    const mediaType = types[index]; // Assuming types correspond to each media item
-                    return mediaType === "image/jpeg" ? (
+                    const mediaType = types[index] as string; // Assuming types correspond to each media item
+                    return mediaType.includes('image') ? (
                       <CustomImage
                         key={index}
                         src={el}
@@ -248,7 +244,7 @@ export const Post: FC<PostProps> = ({
                 <figure className="w-full relative" onClick={showFullPost}>
                   {(media as MediaPost[]).map((el: any, index) => {
                     const mediaType = types[index]; // Assuming types correspond to each media item
-                    return mediaType === "image/jpeg" ? (
+                    return mediaType.includes('image') ? (
                       <CustomImage
                         key={index}
                         src={el}
@@ -272,7 +268,7 @@ export const Post: FC<PostProps> = ({
                 <figure className="w-full relative" onClick={showFullPost}>
                   {(media as MediaPost[]).map((el: any, index) => {
                     const mediaType = types[index]; // Assuming types correspond to each media item
-                    return mediaType === "image/jpeg" ? (
+                    return mediaType.includes('image') ? (
                       <CustomImage
                         key={index}
                         src={el}

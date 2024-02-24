@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import { BriefProfileInfoBox } from "@/components/timlineComponents/BriefProfileInfoBox";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { TrendingUsers } from "@/components/timlineComponents/TrendingUsers";
@@ -8,14 +7,9 @@ import { BriefEventsBox } from "@/components/timlineComponents/BriefEventsBox";
 import { BirthdayNotifications } from "@/components/timlineComponents/BirthdayNotifications";
 import { FollowedLeader } from "@/components/timlineComponents/FollowedLeader";
 import { useState } from "react";
-import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { getFollowers, getProfile } from "@/redux_store/leader/leaderAPI";
-import { leaderActions } from "@/redux_store/leader/leaderSlice";
 
 const AdminHomePage = () => {
   const [followers, setFollowers] = useState<any>({});
-  const { userDetails } = cusSelector((state) => state.auth);
-  const dispatch = cusDispatch();
   const handleFollowers = (data: any) => {
     setFollowers(data);
   };

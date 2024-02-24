@@ -12,9 +12,10 @@ Axios.interceptors.request.use((config: any) => {
   return {
     ...config,
     headers: {
-      ...headers,
+   
       'Content-Type': headers['Content-Type'] ?? DEFAULT_CONTENT_TYPE,
-      'Authorization': token && `Bearer ${token}`
+      'Authorization': token && `Bearer ${token}`,
+         ...headers,
     },
   };
 });

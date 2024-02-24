@@ -1,22 +1,31 @@
 "use client";
-import { cusSelector } from "@/redux_store/cusHooks";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { CommonBox } from "@/utils/CommonBox";
-import { ErrObj,  NewPostFields, PostType } from "@/utils/typesUtils";
+import {
+  ErrObj,
+  NewPostFields,
+  PostType,
+  UserPostType,
+} from "@/utils/typesUtils";
 import { GenerateId, convertFileToBase64 } from "@/utils/utility";
-import { FC, FormEvent, useState, ChangeEvent, useEffect } from "react";
+import { FC, FormEvent, useState, ChangeEvent } from "react";
 import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
-import { FaCamera } from "react-icons/fa";
-import { fetchAddPost } from "../api/posts";
 import { PostTypes } from "./PostTypes";
 import CustomImage from "@/utils/CustomImage";
+import { addPost, addStories } from "@/redux_store/posts/postAPI";
+import { tryCatch } from "@/config/try-catch";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 
 interface NewPostBoxProps {
-  updatePost: any;
+  type: UserPostType;
+  handleClose?: () => void;
 }
 
-export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
-  const [media, setMedia] = useState<NewPostFields[]>([]);
+export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose }) => {
+  const dispatch = cusDispatch();
+  const [previewImages, setPreviewImages] = useState<NewPostFields[]>([]);
   const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
   const [textPost, setTextPost] = useState("");
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
@@ -30,39 +39,51 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
 
     if (
       textPost.trim().length === 0 &&
-      media.length === 0 &&
+      previewImages.length === 0 &&
       accessType?.length === 0
     )
-      return setPostErr({ errTxt: "post can't be empty", isErr: true });
+      return setPostErr({ errTxt: "Post can't be empty", isErr: true });
 
     const formData = new FormData();
 
-    formData.append("leaderid", userDetails?.id || "");
+    formData.append("leaderid", userDetails?.leaderId || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", accessType);
 
     for (let i = 0; i < apimedia.length; i++) {
       const item: any = apimedia[i];
-
       formData.append("media", item?.media);
     }
 
-    try {
-      const data = await fetchAddPost(formData);
-      if (data?.success) {
-        updatePost(data);
+    tryCatch(async () => {
+      let response: any = "";
+      if (type === "post") {
+        response = await addPost(formData);
+      } else if (type === "story") {
+        response = await addStories(formData);
       }
-    } catch (error) {
-      console.log(error);
-    }
 
-    setMedia([]);
-    setApiMedia([]);
-    setTextPost("");
-  };
+      if (response?.success) {
+        setPreviewImages([]);
+        setApiMedia([]);
+        setTextPost("");
 
-  const accessTypeOptions = (data: any) => {
-    setAccessType(data);
+        dispatch(
+          commonActions.showNotification({
+            type: ToastType.SUCCESS,
+            message: response.message,
+          })
+        );
+        if(handleClose) handleClose();
+      } else {
+        dispatch(
+          commonActions.showNotification({
+            type: ToastType.ERROR,
+            message: response.message,
+          })
+        );
+      }
+    });
   };
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -72,18 +93,12 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
     });
 
     const data = e.target.files as FileList;
-
-    if (!data) return;
+    if (!data || data.length === 0) return;
 
     for (let i = 0; i < data.length; i++) {
       const uploadData = data[i];
-
       // checking for media type
-      if (
-        !(
-          uploadData.type.includes("image") || uploadData.type.includes("video")
-        )
-      )
+      if (!(uploadData.type.includes("image") || uploadData.type.includes("video")))
         return setPostErr({
           errTxt: "File type not allowed",
           isErr: true,
@@ -94,26 +109,20 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
 
       setApiMedia((lst) => {
         const oldData = [...lst];
-
         oldData.push({
           type: uploadData.type.split("/")[0] as PostType,
           media: uploadData as any,
           id: GenerateId(),
         });
-
         return oldData;
       });
-
-      setMedia((lst) => {
-        const oldData = [...lst];
-        oldData.push({
-          type: uploadData.type.split("/")[0] as PostType,
-          media: convertedData as string,
-          id: GenerateId(),
-        });
-
-        return oldData;
+      const updatedPreviewList = [...previewImages];
+      updatedPreviewList.push({
+        type: uploadData.type.split("/")[0] as PostType,
+        media: convertedData as string,
+        id: GenerateId(),
       });
+      setPreviewImages(updatedPreviewList);
     }
   };
 
@@ -122,26 +131,29 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
       errTxt: "",
       isErr: false,
     });
-
-    setMedia((lst) => {
-      const newData = [...lst];
-
-      newData.splice(
-        newData.findIndex((dt) => dt.id === id),
-        1
-      );
-
-      return newData;
-    });
+    const updatedPreviewList = previewImages.filter(el => el.id !== id);
+    setPreviewImages(updatedPreviewList);
   };
 
   return (
     <>
-      <CommonBox title="create post">
-        <form className="flex flex-col gap-4 py-4" onSubmit={formSubmitHandler}>
+      <CommonBox title={`create ${type}`} key={`form-${type}`}>
+        <form
+          id={`form-${type}`}
+          className="flex flex-col gap-4 py-4"
+          onSubmit={formSubmitHandler}
+        >
           <div className="flex items-start gap-3">
             <CustomImage
-              src={userDetails?.image as string}
+              src={
+                `${
+                  (userDetails?.image &&
+                    process.env.NEXT_PUBLIC_BASE_URL +
+                      "" +
+                      userDetails?.image) ||
+                  ""
+                }` as string
+              }
               alt="user image"
               width={1000}
               height={1000}
@@ -161,15 +173,11 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
 
           <div className="flex items-center justify-between px-3">
             <div className="flex items-center gap-3">
-              <label htmlFor="liveMedia">
-                <FaCamera className="text-sky-950 text-xl text-opacity-70" />
-              </label>
-
-              <label htmlFor="medias">
+              <label htmlFor={`medias-${type}`}>
                 <input
                   type="file"
                   className="hidden"
-                  id="medias"
+                  id={`medias-${type}`}
                   multiple
                   onChange={mediaChangeHandler}
                 />
@@ -181,12 +189,14 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
                 className="cursor-pointer"
                 onClick={() => setShowMorePostOptions(!showMorePostOptions)}
               >
-                Post Type
+                <span className="capitalize">{`Post Type ${
+                  (accessType && ": " + accessType) || ""
+                }`}</span>
               </div>
               {showMorePostOptions && (
                 <PostTypes
                   onClose={() => setShowMorePostOptions(false)}
-                  accessTypeOptions={accessTypeOptions}
+                  accessTypeOptions={(e: any) => setAccessType(e)}
                 />
               )}
             </div>
@@ -197,7 +207,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
           )}
 
           {/* Preview box */}
-          {media.length > 0 && (
+          {previewImages.length > 0 && (
             <div className="">
               {/* Preview Line */}
               <div className="preview">
@@ -206,7 +216,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                {media.map((el) => (
+                {previewImages.map((el) => (
                   <div className="w-20 aspect-square relative" key={el.id}>
                     {el.type === "image" && (
                       <CustomImage
@@ -241,7 +251,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ updatePost }) => {
             disabled={creatingPost}
             className="bg-sky-400 text-sky-50 py-1 rounded-md capitalize font-[500]"
           >
-            {creatingPost ? "posting.." : "post"}
+            {creatingPost ? "creating.." : type}
           </button>
         </form>
       </CommonBox>

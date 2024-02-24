@@ -38,21 +38,24 @@ export const PersonalInformationForm: FC = () => {
       ...personal_info,
       dob: moment(personal_info?.dob).format("YYYY-MM-DD")
     })
-  }, [leaderProfile]);
+  }, [leaderProfile, reset]);
 
   const formSubmitHandler =async (data: UserDetails) => {
     const resBody: ProfileInfo = {...data};
 
     tryCatch(
       async () => {
-        const response = await submitLeaderForm({
+        const param = {
           ...leaderProfile,
-          'personal_info':resBody,
+          'personal_info': resBody,
           political_info: {
             ...leaderProfile?.political_info?.activity_pictures,
             activity_pictures: leaderProfile?.political_info?.activity_pictures || []
           }
-        });
+        }
+        param.password = ""
+        console.log("paramparam",param)
+        const response = await submitLeaderForm(param);
     
         if (response?.success) {
           // Update only personal info in redux store

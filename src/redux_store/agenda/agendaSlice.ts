@@ -3,22 +3,36 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface AgendaDetails {
   access: string
-  attachments: string
-  category: string
-  created_date: string
+  attachments: string[]
+  categoryid: string
+  creation_date: string
   description: string
   documents: string
   priority: string
   status: string
   title: string
-  id: string,
-  created_by_type: string,
+  id: string
+  leaderid:string
+  created_by_type: string
   timeline: TimeLineDetails[]
+  saved_by_type: string
+  saved_by:string
+  
+}
+export interface TimeLineFormField {
+  status: string
+  id: string
+  leaderid: string
+  agendaid:string
+  access: string
+  attachments: string
+  description: string
+  milestone:string
 }
 
 export interface CategoryFilter {
-  category_name: string
-  _id: string
+  category: string
+  id: string
 }
 interface AgendaState {
   agendas: AgendaDetails[]

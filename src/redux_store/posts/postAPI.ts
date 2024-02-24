@@ -1,11 +1,72 @@
+import Axios from "@/config/axios";
+import { insertVariables } from "@/config/insert-variables";
+import { tryCatch } from "@/config/try-catch";
+import { APIRoutes } from "@/constants/routes";
+
+
 import { ConnectToAPI, GenerateId } from '@/utils/utility'
 import { AppDispatch, getReduxStoreValues } from '..'
 import { NewPostData } from '@/utils/typesUtils'
 import { postActions } from './postSlice'
-import CryptoJS from 'crypto-js'
 
 const POST_ENDPOINT = 'leaderpost'
 
+export const getLeaderAddedStories = async (leaderId: string) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(insertVariables(APIRoutes.getLeaderAddedStories, { leaderId }));
+      return res.data;
+    }
+  );
+};
+
+export const getStoriesForLeader = async (leaderId: string) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(insertVariables(APIRoutes.getStoriesForLeader, { leaderId }));
+      return res.data;
+    }
+  );
+};
+
+export const addStories = async (formData: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.addStories, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      return res.data;
+    }
+  );
+}
+
+export const deleteStory = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.deleteStory, body);
+      return res.data;
+    }
+  );
+};
+
+export const addPost = async (formData: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.addPost, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      return res.data;
+    }
+  );
+}
+
+
+
+//  Will remove 
 export const fetchAllPosts = () => async (dispatch: AppDispatch) => {
   try {
     const leaderId = getReduxStoreValues().UI.userDetails?.id as string
@@ -24,174 +85,6 @@ export const fetchAllPosts = () => async (dispatch: AppDispatch) => {
     console.error(err)
   }
 }
-
-type NewPost = (obj: NewPostData) => (dispatch: AppDispatch) => void
-
-export const createNewPost: NewPost =
-  (val) => async (dispatch: AppDispatch) => {
-    try {
-      const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-      dispatch(postActions.setCreatingPost(true))
-      const body = JSON.stringify({
-        eventID: '0001',
-        addInfo: {
-          ...val,
-          leaderId,
-          comments: [],
-          likes: [],
-        },
-      })
-
-      await ConnectToAPI(POST_ENDPOINT, body)
-
-      dispatch(fetchAllPosts())
-      dispatch(postActions.setCreatingPost(false))
-    } catch (err) {
-      console.error(err)
-      dispatch(postActions.setCreatingPost(false))
-    }
-  }
-
-export const deletePost = (postId: string) => async (dispatch: AppDispatch) => {
-  try {
-    const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-    console.log(postId)
-    const body = JSON.stringify({
-      eventID: '0004',
-      addInfo: {
-        leaderId,
-        postId,
-      },
-    })
-
-    await ConnectToAPI(POST_ENDPOINT, body)
-
-    dispatch(fetchAllPosts())
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-// POST Like
-export const updateLike = (postId: string, userId: string) => async () => {
-  try {
-    const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-    const body = JSON.stringify({
-      eventID: '0007',
-      addInfo: {
-        leaderId,
-        postId,
-        userId,
-      },
-    })
-
-    await ConnectToAPI(POST_ENDPOINT, body)
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-// Post Comments
-export const addNewComment: (obj: {
-  postId: string
-  userImg: string
-  commentText: string
-}) => (d: AppDispatch) => void =
-  ({ commentText, postId, userImg }) =>
-  async (dispatch: AppDispatch) => {
-    try {
-      const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-      const body = JSON.stringify({
-        eventID: '0005',
-        addInfo: {
-          leaderId,
-          postId,
-          userId: leaderId,
-          userImg,
-          commentText,
-          id: GenerateId(),
-          likes: [],
-        },
-      })
-
-      await ConnectToAPI(POST_ENDPOINT, body)
-
-      dispatch(fetchAllPosts())
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-export const updateComment = () => async (dispatch: AppDispatch) => {}
-
-export const deletePostComment =
-  (postId: string, id: string) => async (dispatch: AppDispatch) => {
-    try {
-      const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-      const body = JSON.stringify({
-        eventID: '0006',
-        addInfo: {
-          leaderId,
-          postId,
-          id,
-        },
-      })
-
-      await ConnectToAPI(POST_ENDPOINT, body)
-
-      dispatch(fetchAllPosts())
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-export const updateCommentLike =
-  (postId: string, id: string, userId: string) => async () => {
-    try {
-      const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-      const body = JSON.stringify({
-        eventID: '0008',
-        addInfo: {
-          leaderId,
-          postId,
-          id,
-          userId,
-        },
-      })
-
-      await ConnectToAPI(POST_ENDPOINT, body)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-export const changeNestedLike: (obj: {
-  postId: string
-  id: string
-  userId: string
-  likeTypeStatus: '_media' | '_comments'
-  eventID: '0008' | '0010'
-}) => () => void =
-  ({ id, postId, userId, likeTypeStatus, eventID }) =>
-  async () => {
-    try {
-      const leaderId = getReduxStoreValues().UI.userDetails?.id as string
-      const body = JSON.stringify({
-        eventID,
-        addInfo: {
-          leaderId,
-          postId,
-          id,
-          userId,
-          likeTypeStatus,
-        },
-      })
-
-      await ConnectToAPI(POST_ENDPOINT, body)
-    } catch (err) {
-      console.error(err)
-    }
-  }
 
 export const addNewNestedComment: (obj: {
   postId: string
@@ -231,6 +124,121 @@ export const addNewNestedComment: (obj: {
 
       await ConnectToAPI(POST_ENDPOINT, body)
       dispatch(fetchAllPosts())
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  export const changeNestedLike: (obj: {
+    postId: string
+    id: string
+    userId: string
+    likeTypeStatus: '_media' | '_comments'
+    eventID: '0008' | '0010'
+  }) => () => void =
+    ({ id, postId, userId, likeTypeStatus, eventID }) =>
+    async () => {
+      try {
+        const leaderId = getReduxStoreValues().UI.userDetails?.id as string
+        const body = JSON.stringify({
+          eventID,
+          addInfo: {
+            leaderId,
+            postId,
+            id,
+            userId,
+            likeTypeStatus,
+          },
+        })
+        await ConnectToAPI(POST_ENDPOINT, body)
+      } catch (err) {
+        console.error(err)
+      }
+  }
+
+  export const updateComment = () => async (dispatch: AppDispatch) => {}
+
+  export const deletePostComment =
+    (postId: string, id: string) => async (dispatch: AppDispatch) => {
+      try {
+        const leaderId = getReduxStoreValues().UI.userDetails?.id as string
+        const body = JSON.stringify({
+          eventID: '0006',
+          addInfo: {
+            leaderId,
+            postId,
+            id,
+          },
+        })
+  
+        await ConnectToAPI(POST_ENDPOINT, body)
+  
+        dispatch(fetchAllPosts())
+      } catch (err) {
+        console.error(err)
+      }
+  };
+
+  type NewPost = (obj: NewPostData) => (dispatch: AppDispatch) => void
+
+  export const createNewPost: NewPost =
+    (val) => async (dispatch: AppDispatch) => {
+      try {
+        const leaderId = getReduxStoreValues().UI.userDetails?.id as string
+        dispatch(postActions.setCreatingPost(true))
+        const body = JSON.stringify({
+          eventID: '0001',
+          addInfo: {
+            ...val,
+            leaderId,
+            comments: [],
+            likes: [],
+          },
+        })
+  
+        await ConnectToAPI(POST_ENDPOINT, body)
+  
+        dispatch(fetchAllPosts())
+        dispatch(postActions.setCreatingPost(false))
+      } catch (err) {
+        console.error(err)
+        dispatch(postActions.setCreatingPost(false))
+      }
+    }
+  
+export const updateLike = (postId: string, userId: string) => async () => {
+  try {
+    const leaderId = getReduxStoreValues().UI.userDetails?.id as string
+    const body = JSON.stringify({
+      eventID: '0007',
+      addInfo: {
+        leaderId,
+        postId,
+        userId,
+      },
+    })
+
+    await ConnectToAPI(POST_ENDPOINT, body)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const updateCommentLike =
+  (postId: string, id: string, userId: string) => async () => {
+    try {
+      const leaderId = getReduxStoreValues().UI.userDetails?.id as string
+      const body = JSON.stringify({
+        eventID: '0008',
+        addInfo: {
+          leaderId,
+          postId,
+          id,
+          userId,
+        },
+      })
+
+      await ConnectToAPI(POST_ENDPOINT, body)
     } catch (err) {
       console.error(err)
     }

@@ -38,7 +38,6 @@ const PoliticalInformationPage: FC = () => {
       async () => {
         const response = await submitLeaderForm({
           ...leaderProfile,
-          password: "Hemant@123",
           political_info: {
             ...resBody,
             activity_pictures: resBody && resBody.activity_pictures || []

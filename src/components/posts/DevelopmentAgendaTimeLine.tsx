@@ -1,25 +1,39 @@
 import { FC ,useState } from 'react'
 import { BiX } from 'react-icons/bi'
-import { motion as m } from 'framer-motion'
+import { AnimatePresence, motion as m } from 'framer-motion'
 import moment from 'moment'
 import { FaFileAlt } from "react-icons/fa";
 import { getImageUrl } from '@/config/get-image-url';
+import { BsTrash3Fill } from "react-icons/bs";
+import { FaEdit } from "react-icons/fa";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import toast from 'react-hot-toast';
 import {
 
 TimeLineDetails
 } from '@/utils/typesUtils'
+import { deleteTimeLine, getAgenda } from '@/redux_store/agenda/agendaApi';
+import { agendaAction } from '@/redux_store/agenda/agendaSlice';
+import TimeLineForm from './TineLineForm';
 
 interface AgendaTimelineProps {
   onClose: () => void
-  title: string,
+  onAddMileStone: () => void
+  title: string
   timeline: TimeLineDetails[]
+  agendaid:string
 }
 
 export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
   onClose,
+  onAddMileStone,
   title,
-  timeline
+  timeline,
+  agendaid
+
 }) => {
+  const [editTimeLine, setEditTimeLine] = useState(false);
+  const [editData, setEditData] = useState<TimeLineDetails>();
   return (
     <>
       <m.div
@@ -47,17 +61,58 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
 
            {   timeline?.map((el) => (
              <TimeLineData
+               id={el.id}
                key={el.milestone}
                status={el?.status}
                details={el?.description}
                title={el?.milestone}
                created_date={el?.created_date}
                attachments={el?.attachments}
+               agendaid={agendaid}
+               edithandler={()=>{setEditTimeLine(true),setEditData(el)}}
              />
-              ))}
-              
+           ))}
+              <div className='flex justify-center col-span-full gap-2 mt-5'>
+                <button
+                  className={`text-sm mt-5 mb-5 align-center transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                  onClick={() => onAddMileStone()}
+                >
+                  Add Milestone
+                </button>
+              </div>
+              {
+             <AnimatePresence mode="wait">
+                  {editTimeLine && (
+                    <m.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
+                        }`}
+                    >
+                      <div
+                        className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"
+                        onClick={() => setEditTimeLine(false)}
+                      />
+                      <m.div
+                        initial={{ scale: 0.7, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.7, opacity: 0 }}
+                        className="shadow-md border rounded-md border-gray-200 py-8 px-20 z-30 bg-white relative flex flex-col items-center"
+                      >
+                        <h2 className="mt-4 mb-8 text-3xl">Edit Milestone</h2>
+
+                        <TimeLineForm data={editData} isedit={true} agendaid={agendaid} onCancel={() => setEditTimeLine(false)} />
+                      </m.div>
+                    </m.div>
+                  )}
+                  
+                </AnimatePresence>
+              }
             </ul>
+           
           </m.div>
+         
         </div>
       </m.div>
     </>
@@ -105,10 +160,12 @@ export const FileOpen: FC<AgendaTimelineProps> = ({
 interface TimeLineDataProps {
   details: string
   title: string
-  status: string,
-  created_date: string,
+  status: string
+  created_date: string
   attachments: string[]
-  
+  agendaid:string
+  id: string 
+  edithandler: () => void
 }
 
 const colors = {
@@ -123,9 +180,27 @@ const colors = {
   },
 }
 
-const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, created_date ,attachments}) => {
+const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, created_date, attachments, id, agendaid, edithandler }) => {
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
+  const deletehandler = async () => {
+    try {
+      const Data = await deleteTimeLine(id, leaderProfile?.id as string, agendaid as string);
+      if (Data?.success) {
+        toast.success(() => (
+          <p>
+            {Data?.message}
+          </p>
+        ));
+        const agendaData = await getAgenda(leaderProfile?.id as string);
+        dispatch(agendaAction.storeAgendas(agendaData))
+      }
+      console.log("Data", Data)
+    } catch (error) {
+      console.log(error);
 
-  const [showTimeline, setShowTimeline] = useState(false);
+    }
+  }
   return (
     <>
       <li className={`last_timeline ${colors[status == "completed" ? 1 : 0 ].line}`}>
@@ -139,8 +214,9 @@ const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, created_d
             <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
               <FaFileAlt />
             </a>
-            ))}
-         
+          ))}
+          <a onClick={()=>{deletehandler()}}  ><BsTrash3Fill /></a>
+          <a onClick={() => { edithandler() }} ><FaEdit /></a>
           <div className='flex flex-col w-full'>
             <h4 className='font-medium capitalize'>{title} </h4>
             <p className='text-[15px] text-gray-600'>{moment(created_date).format('DD MMM, yyyy')}</p>
