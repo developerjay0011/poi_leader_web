@@ -30,7 +30,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
 
   const formSubmitHandler = async (data: UserDetails) => {
    
-    const body = { ...data, categoryid:categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
+    const body: any = { ...data, categoryid:categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
      try {
        const Data = await saveAgenda(body);  
        if (Data?.success) {

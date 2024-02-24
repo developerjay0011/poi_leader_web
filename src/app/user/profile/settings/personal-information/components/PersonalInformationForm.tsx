@@ -38,7 +38,7 @@ export const PersonalInformationForm: FC = () => {
       ...personal_info,
       dob: moment(personal_info?.dob).format("YYYY-MM-DD")
     })
-  }, [leaderProfile]);
+  }, [leaderProfile, reset]);
 
   const formSubmitHandler =async (data: UserDetails) => {
     const resBody: ProfileInfo = {...data};

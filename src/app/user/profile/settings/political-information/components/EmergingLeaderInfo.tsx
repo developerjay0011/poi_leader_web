@@ -26,7 +26,6 @@ import { cusSelector } from '@/redux_store/cusHooks'
 import moment from 'moment'
 import { uploadActivityPictures } from '@/redux_store/leader/leaderAPI'
 import { ErrorMessage } from '@hookform/error-message'
-import { ActivityPictures } from '@/interfaces/leader'
 
 interface EmerginLeaderInfoProps {
   watch: UseFormWatch<UserDetails>
@@ -84,7 +83,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
       doneAnyPoliticalActivity: leaderProfile.political_info?.done_any_political_activity ? 'yes' : 'no',
       familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no'
     });
-  }, [leaderProfile]);
+  }, [leaderProfile, reset]);
 
   return (
     <>
@@ -516,12 +515,12 @@ const Activity: FC<{
       <div className='w-full flex flex-col gap-3 relative'>
         <div className='flex flex-row gap-3 relative'>
           {activityImg.length > 0 && (
-            activityImg.map((image: string) => {
+            activityImg.map((image: string, imgIndex: number) => {
               return (
-                <div className='relative'>
+                <div className='relative' key={image}>
                   <button
                     type='button'
-                    key={image}
+                    key={imgIndex}
                     onClick={() => {
                       const updatedImageList = activityImg?.filter((el: string) => el !== image);
                       setActivityImg(updatedImageList);

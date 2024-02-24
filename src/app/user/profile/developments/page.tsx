@@ -29,7 +29,7 @@ const AdminDevelopmentPage = () => {
   )
 
   const filterData = filterDataOnStatus.filter((el) =>
-    categoryFilter ? el.category === categoryFilter : el
+    categoryFilter ? el.categoryid === categoryFilter : el
   )
 
   const agendaJSX =
@@ -80,8 +80,8 @@ const AdminDevelopmentPage = () => {
                     className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer'>
                     <option value=''>All</option>
                     {categories.map((el) => (
-                      <option key={el._id} value={el._id}>
-                        {el.category_name}
+                      <option key={el.category} value={el.category}>
+                        {el.category}
                       </option>
                     ))}
                   </select>

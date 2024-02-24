@@ -77,7 +77,7 @@ export const ContactForm: FC = () => {
     reset({
       ...contact_info
     })
-  }, [leaderProfile]);
+  }, [leaderProfile, reset]);
 
   return (
     <>

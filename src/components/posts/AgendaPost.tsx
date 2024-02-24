@@ -28,7 +28,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
   title,
   status,
   userId,
-  created_date,
+  creation_date,
   created_by_type,
   timeline
 }) => {
@@ -64,7 +64,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
             <div>
               <h4 className="font-[600] text-lg text-orange-500">Created by : {created_by_type}</h4>
               <p className="flex items-center capitalize gap-2 text-sm font-[500]">
-                <span>created an agenda: {moment(created_date).format("YYYY-MM-DD")}</span>
+                <span>created an agenda: {moment(creation_date).format("YYYY-MM-DD")}</span>
               </p>
             </div>
 

@@ -100,6 +100,15 @@ export interface UserDetails {
   is_participated_in_elections: boolean
   is_prepare_for_elections: boolean
 
+  parliamentHouse: string
+  lokSabhaState: string
+  rajyaSabhaState: string
+  rajyaSabhaNominated: string
+  mlaConstituency: string
+  lokSabhaConstituency: string
+  politicalParty: string
+  mlaState: string
+
   done_any_political_activity: boolean
   does_family_supports: boolean
   people_in_team: string
