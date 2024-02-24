@@ -31,9 +31,6 @@ export const APIRoutes = {
   getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{leaderId}}`,
   getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
-  getAgenda: `${API_Prefix}/leader/getagendas/{{leaderId}}`,
-  getCategories: `${API_Prefix}/leader/getcategories/{{leaderId}}`,
-  saveAgenda: `${API_Prefix}/leader/saveagenda`,
   uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
 
   // Post Endpoint
@@ -42,4 +39,14 @@ export const APIRoutes = {
   addStories: `${API_Prefix}/post/addStory`,
   deleteStory: `${API_Prefix}/post/deleteStory`,
   addPost: `${API_Prefix}/post/addPost`,
+
+  // Agenda Endpoint
+  getAgenda: `${API_Prefix}/leader/getagendas/{{leaderId}}`,
+  getCategories: `${API_Prefix}/leader/getcategories/{{leaderId}}`,
+  saveAgenda: `${API_Prefix}/leader/saveagenda`,
+  deleteAgenda: `${API_Prefix}/leader/deleteagenda`,
+  saveTimeLine: `${API_Prefix}/leader/savetimeline`,
+  deleteTimeLine: `${API_Prefix}/leader/deletetimeline`,
+
+
 }

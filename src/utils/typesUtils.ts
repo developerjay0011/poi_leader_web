@@ -177,14 +177,15 @@ export interface UserDetails {
   Phone:string;
   Email:string;
 
-
+  status:string
   title:string
   description:string
   documents:string
   attachments:string
   leaderId?: string
   creation_date: string
-  categoryid:string
+  categoryid: string
+  milestone:string
 }
 
 export const LEADER_IDS = {
@@ -224,6 +225,7 @@ export interface PartyDetails {
   party_name: string
 }
 export interface TimeLineDetails {
+  id:string
     status : string
   description : string
   milestone: string

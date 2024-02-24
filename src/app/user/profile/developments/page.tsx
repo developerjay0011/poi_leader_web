@@ -80,7 +80,7 @@ const AdminDevelopmentPage = () => {
                     className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer'>
                     <option value=''>All</option>
                     {categories.map((el) => (
-                      <option key={el.category} value={el.category}>
+                      <option key={el.id} value={el.id}>
                         {el.category}
                       </option>
                     ))}
