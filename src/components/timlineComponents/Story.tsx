@@ -5,12 +5,14 @@ import { cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
 import { TfiClose } from "react-icons/tfi";
+import { getImageUrl } from "@/config/get-image-url";
 
 export const Story: FC<StoryProps> = ({
   id,
   handleDelete,
   userImage,
   stories,
+  data
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const { userDetails } = cusSelector((state) => state.auth);
@@ -19,7 +21,18 @@ export const Story: FC<StoryProps> = ({
   const deletePostHandler = async () => {
     handleDelete(leaderid, id);
   };
+  const storyContent = {
+    width: 'auto',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    margin: 'auto',
 
+  }
+  const heading = {
+    heading: data.name,
+    subheading: data.written_text,
+    profileImage: userImage
+  }
   return (
     <>
       <li>
@@ -58,16 +71,16 @@ export const Story: FC<StoryProps> = ({
               stories={stories?.map((item) => ({
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}${item.media}`,
                 type: item.type && (item.type.includes("image") ? "image" : "video") || '',
+                header: heading
               }))}
+              storyContainerStyles={{ borderRadius: 8, overflow: "hidden" }}
               defaultInterval={1500}
               width={432}
               height={768}
+               storyStyles={storyContent}
               onAllStoriesEnd={() => setIsOpen(false)}
             />
           </div>
-          {/* <TfiClose
-            className="z-10 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
-            onClick={deletePostHandler} /> */}
         </Modal>
       )}
     </>

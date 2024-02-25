@@ -6,6 +6,13 @@ import { RiCheckboxMultipleBlankFill } from "react-icons/ri";
 import { PostOptions } from "./PostOptions";
 import { DeleteGalleryMedia } from "../api/gallery";
 import CustomImage from "@/utils/CustomImage";
+import { getImageUrl } from "@/config/get-image-url";
+import { tryCatch } from "@/config/try-catch";
+import { deleteGallery } from "@/redux_store/gallery/galleryAPI";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
+import { GrClose } from "react-icons/gr";
 
 interface BriefPostProps {
   userMedia: any;
@@ -15,6 +22,8 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   console.log(userMedia);
   const [userData, setUserData] = useState<UserData | null>(null);
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
 
   useEffect(() => {
     const serializedData = sessionStorage.getItem("user Data");
@@ -26,25 +35,26 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
   }, []);
 
   const deletePostHandler = async (id: string) => {
-    try {
+    tryCatch(
+      async () => {
       const DeleteGalleryIds = {
-        leaderid: userData?.id || "",
+        leaderid: leaderProfile?.id || "",
         deleteids: [id],
       };
 
-      const token = userData?.token;
-
-      const deleteRes = await DeleteGalleryMedia(DeleteGalleryIds, token);
-
-      if (deleteRes.success) {
-        deletedata(deleteRes);
-        setShowMorePostOptions(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+        const response = await deleteGallery(DeleteGalleryIds);
+        if (response?.success) {
+          deletedata(response);
+          setShowMorePostOptions(false);
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+    })
   };
-
+  function isImage(url: string) {
+    return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
+  }
   return (
     <>
       <li className="w-full aspect-square rounded-md bg-sky-50 overflow-hidden relative brief_post">
@@ -53,10 +63,11 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
           className="absolute top-4 right-4 z-[5] flex items-center gap-3"
         >
           <RiCheckboxMultipleBlankFill className="text-2xl text-white" />
-          <div className="ml-auto relative" id="moreOptions">
-            <button onClick={() => setShowMorePostOptions((lst) => !lst)}>
+          <div onClick={() => setShowMorePostOptions((lst) => !lst)} className="ml-auto relative" id="moreOptions">
+            
+            {showMorePostOptions ? <GrClose /> : 
               <BsThreeDots className="text-2xl rotate-90 " />
-            </button>
+  }
 
             {showMorePostOptions && (
               <PostOptions
@@ -84,13 +95,24 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
             </p>
           </div>
         </div>
-        <CustomImage
-          width={1000}
-          height={1000}
-          className="w-full h-full object-cover object-center"
-          src={`http://203.92.43.166:4005${userMedia.media}`}
-          alt="user image"
-        />
+        {
+          isImage(getImageUrl(userMedia.media)) ?
+            <CustomImage
+              width={1000}
+              height={1000}
+              className="w-full h-full object-cover object-center"
+              src={getImageUrl(userMedia.media)}
+              alt="user image"
+            /> :
+            <video
+              src={getImageUrl(userMedia.media) as string}
+
+              className='object-cover object-center w-full h-full'
+              controls
+            />
+        }
+       
+        
       </li>
     </>
   );

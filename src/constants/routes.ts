@@ -47,6 +47,28 @@ export const APIRoutes = {
   deleteAgenda: `${API_Prefix}/leader/deleteagenda`,
   saveTimeLine: `${API_Prefix}/leader/savetimeline`,
   deleteTimeLine: `${API_Prefix}/leader/deletetimeline`,
+  makeAgendaPost: `${API_Prefix}/leader/makeagendapost`,
+
+  // Development Endpoint
+  getDevelopment: `${API_Prefix}/leader/getdevelopments/{{leaderId}}`,
+  saveDevelopment: `${API_Prefix}/leader/savedevelopment`,
+  deleteDevelopment: `${API_Prefix}/leader/deletedevelopment`,
+  saveDevelopmentTimeLine: `${API_Prefix}/leader/savedevelopmenttimeline`,
+  deleteDevelopmentTimeLine: `${API_Prefix}/leader/deletedevelopmenttimeline`,
+  makeDevelopmentPost: `${API_Prefix}/leader/makedevelopmentpost`,
+
+  // Directory Endpoint
+  getDirectory: `${API_Prefix}/leader/getdirectories/{{leaderId}}`,
+  saveDirectory: `${API_Prefix}/leader/savedirectory`,
+  deleteDirectory: `${API_Prefix}/leader/deletedirectory`,
+
+  // Gallery Endpoint
+  getGalleryData: `${API_Prefix}/leader/getgallerydata/{{leaderId}}`,
+  saveGallery: `${API_Prefix}/leader/savegallery`,
+  deleteGallery: `${API_Prefix}/leader/deletegallerymedia`,
+  // Account Setting Endpoint
+  closeAccount: `${API_Prefix}/leader/closeaccount/{{leaderId}}`,
+  deActiveAccount: `${API_Prefix}/leader/deactiveaccount/{{leaderId}}`,
 
 
 }

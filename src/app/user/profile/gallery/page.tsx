@@ -4,58 +4,43 @@ import { BriefPost } from "@/components/posts/BriefPost";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { validate } from "uuid";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
-import {
-  fetchGetGalleryData,
-  fetchSaveGallery,
-} from "@/components/api/gallery";
 import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import { BsImageFill } from "react-icons/bs";
-import { FaCamera } from "react-icons/fa6";
 import { NewPostFields, PostType } from "@/utils/typesUtils";
 import { BiX } from "react-icons/bi";
 import CustomImage from "@/utils/CustomImage";
+import { getGalleryData, saveGallery } from "@/redux_store/gallery/galleryAPI";
+import { tryCatch } from "@/config/try-catch";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { galleryActions } from "@/redux_store/gallery/gallerySlice";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 
 const AdminProfileGalleryPage = () => {
   const [searchStr, setSearchStr] = useState("");
-  const [briefPostData, setBriefPostData] = useState([]);
   const [updateGallery, setUpdateGallery] = useState({});
   const [isGallery, setIsGallery] = useState(false);
   const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
   const [media, setMedia] = useState<NewPostFields[]>([]);
   const changeSearchStr = (val: string) => setSearchStr(val);
+  const dispatch = cusDispatch();
+  const { userDetails } = cusSelector((st) => st.auth);
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { gallery } = cusSelector((state) => state.gallery);
 
-  const [userData, setUserData] = useState<UserData | null>(null);
 
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  console.log(userData);
-  console.log(briefPostData);
 
   useEffect(() => {
     (async () => {
-      try {
-        if (userData && userData?.id?.length > 0) {
-          const leaderid = userData?.id || "";
-          const token = userData?.token || "";
-
-          const data = await fetchGetGalleryData(leaderid, token);
-
-          if (data.length > 0) {
-            setBriefPostData(data);
-          }
-        }
-      } catch (error) {}
+      tryCatch(
+        async () => {
+          const data = await getGalleryData(leaderProfile?.id as string);
+          dispatch(galleryActions.storeGallery(data))
+      })
     })();
-  }, [userData, updateGallery]);
+  }, [userDetails,dispatch ,updateGallery]);
 
   const deletedata = (data: any) => {
     setUpdateGallery(data);
@@ -122,30 +107,26 @@ const AdminProfileGalleryPage = () => {
   };
 
   const handleSave = async () => {
-    try {
-      const token = userData?.token;
-
+    tryCatch(
+      async () => {
       const formData = new FormData();
-
-      formData.append("leaderid", userData?.id || "");
-
+      formData.append("leaderid", leaderProfile?.id || "");
       for (let i = 0; i < apimedia.length; i++) {
         const item: any = apimedia[i];
-
         formData.append("media", item?.media);
       }
 
-      const res = await fetchSaveGallery(formData, token);
-
-      console.log(res);
-
-      if (res?.success) {
-        onCancel();
-        setUpdateGallery(res);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+        const response = await saveGallery(formData);
+        if (response?.success) {
+          onCancel();
+          setApiMedia([])
+          setMedia([])
+          setUpdateGallery(response);
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+    })
   };
 
   return (
@@ -189,13 +170,13 @@ const AdminProfileGalleryPage = () => {
 
           <section className="px-7 pb-8 max-[650px]:px-3">
             <ul className="grid grid-cols-5 gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
-              {briefPostData &&
-                briefPostData.length > 0 &&
-                briefPostData.map((userMedia, index) => {
+              {gallery &&
+                gallery.length > 0 &&
+                gallery.map((userMedia, index) => {
                   return (
                     <BriefPost
                       key={index}
-                      userMedia={userMedia}
+                      userMedia={userMedia} 
                       deletedata={deletedata}
                     />
                   );

@@ -5,12 +5,11 @@ import { BsTrash3Fill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { AnimatePresence, motion as m } from "framer-motion";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
-import { cusSelector } from "@/redux_store/cusHooks";
-
-
+import { IoSend } from "react-icons/io5";
 interface AgendaOptionsProps {
   deleteAgendaHandler: () => void;
   editAgendaHandler: () => void;
+  postAgendaHandler: () => void;
   onClose: () => void;
   userId: string;
 }
@@ -18,6 +17,7 @@ interface AgendaOptionsProps {
 export const AgendaOptions: FC<AgendaOptionsProps> = ({
   editAgendaHandler,
   deleteAgendaHandler,
+  postAgendaHandler,
   onClose,
   userId,
 }) => {
@@ -37,7 +37,12 @@ export const AgendaOptions: FC<AgendaOptionsProps> = ({
         >
           <FaEdit className="text-xl" /> Edit
         </button>
-        
+        <button
+          className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+          onClick={postAgendaHandler}
+        >
+          <IoSend className="text-xl" /> Post
+        </button>
           <button
           onClick={() => {
             onClose()

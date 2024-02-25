@@ -5,6 +5,11 @@ import { agendaSlice } from './agenda/agendaSlice'
 import { authSlice } from './auth/authSlice'
 import { commonSlice } from './common/commonSlice'
 import { leaderSlice } from './leader/leaderSlice'
+import { directorySlice } from './directory/directorySlice'
+import { developmentSlice } from './development/developmentSlice'
+import { gallerySlice } from './gallery/gallerySlice'
+
+
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +19,10 @@ export const store = configureStore({
     UI: uiSlice.reducer,
     posts: postSlice.reducer,
     agenda: agendaSlice.reducer,
+    directory: directorySlice.reducer,
+    development: developmentSlice.reducer,
+    gallery: gallerySlice.reducer,
+
   },
 })
 

@@ -12,28 +12,32 @@ import {
 
 TimeLineDetails
 } from '@/utils/typesUtils'
-import { deleteTimeLine, getAgenda } from '@/redux_store/agenda/agendaApi';
-import { agendaAction } from '@/redux_store/agenda/agendaSlice';
 import TimeLineForm from './TineLineForm';
+import { tryCatch } from '@/config/try-catch';
+import { commonActions } from '@/redux_store/common/commonSlice';
+import { ToastType } from '@/constants/common';
+import { deleteDevelopmentTimeLine, getDevelopment } from '@/redux_store/development/developmentApi';
+import { developmentAction } from '@/redux_store/development/developmentSlice';
 
 interface AgendaTimelineProps {
   onClose: () => void
   onAddMileStone: () => void
   title: string
   timeline: TimeLineDetails[]
-  agendaid:string
+  developmentid:string
 }
 
-export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
+export const DevelopmentTimeLine: FC<AgendaTimelineProps> = ({
   onClose,
   onAddMileStone,
   title,
   timeline,
-  agendaid
+  developmentid
 
 }) => {
   const [editTimeLine, setEditTimeLine] = useState(false);
   const [editData, setEditData] = useState<TimeLineDetails>();
+
   return (
     <>
       <m.div
@@ -68,7 +72,7 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
                title={el?.milestone}
                created_date={el?.created_date}
                attachments={el?.attachments}
-               agendaid={agendaid}
+               developmentid={developmentid}
                edithandler={()=>{setEditTimeLine(true),setEditData(el)}}
              />
            ))}
@@ -101,8 +105,8 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
                         className="shadow-md border rounded-md border-gray-200 py-8 px-20 z-30 bg-white relative flex flex-col items-center"
                       >
                         <h2 className="mt-4 mb-8 text-3xl">Edit Milestone</h2>
-
-                        <TimeLineForm data={editData} isedit={true} agendaid={agendaid} onCancel={() => setEditTimeLine(false)} />
+                            
+                        <TimeLineForm data={editData} isedit={true} developmentid={developmentid} onCancel={() => setEditTimeLine(false)} />
                       </m.div>
                     </m.div>
                   )}
@@ -163,7 +167,7 @@ interface TimeLineDataProps {
   status: string
   created_date: string
   attachments: string[]
-  agendaid:string
+  developmentid:string
   id: string 
   edithandler: () => void
 }
@@ -180,26 +184,22 @@ const colors = {
   },
 }
 
-const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, created_date, attachments, id, agendaid, edithandler }) => {
+const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, created_date, attachments, id, developmentid, edithandler }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
   const deletehandler = async () => {
-    try {
-      const Data = await deleteTimeLine(id, leaderProfile?.id as string, agendaid as string);
-      if (Data?.success) {
-        toast.success(() => (
-          <p>
-            {Data?.message}
-          </p>
-        ));
-        const agendaData = await getAgenda(leaderProfile?.id as string);
-        dispatch(agendaAction.storeAgendas(agendaData))
-      }
-      console.log("Data", Data)
-    } catch (error) {
-      console.log(error);
+    tryCatch(
+      async () => {
+        const response = await deleteDevelopmentTimeLine(id, leaderProfile?.id as string, developmentid as string);
+        if (response?.success) {
+          const agendaData = await getDevelopment(leaderProfile?.id as string);
+          dispatch(developmentAction.storeDevelopments(agendaData))
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
 
-    }
+    } )
   }
   return (
     <>

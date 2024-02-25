@@ -27,9 +27,12 @@ export const StoriesBox: FC = () => {
       if (data?.length > 0) {
         let mergeAllPosts: any = [];
         let allLeaderProfile: any = {};
+        let allLeaderName: any = {};
+
         data.forEach((item: any) => {
           mergeAllPosts.push(...item.posts);
           allLeaderProfile[item.leaderid] = item.image;
+          allLeaderName[item.leaderid] = item.name;
         });
         const groupByLeaderId = await groupBy(
           mergeAllPosts,
@@ -45,9 +48,13 @@ export const StoriesBox: FC = () => {
                 image: "",
                 leaderid: item.leaderid,
                 media: [],
+                name: "",
+                written_text:""
               };
             }
             finalStories[item.leaderid].id = item.id;
+            finalStories[item.leaderid].name = allLeaderName[item.leaderid];
+            finalStories[item.leaderid].written_text = item.written_text;
             finalStories[item.leaderid].image =
               allLeaderProfile[item.leaderid];
             finalStories[item.leaderid].media = finalStories[
@@ -112,7 +119,8 @@ export const StoriesBox: FC = () => {
                       media?: any[];
                       id: string;
                       leaderid: string;
-                      image: string;
+                    image: string;
+                    name: string;
                     }
                   | undefined
               ) => {
@@ -123,7 +131,8 @@ export const StoriesBox: FC = () => {
                       (el?.image &&
                         process.env.NEXT_PUBLIC_BASE_URL + "" + el.image) ||
                       ""
-                    }`}
+                      }`}
+                    data={el}
                     stories={el?.media}
                     id={el?.id || ""}
                     handleDelete={handleDelete}
