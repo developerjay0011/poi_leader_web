@@ -9,11 +9,14 @@ import { BsFillPatchExclamationFill } from "react-icons/bs";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/Input";
-import Link from "next/link";
-import { fetchSaveDirectory } from "@/components/api/directory";
-import { UserData } from "@/utils/utility";
+import { tryCatch } from "@/config/try-catch";
+import { getDirectory, saveDirectory } from "@/redux_store/directory/directoryApi";
+import { directoryAction } from "@/redux_store/directory/directorySlice";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 
-interface DirectoryPageProps {}
+interface DirectoryPageProps { }
 
 interface Edit {
   id: string;
@@ -29,18 +32,11 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
   const [searchString, setSearchString] = useState("");
   const [isDirectory, setIsDirectory] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [editDirectoryData, setEditDirectoryData] = useState<Edit | null>();
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
+  const dispatch = cusDispatch();
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
+  
   const {
     register,
     setValue,
@@ -50,47 +46,45 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
     reset,
   } = useForm<UserDetails>();
 
+  useEffect(() => {
+    (async () => {
+      tryCatch(
+        async () => {
+
+          const Data = await getDirectory(leaderProfile?.id as string);
+          dispatch(directoryAction.storedirectory(Data))
+
+        }
+      )
+    })();
+  }, [userDetails, dispatch, leaderProfile?.id,isDirectory]);
+
   const formSubmitHandler = async (data: UserDetails) => {
     console.log(data);
-    try {
-      const currentDate = new Date().toISOString();
+    tryCatch(
+      async () => {
+        const currentDate = new Date().toISOString();
 
-      const addData = {
-        id: null,
-        leaderid: userData?.id || "",
-        name: data?.Name,
-        mobile: data?.Phone,
-        email: data?.Email,
-        isactive: true,
-        createddate: currentDate,
-      };
+        const body = {
+          id: isEdit ? editDirectoryData?.id : null,
+          leaderid: leaderProfile?.id || "",
+          name: data?.Name,
+          mobile: data?.Phone,
+          email: data?.Email,
+          isactive: true,
+          createddate: currentDate,
+        };
 
-      const EditData = {
-        id: editDirectoryData?.id || "",
-        leaderid: userData?.id || "",
-        name: data?.Name,
-        mobile: data?.Phone,
-        email: data?.Email,
-        isactive: true,
-        createddate: currentDate,
-      };
-
-      const addDirectory = isEdit ? EditData : addData;
-
-      const token = userData?.token || "";
-
-      const response = await fetchSaveDirectory(addDirectory, token);
-
-
-      if (response.success) {
-        setIsDirectory(false);
-        setIsEdit(false);
+        const response = await saveDirectory(body);
+        if (response?.success) {
+          setIsDirectory(false);
+          setIsEdit(false);
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
         reset();
-      }
-      reset();
-    } catch (error) {
-      console.log(error);
-    }
+      })
   };
 
   const editDirectory = async (data: any) => {
@@ -187,13 +181,12 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${
-              false ? "cursor-not-allowed" : ""
-            }`}
+            className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
+              }`}
           >
             <div
               className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"
-              // onClick={onCancel}
+            // onClick={onCancel}
             />
             <m.div
               initial={{ scale: 0.7, opacity: 0 }}
@@ -245,14 +238,14 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
                 />
 
                 <div className="flex justify-end col-span-full gap-2 mt-5">
-                  <button
+                  <a
                     className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
                     onClick={() => {
                       setIsDirectory(false), setIsEdit(false);
                     }}
                   >
                     close
-                  </button>
+                  </a>
                   <button
                     className="rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
                     type="submit"

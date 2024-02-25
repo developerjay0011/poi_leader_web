@@ -4,6 +4,7 @@ export interface StoryProps {
   handleDelete: any;
   userImage: string;
   stories?: Array<any>;
+  data:any
 }
 
 export interface Media {

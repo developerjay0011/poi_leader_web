@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { AgendaPost } from "@/components/posts/AgendaPost";
+import { AgendaPost } from "@/components/posts/agenda/AgendaPost";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
-import AgendaForm from "@/components/posts/AgendaForm";
+import AgendaForm from "@/components/posts/agenda/AgendaForm";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 
 const AdminAgendaPage = () => {

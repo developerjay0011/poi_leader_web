@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
-import { Input } from "../Input";
+import { Input } from "../../Input";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { getAgenda, saveTimeLine } from "@/redux_store/agenda/agendaApi";
-import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { getImageUrl } from "@/config/get-image-url";
 import { tryCatch } from "@/config/try-catch";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import { getDevelopment, saveDevelopmentTimeLine } from "@/redux_store/development/developmentApi";
+import { developmentAction } from "@/redux_store/development/developmentSlice";
 
 interface TimeLineFormProps {
   onCancel: () => void;
-  agendaid: string// Define the type of onCancel prop
+  developmentid: string
   isedit: boolean
   data: any
 }
 
-const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit, data }) => {
+const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, developmentid, isedit, data }) => {
 
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
@@ -34,18 +34,18 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit,
     formState: { errors },
     handleSubmit,
   } = useForm<UserDetails>();
-
+  console.log("developmentid",developmentid)
   const formSubmitHandler = async (data: UserDetails) => {
-    const body: any = { ...data, leaderid: leaderProfile.id, agendaid: agendaid }
+    const body: any = { ...data, leaderid: leaderProfile.id, developmentid: developmentid }
     if (isedit) {
       body.id = id
     }
     tryCatch(
       async () => {
-        const response = await saveTimeLine(body);
+        const response = await saveDevelopmentTimeLine(body);
         if (response?.success) {
-          const agendaData = await getAgenda(leaderProfile?.id as string);
-          dispatch(agendaAction.storeAgendas(agendaData))
+          const agendaData = await getDevelopment(leaderProfile?.id as string);
+          dispatch(developmentAction.storeDevelopments(agendaData))
           onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {

@@ -97,24 +97,8 @@ export const ShortcutsBox: FC = () => {
             route="http://localhost:5000/"
           />
 
-          <button onClick={() => dispatch(uiActions.setLogin(false))}>
-            <ShortcutBtn Icon={FaPowerOff} title="logout" route="/" />
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-4 hover:text-orange-600 transition-all text-sky-950"
-            onClick={() => setShowConfirmBox(true)}
-          >
-            <FaPowerOff /> Deactive Account
-          </button>
-
-          <button
-            type="button"
-            className="flex items-center gap-4 hover:text-orange-600 transition-all text-sky-950"
-            onClick={() => setShowCloseConfirmBox(true)}
-          >
-            <FaPowerOff /> Close Account
-          </button>
+        
+        
           <AnimatePresence mode="wait">
             {showConfirmBox && (
               <ConfirmDialogBox

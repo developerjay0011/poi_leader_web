@@ -185,7 +185,8 @@ export interface UserDetails {
   leaderId?: string
   creation_date: string
   categoryid: string
-  milestone:string
+  milestone: string
+  development_title:string
 }
 
 export const LEADER_IDS = {

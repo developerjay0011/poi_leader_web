@@ -5,7 +5,7 @@ import { Post } from "./Post";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { StoriesBox } from "../timlineComponents/StoriesBox";
 import { PollPost } from "./polls/PollPost";
-import { AgendaPost } from "./AgendaPost";
+import { AgendaPost } from "./agenda/AgendaPost";
 import { fetchGetLeaderAddedPosts } from "../api/posts";
 
 interface TimeLinePageProps {}
