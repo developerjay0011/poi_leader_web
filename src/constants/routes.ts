@@ -23,15 +23,26 @@ export const APIRoutes = {
   verifyOTP: `${API_Prefix}/common/verifyOtp`,
   getLeadersForDropdown: `${API_Prefix}/common/getAddLeadersDropdown`,
 
+
   // Leader Endpoints
   login: `${API_Prefix}/leader/login`,
   register: `${API_Prefix}/leader/registration`,
   upsertLeaders: `${API_Prefix}/leader/addEditLeader`,
   getAccessTabs: `${API_Prefix}/leader/getAccessTabs/{{userId}}`,
   getProfile: `${API_Prefix}/leader/getLeaderProfileInfo/{{leaderId}}`,
-  getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
   uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
+  getTrendingLeaderList: `${API_Prefix}/leader/trendingleaderlist`,
+  getNotification: `${API_Prefix}/leader/getleadernotification/{{leaderId}}`,
+
+  //Group Endpoints
+  getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
+
+  // Follow Following Endpoints
+  getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
+  getFollowering: `${API_Prefix}/leader/followingList/{{leaderId}}`,
+  followLeader: `${API_Prefix}/leader/followLeader`,
+  unFollowLeader: `${API_Prefix}/leader/unfollowLeader`,
 
   // Post Endpoint
   getLeaderAddedStories: `${API_Prefix}/post/getLeaderAddedStories/{{leaderId}}`,

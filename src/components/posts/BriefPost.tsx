@@ -4,7 +4,6 @@ import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import { BsThreeDots } from "react-icons/bs";
 import { RiCheckboxMultipleBlankFill } from "react-icons/ri";
 import { PostOptions } from "./PostOptions";
-import { DeleteGalleryMedia } from "../api/gallery";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl } from "@/config/get-image-url";
 import { tryCatch } from "@/config/try-catch";
@@ -21,26 +20,19 @@ interface BriefPostProps {
 export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   console.log(userMedia);
-  const [userData, setUserData] = useState<UserData | null>(null);
+
   const { leaderProfile } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
 
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
 
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
 
   const deletePostHandler = async (id: string) => {
     tryCatch(
       async () => {
-      const DeleteGalleryIds = {
-        leaderid: leaderProfile?.id || "",
-        deleteids: [id],
-      };
+        const DeleteGalleryIds = {
+          leaderid: leaderProfile?.id || "",
+          deleteids: [id],
+        };
 
         const response = await deleteGallery(DeleteGalleryIds);
         if (response?.success) {
@@ -50,7 +42,7 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    })
+      })
   };
   function isImage(url: string) {
     return /\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(url);
@@ -64,10 +56,10 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
         >
           <RiCheckboxMultipleBlankFill className="text-2xl text-white" />
           <div onClick={() => setShowMorePostOptions((lst) => !lst)} className="ml-auto relative" id="moreOptions">
-            
-            {showMorePostOptions ? <GrClose /> : 
+
+            {showMorePostOptions ? <GrClose /> :
               <BsThreeDots className="text-2xl rotate-90 " />
-  }
+            }
 
             {showMorePostOptions && (
               <PostOptions
@@ -111,8 +103,8 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
               controls
             />
         }
-       
-        
+
+
       </li>
     </>
   );

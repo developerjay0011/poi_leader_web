@@ -8,6 +8,7 @@ import { leaderSlice } from './leader/leaderSlice'
 import { directorySlice } from './directory/directorySlice'
 import { developmentSlice } from './development/developmentSlice'
 import { gallerySlice } from './gallery/gallerySlice'
+import { groupSlice } from './group/groupSlice'
 
 
 
@@ -22,6 +23,7 @@ export const store = configureStore({
     directory: directorySlice.reducer,
     development: developmentSlice.reducer,
     gallery: gallerySlice.reducer,
+    group: groupSlice.reducer
 
   },
 })

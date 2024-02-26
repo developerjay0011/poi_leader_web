@@ -3,9 +3,15 @@ import { UserData } from "@/utils/utility";
 import { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
 import { fetchFollowingList, fetchUnFollowLeader } from "../api/followLeader";
-import { cusSelector } from "@/redux_store/cusHooks";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
+import { getFollowering, getFollowers, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { tryCatch } from "@/config/try-catch";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { getImageUrl } from "@/config/get-image-url";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 interface Leader {
   image: string;
   designation: string;
@@ -17,41 +23,25 @@ interface Leader {
 interface TrendingUsersProps {
   followers: any;
 }
-export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
-  const [trendingLeaders, setTrendingLeaders] = useState([]);
-  const [unfollow, setUnfollow] = useState({});
-  const userDetails = cusSelector(
-    (state: RootState) => state.auth
-  );
-
-  const [userData, setUserData] = useState<UserData | null>(null);
+export const FollowedLeader: FC<TrendingUsersProps> = ({  }) => {
+  const {  leaderProfile, following } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
 
   useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
+    (async () => {
 
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
+      tryCatch(
+        async () => {
+          const followingRes = await getFollowers(leaderProfile?.id as string);
+          dispatch(leaderActions.setFollowers(followingRes));
+        })
 
+    })();
+  }, [following]);
 
-  useEffect(() => {
-    if ( userData && Object.keys(userData).length > 0 ) {
-      (async () => {
-        const token = userData?.token;
-        const leaderid = userData?.id;
-        const data = await fetchFollowingList(leaderid, token);
-
-        if (data.length > 0) {
-          setTrendingLeaders(data);
-        }
-      })();
-    }
-  }, [userData, followers, unfollow]);
 
   const handleunfollow = (data: any) => {
-    setUnfollow(data);
+
   };
 
   return (
@@ -65,11 +55,11 @@ export const FollowedLeader: FC<TrendingUsersProps> = ({ followers }) => {
 
         <div className="overflow-y-scroll flex-1 main_scrollbar">
           <ul className="flex flex-col">
-            {trendingLeaders?.length > 0 &&
-              trendingLeaders?.map((item: Leader, index: number) => {
+            {following?.length > 0 &&
+              following?.map((item: Leader, index: number) => {
                 return (
                   <TrendingUser
-                    userImg={item?.image || ""}
+                    userImg={getImageUrl(item?.image) || ""}
                     designation={item?.designation || ""}
                     username={item?.name || ""}
                     id={item?.leaderid || ""}
@@ -97,35 +87,31 @@ const TrendingUser: FC<TrendingUserProps> = ({
   designation,
   username,
   id,
-  handleunfollow,
 }) => {
   const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   );
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const dispatch = cusDispatch();
+  const { leaderProfile } = cusSelector((state) => state.leader);
 
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
 
   const handleFollowers = async (id: string) => {
-    const token = userData?.token;
     const postBody = {
-      senderid: userData?.id,
+      senderid: leaderProfile?.id,
       receiverid: id,
     };
+    tryCatch(
+      async () => {
+        const response = await  unFollowLeader(postBody);
+        if (response?.success) {
+          const res = await getFollowering(leaderProfile?.id as string)
+          dispatch(leaderActions.setFollowing(res))
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
 
-    const followedLeader = await fetchUnFollowLeader(postBody, token);
-
-    console.log(followedLeader);
-    if (followedLeader?.success) {
-      handleunfollow(followedLeader);
-    }
+      })
   };
 
   return (
