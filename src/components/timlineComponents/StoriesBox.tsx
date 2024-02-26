@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FC, useCallback, useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import Modal from "react-modal";
-import { cusSelector } from "@/redux_store/cusHooks";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { Story } from "./Story";
 import {
   deleteStory,
@@ -13,16 +13,20 @@ import {
 import { groupBy } from "@/config/groupby";
 import { NewPostBox } from "../posts/NewPostBox";
 import { ProtectedRoutes } from "@/constants/routes";
+import { getNotification } from "@/redux_store/leader/leaderAPI";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
 
 export const StoriesBox: FC = () => {
   const [getStories, setGetStories] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const id = GenerateId();
   const { userDetails } = cusSelector((state) => state.auth);
-
+  const dispatch = cusDispatch();
   const fetchStories = async() => {
     const leaderid = userDetails?.leaderId;
-    if(leaderid) {
+    if (leaderid) {
+      const response = await getNotification(leaderid as string);
+      dispatch(leaderActions.setNotification(response));
       const data = await getStoriesForLeader(leaderid);
       if (data?.length > 0) {
         let mergeAllPosts: any = [];

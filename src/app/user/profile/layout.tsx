@@ -16,6 +16,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
 
+
   useEffect(() => {
     (async () => {
       if (leaderProfile?.id) {

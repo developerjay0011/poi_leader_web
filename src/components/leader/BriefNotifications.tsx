@@ -1,8 +1,25 @@
+import { cusSelector } from '@/redux_store/cusHooks';
 import Link from 'next/link'
 import { FC } from 'react'
+import { Notification } from '@/components/leader/Notification'
+interface NotiProps {
+  id: string,
+  leaderid: string,
+  postid: string,
+  userid: string,
+  username: string,
+  userimg: string,
+  usertype: string,
+  title: string,
+  description: string,
+  createddate: string,
+  isread: true
+}
+interface BriefNotificationsProps {
 
-interface BriefNotificationsProps {}
-export const BriefNotifications: FC<BriefNotificationsProps> = () => {
+}
+export const BriefNotifications: FC<BriefNotificationsProps> = (noti) => {
+  const {  notification } = cusSelector((state) => state.leader);
   return (
     <>
       <div className='w-[300px] h-[400px] bg-white rounded-md shadow-md border text-sky-950 flex flex-col overflow-hidden'>
@@ -10,7 +27,16 @@ export const BriefNotifications: FC<BriefNotificationsProps> = () => {
           Notifications{' '}
         </h2>
 
-        <div className='flex flex-col flex-1'></div>
+        <div className="overflow-y-scroll flex-1 main_scrollbar">
+          <ul className="flex flex-col">
+          { notification.length > 0 &&
+              notification.map((noti: NotiProps, index: number) => {
+              return (
+                <Notification key={index} title={noti.title} description={noti.description} userimg={noti.userimg} />
+              )
+            })}
+            </ul>
+        </div>
 
         <div className='w-full py-2 flex justify-center'>
           <Link

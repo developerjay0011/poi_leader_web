@@ -1,19 +1,15 @@
 "use client";
 
-import { CommonBox } from "@/utils/CommonBox";
-import { UserData, user2Img } from "@/utils/utility";
 import { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
-import ARVIND from "@/assets/politicians-images/ARVIND_KEJRIWAL.jpg";
-import MODI from "@/assets/politicians-images/narendar_modi.jpg";
-import RAHUL from "@/assets/politicians-images/Rahul-Gandhi.jpg";
-import {
-  fetchFollowLeader,
-  fetchTrendingLeaderList,
-} from "../api/followLeader";
-import { cusSelector } from "@/redux_store/cusHooks";
-import { RootState } from "@/redux_store";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
+import { tryCatch } from "@/config/try-catch";
+import { followLeader, getFollowering, getFollowers, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { getImageUrl } from "@/config/get-image-url";
+import { commonActions } from "@/redux_store/common/commonSlice";
+import { ToastType } from "@/constants/common";
 interface Leader {
   image: string;
   designation: string;
@@ -25,37 +21,25 @@ interface TrendingUsersProps {
   handleFollowers: any;
 }
 export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
-  const [trendingLeaders, setTrendingLeaders] = useState([]);
-  const userDetails: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
-
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const { trendingLeader, leaderProfile,following } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
 
   useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (userData && Object.keys(userData).length > 0) {
       (async () => {
-        const token = userData?.token;
-        const data = await fetchTrendingLeaderList(token);
 
-        if (data.length > 0) {
-          setTrendingLeaders(data);
-          handleFollowers(data);
-        }
+        tryCatch(
+          async () => {
+            const response = await getTrendingLeaderList();
+            dispatch(leaderActions.setTrendingLeader(response))
+          })
+        const followingRes = await getFollowering(leaderProfile?.id as string);
+        dispatch(leaderActions.setFollowing(followingRes));
+          // handleFollowers(data);
+
       })();
-    }
-  }, [userData]);
+  }, [following]);
 
-  const following = (data: any) => {
+  const followinga = (data: any) => {
     handleFollowers(data);
   };
 
@@ -70,16 +54,17 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
 
         <div className="overflow-y-scroll flex-1 main_scrollbar">
           <ul className="flex flex-col">
-            {trendingLeaders?.length > 0 &&
-              trendingLeaders?.map((item: Leader, index: number) => {
+            {trendingLeader?.length > 0 &&
+              trendingLeader?.map((item: Leader, index: number) => {
                 return (
                   <TrendingUser
-                    userImg={item?.image || ""}
+                    userImg={getImageUrl(item?.image)  || ""}
                     designation={item?.designation || ""}
                     username={item?.username || ""}
                     id={item?.id || ""}
                     key={index}
                     following={following}
+                    isFollowing={following?.find((i: any) => i.leaderid == item.id ) ? true :false}
                   />
                 );
               })}
@@ -95,6 +80,7 @@ interface TrendingUserProps {
   userImg: string | StaticImageData;
   id: string;
   following: any;
+  isFollowing:boolean
 }
 
 const TrendingUser: FC<TrendingUserProps> = ({
@@ -102,35 +88,30 @@ const TrendingUser: FC<TrendingUserProps> = ({
   designation,
   username,
   id,
-  following,
+  isFollowing
 }) => {
   /* const userDetails: any = cusSelector(
     (state: RootState) => state.auth.userDetails
   ); */
-
-  const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const serializedData = sessionStorage.getItem("user Data");
-
-    if (serializedData) {
-      const userDataFromStorage: UserData = JSON.parse(serializedData);
-      setUserData(userDataFromStorage);
-    }
-  }, []);
-
-  const handleFollower = async (id: string) => {
-    const token = userData?.token;
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
+  const handleClick = async (id: string, isFollowing:boolean) => {
     const postBody = {
-      senderid: userData?.id,
+      senderid: leaderProfile?.id,
       receiverid: id,
     };
-
-    const followedLeader = await fetchFollowLeader(postBody, token);
-
-    if (followedLeader?.success) {
-      following(followedLeader);
-    }
+    tryCatch(
+      async () => {
+        const response = await (!isFollowing ? followLeader(postBody) : unFollowLeader(postBody)) ;
+        if (response?.success) {
+          const res = await getFollowering(leaderProfile?.id as string)
+          dispatch(leaderActions.setFollowing(res))
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+       
+      })
   };
 
   return (
@@ -151,9 +132,9 @@ const TrendingUser: FC<TrendingUserProps> = ({
       <button
         type="button"
         className="text-orange-500 hover:underline ml-auto text-[15px]"
-        onClick={() => handleFollower(id)}
+        onClick={() => handleClick(id, isFollowing)}
       >
-        Follow
+        {isFollowing ?  "Unfollow" : "Follow"}
       </button>
     </li>
   );

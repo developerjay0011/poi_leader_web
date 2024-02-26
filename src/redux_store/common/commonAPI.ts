@@ -12,6 +12,7 @@ export const getLeadersOptions = async () => {
   );
 };
 
+
 // Close Account API
 export const closeAccount = async (userId: string) => {
   return tryCatch(

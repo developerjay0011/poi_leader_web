@@ -5,6 +5,9 @@ import { getCookie } from 'cookies-next';
 interface LeaderState {
   leaderProfile: LeaderProfile;
   followers: any[];
+  following: any[];
+  trendingLeader: any[];
+  notification: any[];
 }
 
 let userDetails: any = getCookie("userData");
@@ -14,7 +17,10 @@ const initialState: LeaderState = {
   leaderProfile: {
     id: userDetails?.leaderId
   },
-  followers: []
+  followers: [],
+  trendingLeader: [],
+  following: [],
+  notification:[]
 };
 
 export const leaderSlice = createSlice({
@@ -29,6 +35,15 @@ export const leaderSlice = createSlice({
     },
     setFollowers(state, action: PayloadAction<any[]>) {
       state.followers = action.payload;
+    },
+    setFollowing(state, action: PayloadAction<any[]>) {
+      state.following = action.payload;
+    },
+    setTrendingLeader(state, action: PayloadAction<any[]>) {
+      state.trendingLeader = action.payload;
+    },
+    setNotification(state, action: PayloadAction<any[]>) {
+      state.notification = action.payload;
     },
   },
 });

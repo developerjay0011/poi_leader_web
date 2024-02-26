@@ -33,7 +33,7 @@ export const TopNavbar: FC = () => {
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showWarningMsg, setShowWarningMsg] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
-
+  const { notification } = cusSelector((state) => state.leader);
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -120,7 +120,7 @@ export const TopNavbar: FC = () => {
             <FaBell className="text-sky-50 text-2xl" />
 
             <span className="absolute -top-3 -right-2 bg-orange-500 text-orange-50 w-4 text-[12px] aspect-square flex items-center justify-center rounded-full">
-              0
+              {notification?.length}
             </span>
 
             {showNotifications && (
