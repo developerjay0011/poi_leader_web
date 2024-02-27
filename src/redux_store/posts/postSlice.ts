@@ -13,10 +13,12 @@ interface PostState {
   agendas?: any
   developments?: any
   polls?: any
+  allPosts: any,
 }
 
 const init: PostState = {
   posts: [],
+  allPosts: [],
   creatingPost: false,
   likingPost: false,
 }
@@ -25,6 +27,9 @@ export const postSlice = createSlice({
   name: 'post',
   initialState: init,
   reducers: {
+    setPost(state, action: PayloadAction<PostDetails[]>) {
+      state.allPosts = action.payload
+    },
     listPosts(state, action: PayloadAction<PostDetails[]>) {
       state.posts = action.payload
     },
@@ -32,7 +37,7 @@ export const postSlice = createSlice({
       state.posts = action.payload
     },
     addPost(state, action: PayloadAction<PostDetails>) {
-      state.posts = [ ...state.posts, action.payload ]
+      state.posts = [...state.posts, action.payload]
     },
     setCreatingPost(state, action: PayloadAction<boolean>) {
       state.creatingPost = action.payload

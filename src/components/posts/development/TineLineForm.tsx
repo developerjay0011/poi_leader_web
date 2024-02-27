@@ -34,7 +34,6 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, developmentid, is
     formState: { errors },
     handleSubmit,
   } = useForm<UserDetails>();
-  console.log("developmentid",developmentid)
   const formSubmitHandler = async (data: UserDetails) => {
     const body: any = { ...data, leaderid: leaderProfile.id, developmentid: developmentid }
     if (isedit) {

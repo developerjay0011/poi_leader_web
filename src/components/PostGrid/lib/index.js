@@ -38,6 +38,7 @@ var ReactLikePostsFB = function (_a) {
     var renderImg = function (src) {
         var elemImg = document.createElement("img");
         elemImg.src = src;
+        elemImg.className = "react-like-posts-fb_modal"
         return elemImg;
     };
     var renderVideoOrImg = react_1.useCallback(function (src) {
@@ -107,9 +108,12 @@ var ReactLikePostsFB = function (_a) {
     }, [imagesOrVideos, indexDisplay, renderVideoOrImg]);
     var renderimagesOrVideos = function (src, index) {
         return (react_1.default.createElement("div", { className: "col-" + (imagesOrVideos.length > 5 ? 5 : imagesOrVideos.length) + " " + (imagesOrVideos.length > 5 && index === 5 ? "bigger-5" : ""), "data-count": imagesOrVideos.length - 5, onClick: function (e) { return handleClickItem(e, index); }, onTouchStart: function (e) { return handleClickItem(e, index); } },
-            react_1.default.createElement("div", { className: "item" }, isVideo(src) ? (react_1.default.createElement("video", { src: src, controls: true })) : (react_1.default.createElement("img", { src: src, alt: "" })))));
+            react_1.default.createElement("div", { className: "item" }, isVideo(src) ? (react_1.default.createElement("video", { src: src, controls: true })) :
+                (react_1.default.createElement("img", { src: src, alt: "" })))));
     };
-    return (react_1.default.createElement("div", { className: "react-like-posts-fb" }, imagesOrVideos.map(function (item, index) { return (react_1.default.createElement(react_1.default.Fragment, { key: index }, index < 5 && renderimagesOrVideos(item, index + 1))); })));
+    return (react_1.default.createElement("div", { className: "react-like-posts-fb" }, imagesOrVideos.map(function (item, index) {
+        return (react_1.default.createElement(react_1.default.Fragment, { key: index }, index < 5 && renderimagesOrVideos(item, index + 1)));
+    })));
 };
 exports.default = ReactLikePostsFB;
 //# sourceMappingURL=index.js.map

@@ -1,113 +1,95 @@
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { Comment, Like, NestedComment } from "@/utils/typesUtils";
-import { UserData, dateConverter } from "@/utils/utility";
+import { cusSelector } from "@/redux_store/cusHooks";
+import { Comment, NestedComment } from "@/utils/typesUtils";
+import Image from "next/image";
 import { FC, FormEvent, useEffect, useState } from "react";
-import { BsFillHeartFill, BsThreeDots } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import { PostCommentOptions } from "./PostCommentOptions";
 import { AnimatePresence } from "framer-motion";
-import {
-  changeNestedLike,
-  deletePostComment,
-} from "@/redux_store/posts/postAPI";
 import { RiReplyFill } from "react-icons/ri";
 import { motion as m } from "framer-motion";
 import { BiPlusCircle } from "react-icons/bi";
-import { fetchReplyToComment } from "../api/posts";
+import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
+import moment from "moment";
+import { BsFillHeartFill, BsHeart } from "react-icons/bs";
+import { islike } from "./utils";
+import toast from "react-hot-toast";
+import { LikeComment, ReplyToComment, UnLikeComment } from "@/redux_store/posts/postAPI";
 
 interface SingleCommentProps extends Comment {
-  postId: string;
-  likeChangeHandler: (id: string) => void;
-  newNestedCommentHandler?: (commentId: string, commentReply: string) => void;
+  likeChangeHandler: () => void;
+  newNestedCommentHandler: () => void;
   postPerMedia?: boolean;
-  fullPostData: any;
+  comment_text: string;
+  comments: any;
+  post: any
 }
 
-export const SingleComment: FC<SingleCommentProps> = ({
-  commentText,
-  createdDate,
-  likes,
-  userImg,
-  username,
-  postId,
-  id,
-  comments,
-  userId,
-  likeChangeHandler,
-  postPerMedia,
-  newNestedCommentHandler,
-  allData,
-  fullPostData,
-}) => {
+export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, postPerMedia, newNestedCommentHandler, likeChangeHandler, comment_text, comments, post }) => {
+  const { userDetails } = cusSelector((st) => st.auth);
   const [firstTime, setFirstTime] = useState(true);
   const [showNestedComments, setShowNestedComments] = useState(false);
   const [showCommentOptions, setShowCommentOptions] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes.length); // in order to show updated like count on frontend
-  const dispatch = cusDispatch();
-  const { userDetails } = cusSelector((state) => state.auth);
-  const [showLikeAnimation, setShowLikeAnimation] = useState(
-    (likes as Like[]).some((el) => el.userId === userDetails?.id)
-  );
+  const [showLikeAnimation, setShowLikeAnimation] = useState<any>();
   const [commentReply, setCommentReply] = useState("");
-  const deleteCommentHandler = () => dispatch(deletePostComment(postId, id));
-
-  useEffect(() => {
-    return () => {
-      setFirstTime(true);
-    };
-  }, []);
-
-  // to show count at frontend and calling api behind
-  useEffect(() => {
-    // if animation is true and component doesn't load for first then we increase like count
-    if (showLikeAnimation && !firstTime) setLikeCount((lst) => lst + 1);
-
-    // if animation is false and component doen't load first time then we decrease like count
-    if (!showLikeAnimation && !firstTime)
-      setLikeCount((lst) => {
-        if (lst === 0) return 0;
-
-        return lst - 1;
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showLikeAnimation]);
-
-  const addNewNestedComment = (e: FormEvent) => {
-    e.preventDefault();
-
-    const commentBody = {
-      commentid: allData?.id,
-      postid: postId,
-      post_leaderid: fullPostData?.leaderid,
+  const [name, setName] = useState("");
+  const deleteCommentHandler = () => { };
+  var is_like = islike(comments?.likes, userDetails?.id)
+  const handleLike = async (id: string) => {
+    const likeBody = {
+      commentid: id,
+      postid: post?.id,
+      post_leaderid: post?.leaderid,
       userid: userDetails?.id,
       usertype: "leader",
       username: userDetails?.username,
-      userimg: userDetails?.image || "",
+      userimg: userDetails?.image,
+    };
+    const UnlikeBody = {
+      commentid: id,
+      postid: post?.id,
+      post_leaderid: post?.leaderid,
+      userid: userDetails?.id,
+    };
+    try {
+      if (!is_like) {
+        const data = await LikeComment(likeBody);
+        likeChangeHandler();
+        toast.success(data.message);
+      } else {
+        const data = await UnLikeComment(UnlikeBody);
+        toast.success(data.message);
+        likeChangeHandler()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (!commentReply.startsWith(name)) {
+      setShowNestedComments(false)
+    }
+  }, [name, commentReply])
+  const addNewNestedComment = async (e: FormEvent) => {
+    e.preventDefault();
+    if (commentReply.length === 0) return;
+    const commentBody = {
+      commentid: id,
+      postid: post?.id,
+      post_leaderid: post?.leaderid,
+      userid: userDetails?.id,
+      usertype: "citizen",
+      username: userDetails?.username,
+      userimg: userDetails?.image,
       comment_text: commentReply,
     };
-
-    try {
-      const data = fetchReplyToComment(commentBody);
-      console.log(data)
-    } catch (error) {}
-
-    if (commentReply.length === 0) return;
-
-    newNestedCommentHandler && newNestedCommentHandler(id, commentReply);
-
-    setCommentReply("");
-  };
-
-  const changeNestedCommentLike = (commentId: string) => {
-    dispatch(
-      changeNestedLike({
-        id: commentId,
-        likeTypeStatus: "_comments",
-        postId,
-        userId,
-        eventID: "0010",
-      })
-    );
+    const data = await ReplyToComment(commentBody)
+    if (data?.success) {
+      newNestedCommentHandler()
+      setShowNestedComments(false)
+      setCommentReply("");
+      setName("");
+    }
   };
 
   return (
@@ -115,7 +97,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
       <li className="flex items-start gap-5 border-b pb-3 max-[400px]:gap-3">
         <CustomImage
           alt="user pic"
-          src={allData?.userimg || ""}
+          src={getImageUrl(comments?.userimg)}
           width={1000}
           height={1000}
           className="w-8 aspect-square rounded-full object-cover object-center"
@@ -123,60 +105,44 @@ export const SingleComment: FC<SingleCommentProps> = ({
 
         <div className="flex flex-col w-full">
           <div className="flex">
-            <div className="flex flex-col text-gray-500 gap-2">
+            <div className="flex flex-col text-gray-500 gap-1">
               <p className="text-[15px] flex flex-col">
                 <strong className="text-sky-950 font-medium capitalize">
-                  {allData?.username?.length ? allData?.username : username}
-                  ......
+                  {username}
                 </strong>
-                {allData?.comment_text?.length
-                  ? allData?.comment_text
-                  : commentText}
+                {comment_text}
               </p>
-
               <section className="flex items-center gap-3">
                 <strong className="text-[14px] text-sky-950 font-medium">
-                  {allData?.created_date?.length > 0
-                    ? dateConverter(allData?.created_date) || ""
-                    : dateConverter(createdDate) || ""}
+                  {moment(comments?.created_date).fromNow()}
                 </strong>
                 <button
-                  className={`flex flex-col gap-3 relative transition-all ${
-                    likeCount ? "text-rose-500" : "text-black"
-                  }`}
+                  className={`flex flex-col gap-3 relative transition-all ${comments?.likes?.length ? "text-rose-500" : "text-black"}`}
                   onClick={() => {
-                    likeChangeHandler(id);
                     setFirstTime(false);
-                    setShowLikeAnimation((lst) => !lst);
+                    handleLike(comments?.id)
+                    setShowLikeAnimation(!is_like);
                   }}
                 >
-                  <BsFillHeartFill className="text-lg" />
-
-                  {!firstTime && (
-                    <BsFillHeartFill
-                      className={`text-lg overlay ${
-                        showLikeAnimation ? "fadeOut" : "fadeIn"
-                      }`}
-                    />
-                  )}
-
+                  {is_like ? (<BsFillHeartFill className="text-lg" />) : (<BsHeart className="text-lg" />)}
+                  {!firstTime && (<BsFillHeartFill className={`text-lg overlay ${showLikeAnimation ? "fadeOut" : "fadeIn"}`} />)}
                   <span className="text-[14px] absolute -top-3 left-5 font-[500]">
-                    {likeCount}
+                    {comments?.likes?.length}
                   </span>
                 </button>
 
-                {/* Showing nested comments that are not in per media */}
                 {!postPerMedia && (
                   <button
-                    onClick={() => setShowNestedComments((lst) => !lst)}
-                    className={`flex flex-col gap-3 relative transition-all ml-2 text-black ${
-                      showNestedComments ? "text-rose-500" : "text-black"
-                    }`}
+                    onClick={() => {
+                      setShowNestedComments((lst) => !lst);
+                      setName("@" + username)
+                      setCommentReply("@" + username + " ")
+                    }}
+                    className={`flex flex-col gap-3 relative transition-all ml-2 text-black ${showNestedComments ? "text-rose-500" : "text-black"}`}
                   >
                     <RiReplyFill className="text-lg" />
-
                     <span className="text-[14px] absolute -top-3 left-4 font-[500]">
-                      {comments.length}
+                      {comments?.comments.length}
                     </span>
                   </button>
                 )}
@@ -185,10 +151,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
 
             {userId === userDetails?.id && (
               <div className="relative ml-auto">
-                <button
-                  type="button"
-                  onClick={() => setShowCommentOptions((lst) => !lst)}
-                >
+                <button type="button" onClick={() => setShowCommentOptions((lst) => !lst)}>
                   <BsThreeDots className="rotate-90 text-lg" />
                 </button>
 
@@ -207,24 +170,23 @@ export const SingleComment: FC<SingleCommentProps> = ({
 
           {/* COMMENT REPLY */}
           {showNestedComments && (
-            <div className="ml-16 mt-2 max-[600px]:ml-5 max-[400px]:ml-0">
+            <div className="mt-2 max-[600px]:ml-5 max-[400px]:ml-0">
               <ul className="bg-zinc-100 rounded-md ">
-                {comments.map((el) => (
+                {comments?.comments.map((el: any, index: any) => (
                   <NestedCommentCmp
-                    changeNestedCommentLike={changeNestedCommentLike}
-                    {...el}
-                    key={el.id}
-                    postId={postId}
-                  />
+                    item={el} key={index}
+                    userimg={el?.userimg}
+                    comment_text={el?.comment_text}
+                    username={el?.username}
+                    created_date={el?.created_date}
+                    {...el} />
                 ))}
               </ul>
               {/* Add a new comment */}
-              <form
-                className="flex items-end bg-white gap-3 pt-3"
-                onSubmit={addNewNestedComment}
-              >
+              <form className="flex items-end bg-white gap-3 pt-3" onSubmit={addNewNestedComment}>
                 <CustomImage
-                  src={userImg}
+                  src={getImageUrl(userDetails?.image)}
+                  priority={true}
                   alt="user dp"
                   width={1000}
                   height={1000}
@@ -239,10 +201,7 @@ export const SingleComment: FC<SingleCommentProps> = ({
                     className="border-b outline-none focs:bg-zinc-100 w-full pb-1 pr-3 pl-1 font-[15px]"
                     placeholder="Reply"
                   />
-                  <button
-                    type="submit"
-                    className="absolute top-1/2 right-1 translate-y-[-50%]"
-                  >
+                  <button type="submit" className="absolute top-1/2 right-1 translate-y-[-50%]">
                     <BiPlusCircle className="text-2xl" />
                   </button>
                 </label>
@@ -255,78 +214,64 @@ export const SingleComment: FC<SingleCommentProps> = ({
   );
 };
 
+
+
+
+
+
+
+
+
+
 interface NestedCommentCmpProps extends NestedComment {
-  postId: string;
-  changeNestedCommentLike: (id: string) => void;
+  userimg: string
+  username: string
+  comment_text: string
+  created_date: string
 }
 
-const NestedCommentCmp: FC<NestedCommentCmpProps> = ({
-  commentText,
-  createdDate,
-  id,
-  likes,
-  userImg,
-  username,
-  changeNestedCommentLike,
-}) => {
-  const [firstTime, setFirstTime] = useState(true);
-  const { userDetails } = cusSelector((st) => st.UI);
-  const [likeCount, setLikeCount] = useState(likes.length);
-  const [showLikeAnimation, setShowLikeAnimation] = useState(
-    likes.some((el) => el.userId === userDetails?.id)
-  );
+const NestedCommentCmp: FC<NestedCommentCmpProps> = ({ userimg, username, comment_text, created_date }) => {
+  // const [firstTime, setFirstTime] = useState(true);
+  // const { userDetails } = cusSelector((st) => st.auth);
+  // // const { userDetails } = cusSelector((st) => st.UI);
+  // const [likeCount, setLikeCount] = useState(likes.length);
+  // const [showLikeAnimation, setShowLikeAnimation] = useState(
+  //   likes.some((el) => el.userId === userDetails?.id)
+  // );
 
-  useEffect(() => {
-    return () => {
-      setFirstTime(true);
-    };
-  }, []);
 
-  // to show count at frontend and calling api behind
-  useEffect(() => {
-    if (showLikeAnimation && !firstTime) setLikeCount((lst) => lst + 1);
 
-    if (!showLikeAnimation && !firstTime)
-      setLikeCount((lst) => {
-        if (lst === 0) return 0;
-
-        return lst - 1;
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showLikeAnimation]);
 
   return (
     <m.li
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex items-start gap-5 last_noti p-2"
+      className="flex items-start gap-2 last_noti p-2"
     >
       <CustomImage
         alt="user pic"
-        src={userImg}
+        src={getImageUrl(userimg)}
         width={1000}
         height={1000}
         className="w-8 aspect-square rounded-full object-cover object-center"
       />
 
       <div className="flex w-full">
-        <div className="flex flex-col text-gray-500 gap-2">
-          <p className="text-[15px] flex flex-col">
+        <div className="flex flex-col text-gray-500 gap-1">
+          <p className="text-[13px] flex flex-col">
             <strong className="text-sky-950 font-medium capitalize">
               {username}
             </strong>
-            {commentText}
+            {comment_text}
           </p>
-
-          <section className="flex items-center gap-3">
-            <strong className="text-[14px] text-sky-950 font-medium">
-              {dateConverter(createdDate)}
+          <section className="flex items-center gap-2">
+            <strong className="text-[11px] text-sky-950 font-medium">
+              {moment(created_date).fromNow()}
             </strong>
-            <button
-              className={`flex flex-col gap-3 relative transition-all ${
-                likeCount ? "text-rose-500" : "text-black"
-              }`}
+            {/* <button
+              className={`flex flex-col gap-3 relative transition-all ${likeCount ? "text-rose-500" : "text-black"
+                }`}
               onClick={() => {
                 setFirstTime(false);
                 setShowLikeAnimation((lst) => !lst);
@@ -337,34 +282,16 @@ const NestedCommentCmp: FC<NestedCommentCmpProps> = ({
 
               {!firstTime && (
                 <BsFillHeartFill
-                  className={`text-[.9rem] overlay ${
-                    showLikeAnimation ? "fadeOut" : "fadeIn"
-                  }`}
+                  className={`text-[.9rem] overlay ${showLikeAnimation ? "fadeOut" : "fadeIn"
+                    }`}
                 />
               )}
 
               <span className="text-[14px] absolute -top-3 left-[1rem] font-[500]">
                 {likeCount}
               </span>
-            </button>
+            </button> */}
           </section>
-        </div>
-
-        <div className="relative ml-auto">
-          {/* <button
-            type='button'
-            onClick={() => setShowCommentOptions((lst) => !lst)}>
-            <BsThreeDots className='rotate-90 text-lg' />
-          </button>
-
-          <AnimatePresence>
-            {showCommentOptions && (
-              <PostCommentOptions
-                deleteCommentHandler={deleteCommentHandler}
-                onClose={() => setShowCommentOptions(false)}
-              />
-            )}
-          </AnimatePresence> */}
         </div>
       </div>
     </m.li>

@@ -48,10 +48,10 @@ export const TopNavbar: FC = () => {
 
   // Initialize login user info from below API
   useEffect(() => {
-    (async() => {
+    (async () => {
       const LeadersDropdown = await getLeadersOptions();
       dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-      if(userDetails?.leaderId) {
+      if (userDetails?.leaderId) {
         const leaderRes = await getProfile(userDetails?.leaderId);
         dispatch(leaderActions.setLeaderProfile(leaderRes));
       }
@@ -138,7 +138,7 @@ export const TopNavbar: FC = () => {
         {/* USER Profile */}
 
         <section className="flex items-center gap-4 ml-auto relative">
-          <button
+          {/* <button
             type="button"
             onClick={() => setShowWarningMsg((lst) => !lst)}
             className={`${showWarningMsg ? "" : "animate-bounce"}`}
@@ -163,7 +163,7 @@ export const TopNavbar: FC = () => {
                 </Link>
               </m.p>
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
 
           <p className="capitalize">{""}</p>
           <button
