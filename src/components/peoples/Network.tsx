@@ -1,18 +1,22 @@
 import CustomImage from '@/utils/CustomImage'
+import { AnimatePresence } from 'framer-motion'
 import moment from 'moment'
-import { FC } from 'react'
+import { FC, useState } from 'react'
+import { motion as m } from "framer-motion";
 
 interface NetworkProps {
   backgroundImg: string
   displayImg: string
   name: string
   member: [],
-  created_date:string
+  created_date: string
+  onMemberClick:()=>void
 }
 
-export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, member, created_date }) => {
+export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, member, created_date, onMemberClick }) => {
+
   return (
-    <li className='border rounded-md overflow-hidden w-full bg-white shadow-sm'>
+    <li onClick={() => onMemberClick()} className='border rounded-md overflow-hidden w-full bg-white shadow-sm'>
       {/* <figure className='relative'>
      
         <CustomImage
@@ -69,6 +73,7 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, mem
           <span className='text-[13px]'>{moment(created_date).format('MMM YYYY')}</span>
         </p>
       </div>
+      
     </li>
   )
 }

@@ -37,6 +37,8 @@ export const APIRoutes = {
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
+  saveGroup: `${API_Prefix}/leader/savegroup`,
+  getSingleGroup: `${API_Prefix}/leader/getsinglegroupdetail`,
 
   // Follow Following Endpoints
   getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
@@ -47,10 +49,17 @@ export const APIRoutes = {
   // Post Endpoint
   getLeaderAddedStories: `${API_Prefix}/post/getLeaderAddedStories/{{leaderId}}`,
   getStoriesForLeader: `${API_Prefix}/post/getStoriesForLeader/{{leaderId}}`,
+  GetPostsForLeader: `${API_Prefix}/post/GetPostsForLeader/{{leaderId}}`,
+  LikePost: `${API_Prefix}/post/LikePost`,
+  CommentPost: `${API_Prefix}/post/CommentPost`,
+  UnlikePostorStory: `${API_Prefix}/post/UnlikePostorStory`,
+  ReplyToComment: `${API_Prefix}/post/ReplyToComment`,
+  LikeComment: `${API_Prefix}/post/LikeComment`,
+  UnLikeComment: `${API_Prefix}/post/UnLikeComment`,
   addStories: `${API_Prefix}/post/addStory`,
   deleteStory: `${API_Prefix}/post/deleteStory`,
   addPost: `${API_Prefix}/post/addPost`,
-
+  VoteAdd: `${API_Prefix}/leader/VoteAdd`,
   // Agenda Endpoint
   getAgenda: `${API_Prefix}/leader/getagendas/{{leaderId}}`,
   getCategories: `${API_Prefix}/leader/getcategories/{{leaderId}}`,

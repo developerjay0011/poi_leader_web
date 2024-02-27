@@ -22,9 +22,9 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
       if (leaderProfile?.id) {
         // Get Leader Profiles
         const res = await getProfile(leaderProfile?.id);
-       
+
         dispatch(leaderActions.setLeaderProfile(res));
-        
+
         // Get Followers of Leader
         const followersRes = await getFollowers(leaderProfile?.id);
         dispatch(leaderActions.setFollowers(followersRes));
@@ -34,7 +34,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
 
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const files = e.target.files as FileList;
-    if(files.length > 0) {
+    if (files.length > 0) {
       const formData = new FormData();
       formData.append("leaderid", leaderProfile?.id || "");
       formData.append(fieldName, files[0] || "");
@@ -121,15 +121,15 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                   </span>
                 </Link>
                 <Link
-                  href={'/leader/profile/followers'}
+                  href={''}
                   className='flex flex-col items-center font-[500] capitalize'>
                   Followers
                   <span className='text-orange-500 text-2xl font-normal'>
-                    { followers.length }
+                    {followers.length}
                   </span>
                 </Link>
                 <Link
-                  href={'/leader/profile/following'}
+                  href={''}
                   className='flex flex-col items-center font-[500] capitalize'>
                   following
                   <span className='text-orange-500 text-2xl font-normal '>
