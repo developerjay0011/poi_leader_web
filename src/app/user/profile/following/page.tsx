@@ -20,7 +20,7 @@ const AdminFollowingPage = () => {
           {groups.length > 0 &&
             groups.map((item: any, index: number) => {
               return (
-                <Network key={index} created_date={item?.created_date} member={item.members} name={item.name} backgroundImg={bgIMG} displayImg={userImg} />
+                <Network onMemberClick={() => { }}  key={index} created_date={item?.created_date} member={item.members} name={item.name} backgroundImg={bgIMG} displayImg={userImg} />
               )
             })}
         </ul>
