@@ -146,11 +146,12 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
         {showComments && (
           <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ul className="flex flex-col gap-5">
-              {(Shortlistbytime(post?.comments) as Comment[]).map((el, index) => (
+              {(Shortlistbytime(post?.comments) as Comment[]).map((el:any, index:number) => (
                 <SingleComment
                   {...el}
                   comments={el}
                   key={index}
+                  comment_text={el?.comment_text}
                   likeChangeHandler={() => Getpost()}
                   newNestedCommentHandler={() => Getpost()}
                   post={post}

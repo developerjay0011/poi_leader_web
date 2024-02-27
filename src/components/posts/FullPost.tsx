@@ -193,11 +193,11 @@ export const FullPost: FC<FullPostProps> = ({
                   />
                 ))} */}
               </ul>
-              <NewCommentForm
+              {/* <NewCommentForm
                 CommentHandler={createNewComment}
                 setUpdateComment={"setUpdateComment"}
                 allData={"allData"}
-              />
+              /> */}
             </div>
           </div>
         </m.section>
