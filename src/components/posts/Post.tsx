@@ -9,6 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import { PostOptions } from "./PostOptions";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+
 // import {
 //   addNewComment,
 //   addNewNestedComment,
@@ -19,6 +20,7 @@ import { NewCommentForm } from "../common-forms/NewCommentForm";
 import { SingleComment } from "./SingleComment";
 import { MoreThan4ColumnImgLayout } from "./MoreThan4ColumnLayout";
 import { FourColumnImgLayout } from "./FourColumnLayout";
+import PostGrid from '../PostGrid'
 import {
   fetchDeletePost,
   fetchLikePost,
@@ -216,98 +218,7 @@ export const Post: FC<PostProps> = ({
           {/* MEDIA */}
           {media.length > 0 && (
             <section className="w-full">
-              {media.length === 1 && (
-                <figure className="w-full relative" onClick={showFullPost}>
-                  {(media as MediaPost[]).map((el: any, index) => {
-                    const mediaType = types[index] as string; // Assuming types correspond to each media item
-                    return mediaType.includes('image') ? (
-                      <CustomImage
-                        key={index}
-                        src={el}
-                        width={1000}
-                        height={1000}
-                        alt="user post"
-                        className="object-cover object-center w-full h-[500px]"
-                      />
-                    ) : (
-                      <video
-                        key={el.id}
-                        src={el.media}
-                        className="object-cover object-center w-full h-full"
-                        controls
-                      />
-                    );
-                  })}
-                </figure>
-              )}
-              {media.length === 2 && (
-                <figure className="w-full relative" onClick={showFullPost}>
-                  {(media as MediaPost[]).map((el: any, index) => {
-                    const mediaType = types[index]; // Assuming types correspond to each media item
-                    return mediaType.includes('image') ? (
-                      <CustomImage
-                        key={index}
-                        src={el}
-                        width={1000}
-                        height={1000}
-                        alt="user post"
-                        className="object-cover object-center w-full h-[500px]"
-                      />
-                    ) : (
-                      <video
-                        key={el.id}
-                        src={el.media}
-                        className="object-cover object-center w-full h-full"
-                        controls
-                      />
-                    );
-                  })}
-                </figure>
-              )}
-              {media.length === 3 && (
-                <figure className="w-full relative" onClick={showFullPost}>
-                  {(media as MediaPost[]).map((el: any, index) => {
-                    const mediaType = types[index]; // Assuming types correspond to each media item
-                    return mediaType.includes('image') ? (
-                      <CustomImage
-                        key={index}
-                        src={el}
-                        width={1000}
-                        height={1000}
-                        alt="user post"
-                        className="object-cover object-center w-full h-[500px]"
-                      />
-                    ) : (
-                      <video
-                        key={el.id}
-                        src={el.media}
-                        className="object-cover object-center w-full h-full"
-                        controls
-                      />
-                    );
-                  })}
-                </figure>
-              )}
-              {media.length === 4 && (
-                <FourColumnImgLayout
-                  hidePost={hideFullPost}
-                  showFullPost={showPostDetials}
-                  media={media as MediaPost[]}
-                  onClick={showFullPost}
-                  postId={id}
-                  userId={userId}
-                />
-              )}
-              {media.length > 4 && (
-                <MoreThan4ColumnImgLayout
-                  hidePost={hideFullPost}
-                  showFullPost={showPostDetials}
-                  media={media as MediaPost[]}
-                  onClick={showFullPost}
-                  postId={id}
-                  userId={userId}
-                />
-              )}
+              <PostGrid imagesOrVideos={media as []} />
             </section>
           )}
         </div>

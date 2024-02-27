@@ -13,16 +13,22 @@ export const getGroups = async (leaderId: string) => {
   );
 };
 
+export const getSingleGroup = async (body: any) => {
+  return tryCatch(
+
+    async () => {
+      const res = await Axios.post(APIRoutes.getSingleGroup,body);
+      return res.data;
+    }
+  );
+};
 
 
-export const saveGallery = async (formData: any) => {
+
+export const saveGroup = async (body: any) => {
   return tryCatch(
     async () => {
-      const res = await Axios.post(APIRoutes.saveGallery, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
+      const res = await Axios.post(APIRoutes.saveGroup, body);
       return res.data;
     }
   );

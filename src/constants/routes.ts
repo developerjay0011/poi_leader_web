@@ -37,7 +37,9 @@ export const APIRoutes = {
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
-
+  saveGroup: `${API_Prefix}/leader/savegroup`,
+  getSingleGroup: `${API_Prefix}/leader/getsinglegroupdetail`,
+    
   // Follow Following Endpoints
   getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
   getFollowering: `${API_Prefix}/leader/followingList/{{leaderId}}`,
