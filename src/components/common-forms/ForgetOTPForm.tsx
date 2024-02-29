@@ -1,23 +1,47 @@
 'use client'
 import { ChangeEvent, FC, FormEvent, useEffect, useRef, useState } from 'react'
 import { motion as m } from 'framer-motion'
-
+import { verifyOtp } from '@/redux_store/auth/authAPI'
+import { ToastType } from '@/constants/common'
+import { commonActions } from '@/redux_store/common/commonSlice'
+import { cusDispatch } from '@/redux_store/cusHooks'
 interface ForgetOTPFormProps {
-  proceedFn: (otp: string) => void
+  proceedFn: () => void
   number: string
-  submitting: boolean
+
 }
 
 let curOtpIndex: number = 0
 
+
 export const ForgetOTPForm: FC<ForgetOTPFormProps> = ({
   proceedFn,
   number,
-  submitting,
 }) => {
+  const dispatch = cusDispatch();
   const [OTP, setOTP] = useState(['', '', '', '', '', ''])
   const [activeOtpIndex, setActiveOtpIndex] = useState(0)
   const otpInpRef = useRef<HTMLInputElement>(null)
+  const [registering, setRegistering] = useState(false);
+  const verifyOTP = async (otp: string) => {
+    try {
+      setRegistering(true);
+      const body = {
+        mobile: number,
+        otp: otp,
+      };
+      const verify = await verifyOtp(body);
+      setRegistering(false);
+      if (verify?.success) {
+        proceedFn()
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: verify.message }))
+      }
+    } catch (err) {
+      console.error(err);
+      setRegistering(false);
+    }
+  };
   useEffect(() => {
     otpInpRef.current?.focus()
   }, [activeOtpIndex])
@@ -37,14 +61,9 @@ export const ForgetOTPForm: FC<ForgetOTPFormProps> = ({
 
   const otpSubmitHandler = (e: FormEvent) => {
     e.preventDefault()
-
     const otp = OTP.join('')
-
-    
-
     if (otp.length !== 6) return
-
-    proceedFn(otp)
+    verifyOTP(otp)
   }
 
   return (
@@ -88,9 +107,9 @@ export const ForgetOTPForm: FC<ForgetOTPFormProps> = ({
       <div className='flex items-center self-center gap-2 mt-6'>
         <button
           type='submit'
-          disabled={submitting}
-          className='bg-sky-800 text-sky-50 py-2 px-5 rounded-full disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400'>
-          {submitting ? 'Verifying....' : 'Verify'}
+          disabled={registering}
+          className='bg-sky-800 text-sky-50 py-2 px-5 rounded-full'>
+          {registering ? 'Verify....' : "Verify"}
         </button>
       </div>
     </m.form>

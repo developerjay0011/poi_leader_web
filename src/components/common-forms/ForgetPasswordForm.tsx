@@ -20,39 +20,8 @@ interface ForgetPasswordProps {
 }
 
 export const ForgetPassword: FC<ForgetPasswordProps> = ({ onClose }) => {
-  const [curFormPos, setCurFormPos] = useState(1)
-  const [userPhoneNo, setUserPhoneNo] = useState('')
-  const [verifying, setVerifying] = useState(false)
-  const dispatch = cusDispatch()
-
-  const enterUserId = async (val: string) => {
-    setVerifying(true)
-    setUserPhoneNo(val)
-
-    await dispatch(verifyUserId(val, '12def3rd3w'))
-
-    setVerifying(false)
-
-    setCurFormPos(2)
-  }
-
-  const verifyOTP = async (otp: string) => {
-    setVerifying(true)
-
-    await dispatch(verifyForgetOTP(userPhoneNo, otp, 'dfesfwef32'))
-
-    setCurFormPos(3)
-
-    setVerifying(false)
-  }
-
-  const changePasswordHandler = async (password: string) => {
-    await dispatch(changePassword(userPhoneNo, password))
-
-    onClose()
-
-    toast.success(() => <p>Password reset successfully.</p>)
-  }
+  const [curFormPos, setCurFormPos] = useState(1);
+  const [userINP, setUserINP] = useState("");
 
   return (
     <>
@@ -84,20 +53,26 @@ export const ForgetPassword: FC<ForgetPasswordProps> = ({ onClose }) => {
           <AnimatePresence mode='wait'>
             {curFormPos === 1 && (
               <ForgetUserIdField
-                submitting={verifying}
-                proceedFn={enterUserId}
+                setUserINP={(data) => { setUserINP(data); }}
+                userINP={userINP}
+                proceedFn={() => setCurFormPos(2)}
               />
             )}
 
             {curFormPos === 2 && (
               <ForgetOTPForm
-                number={userPhoneNo}
-                proceedFn={verifyOTP}
-                submitting={verifying}
+                proceedFn={() => { setCurFormPos(3); }}
+                number={userINP}
+
               />
             )}
             {curFormPos === 3 && (
-              <CreateNewPasswordForm proceedFn={changePasswordHandler} />
+              <CreateNewPasswordForm
+                number={userINP}
+                proceedFn={() => {
+                  setCurFormPos(4);
+                  onClose();
+                }} />
             )}
           </AnimatePresence>
         </m.div>

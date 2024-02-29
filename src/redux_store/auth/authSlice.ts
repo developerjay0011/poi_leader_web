@@ -28,9 +28,9 @@ export const authSlice = createSlice({
       state.userDetails = null;
     },
     logout(state) {
-      state.userDetails = null;
       deleteCookie(TOKEN_KEY);
       deleteCookie(USER_INFO);
+      state.userDetails = null;
     }
   },
 });
