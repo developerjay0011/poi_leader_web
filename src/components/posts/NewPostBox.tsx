@@ -21,9 +21,10 @@ import { ToastType } from "@/constants/common";
 interface NewPostBoxProps {
   type: UserPostType;
   handleClose?: () => void;
+  handleAdd: () => void;
 }
 
-export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose }) => {
+export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }) => {
   const dispatch = cusDispatch();
   const [previewImages, setPreviewImages] = useState<NewPostFields[]>([]);
   const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
@@ -61,8 +62,9 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose }) => {
         response = await addPost(formData);
       } else if (type === "story") {
         response = await addStories(formData);
+       
       }
-
+      handleAdd()
       if (response?.success) {
         setPreviewImages([]);
         setApiMedia([]);
