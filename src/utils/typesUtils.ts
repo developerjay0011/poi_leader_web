@@ -186,7 +186,15 @@ export interface UserDetails {
   creation_date: string
   categoryid: string
   milestone: string
-  development_title:string
+  development_title: string
+
+  // Event Information
+  event_type: string
+  access: string
+  location: string
+  notes: string
+  start_datetime: string
+  end_datetime:string
 }
 
 export const LEADER_IDS = {

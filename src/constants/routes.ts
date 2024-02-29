@@ -82,6 +82,11 @@ export const APIRoutes = {
   saveDirectory: `${API_Prefix}/leader/savedirectory`,
   deleteDirectory: `${API_Prefix}/leader/deletedirectory`,
 
+  // Directory Endpoint
+  getEvents: `${API_Prefix}/leader/getevents/{{leaderId}}`,
+  saveEvent: `${API_Prefix}/leader/saveevent`,
+  deleteEvent: `${API_Prefix}/leader/deleteevent`,
+
   // Gallery Endpoint
   getGalleryData: `${API_Prefix}/leader/getgallerydata/{{leaderId}}`,
   saveGallery: `${API_Prefix}/leader/savegallery`,

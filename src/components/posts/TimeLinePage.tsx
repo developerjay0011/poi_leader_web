@@ -38,7 +38,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
       {/* CENTER FEED */}
       <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
         <StoriesBox />
-        <NewPostBox type="post" />
+        <NewPostBox handleAdd={()=>Getpost()} type="post" />
         {postData.map((el: any, index: string) => {
           var type = el?.type
           return type === "post" ? (

@@ -163,7 +163,7 @@ export const StoriesBox: FC = () => {
         }}
       >
         <div className="object-center w-96">
-          <NewPostBox type="story" handleClose={() => setOpenPopup(false)} />
+          <NewPostBox handleAdd={() => { fetchStories() }} type="story" handleClose={() => setOpenPopup(false)} />
         </div>
       </Modal>
     </>
