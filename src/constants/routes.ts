@@ -34,6 +34,9 @@ export const APIRoutes = {
   uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
   getTrendingLeaderList: `${API_Prefix}/leader/trendingleaderlist`,
   getNotification: `${API_Prefix}/leader/getleadernotification/{{leaderId}}`,
+  CheckLeaderUserRegExists: `${API_Prefix}/leader/CheckLeaderUserRegExists`,
+  ForgotPassword: `${API_Prefix}/leader/ForgotPassword`,
+
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,

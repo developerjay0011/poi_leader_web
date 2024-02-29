@@ -11,6 +11,7 @@ import { ToastType } from '@/constants/common';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 import { closeAccount, deActiveAccount } from '@/redux_store/common/commonAPI';
+import { authActions } from '@/redux_store/auth/authSlice';
 
 const AdminGeneralSettingPage: FC = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
@@ -26,14 +27,13 @@ const AdminGeneralSettingPage: FC = () => {
 
   const dispatch = cusDispatch();
 
-  
-  const deleteHandler = async () => { 
+
+  const deleteHandler = async () => {
     tryCatch(
       async () => {
-       
-        const response = await (isDelete ? closeAccount(userDetails?.id as string): deActiveAccount(userDetails?.id as string));
-
+        const response = await (isDelete ? closeAccount(userDetails?.id as string) : deActiveAccount(userDetails?.id as string));
         if (response?.success) {
+          dispatch(authActions.logout())
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -46,7 +46,7 @@ const AdminGeneralSettingPage: FC = () => {
     const resBody = {
       "enable_follow_me": enableFollowMe || false,
       "show_agendas": showAgendas || false,
-      "send_me_notifications": sendMeNotifications  || false
+      "send_me_notifications": sendMeNotifications || false
     }
 
     tryCatch(
@@ -90,7 +90,7 @@ const AdminGeneralSettingPage: FC = () => {
             description='user can follow you if this setting is on'
             title='enable follow me'
             value={enableFollowMe || false}
-            onChange={(value:boolean) => setEnableFollowMe(value)}
+            onChange={(value: boolean) => setEnableFollowMe(value)}
           />
 
           <GeneralSetting
@@ -138,7 +138,7 @@ const AdminGeneralSettingPage: FC = () => {
           <p className='mt-4 flex items-center justify-between text-gray-600'>
             <span>Delete your account and data</span>
             <button
-              onClick={() => { setShowConfirmBox(true),setIsDelete(true) }}
+              onClick={() => { setShowConfirmBox(true), setIsDelete(true) }}
               type='button'
               className='rounded-full bg-gray-400 text-[14px] text-gray-50 py-2 px-6 hover:bg-orange-500 hover:text-orange-50 capitalize'>
               close account
@@ -167,7 +167,7 @@ interface GeneralSettingProps {
   title: string
   description: string
   value: boolean
-  onChange: (value: boolean)=>void
+  onChange: (value: boolean) => void
 }
 
 const GeneralSetting: FC<GeneralSettingProps> = ({ description, title, value, onChange }) => {

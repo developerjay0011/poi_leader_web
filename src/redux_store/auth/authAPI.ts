@@ -47,6 +47,36 @@ export const verifyOtp = async (body: {
   );
 };
 
+
+
+export const CheckLeaderUserRegExists = async (body: {
+  email: string;
+  mobile: string
+}) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.CheckLeaderUserRegExists, body);
+      return res.data;
+    }
+  );
+};
+
+export const ForgotPassword = async (resBody: any) => {
+  return tryCatch(async () => {
+    const res = await Axios.post(APIRoutes.ForgotPassword, resBody)
+    return res.data;
+  });
+};
+
+
+
+
+
+
+
+
+
+
 export const verifyUserId = (phoneNo: string, guid: string) => async () => {
   const body = JSON.stringify({
     eventID: '8',

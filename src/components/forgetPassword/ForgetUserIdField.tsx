@@ -1,23 +1,47 @@
 'use client'
+import { ToastType } from '@/constants/common';
+import { sendOtp } from '@/redux_store/auth/authAPI';
+import { commonActions } from '@/redux_store/common/commonSlice';
+import { cusDispatch } from '@/redux_store/cusHooks';
 import { motion as m } from 'framer-motion'
 import { FC, FormEvent, useState } from 'react'
 
 interface ForgetUserIdFieldProps {
-  proceedFn: (userId: string) => void
-  submitting: boolean
+  proceedFn: () => void;
+  setUserINP: (data: any) => void;
+  userINP: string;
 }
 
 export const ForgetUserIdField: FC<ForgetUserIdFieldProps> = ({
   proceedFn,
-  submitting,
+  setUserINP,
+  userINP,
 }) => {
-  const [userINP, setUserINP] = useState('')
+  const dispatch = cusDispatch();
+  const [registering, setRegistering] = useState(false);
 
+  const resendOTP = async () => {
+    try {
+      if (userINP.length !== 0) {
+        setRegistering(true);
+        const body = { mobile: userINP || "" };
+        const sandOtp = await sendOtp(body as any);
+        setRegistering(false);
+        if (sandOtp?.success) {
+          proceedFn();
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: sandOtp.message }))
+        }
+      }
+    } catch (err) {
+      setRegistering(false);
+    }
+  };
   const userIdSubmitHandler = (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+    resendOTP();
+  };
 
-    if (userINP.length !== 0) proceedFn(userINP)
-  }
 
   return (
     <>
@@ -44,9 +68,9 @@ export const ForgetUserIdField: FC<ForgetUserIdFieldProps> = ({
         <div className='flex items-center self-center gap-2'>
           <button
             type='submit'
-            disabled={submitting}
+            disabled={registering}
             className='bg-sky-800 text-sky-50 py-2 px-5 rounded-full disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400'>
-            {submitting ? 'Checking...' : 'Proceed'}
+            {registering ? "Proceed..." : "Proceed"}
           </button>
         </div>
       </m.form>

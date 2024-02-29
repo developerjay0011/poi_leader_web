@@ -14,10 +14,11 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { AuthRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
-import { registerUser, sendOtp, verifyOtp } from "@/redux_store/auth/authAPI";
 import { cusDispatch } from "@/redux_store/cusHooks";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import { CheckLeaderUserRegExists, registerUser, sendOtp, verifyOtp } from "@/redux_store/auth/authAPI";
+
 
 let interval: NodeJS.Timer;
 let OTP_TIME = 120;
@@ -29,7 +30,13 @@ export const RegisterForm: FC = () => {
   const [resendOTPTime, setResendOTPTime] = useState(OTP_TIME);
   const [registering, setRegistering] = useState(false);
   const [verifying, setVerifying] = useState(false);
-
+  const [registerdata2, setRegisterdata] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    password: '',
+    leadertype: ''
+  });
   const openOTPForm = () => setShowOTPForm(true);
   const closeOTPForm = () => {
     clearInterval(interval); // clearing Interval
@@ -49,19 +56,25 @@ export const RegisterForm: FC = () => {
 
   const resendOTP = async () => {
     try {
+      const userData = getValues() as RegisterFormFields;
       setRegistering(true);
-      // Starts a OTP resend Timer
-      interval = setInterval(() => {
-        if (resendOTPTime > 0)
-          setResendOTPTime((lst) => {
-            if (lst > 0) return lst - 1;
-            return 0;
-          });
-        else {
-          setResendOTPTime(OTP_TIME);
-          clearInterval(interval);
-        }
-      }, 1000);
+      const body = { mobile: userData.phoneNo || "" };
+      const sandOtp = await sendOtp(body as any);
+      if (sandOtp?.success) {
+        interval = setInterval(() => {
+          if (resendOTPTime > 0)
+            setResendOTPTime((lst) => {
+              if (lst > 0) return lst - 1;
+              return 0;
+            });
+          else {
+            setResendOTPTime(OTP_TIME);
+            clearInterval(interval);
+          }
+        }, 1000);
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: sandOtp.message }))
+      }
     } catch (err) {
       console.error(err);
       setRegistering(false);
@@ -71,39 +84,43 @@ export const RegisterForm: FC = () => {
   const verifyOTP = async (otp: string) => {
     setVerifying(true);
     const userData = getValues() as RegisterFormFields;
-
-    clearInterval(interval); // clearing resend timer
-    setResendOTPTime(OTP_TIME); // Reset OTP time
+    clearInterval(interval);
+    setResendOTPTime(OTP_TIME)
 
     try {
       const payload = {
         mobile: userData.phoneNo,
         otp: otp,
       };
-
+      setRegistering(true);
       const res = await verifyOtp(payload);
       if (res?.success) {
-        // stopping verifying and registering
         setVerifying(false);
-        setRegistering(false);
-        // close form
+        const resBody = {
+          name: registerdata2?.name,
+          email: registerdata2?.email,
+          mobile: registerdata2?.mobile,
+          password: registerdata2?.password,
+          leadertype: registerdata2?.leadertype,
+        };
+        const response = await registerUser(resBody as any);
+        if (response?.success) {
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
         closeOTPForm();
-
-        // showing a message
-        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: "Registered Successfully"}))
         router.push(AuthRoutes.login);
       } else {
-        setVerifying(false);
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: res.message }))
       }
-
     } catch (err) {
+      setRegistering(false);
       setVerifying(false);
     }
   };
 
-  const formSubmitHandler = async (
-    data: RegisterFormFields | LoginFormFields
-  ) => {
+  const formSubmitHandler = async (data: RegisterFormFields | LoginFormFields) => {
     setRegistering(true);
     const resBody = {
       name: data?.fullName,
@@ -112,17 +129,14 @@ export const RegisterForm: FC = () => {
       password: data?.password,
       leadertype: data?.userType,
     };
-
+    setRegisterdata(resBody)
     try {
-      const response = await registerUser(resBody);
-
-      if (response?.success) {
-        const otpBody = {
-          mobile: data?.phoneNo as "string",
-        };
-        const sendOTPRes = await sendOtp(otpBody);
-        if (sendOTPRes?.success) {
-          // Starts a OTP resend Timer
+      const checkReg = await CheckLeaderUserRegExists({ email: data?.email, mobile: data?.phoneNo, });
+      if (checkReg?.success == true) {
+        const otpBody = { mobile: data?.phoneNo as "string", };
+        const sandOtp = await sendOtp(otpBody);
+        if (sandOtp?.success) {
+          setShowOTPForm(true);
           interval = setInterval(() => {
             if (resendOTPTime > 0)
               setResendOTPTime((lst) => {
@@ -134,13 +148,12 @@ export const RegisterForm: FC = () => {
               clearInterval(interval);
             }
           }, 1000);
-
           openOTPForm();
         } else {
-          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: sandOtp.message }))
         }
       } else {
-        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: checkReg.message }))
       }
       setRegistering(false);
     } catch (error) {
