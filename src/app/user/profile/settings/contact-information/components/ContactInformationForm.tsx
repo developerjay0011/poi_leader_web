@@ -30,40 +30,24 @@ export const ContactForm: FC = () => {
   } = useForm<UserDetails>({
     defaultValues: {
       ...leaderProfile.contact_info,
-      bothAddressIsSame: 'yes'
     },
     mode: 'onTouched',
   });
 
-  const bothAddressIsSame = watch('bothAddressIsSame');
+  const bothAddressIsSame = watch('bothAddressIsSame')
   const pAddress = watch("permanent_address");
   const pState = watch("permanent_state_id");
   const pDistrict = watch("permanent_district_id");
   const pPincode = watch("permanent_pincode");
   const cState = watch("present_state_id");
 
-  const formSubmitHandler = async(data: UserDetails) => {
-    const resBody: ContactInfo = {
-      ...data,
-      is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false,
-    };
-
+  const formSubmitHandler = async (data: UserDetails) => {
+    const resBody: ContactInfo = { ...data, is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false, };
     tryCatch(
       async () => {
-        const response = await submitLeaderForm({
-          ...leaderProfile,
-          'contact_info': resBody,
-          political_info: {
-            ...leaderProfile?.political_info?.activity_pictures,
-            activity_pictures: leaderProfile?.political_info?.activity_pictures || []
-          }
-        });
-    
+        const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, });
         if (response?.success) {
-          // Update only contact info in redux store
-          dispatch(leaderActions.setLeaderProfile({
-            contact_info: resBody
-          }));
+          dispatch(leaderActions.setLeaderProfile({ contact_info: resBody }));
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -71,11 +55,11 @@ export const ContactForm: FC = () => {
       }
     );
   }
-
   useEffect(() => {
     const { contact_info } = leaderProfile;
     reset({
-      ...contact_info
+      ...contact_info,
+      bothAddressIsSame: leaderProfile.contact_info?.is_same_as_permanent ? "yes" : null
     })
   }, [leaderProfile, reset]);
 
@@ -104,11 +88,10 @@ export const ContactForm: FC = () => {
             })}
             placeholder=''
             id={"permanent_address"}
-            className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-              errors.permanent_address
-                ? 'bg-red-100 text-red-500 border-red-400'
-                : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-            }`}
+            className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${errors.permanent_address
+              ? 'bg-red-100 text-red-500 border-red-400'
+              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+              }`}
             rows={4}></textarea>
           <ErrorMessage
             as={'span'}
@@ -206,11 +189,10 @@ export const ContactForm: FC = () => {
                 })}
                 placeholder=''
                 id="present_address"
-                className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-                  errors.present_address
-                    ? 'bg-red-100 text-red-500 border-red-400'
-                    : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-                }`}
+                className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${errors.present_address
+                  ? 'bg-red-100 text-red-500 border-red-400'
+                  : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+                  }`}
                 rows={4}></textarea>
               <ErrorMessage
                 as={'span'}

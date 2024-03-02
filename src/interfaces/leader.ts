@@ -1,6 +1,7 @@
 export interface LeaderProfile {
   id?: string
-  username?: string
+  username?: string,
+  about_me?: string
   email?: string
   mobile?: string
   image?: string

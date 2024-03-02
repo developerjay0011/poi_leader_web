@@ -40,28 +40,18 @@ export const PersonalInformationForm: FC = () => {
     })
   }, [leaderProfile, reset]);
 
-  const formSubmitHandler =async (data: UserDetails) => {
-    const resBody: ProfileInfo = {...data};
+  const formSubmitHandler = async (data: UserDetails) => {
+    const resBody: ProfileInfo = { ...data };
 
     tryCatch(
       async () => {
         const param = {
           ...leaderProfile,
           'personal_info': resBody,
-          political_info: {
-            ...leaderProfile?.political_info?.activity_pictures,
-            activity_pictures: leaderProfile?.political_info?.activity_pictures || []
-          }
         }
-        param.password = ""
-        console.log("paramparam",param)
         const response = await submitLeaderForm(param);
-    
         if (response?.success) {
-          // Update only personal info in redux store
-          dispatch(leaderActions.setLeaderProfile({
-            personal_info: resBody
-          }));
+          dispatch(leaderActions.setLeaderProfile({ personal_info: resBody }));
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -203,7 +193,7 @@ export const PersonalInformationForm: FC = () => {
           }}
         />
         {/* Conditional Data based on maritalStatus */}
-        {maritalStatus && maritalStatus === 'married' && (
+        {maritalStatus && maritalStatus === 'Married' && (
           <>
             <Input
               errors={errors}

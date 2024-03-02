@@ -11,7 +11,8 @@ export const ProtectedRoutes = {
 
 export const AuthRoutes = {
   login: "/",
-  register: "/register"
+  register: "/register",
+  leaderinfo: "/leaderinfo",
 }
 
 // API Routes
@@ -90,6 +91,11 @@ export const APIRoutes = {
   saveEvent: `${API_Prefix}/leader/saveevent`,
   deleteEvent: `${API_Prefix}/leader/deleteevent`,
 
+  // polls Endpoint
+  getPolls: `${API_Prefix}/leader/getaddedpolls/{{leaderId}}`,
+  savePolls: `${API_Prefix}/leader/savepolls`,
+  deletePoll: `${API_Prefix}/leader/deletepoll`,
+
   // Gallery Endpoint
   getGalleryData: `${API_Prefix}/leader/getgallerydata/{{leaderId}}`,
   saveGallery: `${API_Prefix}/leader/savegallery`,
@@ -97,6 +103,16 @@ export const APIRoutes = {
   // Account Setting Endpoint
   closeAccount: `${API_Prefix}/leader/closeaccount/{{leaderId}}`,
   deActiveAccount: `${API_Prefix}/leader/deactiveaccount/{{leaderId}}`,
+
+  //Letter & Template Endpoint
+  getLetterTemplates: `${API_Prefix}/leader/getlettertemplates/{{leaderId}}`,
+  saveLetterTemplates: `${API_Prefix}/leader/savelettertemplate`,
+  deleteLetterTemplates: `${API_Prefix}/leader/deletelettertemplate`,
+
+  getLetters: `${API_Prefix}/leader/getletters/{{leaderId}}`,
+  saveLetter: `${API_Prefix}/leader/saveletter`,
+  deleteLetter: `${API_Prefix}/leader/deleteletter`,
+
 
 
 }

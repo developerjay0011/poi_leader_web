@@ -1,8 +1,10 @@
 import { DropdownOptions } from "@/interfaces/common";
 
 export const TOKEN_KEY = "token";
+export const USER_VERIFY = "USER_VERIFY";
 export const USER_INFO = "userDetails";
 export const DEFAULT_CONTENT_TYPE = 'application/json';
+export const LOGIN_BODY = "LOGIN_BODY";
 
 export enum ToastType {
   SUCCESS = 'success',
@@ -27,7 +29,7 @@ export const GenderDropdowns: DropdownOptions[] = [
 ];
 
 export const MaritalStatusDropdowns: DropdownOptions[] = [
-  { id: 'married', value: 'married' },
-  { id: 'unmarried', value: 'unmarried' },
-  { id: 'divorced', value: 'divorced' }
+  { id: 'Married', value: 'married' },
+  { id: 'Unmarried', value: 'unmarried' },
+  { id: 'Divorced', value: 'divorced' }
 ];

@@ -35,7 +35,10 @@ export const DownloadExcelButton: React.FC<Props> = ({
   }
 
   return (
-    <button onClick={handleDownload} className={className} id={id ? id : ''}>
+    <button
+      type='button'
+      onClick={handleDownload} id={id ? id : ''}
+      className='rounded-full bg-orange-500 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'>
       {children}
     </button>
   )

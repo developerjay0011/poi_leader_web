@@ -11,6 +11,7 @@ import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 import { UserDetails } from '@/utils/typesUtils'
 import { ProtectedRoutes } from '@/constants/routes'
+import { LeaderPoliticalInfo } from './components/LeaderPoliticalInfo'
 
 const PoliticalInformationPage: FC = () => {
   const { leaderOptions } = cusSelector((state) => state.common);
@@ -25,33 +26,23 @@ const PoliticalInformationPage: FC = () => {
     reset,
     control,
   } = useForm<UserDetails>()
-  
-  const formSubmitHandler =async (data: UserDetails) => {
+
+  const formSubmitHandler = async (data: UserDetails) => {
     const resBody: UserDetails = {
       ...data,
       done_any_political_activity: data.doneAnyPoliticalActivity === 'yes' ? true : false,
       is_participated_in_elections: data.participatedInElection === 'yes' ? true : false,
-      does_family_supports: data.familySupportedForPolitics === 'yes' ? true : false
+      does_family_supports: data.familySupportedForPolitics === 'yes' ? true : false,
+      is_prepare_for_elections: data.isprepareforelections === 'yes' ? true : false,
+      is_nominated: data.rajyaSabhaNominated === 'yes' ? true : false,
+      is_hold_ministry: data?.hasMinistry === 'yes' ? true : false
     };
 
     tryCatch(
       async () => {
-        const response = await submitLeaderForm({
-          ...leaderProfile,
-          political_info: {
-            ...resBody,
-            activity_pictures: resBody && resBody.activity_pictures || []
-          }
-        });
-    
+        const response = await submitLeaderForm({ ...leaderProfile, political_info: { ...resBody, } });
         if (response?.success) {
-          // Update only political info in redux store
-          dispatch(leaderActions.setLeaderProfile({
-            political_info: {
-              ...resBody,
-              activity_pictures: resBody && resBody.activity_pictures || []
-            }
-          }));
+          dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -69,19 +60,37 @@ const PoliticalInformationPage: FC = () => {
         Political Information
       </h2>
 
-      <EmerginLeaderInfo
-        assemblyConstituency={leaderOptions.assemblies}
-        parliamentaryConstituency={leaderOptions.parliamentries}
-        states={leaderOptions.states}
-        designations={leaderOptions?.designations}
-        parties={leaderOptions?.politicalparty}
-        control={control}
-        errors={errors}
-        register={register}
-        setValue={setValue}
-        watch={watch}
-        reset={reset}
-      />
+      {leaderProfile?.leadertype == "emerging leader" ?
+        <EmerginLeaderInfo
+          assemblyConstituency={leaderOptions.assemblies}
+          parliamentaryConstituency={leaderOptions.parliamentries}
+          states={leaderOptions.states}
+          designations={leaderOptions?.designations}
+          parties={leaderOptions?.politicalparty}
+          control={control}
+          errors={errors}
+          register={register}
+          setValue={setValue}
+          watch={watch}
+          reset={reset}
+        />
+        :
+        <LeaderPoliticalInfo
+          watch={watch}
+          reset={reset}
+          setValue={setValue}
+          register={register}
+          assemblyConstituency={leaderOptions.assemblies}
+          parliamentaryConstituency={leaderOptions.parliamentries}
+          states={leaderOptions.states}
+          designations={leaderOptions?.designations}
+          parties={leaderOptions?.politicalparty}
+          control={control}
+          ministries={leaderOptions?.ministries}
+          errors={errors}
+        />
+
+      }
 
       <div className='flex justify-end col-span-full gap-2 mt-5'>
         <Link

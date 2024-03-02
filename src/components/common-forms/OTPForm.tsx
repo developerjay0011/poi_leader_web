@@ -70,7 +70,6 @@ export const OTPForm: FC<OTPFormProps> = ({
 
   useEffect(() => {
     if (!registering && otpVerified && !verifyingOTP) {
-     
       onClose()
       router.push(AuthRoutes.login);
     }

@@ -17,15 +17,13 @@ const AdminGeneralSettingPage: FC = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const general_setting = leaderProfile?.general_setting
-
+  const dispatch = cusDispatch();
   const [enableFollowMe, setEnableFollowMe] = useState(general_setting?.enable_follow_me)
   const [sendMeNotifications, setSendMeNotifications] = useState(general_setting?.send_me_notifications)
   const [showAgendas, setShowAgendas] = useState(general_setting?.show_agendas)
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
-
-  const dispatch = cusDispatch();
 
 
   const deleteHandler = async () => {
@@ -40,7 +38,6 @@ const AdminGeneralSettingPage: FC = () => {
         }
       }
     )
-
   }
   const formSubmitHandler = async () => {
     const resBody = {

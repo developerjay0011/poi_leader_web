@@ -1,7 +1,7 @@
 import { deleteCookie, getCookie } from "cookies-next";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserDetails } from '@/utils/typesUtils'; // Import UserDetails type
-import { TOKEN_KEY, USER_INFO } from "@/constants/common";
+import { LOGIN_BODY, TOKEN_KEY, USER_INFO, USER_VERIFY } from "@/constants/common";
 
 interface AuthState {
   userDetails: UserDetails | null;
@@ -30,6 +30,8 @@ export const authSlice = createSlice({
     logout(state) {
       deleteCookie(TOKEN_KEY);
       deleteCookie(USER_INFO);
+      deleteCookie(USER_VERIFY);
+      deleteCookie(LOGIN_BODY);
       state.userDetails = null;
     }
   },

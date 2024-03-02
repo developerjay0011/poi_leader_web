@@ -7,9 +7,8 @@ import { FC } from 'react'
 import { FaEdit } from 'react-icons/fa'
 import { FaGear, FaPowerOff, FaUser } from 'react-icons/fa6'
 
-interface AdminControlsProps {}
 
-export const AdminControls: FC<AdminControlsProps> = () => {
+export const AdminControls: FC = () => {
   const dispatch = cusDispatch()
 
   return (
@@ -30,7 +29,7 @@ export const AdminControls: FC<AdminControlsProps> = () => {
           title='account settings'
           route={ProtectedRoutes.accountSetting}
         />
-        <button onClick={() => dispatch(authActions.logout())}>
+        <button onClick={() => { dispatch(authActions.logout()) }}>
           <ShortcutBtn Icon={FaPowerOff} title='log out' route='/' />
         </button>
       </aside>

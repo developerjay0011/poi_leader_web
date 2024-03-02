@@ -10,6 +10,7 @@ import { Input } from "./Input";
 import { LeaderFormFields, ProfessionDetails } from "./AddLeaderPage";
 import { MultiSelectInputPersonalLeaderInfo } from "./MultiSelectInputPersonalLeaderInfo";
 import { BLOOG_GROUPS } from "@/utils/utility";
+import { MaritalStatusDropdowns } from "@/constants/common";
 
 interface PersonalLeaderInfoProps {
   errors: FieldErrors<LeaderFormFields>;
@@ -156,20 +157,7 @@ export const PersonalLeaderInfo: FC<PersonalLeaderInfoProps> = ({
         id="maritalStatus"
         selectField={{
           title: "select marital status",
-          options: [
-            {
-              id: "married",
-              value: "married",
-            },
-            {
-              id: "un-married",
-              value: "un married",
-            },
-            {
-              id: "divorced",
-              value: "divorced",
-            },
-          ],
+          options: MaritalStatusDropdowns,
         }}
         register={register}
         title="Marital Status"
@@ -180,7 +168,7 @@ export const PersonalLeaderInfo: FC<PersonalLeaderInfoProps> = ({
         }}
       />
       {/* Conditional Data based on maritalStatus */}
-      {maritalStatus && maritalStatus === "married" && (
+      {maritalStatus && maritalStatus === "Married" && (
         <>
           <Input
             errors={errors}

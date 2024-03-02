@@ -7,7 +7,7 @@ import { FC } from 'react'
 const RegisterPage: FC = () => {
   return (
     <>
-      <LoginLayout>
+      <LoginLayout isleaderinfo={false}>
         <RegisterForm />
       </LoginLayout>
     </>

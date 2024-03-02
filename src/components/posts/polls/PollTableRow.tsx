@@ -10,6 +10,7 @@ import { dateTimeConverter } from '@/utils/utility'
 
 interface PollTableRowProps extends PollDetails {
   index: number
+  handleDelete:(id:string)=>void
 }
 
 export const PollTableRow: FC<PollTableRowProps> = (props) => {
@@ -36,13 +37,13 @@ export const PollTableRow: FC<PollTableRowProps> = (props) => {
                   className='text-2xl'
                   onClick={() => setShowEditPollForm(true)}
                 />
-                <MdDelete className='text-2xl' />
+                <MdDelete className='text-2xl' onClick={() => props.handleDelete(props.id)} />
               </>
             )}
 
             <MdInfo
               className='text-2xl'
-              onClick={() => setShowPollChart(true)}
+              onClick={() => { console.log(props.poll_options),setShowPollChart(true)}}
             />
           </div>
         </td>
@@ -50,7 +51,7 @@ export const PollTableRow: FC<PollTableRowProps> = (props) => {
 
       <AnimatePresence mode='wait'>
         {showPollChart && (
-          <PollInfoChart onClose={() => setShowPollChart(false)} />
+          <PollInfoChart pollDetails={props} onClose={() => setShowPollChart(false)} />
         )}
       </AnimatePresence>
 

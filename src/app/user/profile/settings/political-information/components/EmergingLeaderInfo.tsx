@@ -15,8 +15,9 @@ import {
   StateDetails,
   AssemblyConstituencyDetails,
   DesignationDetails,
+  yearlistfuture,
 } from '@/utils/typesUtils'
-import { ChangeEvent, FC, useState,useEffect } from 'react'
+import { ChangeEvent, FC, useState, useEffect } from 'react'
 import { Input } from '../../../../../../components/Input'
 import { YesNoField } from '../../../../../../components/YesNoField'
 import { RiGalleryFill } from 'react-icons/ri'
@@ -57,23 +58,13 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
 
   const participatedInElection = watch('participatedInElection')
   const election = watch('elections') || watch('target_elections')
+  const isprepareforelections = watch('isprepareforelections')
   const electionState = watch('election_stateid')
   const targetElection = watch('target_elections')
   const doneAnyPoliticalActivity = watch('doneAnyPoliticalActivity')
   const { leaderProfile } = cusSelector((state) => state.leader);
-  const { fields, append, remove } = useFieldArray({
-    name: 'activity_pictures',
-    control,
-  });
-
-  const {
-    fields: references,
-    append: newRef,
-    remove: removeRef,
-  } = useFieldArray({
-    name: 'referencies',
-    control,
-  })
+  const { fields, append, remove } = useFieldArray({ name: 'activity_pictures', control, });
+  const { fields: references, append: newRef, remove: removeRef, } = useFieldArray({ name: 'referencies', control, })
   useEffect(() => {
     const { political_info } = leaderProfile;
     reset({
@@ -81,9 +72,12 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
       joined_date: moment(political_info?.joined_date).format("YYYY-MM-DD"),
       participatedInElection: political_info?.is_participated_in_elections ? 'yes' : 'no',
       doneAnyPoliticalActivity: leaderProfile.political_info?.done_any_political_activity ? 'yes' : 'no',
-      familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no'
+      isprepareforelections: leaderProfile.political_info?.is_prepare_for_elections ? 'yes' : 'no',
+      familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no',
+      position: leaderProfile.political_info?.position
     });
   }, [leaderProfile, reset]);
+
 
   return (
     <>
@@ -99,7 +93,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
           title: 'select political party',
           // Rendering party List
           options: parties?.map((el) => ({
-            id: el.party_name,
+            id: el.id,
             value: el.party_name,
           })),
         }}
@@ -151,8 +145,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         errors={errors}
         fullWidth
         validations={{
-          onChange() {
-            setValue('target_elections', '')
+          onChange(i) {
             setValue('elections', '')
           },
         }}
@@ -161,29 +154,19 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         question='Have you participated in any type of Elections'
       />
 
-      {participatedInElection && (
+      {participatedInElection === 'yes' && (
         <>
           <Input
             register={register}
             errors={errors}
-            title={
-              participatedInElection === 'yes'
-                ? 'Elections'
-                : 'Target Elections'
-            }
+            title={'Elections'}
             type='select'
-            id={
-              participatedInElection === 'yes' ? 'elections' : 'target_elections'
-            }
+            id={'elections'}
             required
             validations={{
               required: `Election is required`,
               onChange() {
-                // Resetting all Fields
-
-                setValue('targetElectionConstituency', '')
                 setValue('election_stateid', '')
-                setValue('target_election_year', '')
                 setValue('election_year', '')
                 setValue('election_constituency_id', '')
               },
@@ -202,27 +185,14 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
             errors={errors}
             title='Year'
             type='select'
-            id={
-              participatedInElection === 'yes'
-                ? 'election_year'
-                : 'target_election_year'
-            }
+            id={'election_year'}
             required
             validations={{
               required: 'Year is required',
             }}
             selectField={{
               title: 'select year',
-              options: [
-                {
-                  id: LEADER_IDS.mlaID,
-                  value: 'MLA',
-                },
-                {
-                  id: LEADER_IDS.mpID,
-                  value: 'MP',
-                },
-              ],
+              options: yearlistfuture() as any
             }}
           />
 
@@ -255,7 +225,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                     validations={{
                       required: 'Constituency is required',
                     }}
-                    id='election_constituency_id'
+                    id={election === LEADER_IDS.mpID ? "election_parliamentary_constituency_id" : 'election_constituency_id'}
                     title='Constituency'
                     type='select'
                     required
@@ -265,83 +235,130 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                       options:
                         election === LEADER_IDS.mpID
                           ? parliamentaryConstituency
-                              .filter((el) => el.stateid === electionState)
-                              .map((el) => ({
-                                id: el.id,
-                                value: el.parliamentary_name,
-                              }))
+                            .filter((el) => el.stateid === electionState)
+                            .map((el) => ({
+                              id: el.id,
+                              value: el.parliamentary_name,
+                            }))
                           : assemblyConstituency
                             .filter((el) => el?.stateid === electionState)
-                              .map((el) => ({
-                                id: el?.id,
-                                value: el?.assembly_name,
-                              })),
+                            .map((el) => ({
+                              id: el?.id,
+                              value: el?.assembly_name,
+                            })),
                     }}
                   />
                 )}
               </>
-            )}
+            )
+          }
+          <>
+            <Input
+              errors={errors}
+              register={register}
+              title='Position'
+              id='position'
+              type='text'
+              placeholder='2nd'
+              validations={{
+                required: 'Position is required.',
+              }}
+              required
+            />
+            <Input
+              errors={errors}
+              register={register}
+              title='Opponents'
+              id='opponents'
+              type='text'
+              required
+              placeholder='Enter Comma Separated Values'
+              validations={{
+                required: 'Opponents is required.',
+              }}
+            />
+          </>
         </>
       )}
+      <YesNoField
+        errors={errors}
+        fullWidth
+        validations={{
+          onChange() {
+            setValue('target_elections', '')
+          },
+        }}
+        register={register}
+        id='isprepareforelections'
+        question='Are you preparing for any future elections'
+      />
 
-      {participatedInElection && participatedInElection === 'yes' && (
+      {isprepareforelections === "yes" && (
         <>
           <Input
-            errors={errors}
             register={register}
-            title='Position'
-            id='position'
-            type='text'
-            placeholder='2nd'
-            validations={{
-              required: 'Position is required.',
-            }}
+            errors={errors}
+            title={'Elections'}
+            type='select'
+            id={'target_elections'}
             required
+            validations={{
+              required: `Election is required`,
+            }}
+            selectField={{
+              title: 'select election',
+              options: designations.map((el) => ({
+                id: el.id,
+                value: el.designation,
+              })),
+            }}
+          />
+
+          <Input
+            register={register}
+            errors={errors}
+            title='Year'
+            type='select'
+            id={'target_election_year'}
+            required
+            validations={{
+              required: 'Year is required',
+            }}
+            selectField={{
+              title: 'select year',
+              options: yearlistfuture() as any
+            }}
           />
           <Input
+            id='top_priorities'
             errors={errors}
             register={register}
-            title='Opponents'
-            id='opponents'
-            type='text'
-            required
-            placeholder='Enter Comma Separated Values'
-            validations={{
-              required: 'Opponents is required.',
-            }}
+            title={
+              <>
+                {' '}
+                If you become{' '}
+                {targetElection ? (
+                  <span className='underline text-base text-gray-500 capitalize'>
+                    {
+                      // finding designation based on user selection then showing the designation in place of _____ (dash)
+                      designations.find(
+                        (el) => el.id === targetElection
+                      )?.designation
+                    }
+                  </span>
+                ) : (
+                  '_____'
+                )}{' '}
+                then what will be your Top Priorities !{' '}
+              </>
+            }
+            type='textarea'
+            fullWidth
+            rows={4}
           />
         </>
       )}
 
-      {participatedInElection && participatedInElection === 'no' && (
-        <Input
-          id='top_priorities'
-          errors={errors}
-          register={register}
-          title={
-            <>
-              {' '}
-              If you become{' '}
-              {targetElection ? (
-                <span className='underline text-base text-gray-500 capitalize'>
-                  {
-                    // finding designation based on user selection then showing the designation in place of _____ (dash)
-                    designations.find(
-                      (el) => el.id === targetElection
-                    )?.designation
-                  }
-                </span>
-              ) : (
-                '_____'
-              )}{' '}
-              then what will be your Top Priorities !{' '}
-            </>
-          }
-          type='textarea'
-          fullWidth
-          rows={4}
-        />
-      )}
 
       <YesNoField
         errors={errors}
@@ -360,7 +377,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         }}
         register={register}
         id='doneAnyPoliticalActivity'
-        question='Have you done any Political Activity in Past '
+        question='Have you done any Political Activity in Past'
       />
 
       {doneAnyPoliticalActivity && doneAnyPoliticalActivity === 'yes' && (
@@ -408,12 +425,12 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         </span>
 
         <div className='grid grid-cols-2 gap-5'>
-          <PeopleCount register={register} value='50-100' />
-          <PeopleCount register={register} value='100-500' />
-          <PeopleCount register={register} value='500-1500' />
-          <PeopleCount register={register} value='1500-3000' />
-          <PeopleCount register={register} value='3000-5000' />
-          <PeopleCount register={register} value='5000-above' />
+          <PeopleCount register={register} value='50 - 100' />
+          <PeopleCount register={register} value='100 - 500' />
+          <PeopleCount register={register} value='500 - 1500' />
+          <PeopleCount register={register} value='1500 - 3000' />
+          <PeopleCount register={register} value='3000 - 5000' />
+          <PeopleCount register={register} value='5000 - above' />
         </div>
       </div>
 
@@ -499,7 +516,7 @@ const Activity: FC<{
   const [activityImg, setActivityImg] = useState(preserveValues.pictures || []);
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files as FileList;
-    if(files.length > 0) {
+    if (files.length > 0) {
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append('pictures', files[i]); // Assuming the server expects an array with the name 'pictures[]'
@@ -559,7 +576,7 @@ const Activity: FC<{
                 }
               })}
             />
-            <span>{activityImg.length > 0  ? 'Add' : 'Upload'} Picture</span>
+            <span>{activityImg.length > 0 ? 'Add' : 'Upload'} Picture</span>
             <RiGalleryFill className='text-2xl' />
           </label>
 
@@ -570,11 +587,10 @@ const Activity: FC<{
               })}
               placeholder='description about the picture uploaded'
               id={`activity_pictures.${index}.description`}
-              className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-                errors.activity_pictures && errors.activity_pictures[index]?.description
-                  ? 'bg-red-100 text-red-500 border-red-400'
-                  : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-              }`}
+              className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${errors.activity_pictures && errors.activity_pictures[index]?.description
+                ? 'bg-red-100 text-red-500 border-red-400'
+                : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+                }`}
               rows={3}></textarea>
           </label>
         </div>

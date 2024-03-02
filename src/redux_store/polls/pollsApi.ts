@@ -1,17 +1,38 @@
-import { ConnectToAPI } from '@/utils/utility'
-import { AppDispatch } from '..'
+import Axios from '@/config/axios'
+import { insertVariables } from '@/config/insert-variables';
+import { tryCatch } from '@/config/try-catch'
+import { APIRoutes } from '@/constants/routes'
 
-const POLL_ENDPOINT = 'polls'
 
-export const fetchAllPolls = () => async (dispatch: AppDispatch) => {
-  try {
-    const body = JSON.stringify({
-      eventID: '',
-      addInfo: {},
-    })
 
-    const data = await ConnectToAPI(POLL_ENDPOINT, body)
-  } catch (err: any) {
-    console.error(err)
+
+export const getPolls = async (leaderId: string) => {
+  return tryCatch(
+
+    async () => {
+      const res = await Axios.get(insertVariables(APIRoutes.getPolls, { leaderId }));
+      return res.data;
+    }
+  );
+};
+
+// Add POll API
+export const savePolls =
+  async (body: any) => {
+    return tryCatch(
+      async () => {
+        const res = await Axios.post(APIRoutes.savePolls, body);
+        return res.data;
+      }
+    );
   }
-}
+// Delete Poll API
+export const deletePoll = async (id: string, leaderid: string) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.deletePoll, { id, leaderid });
+      return res.data;
+    }
+  );
+};
+

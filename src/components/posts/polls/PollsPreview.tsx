@@ -26,7 +26,7 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
         className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
         <div
           className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center ${
-            pollDetails.imgOptions.length > 4 || pollDetails.options.length > 4
+            pollDetails.imgOptions.length > 4 || pollDetails.poll_options.length > 4
               ? 'max-[650px]:py-5'
               : ''
           }`}>
@@ -55,7 +55,7 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
               {/* TEXT POST */}
               <p className='text-[16px]'>{pollDetails.title}</p>
 
-              <p className='font-medium text-zinc-600'>0 votes</p>
+              <p className='font-medium text-zinc-600'>{pollDetails?.votes_by?.length} votes</p>
 
               {/* MEDIA */}
               <section className='w-full flex flex-col gap-3'>
@@ -66,16 +66,16 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
                       index={i + 1}
                       pollText={el.text}
                       key={el.id}
-                      pollImg={el.media}
+                      pollImg={el.image}
                     />
                   ))}
 
                 {pollDetails.pollType === 'text' &&
-                  pollDetails.options.map((el, i) => (
+                  pollDetails.poll_options.map((el, i) => (
                     <PollOption
                       id={el.id}
                       index={i + 1}
-                      pollText={el.option}
+                      pollText={el.text}
                       key={el.id}
                     />
                   ))}

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { AnimatePresence, motion as m } from 'framer-motion'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
@@ -7,6 +7,12 @@ import { BiMinusCircle, BiPlusCircle, BiX } from 'react-icons/bi'
 import { GenerateId, dateTimeConverter } from '@/utils/utility'
 import { ImagePlusTextInput } from './ImagePlusTextInput'
 import { PollsPreview } from '@/components/posts/polls/PollsPreview'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { getPolls, savePolls } from '@/redux_store/polls/pollsApi'
+import { commonActions } from '@/redux_store/common/commonSlice'
+import { ToastType } from '@/constants/common'
+import { tryCatch } from '@/config/try-catch'
+import { pollActions } from '@/redux_store/polls/pollSlice'
 
 interface ManagePollsFormProps {
   onClose: () => void
@@ -15,21 +21,25 @@ interface ManagePollsFormProps {
   edit?: boolean
   title?: string
   pollType?: PollType
-  options?: { option: string; id: string; votes: number }[]
-  imgOptions?: { text: string; media: string; id: string; votes: number }[]
+  poll_options?: { text: string; id: string; votes: number}[]
+  imgOptions?: { text: string; image: string; id: string; votes: number }[]
   publishDate?: string
   access?: string
   expiresAt?: string
+  id?: string
+  view_access?:string
 }
 
 export interface NewPollsFormFields {
   title: string
   pollType: PollType
-  options: { option: string; id: string; votes: number }[]
-  imgOptions: { text: string; media: string; id: string; votes: number }[]
+  poll_options: { text: string; id: string; votes: number}[]
+  imgOptions: { text: string; image: string; id: string; votes: number }[]
   publishDate: string
   access: string
   expiresAt: string
+  view_access:string
+  votes_by:any[]
 }
 
 export const ManagePollsForm: FC<ManagePollsFormProps> = ({
@@ -40,15 +50,20 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
   access,
   expiresAt,
   imgOptions,
-  options,
+  poll_options,
   pollType,
   publishDate,
+  view_access,
   title,
+  id
 }) => {
   // MIN Publish Date and time limit
   const minDateLimit = dateTimeConverter(new Date().toISOString(), 0)
 
   const [showPreview, setShowPreview] = useState(false)
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
+  const dispatch = cusDispatch();
   const {
     register,
     handleSubmit,
@@ -56,6 +71,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
     watch,
     setValue,
     getValues,
+    reset,
     formState: { errors, isValid },
   } = useForm<NewPollsFormFields>({
     defaultValues: {
@@ -63,14 +79,15 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
       expiresAt,
       access,
       imgOptions,
-      options,
+      poll_options,
       pollType,
       title,
+      view_access
     },
   })
 
   const { fields, append, remove } = useFieldArray({
-    name: 'options',
+    name: 'poll_options',
     control,
   })
 
@@ -82,12 +99,46 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
     name: 'imgOptions',
     control,
   })
-
+  console.log("poll_options", poll_options)
   const formSubmitHandler = (data: NewPollsFormFields) => {
-    console.log(data)
+    console.log("dataa", data)
+    tryCatch(
+      async () => {
+
+        const body = {
+          id: edit ? id : null,
+          leaderid: leaderProfile?.id || "",
+          title: data?.title,
+          polltype: data?.pollType,
+          access: data?.access,
+          view_access: data?.view_access,
+          poll_options: data?.poll_options,
+          publish_date: data?.publishDate,
+          close_date: data?.expiresAt,
+          saved_by_type: userDetails?.usertype.replace('emerging ', ""),
+          saved_by: leaderProfile?.id  
+
+        };
+
+        const response = await savePolls(body);
+        if (response?.success) {
+          // setIsEdit(false);
+          const Data = await getPolls(leaderProfile?.id as string);
+          dispatch(pollActions.storePoll(Data))
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+        onClose()
+        reset();
+      })
   }
 
+  useEffect(() => {
+    if (edit) {
   
+    }
+  },[]) 
 
   return (
     <>
@@ -156,12 +207,12 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
                       required: 'Poll type is required',
                       onChange(e) {
                         if (e.target.value === 'text') {
-                          append({ option: '', id: GenerateId(), votes: 0 })
+                          append({ text: '', id: GenerateId(), votes: 0 })
                           removeImgField()
                         }
                         if (e.target.value === 'image') {
                           addImgField({
-                            media: '',
+                            image: '',
                             text: '',
                             id: GenerateId(),
                             votes: 0,
@@ -206,7 +257,28 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
                     className='text-red-500 text-sm first-letter:capitalize lowercase'
                   />
                 </label>
-
+                <label htmlFor='view_access' className={`flex flex-col gap-2`}>
+                  <span className='capitalize font-[500]'>
+                    Result Access
+                    <strong className='text-rose-500'>*</strong>
+                  </span>
+                  <select
+                    id='view_access'
+                    {...register('view_access', {
+                      required: 'Result access is required',
+                    })}
+                    className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400 capitalize'>
+                    <option value=''> Allow Access </option>
+                    <option value='private'>Private</option>
+                    <option value='public'>Public</option>
+                  </select>
+                  <ErrorMessage
+                    name={'view_access'}
+                    errors={errors}
+                    as={'span'}
+                    className='text-red-500 text-sm first-letter:capitalize lowercase'
+                  />
+                </label>
                 <label htmlFor='publishDate' className={`flex flex-col gap-2`}>
                   <span className='capitalize font-[500]'>Publish Date</span>
                   <input
@@ -253,17 +325,17 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 
                 {watch('pollType') === 'text' && (
                   <label
-                    htmlFor='options'
+                    htmlFor='poll_options'
                     key={GenerateId()}
                     className={`flex flex-col gap-3 col-span-full`}>
                     <span className='capitalize font-[500] flex items-center'>
-                      poll options
+                      poll poll_options
                       {<strong className='text-rose-500'>*</strong>}
                       {fields.length < 5 && (
                         <button
                           type='button'
                           onClick={() =>
-                            append({ option: '', id: GenerateId(), votes: 0 })
+                            append({ text: '', id: GenerateId(), votes: 0 })
                           }
                           className='text-rose-500 text-3xl ml-2'>
                           <BiPlusCircle />
@@ -278,7 +350,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
                             id={el.id}
                             placeholder={'option ' + (i + 1)}
                             className='border w-full border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400 placeholder:capitalize'
-                            {...register(`options.${i}.option`, {
+                            {...register(`poll_options.${i}.text`, {
                               required: `option ${i} is required`,
                             })}
                           />
@@ -297,18 +369,18 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 
                 {watch('pollType') === 'image' && (
                   <label
-                    htmlFor='options'
+                    htmlFor='poll_options'
                     key={GenerateId()}
                     className={`flex flex-col gap-3 col-span-full`}>
                     <span className='capitalize font-[500] flex items-center'>
-                      poll options
+                      poll poll_options
                       {<strong className='text-rose-500'>*</strong>}
                       {imgFields.length < 5 && (
                         <button
                           type='button'
                           onClick={() =>
                             addImgField({
-                              media: '',
+                              image: '',
                               text: '',
                               id: GenerateId(),
                               votes: 0,
@@ -327,7 +399,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
                         remove={removeImgField}
                         key={el.id}
                         setValue={setValue}
-                        image={getValues(`imgOptions.${i}.media`)}
+                        image={getValues(`imgOptions.${i}.image`)}
                       />
                     ))}
                   </label>

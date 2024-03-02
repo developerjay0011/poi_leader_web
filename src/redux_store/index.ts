@@ -10,6 +10,8 @@ import { developmentSlice } from './development/developmentSlice'
 import { gallerySlice } from './gallery/gallerySlice'
 import { groupSlice } from './group/groupSlice'
 import { eventSlice } from './event/eventSlice'
+import { pollSlice } from './polls/pollSlice'
+import { letterSlice } from './letter/letterSlice'
 
 
 
@@ -25,8 +27,9 @@ export const store = configureStore({
     development: developmentSlice.reducer,
     gallery: gallerySlice.reducer,
     group: groupSlice.reducer,
-    event: eventSlice.reducer
-
+    event: eventSlice.reducer,
+    poll: pollSlice.reducer,
+    letter: letterSlice.reducer,
 
   },
 })
