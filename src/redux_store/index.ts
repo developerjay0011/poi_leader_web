@@ -26,8 +26,6 @@ export const store = configureStore({
     gallery: gallerySlice.reducer,
     group: groupSlice.reducer,
     event: eventSlice.reducer
-
-
   },
 })
 

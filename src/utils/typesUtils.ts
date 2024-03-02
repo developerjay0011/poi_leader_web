@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { StaticImageData } from 'next/image'
 
 export interface LoginFormFields {
@@ -38,6 +39,13 @@ export interface RegisterData {
   leadertype: string;
 }
 
+export interface Basicinfo {
+  email?: string;
+  username?: string;
+  mobile?: string;
+  about_me?: string
+}
+
 export interface ErrObj {
   isErr: boolean
   errTxt: string
@@ -51,7 +59,9 @@ export interface UserDetails {
   leaderType: string
   image: string
   bgimage: string
-  usertype:string
+  usertype: string
+  mobile?: string;
+  about_me?: string
   // Personal Information
   first_name: string
   middle_name: string
@@ -100,14 +110,15 @@ export interface UserDetails {
   is_participated_in_elections: boolean
   is_prepare_for_elections: boolean
 
-  parliamentHouse: string
-  lokSabhaState: string
-  rajyaSabhaState: string
-  rajyaSabhaNominated: string
-  mlaConstituency: string
-  lokSabhaConstituency: string
-  politicalParty: string
-  mlaState: string
+  parliamentHouse: string | any
+  lokSabhaState: string | any
+  rajyaSabhaState: string | any
+  rajyaSabhaNominated: string | any
+  hasMinistry: string | any
+  mlaConstituency: string | any
+  lokSabhaConstituency: string | any
+  politicalParty: string | any
+  mlaState: string | any
 
   done_any_political_activity: boolean
   does_family_supports: boolean
@@ -124,6 +135,7 @@ export interface UserDetails {
 
   // Question
   participatedInElection: string
+  isprepareforelections: string
   achievements: string
   why_join_politics: string
 
@@ -140,7 +152,7 @@ export interface UserDetails {
   // participatedInElection NO Field
   targetElectionState: string
   targetElectionConstituency: string
-  
+
   target_elections: string
   target_election_year: string
   top_priorities: string
@@ -155,7 +167,7 @@ export interface UserDetails {
   permanent_district_id: string
   permanent_pincode: string
 
-  bothAddressIsSame: string
+  bothAddressIsSame: string | any
   is_same_as_permanent: boolean
 
   present_address: string
@@ -167,21 +179,21 @@ export interface UserDetails {
   fb_link: string
   insta_link: string
   twitter_link: string
-  
+
 
   telephones: string
   mobile_nos: string
   workEmails: string
 
-  Name:string;
-  Phone:string;
-  Email:string;
+  Name: string;
+  Phone: string;
+  Email: string;
 
-  status:string
-  title:string
-  description:string
-  documents:string
-  attachments:string
+  status: string
+  title: string
+  description: string
+  documents: string
+  attachments: string
   leaderId?: string
   creation_date: string
   categoryid: string
@@ -194,7 +206,16 @@ export interface UserDetails {
   location: string
   notes: string
   start_datetime: string
-  end_datetime:string
+  end_datetime: string
+}
+export const yearlistfuture = () => {
+  var current_year = moment().year()
+  var listdata = []
+  for (let i = 0; i < 11; i++) {
+    listdata?.push({ value: String(current_year + i), id: current_year + i })
+  }
+
+  return listdata
 }
 
 export const LEADER_IDS = {
@@ -202,7 +223,7 @@ export const LEADER_IDS = {
   mpID: '65b252f4af64d588b642fb98',
   leaderID: '6486e2530b653899171a9bdb',
   emergingLeaderID: '649e8aedd33f7f84f03820f2',
-  mlaID: '649ebf1bc47c520495a02cbb',
+  mlaID: '65b252ebaf64d588b642fb97',
   lokSabhaID: 'lok sabha',
   rajyaSabhaID: 'rajya sabha',
 }
@@ -234,9 +255,9 @@ export interface PartyDetails {
   party_name: string
 }
 export interface TimeLineDetails {
-  id:string
-    status : string
-  description : string
+  id: string
+  status: string
+  description: string
   milestone: string
   created_date: string
   attachments: string[]
@@ -315,9 +336,9 @@ export interface PostDetails {
   comments: Comment[] | string
   likes: Like[] | string
   leaderid: string
-  updatePost: (data:any) => void;
+  updatePost: (data: any) => void;
   types: any[]
-  allData:any
+  allData: any
 }
 
 export interface NewPostFields {
@@ -364,7 +385,7 @@ export interface AgendaFormFields {
   documents: string
   status: string
   saved_by_type: string
-  saved_by:string
+  saved_by: string
 
 }
 export interface Attachments {

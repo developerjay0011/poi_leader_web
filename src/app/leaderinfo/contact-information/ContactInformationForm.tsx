@@ -7,17 +7,23 @@ import {
 } from '@/utils/typesUtils'
 import { Input } from '@/components/Input'
 import { YesNoField } from '@/components/YesNoField'
-import Link from 'next/link'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { submitLeaderForm } from '@/redux_store/APIFunctions'
-import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { tryCatch } from '@/config/try-catch'
 import { ContactInfo } from '@/interfaces/leader'
 import { ToastType } from '@/constants/common'
-import { ProtectedRoutes } from '@/constants/routes'
-export const ContactForm: FC = () => {
-  const { leaderProfile } = cusSelector((state) => state.leader);
+import { getRejectedFieldsObject } from '../utils'
+
+
+interface ContactFormProps {
+  setPage: (data: any) => void;
+  moveLogin: () => void;
+}
+
+
+export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
+  const { leaderProfile, reasons } = cusSelector((state) => state.leader);
   const { leaderOptions } = cusSelector((state) => state.common);
   const dispatch = cusDispatch();
   const {
@@ -28,26 +34,26 @@ export const ContactForm: FC = () => {
     formState: { errors },
     handleSubmit,
   } = useForm<UserDetails>({
-    defaultValues: {
-      ...leaderProfile.contact_info,
-    },
+    defaultValues: { ...leaderProfile.contact_info, },
     mode: 'onTouched',
   });
 
-  const bothAddressIsSame = watch('bothAddressIsSame')
+  const bothAddressIsSame = watch('bothAddressIsSame');
   const pAddress = watch("permanent_address");
   const pState = watch("permanent_state_id");
   const pDistrict = watch("permanent_district_id");
   const pPincode = watch("permanent_pincode");
   const cState = watch("present_state_id");
-
   const formSubmitHandler = async (data: UserDetails) => {
-    const resBody: ContactInfo = { ...data, is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false, };
+    const resBody: ContactInfo = {
+      ...data,
+      is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false,
+    };
     tryCatch(
       async () => {
         const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, });
         if (response?.success) {
-          dispatch(leaderActions.setLeaderProfile({ contact_info: resBody }));
+          moveLogin()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -57,17 +63,17 @@ export const ContactForm: FC = () => {
   }
   useEffect(() => {
     const { contact_info } = leaderProfile;
+    var contact_infolist = leaderProfile?.request_status === "Rejected" && Array.isArray(reasons) ? getRejectedFieldsObject(reasons) : {}
     reset({
+      bothAddressIsSame: leaderProfile.contact_info?.is_same_as_permanent && !contact_infolist.hasOwnProperty("is_same_as_permanent") ? "yes" : null,
       ...contact_info,
-      bothAddressIsSame: leaderProfile.contact_info?.is_same_as_permanent ? "yes" : null
+      ...contact_infolist
     })
   }, [leaderProfile, reset]);
 
   return (
     <>
-      <form
-        className='grid grid-cols-3 gap-x-4 gap-y-5'
-        onSubmit={handleSubmit(formSubmitHandler)}>
+      <form className='grid grid-cols-3 gap-x-4 gap-y-5' onSubmit={handleSubmit(formSubmitHandler)}>
         <h2 className='text-4xl font-semibold col-span-full mb-5'>
           Contact Information
         </h2>
@@ -301,11 +307,11 @@ export const ContactForm: FC = () => {
         />
 
         <div className='flex justify-end col-span-full gap-2 mt-5'>
-          <Link
-            href={ProtectedRoutes.userProfile}
+          <button
+            onClick={() => { setPage("1") }}
             className='rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50'>
-            close
-          </Link>
+            Previous
+          </button>
           <button
             className='rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize'
             type='submit'>

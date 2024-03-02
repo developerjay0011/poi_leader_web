@@ -11,7 +11,8 @@ export const ProtectedRoutes = {
 
 export const AuthRoutes = {
   login: "/",
-  register: "/register"
+  register: "/register",
+  leaderinfo: "/leaderinfo",
 }
 
 // API Routes

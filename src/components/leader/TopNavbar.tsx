@@ -17,10 +17,15 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl } from "@/config/get-image-url";
-import { getProfile } from "@/redux_store/leader/leaderAPI";
+import { followLeader, getFollowering, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { commonActions } from "@/redux_store/common/commonSlice";
+import { TOKEN_KEY, ToastType, USER_VERIFY } from "@/constants/common";
+import { getCookie } from "cookies-next";
+import { AuthRoutes } from "@/constants/routes";
+import { authActions } from "@/redux_store/auth/authSlice";
+import { tryCatch } from "@/config/try-catch";
 
 export const TopNavbar: FC = () => {
   const router = useRouter();
@@ -29,11 +34,29 @@ export const TopNavbar: FC = () => {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const { userDetails } = cusSelector((state: RootState) => state.auth);
-  const { leaderProfile } = cusSelector((state: RootState) => state.leader);
+  const { leaderProfile, trendingLeader, following } = cusSelector((state: RootState) => state.leader);
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showWarningMsg, setShowWarningMsg] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
+  let token: any = getCookie(TOKEN_KEY);
+  let isuserverify = getCookie(USER_VERIFY)
+
+  const searchFilterFunction = (text: string) => {
+    if (text) {
+      const newData = trendingLeader?.filter(
+        function (item) {
+          const itemData = item?.["username"] ? item?.["username"].toUpperCase() : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+      )
+      return newData
+    } else {
+      return trendingLeader
+    };
+  }
+
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -49,11 +72,20 @@ export const TopNavbar: FC = () => {
   // Initialize login user info from below API
   useEffect(() => {
     (async () => {
-      const LeadersDropdown = await getLeadersOptions();
-      dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-      if (userDetails?.leaderId) {
-        const leaderRes = await getProfile(userDetails?.leaderId);
-        dispatch(leaderActions.setLeaderProfile(leaderRes));
+      if (isuserverify == "true" && token) {
+        const LeadersDropdown = await getLeadersOptions();
+        dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+        if (userDetails?.leaderId) {
+          const leaderRes = await getProfile(userDetails?.leaderId);
+          dispatch(leaderActions.setLeaderProfile(leaderRes));
+          if (leaderRes?.request_status === "Rejected") {
+            dispatch(authActions.logout())
+          }
+        }
+      } else {
+        if (!token || isuserverify != "true") {
+          router.push(AuthRoutes.login)
+        }
       }
     })();
   }, [dispatch, userDetails?.leaderId])
@@ -65,6 +97,8 @@ export const TopNavbar: FC = () => {
 
   heading = heading === "user" ? "home" : heading;
 
+
+  // console.log(trendingLeader)
   return (
     <>
       <nav className="py-3 px-8 bg-sky-950 text-orange-50 flex items-center gap-5 max-[1000px]:hidden">
@@ -89,12 +123,16 @@ export const TopNavbar: FC = () => {
           {/* Search box */}
           {searchUserStr.length > 0 && (
             <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
-              <BriefUserInfo
-                designation="prime minister"
-                userPic={MODI}
-                name="narendar modi"
-              />
-              <p className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
+              {searchFilterFunction(searchUserStr)?.map((item: any) =>
+                <BriefUserInfo
+                  designation={item?.username?.political_party}
+                  userPic={getImageUrl(item?.image)}
+                  name={item?.username}
+                  id={item?.id}
+                  isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
+                />
+              )}
+              <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
                 no politician found❗
               </p>
             </ul>
@@ -130,42 +168,13 @@ export const TopNavbar: FC = () => {
             )}
           </button>
 
-          <Link href={"http://localhost:5000/"} target="_parent">
+          <Link href={''} target="_parent">
             <MdSpaceDashboard className="text-sky-50 text-2xl" />
           </Link>
         </section>
 
         {/* USER Profile */}
-
         <section className="flex items-center gap-4 ml-auto relative">
-          {/* <button
-            type="button"
-            onClick={() => setShowWarningMsg((lst) => !lst)}
-            className={`${showWarningMsg ? "" : "animate-bounce"}`}
-          >
-            <BsExclamationCircleFill className="text-3xl text-red-500" />
-          </button>
-          <AnimatePresence>
-            {showWarningMsg && (
-              <m.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center bg-white w-max gap-3 text-sky-950 absolute top-full left-0 translate-x-[-50%] py-3 font-medium px-6 rounded-md border shadow-md z-[100]"
-              >
-                Your Profile is Incomplete
-                <Link
-                  onClick={() => setShowWarningMsg(false)}
-                  href={"/admin/profile/settings/edit-profile"}
-                  className="hover:underline hover:font-medium"
-                >
-                  Click Here
-                </Link>
-              </m.p>
-            )}
-          </AnimatePresence> */}
-
-          <p className="capitalize">{""}</p>
           <button
             id="userDisplayPic"
             onClick={() => setShowAdminMenu((lst) => !lst)}
@@ -204,7 +213,7 @@ export const TopNavbar: FC = () => {
 
           <button id="userMobileDisplayPic">
             <CustomImage
-              src={getImageUrl(leaderProfile?.image) as string}
+              src={getImageUrl(leaderProfile?.image)}
               alt="user pic"
               className="w-14 aspect-square object-cover object-center rounded-full"
               width={100}
@@ -221,10 +230,19 @@ export const TopNavbar: FC = () => {
           />
           <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
 
-          {/* Search box */}
+
           {searchUserStr.length > 0 && (
             <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
-              <p className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
+              {searchFilterFunction(searchUserStr)?.map((item: any) =>
+                <BriefUserInfo
+                  designation={item?.username?.political_party}
+                  userPic={getImageUrl(item?.image)}
+                  name={item?.username}
+                  id={item?.id}
+                  isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
+                />
+              )}
+              <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
                 no politician found❗
               </p>
             </ul>
@@ -245,7 +263,33 @@ const BriefUserInfo: FC<{
   name: string;
   userPic: string | StaticImageData;
   designation: string;
-}> = ({ designation, name, userPic }) => {
+  id: string;
+  isFollowing: boolean
+}> = ({ designation, name, userPic, id, isFollowing }) => {
+  const { trendingLeader, leaderProfile, following } = cusSelector((state) => state.leader);
+  const dispatch = cusDispatch();
+  const handleClick = async (id: string, isFollowing: boolean) => {
+    const postBody = {
+      senderid: leaderProfile?.id,
+      receiverid: id,
+    };
+    tryCatch(
+      async () => {
+        const response = await (!isFollowing ? followLeader(postBody) : unFollowLeader(postBody));
+        if (response?.success) {
+          const res = await getFollowering(leaderProfile?.id as string)
+          dispatch(leaderActions.setFollowing(res))
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+
+      })
+  };
+
+
+
+
   return (
     <>
       <Link href={"#"}>
@@ -255,16 +299,17 @@ const BriefUserInfo: FC<{
             alt="user dp"
             width={1000}
             height={1000}
-            className="w-16 aspect-square rounded-full object-center object-cover"
+            className="w-12 aspect-square rounded-full object-center object-cover"
           />
           <p className="text-lg font-semibold text-sky-950 flex flex-col capitalize">
             {name}
             <span className="font-medium text-[14px]">{designation}</span>
           </p>
-
-          <button type="button" className="ml-auto">
-            <RiUserAddFill className="text-sky-950 text-2xl hover:text-orange-500" />
-          </button>
+          {!isFollowing &&
+            <button onClick={() => { handleClick(id, isFollowing) }} type="button" className="ml-auto">
+              <RiUserAddFill className="text-sky-950 text-2xl hover:text-orange-500" />
+            </button>
+          }
         </li>
       </Link>
     </>

@@ -5,7 +5,7 @@ import { FC } from 'react'
 const LoginPage: FC = () => {
   return (
     <>
-      <LoginLayout>
+      <LoginLayout isleaderinfo={false}>
         <LoginForm />
       </LoginLayout>
     </>

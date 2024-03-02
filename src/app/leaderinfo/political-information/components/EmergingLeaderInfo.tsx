@@ -18,8 +18,6 @@ import {
   yearlistfuture,
 } from '@/utils/typesUtils'
 import { ChangeEvent, FC, useState, useEffect } from 'react'
-import { Input } from '../../../../../../components/Input'
-import { YesNoField } from '../../../../../../components/YesNoField'
 import { RiGalleryFill } from 'react-icons/ri'
 import { BiX } from 'react-icons/bi'
 import CustomImage from '@/utils/CustomImage'
@@ -27,6 +25,10 @@ import { cusSelector } from '@/redux_store/cusHooks'
 import moment from 'moment'
 import { uploadActivityPictures } from '@/redux_store/leader/leaderAPI'
 import { ErrorMessage } from '@hookform/error-message'
+import { Input } from '@/components/Input'
+import { YesNoField } from '@/components/YesNoField'
+import { getRejectedFieldsObject } from '../../utils'
+
 
 interface EmerginLeaderInfoProps {
   watch: UseFormWatch<UserDetails>
@@ -55,32 +57,60 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
   parties,
   states,
 }) => {
-
+  const { leaderProfile, reasons } = cusSelector((state) => state.leader);
   const participatedInElection = watch('participatedInElection')
-  const election = watch('elections') || watch('target_elections')
   const isprepareforelections = watch('isprepareforelections')
+  const election = watch('elections') || watch('target_elections')
   const electionState = watch('election_stateid')
   const targetElection = watch('target_elections')
   const doneAnyPoliticalActivity = watch('doneAnyPoliticalActivity')
-  const { leaderProfile } = cusSelector((state) => state.leader);
-  const { fields, append, remove } = useFieldArray({ name: 'activity_pictures', control, });
-  const { fields: references, append: newRef, remove: removeRef, } = useFieldArray({ name: 'referencies', control, })
+  const referencies = watch('referencies')
+  var activity_pictures = Array.isArray(leaderProfile.political_info?.activity_pictures) ? leaderProfile.political_info?.activity_pictures : []
+  const { fields, append, remove } = useFieldArray({
+    name: 'activity_pictures',
+    control,
+  });
+
+  const {
+    fields: references,
+    append: newRef,
+    remove: removeRef,
+  } = useFieldArray({
+    name: 'referencies',
+    control,
+  })
   useEffect(() => {
     const { political_info } = leaderProfile;
+    var personal_infolist = leaderProfile?.request_status === "Rejected" && Array.isArray(reasons) ? getRejectedFieldsObject(reasons) : {}
     reset({
       ...political_info,
       joined_date: moment(political_info?.joined_date).format("YYYY-MM-DD"),
-      participatedInElection: political_info?.is_participated_in_elections ? 'yes' : 'no',
-      doneAnyPoliticalActivity: leaderProfile.political_info?.done_any_political_activity ? 'yes' : 'no',
-      isprepareforelections: leaderProfile.political_info?.is_prepare_for_elections ? 'yes' : 'no',
-      familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no',
-      position: leaderProfile.political_info?.position
-    });
+      participatedInElection: political_info?.is_participated_in_elections && !personal_infolist.hasOwnProperty("is_participated_in_elections") ? 'yes' : null,
+      doneAnyPoliticalActivity: leaderProfile.political_info?.done_any_political_activity && !personal_infolist.hasOwnProperty("done_any_political_activity") ? 'yes' : null,
+      familySupportedForPolitics: leaderProfile.political_info?.does_family_supports && !personal_infolist.hasOwnProperty("does_family_supports") ? 'yes' : null,
+      isprepareforelections: leaderProfile.political_info?.is_prepare_for_elections && !personal_infolist.hasOwnProperty("is_prepare_for_elections") ? 'yes' : 'no',
+      referencies: (Array.isArray(leaderProfile.political_info?.referencies as any) && leaderProfile.political_info?.referencies?.length as any > 0 ||
+        referencies?.length > 0) && !personal_infolist.hasOwnProperty("referencies") ? leaderProfile.political_info?.referencies : newRef({ age: undefined, mobile: undefined, name: undefined }) as any,
+      ...personal_infolist
+    })
   }, [leaderProfile, reset]);
 
 
+  useEffect(() => {
+    if (participatedInElection == "no") {
+      setValue("elections", '')
+      setValue("election_stateid", '')
+      setValue("election_constituency_id", '')
+      setValue("election_parliamentary_constituency_id", '')
+      setValue("election_year", '')
+      setValue("position", '')
+      setValue("opponents", '')
+    }
+  }, [participatedInElection])
+
+
   return (
-    <>
+    <div className='grid grid-cols-2 gap-4 col-span-full'>
       <Input
         errors={errors}
         required
@@ -280,6 +310,10 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
           </>
         </>
       )}
+
+
+
+
       <YesNoField
         errors={errors}
         fullWidth
@@ -359,7 +393,6 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         </>
       )}
 
-
       <YesNoField
         errors={errors}
         fullWidth
@@ -368,7 +401,6 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
           required: 'Field is required',
           onChange(e) {
             const val = e.target.value
-
             if (val === 'yes') {
               remove()
               append({ description: '', pictures: [] })
@@ -377,7 +409,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
         }}
         register={register}
         id='doneAnyPoliticalActivity'
-        question='Have you done any Political Activity in Past'
+        question='Have you done any Political Activity in Past '
       />
 
       {doneAnyPoliticalActivity && doneAnyPoliticalActivity === 'yes' && (
@@ -391,7 +423,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
                 key={el.id}
                 removeActivity={() => remove(i)}
                 setValue={setValue}
-                preserveValues={leaderProfile.political_info?.activity_pictures && leaderProfile.political_info?.activity_pictures[i]}
+                preserveValues={(activity_pictures as any)[i]}
               />
             )
           })}
@@ -501,7 +533,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
           </button>
         )}
       </div>
-    </>
+    </div>
   )
 }
 
@@ -568,6 +600,7 @@ const Activity: FC<{
               id={`activity_pictures.${index}.pictures`}
               type='file'
               multiple
+              accept="image/*"
               className='hidden'
               {...register(`activity_pictures.${index}.pictures`, {
                 // required: 'Field is required',

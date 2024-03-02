@@ -10,6 +10,10 @@ import {
   useFieldArray,
 } from 'react-hook-form'
 import {
+  MdOutlineCheckBox,
+  MdOutlineCheckBoxOutlineBlank,
+} from 'react-icons/md'
+import {
   LEADER_IDS,
   UserDetails,
   ParliamentaryConstituencyDetails,
@@ -21,6 +25,7 @@ import {
 import { YesNoField } from '@/components/YesNoField'
 import { Input } from '@/components/Input'
 import { cusSelector } from '@/redux_store/cusHooks'
+import { getRejectedFieldsObject } from '../../utils'
 
 
 interface LeaderPoliticalInfoProps {
@@ -52,7 +57,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   reset,
   ministries
 }) => {
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { leaderProfile, reasons } = cusSelector((state) => state.leader);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'ministries',
@@ -62,12 +67,16 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   const stateid = watch('stateid')
   const rajyaSabhaNominated = watch('rajyaSabhaNominated')
   const hasMinistry = watch('hasMinistry')
+
+
   useEffect(() => {
     const { political_info } = leaderProfile;
+    var personal_infolist = leaderProfile?.request_status === "Rejected" && Array.isArray(reasons) ? getRejectedFieldsObject(reasons) : {}
     reset({
       ...political_info,
-      hasMinistry: political_info?.is_hold_ministry ? 'yes' : null,
-      rajyaSabhaNominated: political_info?.is_nominated ? 'yes' : null,
+      ...personal_infolist,
+      hasMinistry: political_info?.is_hold_ministry && !personal_infolist.hasOwnProperty("is_hold_ministry") ? 'yes' : null,
+      rajyaSabhaNominated: political_info?.is_nominated && !personal_infolist.hasOwnProperty("is_nominated") ? 'yes' : null,
     })
   }, [leaderProfile?.id, reset]);
   useEffect(() => {
@@ -83,7 +92,6 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   }, [hasMinistry])
 
 
-
   return (
     <div className='grid grid-cols-2 gap-4 col-span-full w-full'>
       <Input
@@ -96,6 +104,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
         validations={{
           required: 'Designation is required',
           onChange() {
+            // Resetting all Fields
             setValue("parliament_house", '')
             setValue("is_nominated", false)
             setValue("stateid", '')
@@ -104,7 +113,6 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             setValue("ministries", [])
             setValue("assemblyid", '')
             setValue("parliamentaryid", '')
-            setValue("hasMinistry", '')
           },
         }}
         selectField={{
@@ -205,6 +213,24 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
             />
           )}
 
+          {designation_id && (
+            <Input
+              errors={errors}
+              required
+              register={register}
+              validations={{ required: 'Political Party is required' }}
+              id='political_party_id'
+              title='Political Party'
+              type='select'
+              selectField={{
+                title: 'select political party',
+                options: parties.map((el) => ({
+                  id: el.id,
+                  value: el.party_name,
+                })),
+              }}
+            />
+          )}
         </>
       )
       }
@@ -245,30 +271,32 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
               }}
             />
           )}
+
+          {/* Showing Political party once designation is selected */}
+          {designation_id && (
+            <Input
+              errors={errors}
+              required
+              register={register}
+              validations={{ required: 'Political Party is required' }}
+              id='political_party_id'
+              title='Political Party'
+              type='select'
+              selectField={{
+                title: 'select political party',
+                options: parties.map((el) => ({
+                  id: el.id,
+                  value: el.party_name,
+                })),
+              }}
+            />
+          )}
         </>
       )
       }
 
 
 
-      {designation_id && (
-        <Input
-          errors={errors}
-          required
-          register={register}
-          validations={{ required: 'Political Party is required' }}
-          id='political_party_id'
-          title='Political Party'
-          type='select'
-          selectField={{
-            title: 'select political party',
-            options: parties.map((el) => ({
-              id: el.id,
-              value: el.party_name,
-            })),
-          }}
-        />
-      )}
 
 
       {

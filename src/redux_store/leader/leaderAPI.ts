@@ -26,12 +26,14 @@ export const uploadProfileImage = async (formData: any) => {
       const res = await Axios.post(APIRoutes.uploadProfile, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
-        }
+        },
       });
       return res.data;
     }
   );
 };
+
+
 
 export const uploadActivityPictures = async (formData: any) => {
   return tryCatch(

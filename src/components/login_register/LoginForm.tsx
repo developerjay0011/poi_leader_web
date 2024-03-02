@@ -18,13 +18,13 @@ import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { TOKEN_KEY, USER_INFO } from "@/constants/common";
+import { LOGIN_BODY, TOKEN_KEY, USER_INFO, USER_VERIFY } from "@/constants/common";
 import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 
-interface LoginFormProps {}
+interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
   const router = useRouter();
   const [loggingIn, setLoggingIn] = useState(false);
@@ -63,10 +63,8 @@ export const LoginForm: FC<LoginFormProps> = () => {
 
     try {
       const response = await userLogin(resBody);
-
       const loginResponse = response as any;
       const { success, message, data } = loginResponse;
-
       if (success) {
         if (data?.leader_detail?.is_profile_complete) {
           if (data?.leader_detail?.request_status === "Approved") {
@@ -74,13 +72,10 @@ export const LoginForm: FC<LoginFormProps> = () => {
               ...data.user_detail,
               leaderId: data?.leader_detail.id
             };
-
             const serializedData = JSON.stringify(userData);
-
-            // Store the serialized data in session storage
             setCookie(USER_INFO, serializedData);
             setCookie(TOKEN_KEY, loginResponse.token);
-
+            setCookie(USER_VERIFY, 'true');
             dispatch(authActions.setUserData(userData));
             dispatch(leaderActions.setLeaderProfile(data.leader_detail));
             router.push(ProtectedRoutes.user);
@@ -94,6 +89,24 @@ export const LoginForm: FC<LoginFormProps> = () => {
           router.push(ProtectedRoutes.userManagement);
         }
       } else {
+        setCookie(USER_VERIFY, 'false');
+        if (loginResponse.token && (data?.leader_detail?.is_profile_complete == false || data?.leader_detail?.request_status == "Rejected")) {
+          if (data?.leader_detail?.request_status == "Rejected") {
+            dispatch(leaderActions.setReason(data.reason));
+            setErr({ errTxt: message, isErr: true });
+          }
+          const userData = {
+            ...data.user_detail,
+            leaderId: data?.leader_detail.id
+          };
+          setCookie(LOGIN_BODY, resBody);
+          setCookie(TOKEN_KEY, loginResponse.token);
+          dispatch(authActions.setUserData(userData));
+          dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+          dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+          router.push(AuthRoutes.leaderinfo);
+          return
+        }
         setErr({ errTxt: message, isErr: true });
       }
       setLoggingIn(false);

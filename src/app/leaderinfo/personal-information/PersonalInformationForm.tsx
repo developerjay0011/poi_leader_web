@@ -1,23 +1,23 @@
 'use client'
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { UserDetails } from '@/utils/typesUtils'
+import { Basicinfo, UserDetails } from '@/utils/typesUtils'
 import { Input } from '@/components/Input'
 import { BLOOD_GROUPS } from '@/utils/utility'
-import Link from 'next/link'
 import moment from 'moment';
-import { submitLeaderForm } from '@/redux_store/APIFunctions'
-import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns, ToastType } from '@/constants/common'
+import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns } from '@/constants/common'
 import { ProfileInfo } from '@/interfaces/leader'
-import { tryCatch } from '@/config/try-catch'
-import { commonActions } from '@/redux_store/common/commonSlice'
+import { leaderActions } from '@/redux_store/leader/leaderSlice'
+import { getRejectedFieldsObject } from '../utils'
 
-export const PersonalInformationForm: FC = () => {
-  const { leaderProfile } = cusSelector((state) => state.leader);
+interface PersonalInformationFormProps {
+  setPage: (data: any) => void;
+}
+export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setPage }) => {
+  const { leaderProfile, reasons } = cusSelector((state) => state.leader);
+
   const dispatch = cusDispatch();
-
   const {
     register,
     watch,
@@ -27,44 +27,120 @@ export const PersonalInformationForm: FC = () => {
   } = useForm<UserDetails>({
     defaultValues: {
       ...leaderProfile.personal_info
-    }
+    },
   });
-
+  const {
+    register: register2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+    watch: watch2,
+    reset: reset2,
+    getValues: getValues2
+  } = useForm<Basicinfo>({
+    defaultValues: {
+      email: leaderProfile?.email,
+      mobile: leaderProfile?.mobile,
+      username: leaderProfile?.email,
+      about_me: leaderProfile?.about_me,
+    },
+  });
   const maritalStatus = watch('marital_status');
 
   useEffect(() => {
     const { personal_info } = leaderProfile;
+    const userdetails = {
+      email: leaderProfile?.email,
+      mobile: leaderProfile?.mobile,
+      username: leaderProfile?.email,
+      about_me: leaderProfile?.about_me
+    }
+    var personal_infolist = leaderProfile?.request_status === "Rejected" && Array.isArray(reasons) ? getRejectedFieldsObject(reasons) : {}
+    var userdetailslist = leaderProfile?.request_status === "Rejected" && Array.isArray(reasons) ? getRejectedFieldsObject(reasons) : {}
     reset({
       ...personal_info,
-      dob: moment(personal_info?.dob).format("YYYY-MM-DD")
+      dob: moment(personal_info?.dob).format("YYYY-MM-DD"),
+      ...personal_infolist,
     })
-  }, [leaderProfile, reset]);
+    reset2({
+      ...userdetails,
+      ...userdetailslist
+    });
+  }, [leaderProfile, reset, reset2]);
 
-  const formSubmitHandler = async (data: UserDetails) => {
-    const resBody: ProfileInfo = { ...data };
 
-    tryCatch(
-      async () => {
-        const param = {
-          ...leaderProfile,
-          'personal_info': resBody,
-        }
-        const response = await submitLeaderForm(param);
-        if (response?.success) {
-          dispatch(leaderActions.setLeaderProfile({ personal_info: resBody }));
-          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-        } else {
-          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-        }
-      }
-    );
-  }
+  const handleNextClick = async (data: any) => {
+    const userData = getValues2() as Basicinfo;
+    const param = {
+      ...leaderProfile,
+      ...userData,
+      'personal_info': data,
+    }
+    dispatch(leaderActions.setLeaderProfile(param));
+    setPage('1')
+  };
+
 
   return (
     <>
+      <form className='grid grid-cols-2 gap-x-4 gap-y-5'>
+        <h2 className='text-4xl font-semibold col-span-full mb-5'>
+          Basic Information
+        </h2>
+        <Input
+          errors={errors2}
+          id="username"
+          placeholder='narendar'
+          register={register2 as any}
+          title='User name'
+          type='text'
+          required
+          validations={{
+            required: 'User name is required',
+          }}
+        />
+        <Input
+          errors={errors2}
+          id='email'
+          register={register2 as any}
+          title='E-mail'
+          type='text'
+          required
+          validations={{
+            required: 'Email is required',
+          }}
+        />
+        <Input
+          errors={errors2}
+          id="mobile"
+          register={register2 as any}
+          title='Mobile No.'
+          type='text'
+          required
+          validations={{
+            required: 'Mobile no is required',
+            validate: {
+              validMobileNo(no) {
+                return (
+                  no?.toString().length === 10 ||
+                  'Please Enter a Valid Number'
+                )
+              },
+            },
+          }}
+        />
+        <Input
+          errors={errors2}
+          id="about_me"
+          register={register2 as any}
+          title='About me.'
+          type='textarea'
+        />
+      </form>
       <form
         className='grid grid-cols-2 gap-x-4 gap-y-5'
-        onSubmit={handleSubmit(formSubmitHandler)}>
+        onSubmit={handleSubmit(handleNextClick)}
+      >
+
         <h2 className='text-4xl font-semibold col-span-full mb-5'>
           Personal Information
         </h2>
@@ -237,12 +313,23 @@ export const PersonalInformationForm: FC = () => {
         )}
         <Input
           errors={errors}
+          id='profession'
+          required
+          placeholder=''
+          register={register}
+          title='Profession'
+          type='text'
+        />
+        <Input
+          errors={errors}
           id='hobbies'
           placeholder='cricket'
           register={register}
           title='Hobbies OR Interests'
           type='text'
         />
+
+
         <Input
           errors={errors}
           id='assets'
@@ -251,6 +338,7 @@ export const PersonalInformationForm: FC = () => {
           title='Assest & Liability'
           type='text'
         />
+
         <Input
           errors={errors}
           id='higher_education'
@@ -265,15 +353,10 @@ export const PersonalInformationForm: FC = () => {
           }}
         />
         <div className='flex justify-end col-span-full gap-2 mt-5'>
-          <Link
-            href={'/user/profile'}
-            className='rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50'>
-            close
-          </Link>
           <button
             className='rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize'
             type='submit'>
-            Save
+            Next
           </button>
         </div>
       </form>
