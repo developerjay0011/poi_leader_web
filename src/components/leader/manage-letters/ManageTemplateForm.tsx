@@ -1,14 +1,10 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { motion as m } from 'framer-motion'
 import { useForm } from 'react-hook-form'
+// import { ErrObj } from '../../../state/authSlice'
 import { BiX } from 'react-icons/bi'
 import JoditEditor from 'jodit-react'
-import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { getLetterTemplates, saveLetterTemplate } from '@/redux_store/letter/letterApi'
-import { letterActions } from '@/redux_store/letter/letterSlice'
-import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
-import dynamic from 'next/dynamic';
+
 interface ManageTemplateFormProps {
   tempHeader: string
   status: string
@@ -16,82 +12,46 @@ interface ManageTemplateFormProps {
   onClose: () => void
   submitHandler: () => void
   heading: string
-  err: string
-  isEdit:any
+  // err: ErrObj
 }
 
 interface TemplateFormFields {
   tempHeader: string
   status: string
 }
-const Editor = dynamic(() => import('./Editor'), {
-  ssr: false
-})
+
 export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
   submitting,
   tempHeader,
   status,
   onClose,
-  err,
+  // err,
   heading,
-  isEdit
 }) => {
   const {
     register,
     formState: { errors },
     handleSubmit,
-    setValue,
-    reset
   } = useForm<TemplateFormFields>({
     defaultValues: {
       status,
       tempHeader,
     },
   })
-  const { leaderProfile } = cusSelector((state) => state.leader);
-  const { userDetails } = cusSelector((state) => state.auth);
-  const dispatch = cusDispatch();
-
-  const formSubmitHandler = async(data: TemplateFormFields) => {
-    console.log(data, content)
-    const body = {
-      id: isEdit ? isEdit.id : null,
-      leaderid: leaderProfile?.id || "",
-      template_name: data.tempHeader,
-      template_html:content,
-      isactive: data.status == "1" ?true:false,
-      saved_by_type: userDetails?.usertype.replace('emerging ', ""),
-      saved_by: leaderProfile?.id
-
-    };
-
-    const response = await saveLetterTemplate(body);
-    if (response?.success) {
-      const Data = await getLetterTemplates(leaderProfile?.id as string);
-      dispatch(letterActions.storeLetterTemplate(Data))
-      dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-    } else {
-      dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-    }
-    onClose()
-    reset();
+  const formSubmitHandler = (data: TemplateFormFields) => {
+    console.log(data)
   }
 
+  const editor = useRef(null)
   const [content, setContent] = useState('')
-  useEffect(() => {
-    if (isEdit) {
-      setValue("tempHeader", isEdit.template_name)
-      setValue("status", isEdit.isactive ? "1" : "0")
-      setContent(isEdit.template_html)
-    }
-  },[])
+
   return (
     <>
       <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed top-0 left-0 z-10 w-full backdrop-blur-[2px] h-full overflow-y-scroll '>
+        className='fixed top-0 left-0 z-10 w-full backdrop-blur-[2px] h-full'>
         <div className='bg-gray-700 opacity-25 h-screen w-full absolute top-0 left-0 z-20' />
         <m.div
           initial={{ y: -100 }}
@@ -106,7 +66,11 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
           </button>
           <h2 className='text-2xl font-semibold capitalize flex justify-between'>
             {heading}
-
+            {/* {err.isErr && (
+              <span className='text-red-600 text-[15px] font-normal lowercase'>
+                *{err.errTxt}
+              </span>
+            )} */}
           </h2>
 
           <form
@@ -115,9 +79,11 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
             noValidate>
             <div className='grid grid-cols-2 gap-5'>
               <div className='col-span-2'>
-                <Editor
+                <JoditEditor
+                  ref={editor}
                   value={content}
-                  onChange={(val:any) => setContent(val)}
+                  config={{ readonly: false }}
+                  onBlur={(val) => setContent(val)}
                 />
               </div>
 
@@ -126,13 +92,17 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
                   Template Name<strong className='text-red-600'>*</strong>
                 </span>
                 <input
-                  id='tempHeader'
-                  className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+                  id='status'
+                  className={`w-full border border-gray-400 text-l px-3 py-2 rounded-md focus:bg-gray-100 outline-none transition-all ${
+                    errors.tempHeader
+                      ? 'bg-red-100 border-red-400 focus:bg-red-100'
+                      : ''
+                  }`}
                   {...register('tempHeader', {
                     // VALIDATIONS
                     required: {
                       value: true,
-                      message: 'Name is required',
+                      message: 'status is required',
                     },
                   })}
                 />
@@ -149,7 +119,11 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
                 </span>
                 <select
                   id='status'
-                  className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400 capitalize'
+                  className={`w-full border border-gray-400 text-l px-3 py-2 rounded-md focus:bg-gray-100 outline-none transition-all ${
+                    errors.status
+                      ? 'bg-red-100 border-red-400 focus:bg-red-100'
+                      : ''
+                  }`}
                   {...register('status', {
                     // VALIDATIONS
                     required: {
@@ -177,13 +151,13 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
               <button
                 type='button'
                 onClick={onClose}
-                className='py-2 px-5 bg-orange-200 text-orange-500 rounded-full capitalize hover:bg-orange-100 transition-all'>
+                className='py-2 px-4 bg-cyan-500 rounded-md uppercase text-sm text-white hover:bg-cyan-600 transition-all'>
                 Close
               </button>
               <button
                 type='submit'
                 disabled={submitting}
-                className='rounded-full capitalize px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] hover:bg-orange-600 transition-all'>
+                className='py-2 px-4 bg-sky-500 rounded-md uppercase text-sm text-white hover:bg-sky-600 transition-all'>
                 {submitting ? 'submitting...' : heading}
               </button>
             </div>

@@ -72,10 +72,10 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({
                 {i+1}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el.template_name}
+                {el.template_id}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el.template_html}
+                {el.template_name}
               </td>
               <td className='text-center py-2 pl-2 border printHide'>
                 <StatusBtn

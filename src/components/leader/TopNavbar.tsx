@@ -26,6 +26,8 @@ import { getCookie } from "cookies-next";
 import { AuthRoutes } from "@/constants/routes";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { tryCatch } from "@/config/try-catch";
+import { getLetterTemplates, getLetters } from "@/redux_store/letter/letterApi";
+import { letterActions } from "@/redux_store/letter/letterSlice";
 
 export const TopNavbar: FC = () => {
   const router = useRouter();
@@ -73,6 +75,8 @@ export const TopNavbar: FC = () => {
   useEffect(() => {
     (async () => {
       if (isuserverify == "true" && token) {
+        const data = await getLetterTemplates(userDetails?.leaderId as string);
+        dispatch(letterActions.storeLetterTemplate(data));
         const LeadersDropdown = await getLeadersOptions();
         dispatch(commonActions.setLeaderOptions(LeadersDropdown));
         if (userDetails?.leaderId) {
@@ -125,6 +129,7 @@ export const TopNavbar: FC = () => {
             <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
               {searchFilterFunction(searchUserStr)?.map((item: any) =>
                 <BriefUserInfo
+                  key={item?.id}
                   designation={item?.username?.political_party}
                   userPic={getImageUrl(item?.image)}
                   name={item?.username}
@@ -235,6 +240,7 @@ export const TopNavbar: FC = () => {
             <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
               {searchFilterFunction(searchUserStr)?.map((item: any) =>
                 <BriefUserInfo
+                  key={item?.id}
                   designation={item?.username?.political_party}
                   userPic={getImageUrl(item?.image)}
                   name={item?.username}

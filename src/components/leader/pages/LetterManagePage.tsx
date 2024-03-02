@@ -75,7 +75,7 @@ export const LetterManagePage: FC = () => {
                         <TableWrapper
                             heading='Manage Letter'
                             addBtnTitle='add Letter'
-                            addBtnClickFn={openModal}
+                            addBtnClickFn={() => location.href ='/user/letter/add-letter'}
                             curDataCount={1}
                             totalCount={letter_templete?.length}
                             changeFilterFn={changeFilterCount}
@@ -90,7 +90,7 @@ export const LetterManagePage: FC = () => {
                     </section>
                 </div>
             </div>
-
+{/* 
             <AnimatePresence>
                 {showAddTemplateForm && (
                     <ManageTemplateForm
@@ -104,7 +104,7 @@ export const LetterManagePage: FC = () => {
                         onClose={() => setShowAddTemplateForm(false)}
                     />
                 )}
-            </AnimatePresence>
+            </AnimatePresence> */}
         </>
     )
 }
