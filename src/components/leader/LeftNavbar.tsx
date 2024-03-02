@@ -64,14 +64,15 @@ export const LeftNavbar: FC = () => {
           {<El.Icon />}
         </LeftNavLink>
       ))}
-      <LeftNavLink
+      {/* <LeftNavLink
         info={"dashboard"}
-        link={"http://localhost:5000/"}
+        link={"/"}
         target
         routeData={routeData}
       >
         <MdSpaceDashboard />
-      </LeftNavLink>
+      </LeftNavLink> */}
+  
     </section>
   );
 };

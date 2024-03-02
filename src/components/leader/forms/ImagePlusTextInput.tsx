@@ -44,7 +44,7 @@ export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({
             accept='image/*'
             id={id}
             className='hidden'
-            {...register(`imgOptions.${index}.media`, {
+            {...register(`imgOptions.${index}.image`, {
               async onChange(e: ChangeEvent<HTMLInputElement>) {
                 const data = (e.target.files as FileList)[0]
 
@@ -52,7 +52,7 @@ export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({
                   data
                 )) as string
 
-                setValue(`imgOptions.${index}.media`, convertedData)
+                setValue(`imgOptions.${index}.image`, convertedData)
                 setPreviewImg(convertedData)
               },
             })}
@@ -73,7 +73,7 @@ export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({
                   type='button'
                   onClick={() => {
                     setPreviewImg('')
-                    setValue(`imgOptions.${index}.media`, '')
+                    setValue(`imgOptions.${index}.image`, '')
                   }}
                   className='absolute top-0 right-0 w-4 aspect-square rounded-full bg-opacity-50 bg-black text-white flex items-center justify-center text-lg'>
                   <BiX />

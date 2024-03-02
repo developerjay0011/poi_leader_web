@@ -35,7 +35,7 @@ export const AdminProfilePollsPage: FC = () => {
             </div>
 
             {/* POLLS TABLE */}
-            <PollsTable />
+            <PollsTable  />
           </section>
         </div>
       </div>

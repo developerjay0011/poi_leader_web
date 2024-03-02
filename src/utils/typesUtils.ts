@@ -281,11 +281,13 @@ export interface PollDetails {
   id: string
   title: string
   pollType: PollType
-  options: { option: string; id: string; votes: number }[]
-  imgOptions: { text: string; media: string; id: string; votes: number }[]
+  poll_options: { text: string; id: string; votes: number }[]
+  imgOptions: { text: string; image: string; id: string; votes: number }[]
   publishDate: string
   access: string
   expiresAt: string
+  view_access: string
+  votes_by:any[]
 }
 
 export type PostType = 'image' | 'video'

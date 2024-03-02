@@ -1,10 +1,50 @@
 'use client'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { PollTableRow } from './PollTableRow'
 import { GenerateId } from '@/utils/utility'
+import { tryCatch } from '@/config/try-catch'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { deletePoll, getPolls } from '@/redux_store/polls/pollsApi'
+import { pollActions } from '@/redux_store/polls/pollSlice'
+import { ErrorTableRow } from '@/utils/ErrorTableRow'
+import { commonActions } from '@/redux_store/common/commonSlice'
+import { ToastType } from '@/constants/common'
 
 interface PollsTableProps {}
 export const PollsTable: FC<PollsTableProps> = () => {
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
+  const { poll } = cusSelector((state) => state.poll);
+
+  const dispatch = cusDispatch();
+
+  const getPoll = async () => {
+    tryCatch(
+      async () => {
+        const Data = await getPolls(leaderProfile?.id as string);
+        dispatch(pollActions.storePoll(Data))
+      }
+    )
+  }
+  useEffect(() => {
+    (async () => {
+      getPoll()
+
+    })();
+  }, [userDetails, dispatch, leaderProfile?.id]);
+  const handlePollDelete = async (id:string) => {
+    tryCatch(
+      async () => {
+
+        const response = await deletePoll(id, leaderProfile?.id as string);
+        if (response?.success) {
+          getPoll()
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+      })
+  }
   return (
     <>
       <table>
@@ -15,18 +55,31 @@ export const PollsTable: FC<PollsTableProps> = () => {
             <th className='py-2'>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <PollTableRow
-            access='open'
-            id={GenerateId()}
-            imgOptions={[{ id: GenerateId(), media: '', text: '18', votes: 0 }]}
-            index={1}
-            options={[]}
-            pollType='image'
-            publishDate='2023-08-10T10:40'
-            title='what is your age?'
-            expiresAt={'2023-08-25T00:00'}
-          />
+        <tbody>{
+          
+            poll.length ?
+          poll?.map((pollitem: any, index: number) => {
+            return (
+              <PollTableRow
+                key={index}
+                access={pollitem?.access}
+                id={pollitem?.id}
+                imgOptions={pollitem?.poll_options}
+                index={1}
+                poll_options={pollitem?.poll_options}
+                pollType={pollitem?.polltype}
+                publishDate={pollitem?.publish_date}
+                title={pollitem?.title}
+                expiresAt={pollitem?.close_date}
+                view_access={pollitem?.view_access}
+                handleDelete={handlePollDelete}
+                votes_by={pollitem?.votes_by}
+              />
+            )
+          }):(
+            <ErrorTableRow colNo={5} />)
+          }
+         
         </tbody>
       </table>
     </>

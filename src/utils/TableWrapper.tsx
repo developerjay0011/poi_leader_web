@@ -4,6 +4,7 @@ import { motion as m } from 'framer-motion'
 import { DownloadExcelButton } from './ExcelConverter'
 import { FaFileExcel } from 'react-icons/fa'
 import { GenerateId } from './utility'
+import { BiPlusCircle } from 'react-icons/bi'
 
 interface TableWrapperProps {
   heading: string
@@ -65,34 +66,50 @@ export const TableWrapper: FC<TableWrapperProps> = ({
         key={i}
         value={i + 1}
         onClick={(e) => changePageNo(+(e.target as HTMLButtonElement).value)}
-        className={`py-2 px-4 text-gray-800 border-l border-r border-gray-200 ${
-          curPageNo === i + 1 ? 'bg-cyan-400 border-none text-white' : ''
-        }`}>
+        className={`py-2 px-4 text-gray-800 border-l border-r border-gray-200 ${curPageNo === i + 1 ? 'bg-cyan-400 border-none text-white' : ''
+          }`}>
         {i + 1}
       </button>
     )
   }
 
   return (
-    <m.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ ease: 'easeIn' }}
-      id='box'
-      className='w-[95%] m-auto relative my-7 border bg-white border-gray-300 shadow-md rounded-md py-5 px-6 max-lg:w-[98%] max-lg:my-5'>
-      <div className='flex justify-between mt-4 w-full'>
-        <h2 className='text-3xl font-semibold capitalize '>{heading}</h2>
-        {jsonDataToDownload && (
-          <DownloadExcelButton
-            jsonData={jsonDataToDownload}
-            className='data_download relative hover:text-cyan-500 transition-all'>
-            <FaFileExcel className='text-4xl' />
-            <span className='absolute top-[-100%] w-max right-0 capitalize px-4 py-1 rounded bg-cyan-500 text-cyan-50 hidden'>
-              download in excel
-            </span>
-          </DownloadExcelButton>
-        )}
+    <div className='gap-5 w-full relative'>
+      <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col  flex-1 self-start mt-5'>
+      
+        <div className='flex items-center justify-between gap-3'>
+          <h2 className='flex items-center after:h-20 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-6 py-5 border-b font-semibold text-[20px] capitalize'>
+            {heading}
+          </h2>
+          <div className='flex'>
+          {moreBtns}
+
+          {jsonDataToDownload && (
+
+            <DownloadExcelButton
+              jsonData={jsonDataToDownload}
+              className='data_download relative hover:text-cyan-500 transition-all'>
+              <FaFileExcel className='text-2xl' />
+              <span className=''>
+                download in excel
+              </span>
+            </DownloadExcelButton>
+          )}
+
+          {/* ADD OR EDIT Button */}
+          {addBtnTitle && (
+        
+
+              <button
+                type='button'
+                onClick={addBtnClickFn}
+                className='rounded-full bg-orange-500 ml-5 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'>
+                <BiPlusCircle className='text-2xl' /> {addBtnTitle}
+              </button>
+           
+            )}
+          </div>
+        </div>
         {fixedBtnsAtTopRight && (
           <div
             id='hideFixedBtn'
@@ -131,18 +148,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
 
         <section className='flex flex-col gap-5'>
           {/* CTA'S */}
-          <div className='flex items-center justify-end gap-3'>
-            {moreBtns}
-            {/* ADD OR EDIT Button */}
-            {addBtnTitle && (
-              <button
-                type='button'
-                className='px-5 py-2 bg-cyan-400 text-white rounded-md text-sm capitalize transition-all outline-none hover:bg-cyan-600'
-                onClick={addBtnClickFn}>
-                {addBtnTitle}
-              </button>
-            )}
-          </div>
+       
 
           {/* FILTERS */}
           <div className='flex items-center gap-3 justify-end'>
@@ -190,12 +196,12 @@ export const TableWrapper: FC<TableWrapperProps> = ({
                   onClick={() => {
                     changePageNo(curPageNo - filterDataCount)
                   }}
-                  className={`py-2 px-4 border-l border-r border-gray-200 hover:bg-cyan-500 hover:text-cyan-50`}>
+                  className={`py-2 px-4 border-l border-r border-gray-200 hover:bg-orange-500 hover:text-cyan-50`}>
                   - {filterDataCount}
                 </button>
               )}
               <button
-                className={`py-2 px-4 border-l border-r border-gray-200 bg-cyan-500 text-cyan-50`}>
+                className={`py-2 px-4 border-l border-r border-gray-200 bg-orange-500 text-cyan-50`}>
                 {curPageNo}
               </button>
               {curPageNo < totalPages - filterDataCount && (
@@ -220,6 +226,6 @@ export const TableWrapper: FC<TableWrapperProps> = ({
           </>
         )}
       </section>
-    </m.section>
+    </div>
   )
 }

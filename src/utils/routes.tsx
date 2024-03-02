@@ -5,7 +5,7 @@ import { FaUserGroup } from 'react-icons/fa6'
 import { MdContacts } from 'react-icons/md'
 import { BsFillCalendar3WeekFill } from 'react-icons/bs'
 import { TfiStatsUp } from 'react-icons/tfi'
-
+import { SlEnvolopeLetter } from "react-icons/sl";
 export const LEFT_NAV_ROUTES = [
   {
     id: GenerateId(),
@@ -48,5 +48,17 @@ export const LEFT_NAV_ROUTES = [
     link: '/user/analytics',
     name: 'account stats',
     Icon: TfiStatsUp,
+  },
+  {
+    id: GenerateId(),
+    link: '/user/letter/manage-letter',
+    name: 'Manage Letter',
+    Icon: SlEnvolopeLetter,
+  },
+  {
+    id: GenerateId(),
+    link: '/user/letter/manage-letter-template',
+    name: 'Manage Templa Letter',
+    Icon: SlEnvolopeLetter,
   },
 ]

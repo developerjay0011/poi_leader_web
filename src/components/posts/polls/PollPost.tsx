@@ -15,7 +15,7 @@ interface PollPostProps extends PollDetails {
 
 export const PollPost: FC<PollPostProps> = ({
   imgOptions,
-  options,
+  poll_options,
   pollType,
   title,
   postId,
@@ -29,7 +29,7 @@ export const PollPost: FC<PollPostProps> = ({
   const votes =
     pollType === 'image'
       ? imgOptions.reduce((prev, el) => el.votes + prev, 0)
-      : options.reduce((prev, el) => el.votes + prev, 0)
+      : poll_options.reduce((prev, el) => el.votes + prev, 0)
 
   return (
     <>
@@ -67,16 +67,16 @@ export const PollPost: FC<PollPostProps> = ({
                   index={i + 1}
                   pollText={el.text}
                   key={el.id}
-                  pollImg={el.media}
+                  pollImg={el.image}
                 />
               ))}
 
             {pollType === 'text' &&
-              options.map((el, i) => (
+              poll_options.map((el, i) => (
                 <PollOption
                   id={el.id}
                   index={i + 1}
-                  pollText={el.option}
+                  pollText={el.text}
                   key={el.id}
                 />
               ))}
