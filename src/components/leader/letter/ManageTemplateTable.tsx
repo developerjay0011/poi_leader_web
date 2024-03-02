@@ -38,9 +38,9 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
             <th className='font-semibold capitalize text-left py-2 pl-2 border text-center'>
               Template Header
             </th>
-            <th className='font-semibold text-left py-2 px-2 border text-center'>
+            {/* <th className='font-semibold text-left py-2 px-2 border text-center'>
               Template
-            </th>
+            </th> */}
             <th className='font-semibold text-left py-2 px-2 border text-center'>Status</th>
             <th className='font-semibold text-center py-2 pl-2 border printHide'>
               Actions
@@ -56,9 +56,9 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el.template_name}
               </td>
-              <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
+              {/* <td className='capitalize max-w-96 text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el.template_html}
-              </td>
+              </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
                 <StatusBtn
                   status={el.isactive ?'1':'0' }  
