@@ -37,6 +37,12 @@ export const APIRoutes = {
   getNotification: `${API_Prefix}/leader/getleadernotification/{{leaderId}}`,
   CheckLeaderUserRegExists: `${API_Prefix}/leader/CheckLeaderUserRegExists`,
   ForgotPassword: `${API_Prefix}/leader/ForgotPassword`,
+  GetEmployees: `${API_Prefix}/leader/GetEmployees/{{leaderId}}`,
+  AddEditEmployee: `${API_Prefix}/leader/AddEditEmployee`,
+  GetSingleEmployeeDetail: `${API_Prefix}/leader/GetSingleEmployeeDetail`,
+  ChangeActiveStatus: `${API_Prefix}/leader/ChangeActiveStatus`,
+  GetLeaderEmployeeTabAccess: `${API_Prefix}/leader/GetLeaderEmployeeTabAccess/{{employeeid}}`,
+  SavePermission: `${API_Prefix}/leader/SavePermission`,
 
 
   //Group Endpoints

@@ -6,6 +6,7 @@ import { MdContacts } from 'react-icons/md'
 import { BsFillCalendar3WeekFill } from 'react-icons/bs'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { SlEnvolopeLetter } from "react-icons/sl";
+import { BiSolidUserDetail } from "react-icons/bi";
 export const LEFT_NAV_ROUTES = [
   {
     id: GenerateId(),
@@ -60,5 +61,11 @@ export const LEFT_NAV_ROUTES = [
     link: '/user/letter/manage-letter-template',
     name: 'Manage Templa Letter',
     Icon: SlEnvolopeLetter,
+  },
+  {
+    id: GenerateId(),
+    link: '/user/employees/manage-employees',
+    name: 'Manage Employees',
+    Icon: BiSolidUserDetail,
   },
 ]

@@ -62,6 +62,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
     };
 
     try {
+      setLoggingIn(true);
       const response = await userLogin(resBody);
       const loginResponse = response as any;
       const { success, message, data } = loginResponse;

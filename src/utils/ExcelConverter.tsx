@@ -4,7 +4,6 @@ import { saveAs } from 'file-saver'
 
 interface Props {
   jsonData: unknown[] // Your JSON data array,
-  className: string
   children: ReactNode
   onClick?: () => void
   id?: string
@@ -12,7 +11,6 @@ interface Props {
 
 export const DownloadExcelButton: React.FC<Props> = ({
   jsonData,
-  className,
   children,
   onClick,
   id,
@@ -38,7 +36,9 @@ export const DownloadExcelButton: React.FC<Props> = ({
     <button
       type='button'
       onClick={handleDownload} id={id ? id : ''}
-      className='rounded-full bg-orange-500 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'>
+      className="px-5 py-2 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600  gap-2 flex items-center transition-all"
+    // className='rounded-full bg-orange-500 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'
+    >
       {children}
     </button>
   )
