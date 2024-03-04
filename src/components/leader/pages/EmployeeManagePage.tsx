@@ -5,12 +5,8 @@ import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 import { TableWrapper } from '@/utils/TableWrapper'
 
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { deleteLetter } from '@/redux_store/letter/letterApi'
-import { tryCatch } from '@/config/try-catch'
-import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
 import { ManageEmployessForm } from '../forms/ManageEmployessForm'
-import { GetEmployees } from '@/redux_store/employee/employeeApi'
+import { ChangeActiveStatus, GetEmployees } from '@/redux_store/employee/employeeApi'
 import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
 import { ManageEmployeeTable } from '../employee/ManageEmployeeTable'
 
@@ -34,6 +30,15 @@ export const EmployeeManagePage: FC = () => {
         if (Array.isArray(data)) {
             dispatch(employeeAction.storeemployees(data as any));
         }
+    };
+
+    const changeActiveStatus = async (id: string) => {
+        let body = {
+            "leaderid": leaderProfile?.id,
+            "employeeid": id
+        }
+        await ChangeActiveStatus(body)
+        getemployee()
     };
     useEffect(() => {
         (async () => {
@@ -65,7 +70,11 @@ export const EmployeeManagePage: FC = () => {
                         searchFilterFn={changeFilterData}
                         jsonDataToDownload={null}
                     >
-                        <ManageEmployeeTable handleEdit={(value) => { setShowAdd(true), setEdit(value) }} searchStr={searchFilter} />
+                        <ManageEmployeeTable
+                            handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
+                            searchStr={searchFilter}
+                            changeActiveStatus={(id) => { changeActiveStatus(id) }}
+                        />
                     </TableWrapper>
                 </div>
             </div>

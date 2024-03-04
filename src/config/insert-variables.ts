@@ -1,4 +1,4 @@
-export const insertVariables =  (template: string, variables: Record<string, any>): string => {
+export const insertVariables = (template: string, variables: Record<string, any>): string => {
   const regex = /{{\s*([^{}\s]*)\s*}}/g
   // Iterate over the keys in the variables object
   for (const key in variables) {
@@ -7,5 +7,6 @@ export const insertVariables =  (template: string, variables: Record<string, any
       template = template.replace(regex, variables[key]);
     }
   }
+  console.log(template)
   return template;
 }

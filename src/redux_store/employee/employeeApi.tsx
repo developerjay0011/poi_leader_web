@@ -2,7 +2,6 @@ import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
-import { useDispatch } from 'react-redux';
 
 
 export const GetEmployees = async (leaderid: string) => {
@@ -17,17 +16,18 @@ export const GetEmployees = async (leaderid: string) => {
 export const AddEditEmployee = async (body: any) => {
     return tryCatch(
         async () => {
-            console.log("AddEditEmployee", body)
             const res = await Axios.post(APIRoutes.AddEditEmployee, body);
             return res.data;
         }
     );
 }
 
-export const GetLeaderEmployeeTabAccess = async (body: any) => {
+
+
+export const GetLeaderEmployeeTabAccess = async (employeeid: any) => {
     return tryCatch(
         async () => {
-            const res = await Axios.post(APIRoutes.GetLeaderEmployeeTabAccess, body);
+            const res = await Axios.get(insertVariables(APIRoutes.GetLeaderEmployeeTabAccess, { employeeid }));
             return res.data;
         }
     );
@@ -50,6 +50,7 @@ export const SavePermission = async (body: any) => {
         }
     );
 }
+
 
 export const ChangeActiveStatus = async (body: any) => {
     return tryCatch(

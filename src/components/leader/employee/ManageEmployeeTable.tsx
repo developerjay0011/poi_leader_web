@@ -1,24 +1,25 @@
-import { cusSelector } from '@/redux_store/cusHooks';
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
 import { FC, useState } from 'react'
 
 import { StatusBtn } from '@/utils/StatusBtn'
-import { FaEdit } from 'react-icons/fa';
 import { BiEdit } from 'react-icons/bi';
-import { MdDelete } from 'react-icons/md';
-import { AnimatePresence } from 'framer-motion';
-import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
+import { RiTableAltLine } from "react-icons/ri";
+import { EmployeePermissionForm } from '../forms/EmployeePermission';
+import { GetLeaderEmployeeTabAccess } from '@/redux_store/employee/employeeApi';
+import { employeeSlice } from '@/redux_store/employee/employeeApiSlice';
 
 interface ManageEmployeeTableProps {
   searchStr: string
   handleEdit: (value: any) => void
+  changeActiveStatus: (value: any) => void
 }
 
-export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit }) => {
+export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus }) => {
+  const [showAdd, setShowAdd] = useState(false)
   const { employees } = cusSelector((state) => state.employee);
-  const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
-  const [id, setid] = useState("")
   const searchFilterData = employees?.filter((el: any) => searchStr ? el?.fullname === searchStr : el)
+  const dispatch = cusDispatch();
 
 
   return (
@@ -64,13 +65,22 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
                   <td className='text-center border printHide'>
                     <StatusBtn
                       status={el.isactive ? '1' : '0'}
-                      clickHandler={() => { }}
+                      clickHandler={() => { changeActiveStatus(el?.id) }}
                       inProgress={false}
                     />
                   </td>
                   <td className='py-2 pl-2 border printHide'>
                     <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => handleEdit(el)}>
                       <BiEdit className='text-2xl' />
+                    </button>
+                    <button className='hover:scale-110 transition-all ease-out duration-200 ml-2 active:scale-100' onClick={async () => {
+                      const data = await GetLeaderEmployeeTabAccess(el?.id)
+                      if (data) {
+                        dispatch(employeeSlice.actions.setemployeaccess({ ...data, eid: el?.id }))
+                        setShowAdd(true)
+                      }
+                    }}>
+                      <RiTableAltLine className='text-2xl' />
                     </button>
                   </td>
                 </tr>
@@ -81,15 +91,16 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
           )}
         </tbody>
       </table>
-      <AnimatePresence>
-        {showDeleteConfirmPopup && (
-          <ConfirmDialogBox
-            onCancel={() => setShowDeleteConfirmPopup(false)}
-            noAllowed={false}
-            onOk={() => { setShowDeleteConfirmPopup(false) }}
-          />
-        )}
-      </AnimatePresence>
+
+
+
+      {showAdd && (
+        <EmployeePermissionForm
+          heading="Access Tabs"
+          submitting={false}
+          onClose={() => setShowAdd(false)}
+        />
+      )}
     </>
   )
 }

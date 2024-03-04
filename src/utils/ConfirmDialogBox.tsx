@@ -20,9 +20,8 @@ export const ConfirmDialogBox: FC<ConfirmDialogBoxProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${
-          noAllowed ? 'cursor-not-allowed' : ''
-        }`}>
+        className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${noAllowed ? 'cursor-not-allowed' : ''
+          }`}>
         <div
           className='bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20'
           onClick={onCancel}
@@ -38,17 +37,15 @@ export const ConfirmDialogBox: FC<ConfirmDialogBoxProps> = ({
 
           <div className='flex items-center mt-8 gap-5'>
             <button
-              className={`py-2 px-5 text-md uppercase bg-red-600 text-white rounded-md ${
-                noAllowed ? 'cursor-not-allowed' : ''
-              }`}
+              className={`py-2 px-5 text-md uppercase bg-red-600 text-white rounded-md ${noAllowed ? 'cursor-not-allowed' : ''
+                }`}
               onClick={onCancel}>
               close
             </button>
             <button
-              className={`py-2 px-5 text-md uppercase bg-teal-700 text-white rounded-md ${
-                noAllowed ? 'cursor-not-allowed' : ''
-              }`}
-              onClick={onOk}>
+              className={`py-2 px-5 text-md uppercase bg-teal-700 text-white rounded-md ${noAllowed ? 'cursor-not-allowed' : ''
+                }`}
+              onClick={() => onOk()}>
               {noAllowed ? 'processing..' : 'ok'}
             </button>
           </div>
