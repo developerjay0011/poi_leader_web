@@ -209,15 +209,15 @@ export const TopNavbar: FC = () => {
           </section>
         </>
         {/* :
-           <>
-             <h3 className="capitalize ml-2">{heading}</h3>
+          <>
+            <h3 className="capitalize ml-2">{heading}</h3>
 
-             <section className="flex items-center gap-4 ml-auto relative">
-               <button className="flex items-center gap-2" onClick={() => { dispatch(authActions.logout()) }}>
-                 <FaPowerOff />log out
-               </button>
-             </section>
-           </>
+            <section className="flex items-center gap-4 ml-auto relative">
+              <button className="flex items-center gap-2" onClick={() => { dispatch(authActions.logout()) }}>
+                <FaPowerOff />log out
+              </button>
+            </section>
+          </>
         } */}
       </nav>
       <nav className="py-3 px-8 bg-sky-950 text-sky-50 flex-col gap-5 hidden max-[1000px]:flex  max-[500px]:px-4">

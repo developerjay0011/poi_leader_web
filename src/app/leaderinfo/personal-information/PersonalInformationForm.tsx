@@ -7,7 +7,6 @@ import { BLOOD_GROUPS } from '@/utils/utility'
 import moment from 'moment';
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns } from '@/constants/common'
-import { ProfileInfo } from '@/interfaces/leader'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { getRejectedFieldsObject } from '../utils'
 

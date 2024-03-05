@@ -7,8 +7,10 @@ import { usePathname } from 'next/navigation'
 import { localStorageKeys } from '@/utils/utility'
 import { USER_TYPE } from '@/constants/common'
 import { getCookie } from 'cookies-next'
+import { cusDispatch } from '@/redux_store/cusHooks'
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
+  const dispatch = cusDispatch()
   const pathname = usePathname()
   let user_type = getCookie(USER_TYPE)
 
@@ -16,9 +18,15 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
     localStorage.setItem(localStorageKeys.lastRouteVisited, pathname) // storing last path to keep track of user
   }, [pathname])
 
+  useEffect(() => {
+    if (user_type == "leader") {
 
+    } else {
 
-  return (
+    }
+  }, [user_type])
+
+  return user_type && (
     <>
       <main className='flex flex-col h-[100dvh] overflow-hidden'>
         <TopNavbar />

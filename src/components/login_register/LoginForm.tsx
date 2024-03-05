@@ -19,7 +19,7 @@ import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { LOGIN_BODY, TOKEN_KEY, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
-import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
+import { AuthRoutes, EmployeeProtectedRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
@@ -102,7 +102,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       dispatch(authActions.setUserData(userData));
       setCookie(USER_TYPE, 'employee');
-      router.push(ProtectedRoutes.user);
+      router.push(EmployeeProtectedRoutes.user);
       return
     }
     if (usertype != "leader employee") {

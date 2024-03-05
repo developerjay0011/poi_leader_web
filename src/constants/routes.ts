@@ -8,6 +8,13 @@ export const ProtectedRoutes = {
   leader: "/leader",
 };
 
+export const EmployeeProtectedRoutes = {
+  user: "/employee",
+  userProfile: "/employee/profile",
+};
+
+
+
 export const AuthRoutes = {
   login: "/",
   register: "/register",

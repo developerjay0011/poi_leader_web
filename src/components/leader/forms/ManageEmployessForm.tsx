@@ -276,8 +276,8 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
                       required: 'acess is required',
                     })}
                     className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400 capitalize'>
-                    {[{ value: 'true', label: "Active" }, { value: 'false', label: "Deactivate" }].map((item: any) =>
-                      <option value={item?.value}>{item?.label}</option>
+                    {[{ value: 'true', label: "Active" }, { value: 'false', label: "Deactivate" }].map((item: any, index: number) =>
+                      <option key={index} value={item?.value}>{item?.label}</option>
                     )}
                   </select>
                   <ErrorMessage
