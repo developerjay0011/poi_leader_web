@@ -7,6 +7,5 @@ export const insertVariables = (template: string, variables: Record<string, any>
       template = template.replace(regex, variables[key]);
     }
   }
-  console.log(template)
   return template;
 }

@@ -5,13 +5,18 @@ import { LeftNavbar } from '@/components/leader/LeftNavbar'
 import { RightNavbar } from '@/components/leader/RightNavbar'
 import { usePathname } from 'next/navigation'
 import { localStorageKeys } from '@/utils/utility'
+import { USER_TYPE } from '@/constants/common'
+import { getCookie } from 'cookies-next'
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const pathname = usePathname()
+  let user_type = getCookie(USER_TYPE)
 
   useEffect(() => {
     localStorage.setItem(localStorageKeys.lastRouteVisited, pathname) // storing last path to keep track of user
   }, [pathname])
+
+
 
   return (
     <>

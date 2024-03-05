@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { BiX } from 'react-icons/bi'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { tryCatch } from '@/config/try-catch'
-import { YesNoField } from '@/components/YesNoField'
 import { AccessField } from '@/components/Access'
 import { SavePermission } from '@/redux_store/employee/employeeApi'
 import { commonActions } from '@/redux_store/common/commonSlice'
@@ -14,17 +13,14 @@ interface EmployeePermissionFormProps {
   onClose: () => void
   submitting: boolean
   heading: string
-  edit?: boolean
-  employeedetails: any
 }
 
 
 
-export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClose, submitting, heading, edit, }) => {
+export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClose, submitting, heading, }) => {
   const { employeaccess }: any = cusSelector((state) => state.employee);
   const dispatch = cusDispatch();
   const { register, handleSubmit, reset, formState: { errors, isValid }, setValue, watch, getValues } = useForm({}) as any
-  const All = watch('All')
   const formSubmitHandler = (data: any) => {
     const idsWithYesValue = Object.entries(data).filter(([key, value]) => value === "yes").map(([key]) => key);
     tryCatch(
@@ -43,23 +39,29 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
         reset();
       })
   }
-
-  const handleGiveAllAccessChange = (value: string) => {
-    employeaccess?.accesses?.forEach((item: any) => {
-      setValue(item?.tabid, value);
-    });
+  const handleGiveAllAccessChange = () => {
+    const All = watch('All')
+    if (All == "yes" || All == "no") {
+      employeaccess?.accesses?.forEach((item: any) => {
+        setValue(item?.tabid, All);
+      });
+    }
   };
   useEffect(() => {
     employeaccess?.accesses?.forEach((item: any) => {
       setValue(item?.tabid, item?.ischecked ? "yes" : "no");
     });
-  }, [employeaccess])
+  }, [employeaccess, setValue])
   useEffect(() => {
-    if (All) {
-      handleGiveAllAccessChange(All)
+    const idsWithYesValue = Object.entries(getValues()).filter(([key, value]) => value === "yes").map(([key]) => key)?.filter((item: any) => item != "All")?.length == employeaccess?.accesses?.length
+    const idsWithNoValue = Object.entries(getValues()).filter(([key, value]) => value === "no").map(([key]) => key)?.filter((item: any) => item != "All")?.length == employeaccess?.accesses?.length
+    if (idsWithNoValue == true) {
+      setValue('All', 'no');
     }
-  }, [All])
-
+    if (idsWithYesValue == true) {
+      setValue('All', 'yes');
+    }
+  }, [getValues]);
 
   return (
     <>
@@ -73,7 +75,7 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             exit={{ y: -100 }}
-            className='z-30 border overflow-y-auto max-h-[98%] self-start bg-white relative w-1/2 rounded-md shadow-md max-[1450px]:w-[80%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
+            className='z-30 self-center border overflow-y-auto max-h-[98%] self-start bg-white relative w-1/2 rounded-md shadow-md max-[1450px]:w-[80%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
             <button
               type='button'
               onClick={onClose}
@@ -94,6 +96,7 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
                   question={"Give All Access"}
                   register={(e): any => {
                     return (
+                      handleGiveAllAccessChange(),
                       register(e)
                     )
                   }}

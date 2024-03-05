@@ -1,3 +1,4 @@
+import { AccessField } from './../components/Access';
 import moment from 'moment'
 import { StaticImageData } from 'next/image'
 
@@ -254,6 +255,21 @@ export interface PartyDetails {
   id: string
   party_name: string
 }
+export interface AccessFieldDetails {
+  id: string
+  tabs: AccessFieldprops[]
+  userid: string
+}
+
+
+export interface AccessFieldprops {
+  tabid: string
+  tabname: string
+  ischecked: string
+  parentid: string
+  id: string
+}
+
 export interface TimeLineDetails {
   id: string
   status: string
@@ -287,7 +303,7 @@ export interface PollDetails {
   access: string
   expiresAt: string
   view_access: string
-  votes_by:any[]
+  votes_by: any[]
 }
 
 export type PostType = 'image' | 'video'

@@ -22,7 +22,7 @@ export const LetterTemplateManagePage: FC = () => {
     const { userDetails } = cusSelector((st) => st.auth);
     const openModal = () => {
         setShowAddTemplateForm(true)
-            setEdit(null)
+        setEdit(null)
     };
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
@@ -38,24 +38,24 @@ export const LetterTemplateManagePage: FC = () => {
         const data = await getLetterTemplates(leaderProfile?.id as string);
         dispatch(letterActions.storeLetterTemplate(data));
     };
-    const handleTemplateDelete = async (id:string) => {
+    const handleTemplateDelete = async (id: string) => {
         tryCatch(
             async () => {
-                const response = await deleteLetterTemplates(id,leaderProfile.id as string);
-        if (response?.success) {
-            getTemplate()
-            dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-        } else {
-            dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-        }
+                const response = await deleteLetterTemplates(id, leaderProfile.id as string);
+                if (response?.success) {
+                    getTemplate()
+                    dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+                } else {
+                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+                }
             })
 
     }
-     useEffect(() => {
+    useEffect(() => {
         (async () => {
-             getTemplate();
+            getTemplate();
         })();
-    }, [userDetails,dispatch]);
+    }, [userDetails, dispatch]);
 
     return (
         <>
@@ -65,28 +65,22 @@ export const LetterTemplateManagePage: FC = () => {
                 </div>
 
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-
-
-                    <section className='flex flex-col px-5 gap-6 mb-5'>
-
-
-                        {/* POLLS TABLE */}
-                        <TableWrapper
-                            heading='Manage Templates'
-                            addBtnTitle='add template'
-                            addBtnClickFn={openModal}
-                            curDataCount={1}
-                            totalCount={letter_templete?.length}
-                            changeFilterFn={changeFilterCount}
-                            filterDataCount={filterDataCount}
-                            changePageNo={changeCurPageNo}
-                            curPageNo={curPageNo}
-                            searchFilterFn={changeFilterData}
-                            jsonDataToDownload={letter_templete}
-                        >
-                            <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value)}} searchStr={searchFilter} />
-                        </TableWrapper>
-                    </section>
+                    {/* POLLS TABLE */}
+                    <TableWrapper
+                        heading='Manage Templates'
+                        addBtnTitle='add template'
+                        addBtnClickFn={openModal}
+                        curDataCount={1}
+                        totalCount={letter_templete?.length}
+                        changeFilterFn={changeFilterCount}
+                        filterDataCount={filterDataCount}
+                        changePageNo={changeCurPageNo}
+                        curPageNo={curPageNo}
+                        searchFilterFn={changeFilterData}
+                        jsonDataToDownload={letter_templete}
+                    >
+                        <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                    </TableWrapper>
                 </div>
             </div>
 
@@ -95,7 +89,7 @@ export const LetterTemplateManagePage: FC = () => {
                     <ManageTemplateForm
                         isEdit={isEdit}
                         err={"err"}
-                        heading={isEdit ? 'Edit Template' :'Add Template' }
+                        heading={isEdit ? 'Edit Template' : 'Add Template'}
                         status='1'
                         submitting={false}
                         submitHandler={() => { }}

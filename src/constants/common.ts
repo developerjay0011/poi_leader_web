@@ -2,6 +2,7 @@ import { DropdownOptions } from "@/interfaces/common";
 
 export const TOKEN_KEY = "token";
 export const USER_VERIFY = "USER_VERIFY";
+export const USER_TYPE = "USER_TYPE";
 export const USER_INFO = "userDetails";
 export const DEFAULT_CONTENT_TYPE = 'application/json';
 export const LOGIN_BODY = "LOGIN_BODY";

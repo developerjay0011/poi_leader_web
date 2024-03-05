@@ -200,15 +200,15 @@ enum LeaderFormActionType {
 interface LeaderFormAction {
   type: LeaderFormActionType;
   payload:
-    | StateDetails[]
-    | DistrictDetails[]
-    | PincodeDetails[]
-    | AssemblyConstituencyDetails[]
-    | ParliamentaryConstituencyDetails[]
-    | DesignationDetails[]
-    | PartyDetails[]
-    | boolean
-    | ProfessionDetails[];
+  | StateDetails[]
+  | DistrictDetails[]
+  | PincodeDetails[]
+  | AssemblyConstituencyDetails[]
+  | ParliamentaryConstituencyDetails[]
+  | DesignationDetails[]
+  | PartyDetails[]
+  | boolean
+  | ProfessionDetails[];
 }
 
 const reducerFn: (
@@ -458,7 +458,6 @@ export const AddLeaderPage: FC = () => {
             Submit
           </button>
           <button
-            // onClick={() => navigate('/admin/user-management/manage-leaders')} // By passing -1 in navigate function this will redirect to the previous route
             type="button"
             className="px-5 py-1 rounded-full text-cyan-500 bg-cyan-100 transition-all hover:bg-cyan-500 hover:text-cyan-50"
           >

@@ -17,7 +17,7 @@ interface ManageTemplateFormProps {
   submitHandler: () => void
   heading: string
   err: string
-  isEdit:any
+  isEdit: any
 }
 
 interface TemplateFormFields {
@@ -52,14 +52,13 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
 
-  const formSubmitHandler = async(data: TemplateFormFields) => {
-    console.log(data, content)
+  const formSubmitHandler = async (data: TemplateFormFields) => {
     const body = {
       id: isEdit ? isEdit.id : null,
       leaderid: leaderProfile?.id || "",
       template_name: data.tempHeader,
-      template_html:content,
-      isactive: data.status == "1" ?true:false,
+      template_html: content,
+      isactive: data.status == "1" ? true : false,
       saved_by_type: userDetails?.usertype.replace('emerging ', ""),
       saved_by: leaderProfile?.id
 
@@ -84,7 +83,7 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
       setValue("status", isEdit.isactive ? "1" : "0")
       setContent(isEdit.template_html)
     }
-  },[])
+  }, [])
   return (
     <>
       <m.div
@@ -117,7 +116,7 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
               <div className='col-span-2'>
                 <Editor
                   value={content}
-                  onChange={(val:any) => setContent(val)}
+                  onChange={(val: any) => setContent(val)}
                 />
               </div>
 

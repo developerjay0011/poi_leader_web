@@ -18,7 +18,7 @@ import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { LOGIN_BODY, TOKEN_KEY, USER_INFO, USER_VERIFY } from "@/constants/common";
+import { LOGIN_BODY, TOKEN_KEY, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
 import { AuthRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
@@ -67,48 +67,22 @@ export const LoginForm: FC<LoginFormProps> = () => {
       const loginResponse = response as any;
       const { success, message, data } = loginResponse;
       if (success) {
-        if (data?.leader_detail?.is_profile_complete) {
-          if (data?.leader_detail?.request_status === "Approved") {
-            const userData = {
-              ...data.user_detail,
-              leaderId: data?.leader_detail.id
-            };
-            const serializedData = JSON.stringify(userData);
-            setCookie(USER_INFO, serializedData);
-            setCookie(TOKEN_KEY, loginResponse.token);
-            setCookie(USER_VERIFY, 'true');
-            dispatch(authActions.setUserData(userData));
-            dispatch(leaderActions.setLeaderProfile(data.leader_detail));
-            router.push(ProtectedRoutes.user);
-          } else {
-            setErr({
-              errTxt: `Your Request Is ${data?.leader_detail?.request_status} `,
-              isErr: true,
-            });
-          }
+        if (data?.user_detail?.usertype == "leader employee") {
+          SetCookieAndRedux(data, loginResponse, "leader employee")
         } else {
-          router.push(ProtectedRoutes.userManagement);
+          SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
         }
       } else {
         setCookie(USER_VERIFY, 'false');
-        if (loginResponse.token && (data?.leader_detail?.is_profile_complete == false || data?.leader_detail?.request_status == "Rejected")) {
-          if (data?.leader_detail?.request_status == "Rejected") {
-            dispatch(leaderActions.setReason(data.reason));
-            setErr({ errTxt: message, isErr: true });
-          }
-          const userData = {
-            ...data.user_detail,
-            leaderId: data?.leader_detail.id
-          };
+        if ((loginResponse.token && (data?.leader_detail?.is_profile_complete == false || data?.leader_detail?.request_status == "Rejected")) && (data?.user_detail?.usertype == "leader" || data?.user_detail?.usertype == "emerging leader")) {
+          SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
+          if (data?.leader_detail?.request_status == "Rejected") { dispatch(leaderActions.setReason(data.reason)) }
           setCookie(LOGIN_BODY, resBody);
-          setCookie(TOKEN_KEY, loginResponse.token);
-          dispatch(authActions.setUserData(userData));
-          dispatch(leaderActions.setLeaderProfile(data.leader_detail));
-          dispatch(leaderActions.setLeaderProfile(data.leader_detail));
           router.push(AuthRoutes.leaderinfo);
           return
+        } else {
+          setErr({ errTxt: message, isErr: true });
         }
-        setErr({ errTxt: message, isErr: true });
       }
       setLoggingIn(false);
     } catch (error: any) {
@@ -116,6 +90,34 @@ export const LoginForm: FC<LoginFormProps> = () => {
       setErr({ errTxt: error.message, isErr: true });
     }
   };
+
+
+  const SetCookieAndRedux = (data: any, loginResponse: any, usertype: string) => {
+    setCookie(TOKEN_KEY, loginResponse.token);
+    setCookie(USER_VERIFY, 'true');
+    if (usertype == "leader employee") {
+      const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid };
+      const serializedData = JSON.stringify(userData);
+      setCookie(USER_INFO, serializedData);
+      dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+      dispatch(authActions.setUserData(userData));
+      setCookie(USER_TYPE, 'employee');
+      router.push(ProtectedRoutes.user);
+      return
+    }
+    if (usertype != "leader employee") {
+      const userData = { ...data.user_detail, leaderId: data?.leader_detail.id };
+      dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+      dispatch(authActions.setUserData(userData));
+      if (data?.leader_detail?.is_profile_complete && data?.leader_detail?.request_status === "Approved") {
+        const serializedData = JSON.stringify(userData);
+        setCookie(USER_TYPE, 'leader');
+        setCookie(USER_INFO, serializedData);
+        router.push(ProtectedRoutes.user);
+      }
+    }
+  }
+
 
   return (
     <>

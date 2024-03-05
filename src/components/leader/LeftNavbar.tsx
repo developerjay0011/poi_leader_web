@@ -6,6 +6,8 @@ import { fetchAccessTabs } from "../api/tabsAccess";
 import { RootState } from "@/redux_store";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { UserData } from "@/utils/utility";
+import { getCookie } from "cookies-next";
+import { USER_TYPE } from "@/constants/common";
 
 const LeftNavLink: FC<{
   children: ReactNode;
@@ -36,15 +38,14 @@ const LeftNavLink: FC<{
 
 export const LeftNavbar: FC = () => {
   const { userDetails } = cusSelector((state) => state.auth);
-
+  let user_type = getCookie(USER_TYPE)
   const [routeData, setRouteData] = useState([]);
 
   useEffect(() => {
     const userid = userDetails?.id;
-    if(userid) {
+    if (userid) {
       (async () => {
         const data = await fetchAccessTabs(userid);
-  
         if (data?.length > 0) {
           setRouteData(data);
         }
@@ -72,7 +73,7 @@ export const LeftNavbar: FC = () => {
       >
         <MdSpaceDashboard />
       </LeftNavLink> */}
-  
+
     </section>
   );
 };

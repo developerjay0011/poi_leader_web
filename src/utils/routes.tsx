@@ -13,59 +13,69 @@ export const LEFT_NAV_ROUTES = [
     link: '/user',
     name: 'feed',
     Icon: FaClipboard,
+    tabname: "Leader"
   },
   {
     id: GenerateId(),
     link: '/user/profile',
     name: 'my profile',
     Icon: FaUser,
+    tabname: "Leader"
   },
   {
     id: GenerateId(),
     link: '/user/profile/notifications',
     name: 'notifications',
     Icon: FaBell,
+    tabname: "Leader"
   },
   {
     id: GenerateId(),
     link: '/user/profile/networks',
     name: 'Manage Group',
     Icon: LuNetwork,
+    tabname: "Manage Group"
   },
   {
     id: GenerateId(),
     link: '/user/profile/directory',
     name: 'Manage Directory',
     Icon: MdContacts,
+    tabname: "Manage Directory"
   },
   {
     id: GenerateId(),
     link: '/user/profile/events',
     name: 'events',
     Icon: BsFillCalendar3WeekFill,
+    tabname: "Manage Events"
   },
   {
     id: GenerateId(),
     link: '/user/analytics',
     name: 'account stats',
     Icon: TfiStatsUp,
+    tabname: "Leader"
   },
   {
     id: GenerateId(),
     link: '/user/letter/manage-letter',
     name: 'Manage Letter',
     Icon: SlEnvolopeLetter,
+    tabname: "Manage Letters"
   },
   {
     id: GenerateId(),
     link: '/user/letter/manage-letter-template',
     name: 'Manage Templa Letter',
     Icon: SlEnvolopeLetter,
+    tabname: "Manage Letter Templates"
   },
   {
     id: GenerateId(),
     link: '/user/employees/manage-employees',
     name: 'Manage Employees',
     Icon: BiSolidUserDetail,
+    tabname: "Manage Employees"
   },
 ]

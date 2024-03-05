@@ -42,7 +42,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose }) => {
           className='w-1/2 bg-white flex flex-col gap-2 relative h-full z-[102] items-start max-[500px]:w-[75%]'>
           <Link
             href={'/user'}
-            className='w-full text-center bg-sky-950 flex justify-center py-2'>
+            className='w-full text-center bg-sky-950 flex justify-center py-3'>
             <CustomImage src={POILogo} alt='poi logo' className='h-12 w-auto' />
           </Link>
           <li>

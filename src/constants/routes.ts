@@ -1,12 +1,11 @@
 // PAGE Routes
 export const ProtectedRoutes = {
   user: "/user",
-  userManagement: "/user-management",
   userProfile: "/user/profile",
   editUserProfile: "/user/profile/settings/personal-information",
   accountSetting: "/user/profile/settings/general",
   followers: "/user/profile/followers",
-  leader: "/leader"
+  leader: "/leader",
 };
 
 export const AuthRoutes = {

@@ -26,9 +26,11 @@ export const EmployeeManagePage: FC = () => {
         setCurPageNo(1)
     }
     const getemployee = async () => {
-        const data = await GetEmployees(leaderProfile?.id as string);
-        if (Array.isArray(data)) {
-            dispatch(employeeAction.storeemployees(data as any));
+        if (leaderProfile?.id) {
+            const data = await GetEmployees(leaderProfile?.id as string);
+            if (Array.isArray(data)) {
+                dispatch(employeeAction.storeemployees(data as any));
+            }
         }
     };
 

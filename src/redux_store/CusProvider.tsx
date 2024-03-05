@@ -21,10 +21,13 @@ const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
   const router = useRouter()
 
+
+
+
+
   useEffect(() => {
     const authToken = localStorage.getItem('authToken') || ''
     const userDetails = (localStorage.getItem('userDetails') as string) || ''
-
     if (authToken && userDetails) {
       dispatch(uiActions.setLogin(true))
       dispatch(uiActions.setJWT(authToken))

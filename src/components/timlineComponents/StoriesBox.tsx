@@ -13,8 +13,6 @@ import {
 import { groupBy } from "@/config/groupby";
 import { NewPostBox } from "../posts/NewPostBox";
 import { ProtectedRoutes } from "@/constants/routes";
-import { getNotification } from "@/redux_store/leader/leaderAPI";
-import { leaderActions } from "@/redux_store/leader/leaderSlice";
 
 export const StoriesBox: FC = () => {
   const [getStories, setGetStories] = useState([]);
@@ -22,11 +20,9 @@ export const StoriesBox: FC = () => {
   const id = GenerateId();
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-  const fetchStories = async() => {
+  const fetchStories = async () => {
     const leaderid = userDetails?.leaderId;
     if (leaderid) {
-      const response = await getNotification(leaderid as string);
-      dispatch(leaderActions.setNotification(response));
       const data = await getStoriesForLeader(leaderid);
       if (data?.length > 0) {
         let mergeAllPosts: any = [];
@@ -42,7 +38,7 @@ export const StoriesBox: FC = () => {
           mergeAllPosts,
           (item: any) => item.leaderid
         );
-  
+
         let finalStories: Record<string, any> = {};
         Object.keys(groupByLeaderId).forEach((stItem: string) => {
           groupByLeaderId[stItem].map((item: any) => {
@@ -53,7 +49,7 @@ export const StoriesBox: FC = () => {
                 leaderid: item.leaderid,
                 media: [],
                 name: "",
-                written_text:""
+                written_text: ""
               };
             }
             finalStories[item.leaderid].id = item.id;
@@ -120,19 +116,18 @@ export const StoriesBox: FC = () => {
               (
                 el:
                   | {
-                      media?: any[];
-                      id: string;
-                      leaderid: string;
+                    media?: any[];
+                    id: string;
+                    leaderid: string;
                     image: string;
                     name: string;
-                    }
+                  }
                   | undefined
               ) => {
                 return (
                   <Story
                     key={el?.id}
-                    userImage={`${
-                      (el?.image &&
+                    userImage={`${(el?.image &&
                         process.env.NEXT_PUBLIC_BASE_URL + "" + el.image) ||
                       ""
                       }`}
