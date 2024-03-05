@@ -8,110 +8,83 @@ import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
-import moment from 'moment';
 
-interface ManageLetterTableProps {
+interface ManageTicketTableProps {
   searchStr: string
   handleDelete: (id: string) => void
   handleEdit:(value:any)=>void
 }
 
-export const ManageLetterTable: FC<ManageLetterTableProps> = ({
+export const ManageTicketTable: FC<ManageTicketTableProps> = ({
   searchStr, handleEdit, handleDelete
 }) => {
-  const { letter } = cusSelector((state) => state.letter);
+  const { ticket } = cusSelector((state) => state.ticket);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
 
-  const searchFilterData = letter?.filter((el) =>
+  const searchFilterData = ticket?.filter((el:any) =>
     searchStr?
-      el?.template_name === searchStr
+      el?.ticketid.includes(searchStr)
       : el
   )
-
+  console.log(searchFilterData)
    
   return (
     <>
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold text-center py-2 pl-2 border'>S.No</th>
             <th className='font-semibold capitalize text-center py-2 pl-2 border'>
-              ID Number
-            </th>
-            <th className='font-semibold capitalize text-center py-2 pl-2 border'>
-              File Number
+              Ticket Id
             </th>
             <th className='font-semibold capitalize text-center py-2 pl-2 border'>
-              From
+              Ticket Code
             </th>
             <th className='font-semibold capitalize text-center py-2 pl-2 border'>
-              To
+              Category
             </th>
             <th className='font-semibold capitalize text-center py-2 pl-2 border'>
-              Reference
+              Subject
             </th>
-            <th className='font-semibold text-center py-2 px-2 border'>Date</th>
-            <th className='font-semibold text-center py-2 px-2 border'>
-              Contact
+            <th className='font-semibold capitalize text-center py-2 pl-2 border'>
+              Description
             </th>
-            <th className='font-semibold text-center py-2 px-2 border'>
+            <th className='font-semibold capitalize text-center py-2 pl-2 border'>
+              Date
+            </th>
+            <th className='font-semibold capitalize text-center py-2 pl-2 border'>
               Status
             </th>
-            <th className='font-semibold text-center py-2 px-2 border'>
-              Actions
-            </th>
+           
           </tr>
         </thead>
         <tbody>{searchFilterData?.length > 0 ? (
           searchFilterData?.map((el, i) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
-              <td className='py-2 pl-2 border-r align-text-top text-center'>
-                {i+1}
+            
+              <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
+                {el?.ticketid}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el?.template_id}
+                {el?.ticket_code}
+              </td>
+              
+              <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
+                {el?.category}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el?.template_name}
+                {el?.subject}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el?.from}
+                {el?.description}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el?.to}
-              </td>
-              <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el?.reference}
-              </td>
-              <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {moment(el?.created_date).format("DD/MM/YYYY") }
-              </td>
-              <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el?.contact_no}
+                {el?.created_date}
               </td>
               <td className='text-center py-2 pl-2 border printHide'>
-                <StatusBtn
-                  status={el.isactive ?'1':'0' }  
-                  clickHandler={()=>{}}
-                  inProgress={false}
-                />
+                {/* {el?.status[0]} */}
               </td>
-              <td className='text-center py-2 pl-2 border printHide'>
-                <button
-                  className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() => handleEdit(el)}>
-                  <BiEdit className='text-2xl' />
-                </button>
-                <button
-                  className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() =>{ setid(el?.id),setShowDeleteConfirmPopup(true)}}>
-                <MdDelete
-                  className='text-2xl'
-                 
-                />
-              </button>
-              </td>
+        
               </tr>
 
           ))

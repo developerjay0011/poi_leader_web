@@ -125,6 +125,9 @@ export const APIRoutes = {
   saveLetter: `${API_Prefix}/leader/saveletter`,
   deleteLetter: `${API_Prefix}/leader/deleteletter`,
 
-
+  //Ticket Endpoint
+  getTickets: `${API_Prefix}/leader/gettickets/{{leaderId}}`,
+  saveTicketStatus: `${API_Prefix}/leader/saveticketstatus`,
+  deleteTicketStatus: `${API_Prefix}/leader/deleteticketstatus`,
 
 }

@@ -7,6 +7,8 @@ import { BsFillCalendar3WeekFill } from 'react-icons/bs'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { BiSolidUserDetail } from "react-icons/bi";
+
+import { ImTicket } from "react-icons/im";
 export const LEFT_NAV_ROUTES = [
   {
     id: GenerateId(),
@@ -22,13 +24,7 @@ export const LEFT_NAV_ROUTES = [
     Icon: FaUser,
     tabname: "Leader"
   },
-  {
-    id: GenerateId(),
-    link: '/user/profile/notifications',
-    name: 'notifications',
-    Icon: FaBell,
-    tabname: "Leader"
-  },
+ 
   {
     id: GenerateId(),
     link: '/user/profile/networks',
@@ -67,7 +63,7 @@ export const LEFT_NAV_ROUTES = [
   {
     id: GenerateId(),
     link: '/user/letter/manage-letter-template',
-    name: 'Manage Templa Letter',
+    name: 'Manage Template Letter',
     Icon: SlEnvolopeLetter,
     tabname: "Manage Letter Templates"
   },
@@ -77,5 +73,12 @@ export const LEFT_NAV_ROUTES = [
     name: 'Manage Employees',
     Icon: BiSolidUserDetail,
     tabname: "Manage Employees"
+  },
+  {
+    id: GenerateId(),
+    link: '/user/ticket',
+    name: 'Ticket',
+    Icon: ImTicket,
+    tabname: "Leader"
   },
 ]

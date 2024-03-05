@@ -13,6 +13,7 @@ import { eventSlice } from './event/eventSlice'
 import { pollSlice } from './polls/pollSlice'
 import { letterSlice } from './letter/letterSlice'
 import { employeeSlice } from './employee/employeeApiSlice'
+import { ticketSlice } from './ticket/ticketSlice'
 
 
 
@@ -32,6 +33,8 @@ export const store = configureStore({
     poll: pollSlice.reducer,
     letter: letterSlice.reducer,
     employee: employeeSlice.reducer,
+    ticket: ticketSlice.reducer,
+
 
   },
 })
