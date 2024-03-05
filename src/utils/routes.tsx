@@ -24,7 +24,7 @@ export const LEFT_NAV_ROUTES = [
     Icon: FaUser,
     tabname: "Leader"
   },
- 
+
   {
     id: GenerateId(),
     link: '/user/profile/networks',
@@ -69,16 +69,16 @@ export const LEFT_NAV_ROUTES = [
   },
   {
     id: GenerateId(),
+    link: '/user/ticket',
+    name: 'Ticket',
+    Icon: ImTicket,
+    tabname: "Manage Letters"
+  },
+  {
+    id: GenerateId(),
     link: '/user/employees/manage-employees',
     name: 'Manage Employees',
     Icon: BiSolidUserDetail,
     tabname: "Manage Employees"
-  },
-  {
-    id: GenerateId(),
-    link: '/user/ticket',
-    name: 'Ticket',
-    Icon: ImTicket,
-    tabname: "Leader"
   },
 ]

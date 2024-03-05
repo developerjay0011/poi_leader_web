@@ -23,6 +23,9 @@ import { AuthRoutes, EmployeeProtectedRoutes, ProtectedRoutes } from "@/constant
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { accessAction } from "@/redux_store/accesstab/tabSlice";
+import { fetchEmployeeAccessTabs } from "@/redux_store/accesstab/tabApi";
+import { fetchAccessTabs } from "../api/tabsAccess";
 
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -92,7 +95,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
   };
 
 
-  const SetCookieAndRedux = (data: any, loginResponse: any, usertype: string) => {
+  const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string) => {
     setCookie(TOKEN_KEY, loginResponse.token);
     setCookie(USER_VERIFY, 'true');
     if (usertype == "leader employee") {
@@ -102,7 +105,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       dispatch(authActions.setUserData(userData));
       setCookie(USER_TYPE, 'employee');
-      router.push(EmployeeProtectedRoutes.user);
+      router.push(EmployeeProtectedRoutes.employeehome);
       return
     }
     if (usertype != "leader employee") {

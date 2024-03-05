@@ -20,23 +20,18 @@ export const CusProvider: FC<CusProviderProps> = ({ children }) => {
 const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
   const router = useRouter()
+  // useEffect(() => {
+  //   const authToken = localStorage.getItem('authToken') || ''
+  //   const userDetails = (localStorage.getItem('userDetails') as string) || ''
+  //   if (authToken && userDetails) {
+  //     dispatch(uiActions.setLogin(true))
+  //     dispatch(uiActions.setJWT(authToken))
 
+  //     dispatch(uiActions.storeUserDetails(JSON.parse(userDetails)))
 
-
-
-
-  useEffect(() => {
-    const authToken = localStorage.getItem('authToken') || ''
-    const userDetails = (localStorage.getItem('userDetails') as string) || ''
-    if (authToken && userDetails) {
-      dispatch(uiActions.setLogin(true))
-      dispatch(uiActions.setJWT(authToken))
-
-      dispatch(uiActions.storeUserDetails(JSON.parse(userDetails)))
-
-      router.push(`/${JSON.parse(userDetails).userType}`)
-      dispatch(uiActions.setUserType(JSON.parse(userDetails).userType))
-    }
-  }, [dispatch, router])
+  //     router.push(`/${JSON.parse(userDetails).userType}`)
+  //     dispatch(uiActions.setUserType(JSON.parse(userDetails).userType))
+  //   }
+  // }, [dispatch, router])
   return <> {children} </>
 }

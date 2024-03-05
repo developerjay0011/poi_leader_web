@@ -41,6 +41,7 @@ export const TopNavbar: FC = () => {
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
+  const { usertype } = cusSelector((state) => state.access);
   let token: any = getCookie(TOKEN_KEY);
   let isuserverify = getCookie(USER_VERIFY)
   let user_type = getCookie(USER_TYPE)
@@ -59,6 +60,7 @@ export const TopNavbar: FC = () => {
     };
   }
 
+  // console.log(usertype)
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -71,7 +73,6 @@ export const TopNavbar: FC = () => {
     });
   }, [dispatch]);
 
-  // console.log(userDetails)
 
 
   useEffect(() => {
@@ -98,14 +99,14 @@ export const TopNavbar: FC = () => {
         router.push(AuthRoutes.login)
       }
     })();
-  }, [dispatch, userDetails?.leaderId])
+  }, [dispatch, token])
 
   // Converting pathname to heading
   let heading = curRoute?.split("/").at(-1)?.includes("-")
     ? curRoute?.split("/").at(-1)?.replaceAll("-", " ")
     : curRoute?.split("/").at(-1);
 
-  heading = heading === "user" ? "home" : heading;
+  heading = heading === "user" || heading === "employeehome" ? "home" : heading;
 
 
   return (
@@ -118,164 +119,163 @@ export const TopNavbar: FC = () => {
           className="h-12 w-auto"
           onClick={() => router.push("/user")}
         />
-        {/* {user_type == "leader" ? */}
-        <>
-          {/* Search Bar */}
+        {usertype == "leader" ?
+          <>
+            {/* Search Bar */}
 
-          <label htmlFor="searchBox" className="relative w-[20%]" >
-            <input
-              onChange={(e) => setSearchUserStr(e.target.value.toLowerCase())}
-              type="search"
-              className="rounded-full bg-sky-50 bg-opacity-20 py-3 px-5 text-md text-sky-50 outline-none w-full capitalize placeholder:text-sky-50 placeholder:text-opacity-70"
-              placeholder="search politicians"
-            />
-            <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
+            <label htmlFor="searchBox" className="relative w-[20%]" >
+              <input
+                onChange={(e) => setSearchUserStr(e.target.value.toLowerCase())}
+                type="search"
+                className="rounded-full bg-sky-50 bg-opacity-20 py-3 px-5 text-md text-sky-50 outline-none w-full capitalize placeholder:text-sky-50 placeholder:text-opacity-70"
+                placeholder="search politicians"
+              />
+              <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
 
-            {/* Search box */}
-            {searchUserStr.length > 0 && (
-              <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
-                {searchFilterFunction(searchUserStr)?.map((item: any) =>
-                  <BriefUserInfo
-                    key={item?.id}
-                    designation={item?.username?.political_party}
-                    userPic={getImageUrl(item?.image)}
-                    name={item?.username}
-                    id={item?.id}
-                    isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
-                  />
+              {/* Search box */}
+              {searchUserStr.length > 0 && (
+                <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
+                  {searchFilterFunction(searchUserStr)?.map((item: any) =>
+                    <BriefUserInfo
+                      key={item?.id}
+                      designation={item?.username?.political_party}
+                      userPic={getImageUrl(item?.image)}
+                      name={item?.username}
+                      id={item?.id}
+                      isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
+                    />
+                  )}
+                  <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
+                    no politician found❗
+                  </p>
+                </ul>
+              )}
+            </label>
+
+            <h3 className="capitalize">{heading}</h3>
+
+            <div className="h-10 w-[2px] bg-sky-50 bg-opacity-40" />
+
+            {/* CTA's */}
+            <section className="flex items-center gap-8 ml-5">
+              <button type="button" onClick={() => router.push(`/user`)}>
+                <BsHouseFill className="text-sky-50 text-2xl" />
+              </button>
+
+              <button
+                type="button"
+                className="relative"
+                onClick={() => setShowNotifications((lst) => !lst)}
+                id="briefNotiBox"
+              >
+                <FaBell className="text-sky-50 text-2xl" />
+
+                <span className="absolute -top-3 -right-2 bg-orange-500 text-orange-50 w-4 text-[12px] aspect-square flex items-center justify-center rounded-full">
+                  {notification?.length}
+                </span>
+
+                {showNotifications && (
+                  <div className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
+                    <BriefNotifications />
+                  </div>
                 )}
-                <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
-                  no politician found❗
-                </p>
-              </ul>
-            )}
-          </label>
+              </button>
 
-          <h3 className="capitalize">{heading}</h3>
+              <Link href={''} target="_parent">
+                <MdSpaceDashboard className="text-sky-50 text-2xl" />
+              </Link>
+            </section>
 
-          <div className="h-10 w-[2px] bg-sky-50 bg-opacity-40" />
+            {/* USER Profile */}
+            <section className="flex items-center gap-4 ml-auto relative">
+              <button
+                id="userDisplayPic"
+                onClick={() => setShowAdminMenu((lst) => !lst)}
+              >
+                <CustomImage
+                  src={getImageUrl(leaderProfile?.image) as string}
+                  alt="user pic"
+                  className="w-14 aspect-square object-cover object-center rounded-full"
+                  width={100}
+                  height={100}
+                />
+              </button>
 
-          {/* CTA's */}
-          <section className="flex items-center gap-8 ml-5">
-            <button type="button" onClick={() => router.push(`/user`)}>
-              <BsHouseFill className="text-sky-50 text-2xl" />
-            </button>
-
-            <button
-              type="button"
-              className="relative"
-              onClick={() => setShowNotifications((lst) => !lst)}
-              id="briefNotiBox"
-            >
-              <FaBell className="text-sky-50 text-2xl" />
-
-              <span className="absolute -top-3 -right-2 bg-orange-500 text-orange-50 w-4 text-[12px] aspect-square flex items-center justify-center rounded-full">
-                {notification?.length}
-              </span>
-
-              {showNotifications && (
-                <div className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
-                  <BriefNotifications />
+              {/* admin nav */}
+              {showAdminMenu && (
+                <div className="absolute top-[120%] right-0 w-max z-50">
+                  <AdminControls />
                 </div>
               )}
-            </button>
-
-            <Link href={''} target="_parent">
-              <MdSpaceDashboard className="text-sky-50 text-2xl" />
-            </Link>
-          </section>
-
-          {/* USER Profile */}
-          <section className="flex items-center gap-4 ml-auto relative">
-            <button
-              id="userDisplayPic"
-              onClick={() => setShowAdminMenu((lst) => !lst)}
-            >
-              <CustomImage
-                src={getImageUrl(leaderProfile?.image) as string}
-                alt="user pic"
-                className="w-14 aspect-square object-cover object-center rounded-full"
-                width={100}
-                height={100}
-              />
-            </button>
-
-            {/* admin nav */}
-            {showAdminMenu && (
-              <div className="absolute top-[120%] right-0 w-max z-50">
-                <AdminControls />
-              </div>
-            )}
-          </section>
-        </>
-        {/* :
+            </section>
+          </>
+          :
           <>
             <h3 className="capitalize ml-2">{heading}</h3>
-
             <section className="flex items-center gap-4 ml-auto relative">
               <button className="flex items-center gap-2" onClick={() => { dispatch(authActions.logout()) }}>
                 <FaPowerOff />log out
               </button>
             </section>
           </>
-        } */}
+        }
       </nav>
       <nav className="py-3 px-8 bg-sky-950 text-sky-50 flex-col gap-5 hidden max-[1000px]:flex  max-[500px]:px-4">
-        {/* {user_type == "leader" ? */}
-        <>
-          <div className="flex justify-between items-center w-full">
-            <FaHamburger
-              className="text-3xl"
-              onClick={() => setShowMobileNav(true)}
-            />
-
-            <CustomImage
-              src={POILogo}
-              alt="poi logo"
-              className="h-12 w-auto"
-              onClick={() => router.push("/user")}
-            />
-
-            <button id="userMobileDisplayPic">
-              <CustomImage
-                src={getImageUrl(leaderProfile?.image)}
-                alt="user pic"
-                className="w-14 aspect-square object-cover object-center rounded-full"
-                width={100}
-                height={100}
+        {usertype == "leader" ?
+          <>
+            <div className="flex justify-between items-center w-full">
+              <FaHamburger
+                className="text-3xl"
+                onClick={() => setShowMobileNav(true)}
               />
-            </button>
-          </div>
-          <label htmlFor="searchBox" className="relative w-full">
-            <input
-              onChange={(e) => setSearchUserStr(e.target.value.toLowerCase())}
-              type="search"
-              className="rounded-full bg-sky-50 bg-opacity-20 py-3 px-5 text-md text-sky-50 outline-none w-full capitalize placeholder:text-sky-50 placeholder:text-opacity-70"
-              placeholder="search politicians"
-            />
-            <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
+
+              <CustomImage
+                src={POILogo}
+                alt="poi logo"
+                className="h-12 w-auto"
+                onClick={() => router.push("/user")}
+              />
+
+              <button id="userMobileDisplayPic">
+                <CustomImage
+                  src={getImageUrl(leaderProfile?.image)}
+                  alt="user pic"
+                  className="w-14 aspect-square object-cover object-center rounded-full"
+                  width={100}
+                  height={100}
+                />
+              </button>
+            </div>
+            <label htmlFor="searchBox" className="relative w-full">
+              <input
+                onChange={(e) => setSearchUserStr(e.target.value.toLowerCase())}
+                type="search"
+                className="rounded-full bg-sky-50 bg-opacity-20 py-3 px-5 text-md text-sky-50 outline-none w-full capitalize placeholder:text-sky-50 placeholder:text-opacity-70"
+                placeholder="search politicians"
+              />
+              <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
 
 
-            {searchUserStr.length > 0 && (
-              <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
-                {searchFilterFunction(searchUserStr)?.map((item: any) =>
-                  <BriefUserInfo
-                    key={item?.id}
-                    designation={item?.username?.political_party}
-                    userPic={getImageUrl(item?.image)}
-                    name={item?.username}
-                    id={item?.id}
-                    isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
-                  />
-                )}
-                <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
-                  no politician found❗
-                </p>
-              </ul>
-            )}
-          </label>
-        </>
-        {/* :
+              {searchUserStr.length > 0 && (
+                <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
+                  {searchFilterFunction(searchUserStr)?.map((item: any) =>
+                    <BriefUserInfo
+                      key={item?.id}
+                      designation={item?.username?.political_party}
+                      userPic={getImageUrl(item?.image)}
+                      name={item?.username}
+                      id={item?.id}
+                      isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
+                    />
+                  )}
+                  <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
+                    no politician found❗
+                  </p>
+                </ul>
+              )}
+            </label>
+          </>
+          :
           <>
             <div className="flex gap-5 items-center w-full h-12">
               <CustomImage
@@ -291,7 +291,7 @@ export const TopNavbar: FC = () => {
               />
             </div>
           </>
-        } */}
+        }
       </nav>
 
       {showMobileNav && (
