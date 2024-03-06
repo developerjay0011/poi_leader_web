@@ -58,7 +58,7 @@ export const TicketTemplateManagePage: FC = () => {
         (async () => {
             getTicket();
         })();
-    }, [userDetails, dispatch]);
+    }, [userDetails, dispatch, leaderProfile]);
 
     return (
         <>

@@ -55,9 +55,9 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({
             <th className='font-semibold text-center py-2 px-2 border'>
               Contact
             </th>
-            <th className='font-semibold text-center py-2 px-2 border'>
+            {/* <th className='font-semibold text-center py-2 px-2 border'>
               Status
-            </th>
+            </th> */}
             <th className='font-semibold text-center py-2 px-2 border'>
               Actions
             </th>
@@ -90,19 +90,19 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el?.contact_no}
               </td>
-              <td className='text-center py-2 pl-2 border printHide'>
+              {/* <td className='text-center py-2 pl-2 border printHide'>
                 <StatusBtn
                   status={el.isactive ? '1' : '0'}
                   clickHandler={() => { }}
                   inProgress={false}
                 />
-              </td>
+              </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
-                <button
+                {/* <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
                   onClick={() => handleEdit(el)}>
                   <BiEdit className='text-2xl' />
-                </button>
+                </button> */}
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
                   onClick={() => { setid(el?.id), setShowDeleteConfirmPopup(true) }}>

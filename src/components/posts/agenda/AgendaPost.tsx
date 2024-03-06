@@ -14,15 +14,12 @@ import {
 import { AgendaDetails, agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
 import { AnimatePresence } from "framer-motion";
-import { MdTimeline } from "react-icons/md";
-import CustomImage from "@/utils/CustomImage";
 import moment from 'moment'
 import { TimeLineDetails } from "@/utils/typesUtils";
 import { motion as m } from "framer-motion";
 import AgendaEditForm from "@/components/posts/agenda/AgendaEditForm";
 import { deleteAgenda, getAgenda, makeAgendaPost } from "@/redux_store/agenda/agendaApi";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import toast from "react-hot-toast";
 import TimeLineForm from "../TineLineForm";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
@@ -94,10 +91,10 @@ export const AgendaPost: FC<AgendaPostProps> = ({
     <>
       <article className="border bg-white gap-5 rounded-md relative flex items-start overflow-hidden max-[700px]:flex-col">
         <h3
-          className={`self-stretch uppercase border flex flex-col-reverse justify-evenly items-center px-[10px] text-[18px] max-[700px]:flex-row max-[700px]:justify-around max-[700px]:py-1 min-[700px]:py-3 ${PRIORITIES[priority as PRIORITY].classes
+          className={`self-stretch uppercase border flex flex-col-reverse justify-evenly items-center px-[10px] text-[18px] max-[700px]:flex-row max-[700px]:justify-around max-[700px]:py-1 min-[700px]:py-3 ${PRIORITIES[priority as PRIORITY]?.classes
             } `}
         >
-          {PRIORITIES[priority as PRIORITY].name.split("").map((el, i) => (
+          {PRIORITIES[priority as PRIORITY]?.name?.split("")?.map((el, i) => (
             <span className="min-[700px]:-rotate-90" key={i}>
               {el}
             </span>

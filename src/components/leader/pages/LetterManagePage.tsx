@@ -13,6 +13,8 @@ import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 import { ManageLetterTable } from '../letter/ManageLetterTable'
 import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
+import { getTickets } from '@/redux_store/ticket/ticketApi'
+import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 
 export const LetterManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
@@ -57,7 +59,7 @@ export const LetterManagePage: FC = () => {
         (async () => {
             getletter();
         })();
-    }, [userDetails, dispatch]);
+    }, [userDetails, dispatch,leaderProfile]);
 
     return (
         <>
@@ -72,7 +74,11 @@ export const LetterManagePage: FC = () => {
                     <TableWrapper
                         heading='Manage Letter'
                         addBtnTitle='add Letter'
-                        addBtnClickFn={() => location.href = '/user/letter/add-letter'}
+                        addBtnClickFn={async () => {
+                        
+                         
+                            location.href = '/user/letter/add-letter'
+                        }}
                         curDataCount={1}
                         totalCount={letter_templete?.length}
                         changeFilterFn={changeFilterCount}

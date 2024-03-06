@@ -208,6 +208,7 @@ export interface UserDetails {
   notes: string
   start_datetime: string
   end_datetime: string
+  remark:s
 }
 export const yearlistfuture = () => {
   var current_year = moment().year()
@@ -275,6 +276,13 @@ export interface TimeLineDetails {
   status: string
   description: string
   milestone: string
+  created_date: string
+  attachments: string[]
+}
+export interface TicketTimeLineDetails {
+  id: string
+  status: string
+  remark: string
   created_date: string
   attachments: string[]
 }

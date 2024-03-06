@@ -115,7 +115,15 @@ const AddLetterPage: FC = () => {
     }
   }
 
-
+  const getTicket = async () => {
+    const data = await getTickets(leaderProfile?.id as string);
+    dispatch(ticketActions.storeTicket(data));
+  };
+  useEffect(() => {
+    (async () => {
+      getTicket();
+    })();
+  }, [userDetails, dispatch,leaderProfile]);
   return (
     <>
       <m.section

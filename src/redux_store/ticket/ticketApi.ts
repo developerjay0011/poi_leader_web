@@ -4,22 +4,28 @@ import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 
 // Add Letter API
-export const getTickets = async (leaderId: string) => {
+export const getTickets = async (leaderid: string) => {
+  console.log(leaderid)
   return tryCatch(
-
+   
     async () => {
-      const res = await Axios.get(insertVariables(APIRoutes.getTickets, { leaderId }));
+      const res = await Axios.get(insertVariables(APIRoutes.getTickets, { leaderid }));
       return res.data;
     }
   );
 };
 
 // Add Letter API
+
 export const saveTicketStatus =
-  async (body: any) => {
+  async (formData: any) => {
     return tryCatch(
       async () => {
-        const res = await Axios.post(APIRoutes.saveTicketStatus, body);
+        const res = await Axios.post(APIRoutes.saveTicketStatus, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
         return res.data;
       }
     );

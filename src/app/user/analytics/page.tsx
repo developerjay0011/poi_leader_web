@@ -11,6 +11,7 @@ import { CusLineChart } from '@/components/charts/CusLineChart'
 import { CusPieChart } from '@/components/charts/CusPieChart'
 import { CusBarChart } from '@/components/charts/CusBarChart'
 import CustomImage from '@/utils/CustomImage'
+import { cusSelector } from '@/redux_store/cusHooks'
 
 type Graph = 'LINE' | 'AREA' | 'PIE' | 'BAR'
 const GraphType = [
@@ -22,6 +23,7 @@ const GraphType = [
 
 const AdminAccountStatsPage: FC = () => {
   const [graphTypeVal, setGraphTypeVal] = useState<Graph>('AREA')
+  const { leaderProfile } = cusSelector((state) => state.leader);
 
   return (
     <>
@@ -34,7 +36,7 @@ const AdminAccountStatsPage: FC = () => {
         />
 
         <div className='flex flex-col relative items-center z-[10] w-full gap-3'>
-          <h2 className='text-5xl font-semibold'>R.K Singh Statistics</h2>
+          <h2 className='text-5xl fo  nt-semibold'>{leaderProfile?.username} Statistics</h2>
           <p>View all your account activity here</p>
         </div>
       </div>
