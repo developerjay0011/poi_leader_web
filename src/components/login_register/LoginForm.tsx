@@ -5,7 +5,7 @@ import { LuLock } from "react-icons/lu";
 import { AiOutlineKey } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { setCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 import Logo from "@/assets/favicon.png";
 import { useForm } from "react-hook-form";
 import {
@@ -23,9 +23,6 @@ import { AuthRoutes, EmployeeProtectedRoutes, ProtectedRoutes } from "@/constant
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
-import { accessAction } from "@/redux_store/accesstab/tabSlice";
-import { fetchEmployeeAccessTabs } from "@/redux_store/accesstab/tabApi";
-import { fetchAccessTabs } from "../api/tabsAccess";
 
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -98,6 +95,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string) => {
     setCookie(TOKEN_KEY, loginResponse.token);
     setCookie(USER_VERIFY, 'true');
+    deleteCookie(LOGIN_BODY);
     if (usertype == "leader employee") {
       const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid };
       const serializedData = JSON.stringify(userData);

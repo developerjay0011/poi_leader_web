@@ -20,3 +20,13 @@ export const fetchEmployeeAccessTabs = async (employeeid: string) => {
     }
   );
 };
+
+export const tabfilter = (accesstabs: [], usertype: string, tabs_routes: []) => {
+  var tabs = [...tabs_routes]
+  if (usertype === "leader") {
+    tabs = tabs.filter((item: any) => ((item?.tabname == "Leader" || accesstabs?.some((element2: any) => element2?.tabname === item?.tabname)) && item?.isuser != "Employee"))
+  } else {
+    tabs = tabs.filter((item: any) => ((item?.tabname != "Leader" && accesstabs?.some((element2: any) => element2?.tabname === item?.tabname))))
+  }
+  return accesstabs?.length > 0 || usertype === "leader" ? tabs : []
+}

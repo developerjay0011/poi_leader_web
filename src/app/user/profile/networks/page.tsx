@@ -26,7 +26,7 @@ const AdminProfileNetworksPage = () => {
   const [showMember, setShowMember] = useState(false)
 
   const [selectedMembers, setSelectedMembers] = useState([])
-  const statusArr = [ 'Active', 'Deactive']
+  const statusArr = ['Active', 'Deactive']
   const [loader, setLoader] = useState(false);
 
   const [isEdit, setIsEdit] = useState(false);
@@ -45,35 +45,33 @@ const AdminProfileNetworksPage = () => {
 
   useEffect(() => {
     (async () => {
-
       getGroup()
-
     })();
-  }, [dispatch,leaderProfile]);
+  }, [dispatch, leaderProfile]);
   const getGroup = () => {
     tryCatch(
       async () => {
         const response = await getGroups(leaderProfile?.id as string);
-        dispatch(groupActions.storeGroups(response));
+        if (Array.isArray(response))
+          dispatch(groupActions.storeGroups(response));
       })
   }
-  const getSingleGroupDetails = (groupid : string) => {
+  const getSingleGroupDetails = (groupid: string) => {
     tryCatch(
       async () => {
-       const body = { leaderid: leaderProfile?.id,groupid:groupid }
+        const body = { leaderid: leaderProfile?.id, groupid: groupid }
         const response = await getSingleGroup(body);
         setSelectedMembers(response?.members)
-
       })
   }
-  
+
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
       async () => {
         const body = {
           leaderid: leaderProfile.id,
           name: data.Name,
-          isactive: data.status == "Active" ?true:false
+          isactive: data.status == "Active" ? true : false
         }
 
         const response = await saveGroup(body);
@@ -87,7 +85,7 @@ const AdminProfileNetworksPage = () => {
         }
         setShowModal(false)
       })
-    
+
   }
   return (
     <>
@@ -97,7 +95,7 @@ const AdminProfileNetworksPage = () => {
         setSearchStr={changeSearchString}>
         <div className="py-1 px-7 max-[650px]:px-3 flex items-center justify-between">
           <label htmlFor="filter" className="flex items-center gap-2">
-         
+
           </label>
 
           <button
@@ -110,13 +108,13 @@ const AdminProfileNetworksPage = () => {
 
         <section className="px-7 pb-8 max-[650px]:px-3">
           <ul className="grid grid-cols-5 gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
-              {groups.length > 0 &&
-                groups.map((item: any,index:number) => {
-                  return (
-                    <Network onMemberClick={() => { getSingleGroupDetails(item.id),setShowMember(true)}} key={index} created_date={item?.created_date} member={item.members} name={item.name} backgroundImg={bgIMG} displayImg={userImg} />
-                  )
-                })}
-            </ul>
+            {groups.length > 0 &&
+              groups.map((item: any, index: number) => {
+                return (
+                  <Network onMemberClick={() => { getSingleGroupDetails(item.id), setShowMember(true) }} key={index} created_date={item?.created_date} member={item.members} name={item.name} backgroundImg={bgIMG} displayImg={userImg} />
+                )
+              })}
+          </ul>
         </section>
 
         {/* Create Group From  */}
@@ -154,10 +152,10 @@ const AdminProfileNetworksPage = () => {
                     type="text"
                     required
                     validations={{
-                      required: "First name is required",
+                      required: "Name is required",
                     }}
                   />
-            
+
 
                   <Input
                     register={register}
@@ -216,55 +214,55 @@ const AdminProfileNetworksPage = () => {
               >
                 <h2 className="mt-4 mb-8 text-3xl">Members</h2>
 
-               
-                  <table className="w-full mt-5">
-                    <thead className="text-left">
-                      <tr className="bg-orange-500 text-orange-50">
-                        <th className="p-2 font-medium">S.No</th>
-                        <th className="p-2 font-medium">Name</th>
-                        <th className="p-2 font-medium">Phone No</th>
-                        <th className="p-2 font-medium">Email</th>
-                        <th className="p-2 font-medium">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-left">
-                      {selectedMembers.length != 0 ? (
-                        selectedMembers.map((item: any, index: number) => {
-                          return (
-                            <>
-                              <tr key={index}>
-                                <td className="p-2">{index + 1}</td>
-                                <td className="p-2">{item.name}</td>
-                                <td className="p-2">{item.mobile}</td>
-                                <td className="p-2">{item.email}</td>
-                                <td className="p-2 flex  gap-3">
-                                  <button
-                                    className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
-                                    // onClick={() => editDirectory(directory)}
-                                  >
-                                    <FaEdit className="text-xl" />
-                                  </button>
 
-                                  <button
-                                    // onClick={() =>
-                                    //   confirmDelete(directory.id, directory.leaderid)
-                                    // }
-                                    className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
-                                  >
-                                    <BsTrash3Fill />
-                                  </button>
+                <table className="w-full mt-5">
+                  <thead className="text-left">
+                    <tr className="bg-orange-500 text-orange-50">
+                      <th className="p-2 font-medium">S.No</th>
+                      <th className="p-2 font-medium">Name</th>
+                      <th className="p-2 font-medium">Phone No</th>
+                      <th className="p-2 font-medium">Email</th>
+                      <th className="p-2 font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-left">
+                    {selectedMembers.length != 0 ? (
+                      selectedMembers.map((item: any, index: number) => {
+                        return (
+                          <>
+                            <tr key={index}>
+                              <td className="p-2">{index + 1}</td>
+                              <td className="p-2">{item.name}</td>
+                              <td className="p-2">{item.mobile}</td>
+                              <td className="p-2">{item.email}</td>
+                              <td className="p-2 flex  gap-3">
+                                <button
+                                  className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+                                // onClick={() => editDirectory(directory)}
+                                >
+                                  <FaEdit className="text-xl" />
+                                </button>
 
-                                </td>
-                              </tr>
-                            </>
-                          );
-                        })
-                      ) : (
-                        <ErrorTableRow colNo={4} />
-                      )}
+                                <button
+                                  // onClick={() =>
+                                  //   confirmDelete(directory.id, directory.leaderid)
+                                  // }
+                                  className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+                                >
+                                  <BsTrash3Fill />
+                                </button>
+
+                              </td>
+                            </tr>
+                          </>
+                        );
+                      })
+                    ) : (
+                      <ErrorTableRow colNo={4} />
+                    )}
                   </tbody>
                   {
-                    selectedMembers.length > 2 && 
+                    selectedMembers.length > 2 &&
                     <nav aria-label="Page navigation example">
                       <ul className="inline-flex -space-x-px text-sm">
                         <li>
@@ -286,26 +284,26 @@ const AdminProfileNetworksPage = () => {
                       </ul>
                     </nav>
                   }
-                  
-                  </table>
-             
-                  <div className="flex justify-end col-span-full gap-2 mt-5">
-                    <a
-                      className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
-                      onClick={() => {
-                        setShowMember(false)
-                      }}
-                    >
-                      close
-                    </a>
-                    <button
-                      className="rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
-                      type="submit"
-                    >
-                      Save
-                    </button>
-                  </div>
-           
+
+                </table>
+
+                <div className="flex justify-end col-span-full gap-2 mt-5">
+                  <a
+                    className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
+                    onClick={() => {
+                      setShowMember(false)
+                    }}
+                  >
+                    close
+                  </a>
+                  <button
+                    className="rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
+                    type="submit"
+                  >
+                    Save
+                  </button>
+                </div>
+
               </m.div>
             </m.div>
           )}

@@ -1,11 +1,11 @@
 import { DropdownOptions } from "@/interfaces/common";
 
-export const TOKEN_KEY = "token";
+export const TOKEN_KEY = "TOKEN_KEY";
 export const USER_VERIFY = "USER_VERIFY";
 export const USER_TYPE = "USER_TYPE";
-export const USER_INFO = "userDetails";
-export const DEFAULT_CONTENT_TYPE = 'application/json';
+export const USER_INFO = "USER_INFO";
 export const LOGIN_BODY = "LOGIN_BODY";
+export const DEFAULT_CONTENT_TYPE = 'application/json';
 
 export enum ToastType {
   SUCCESS = 'success',

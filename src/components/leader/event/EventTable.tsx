@@ -7,9 +7,8 @@ import { deleteEvent, getEvents } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { ErrorTableRow } from "@/utils/ErrorTableRow";
-import { UserData } from "@/utils/utility";
 import { AnimatePresence } from "framer-motion";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { BsTrash3Fill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 

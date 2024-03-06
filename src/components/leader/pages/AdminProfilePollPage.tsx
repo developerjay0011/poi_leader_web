@@ -6,6 +6,7 @@ import { AnimatePresence } from 'framer-motion'
 import { BiPlusCircle } from 'react-icons/bi'
 import { dateTimeConverter } from '@/utils/utility'
 import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
+import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const AdminProfilePollsPage: FC = () => {
   const [showAddPollForm, setShowAddPollForm] = useState(false)
@@ -13,9 +14,10 @@ export const AdminProfilePollsPage: FC = () => {
   return (
     <>
       <div className='flex gap-5 w-full relative'>
-        <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
+        {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
           <ShortcutsBox />
-        </div>
+        </div> */}
+        <ProfileShortcutsBox />
 
         <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
           <h2 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-6 py-3 border-b font-semibold text-[20px] capitalize'>
@@ -35,7 +37,7 @@ export const AdminProfilePollsPage: FC = () => {
             </div>
 
             {/* POLLS TABLE */}
-            <PollsTable  />
+            <PollsTable />
           </section>
         </div>
       </div>

@@ -1,7 +1,3 @@
-import {
-  fetchDeleteDirectory,
-  fetchGetDirectories,
-} from "@/components/api/directory";
 import { tryCatch } from "@/config/try-catch";
 import { ToastType } from "@/constants/common";
 import { commonActions } from "@/redux_store/common/commonSlice";
@@ -10,16 +6,15 @@ import { deleteDirectory, getDirectory } from "@/redux_store/directory/directory
 import { directoryAction } from "@/redux_store/directory/directorySlice";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { ErrorTableRow } from "@/utils/ErrorTableRow";
-import { UserData } from "@/utils/utility";
 import { AnimatePresence } from "framer-motion";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { BsTrash3Fill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 
 interface DirectoryTableProps {
   searchStr: string;
   isDirectory: boolean;
-  editDirectory:any
+  editDirectory: any
 }
 
 export const DirectoryTable: FC<DirectoryTableProps> = ({
@@ -27,11 +22,10 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
   isDirectory,
   editDirectory
 }) => {
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [showConfirmBox, setShowConfirmBox] = useState<boolean>(false);
   const { directory } = cusSelector((state) => state.directory);
   const dispatch = cusDispatch();
-  const [deleteValue, setDeleteValue] = useState({ id: "", leaderid :""});
+  const [deleteValue, setDeleteValue] = useState({ id: "", leaderid: "" });
   const filterDataOnDirectory = directory?.filter((el) =>
     searchStr ? el.name.includes(searchStr) : el
   );
@@ -57,7 +51,7 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    })
+      })
   };
 
   const onClose = () => {
@@ -91,18 +85,18 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
                         className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
                         onClick={() => editDirectory(directory)}
                       >
-                        <FaEdit className="text-xl" /> 
+                        <FaEdit className="text-xl" />
                       </button>
-                     
+
                       <button
                         onClick={() =>
                           confirmDelete(directory.id, directory.leaderid)
                         }
                         className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
                       >
-                        <BsTrash3Fill /> 
+                        <BsTrash3Fill />
                       </button>
-                     
+
                     </td>
                   </tr>
                 </>

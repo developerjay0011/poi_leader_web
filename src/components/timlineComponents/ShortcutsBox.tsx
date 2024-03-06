@@ -1,46 +1,93 @@
 "use client";
 import { CommonBox } from "@/utils/CommonBox";
-import { FC, useEffect, useState } from "react";
-import { FaBell, FaClipboard, FaPowerOff, FaUser } from "react-icons/fa";
+import { FC, useState } from "react";
+import { FaBell, FaClipboard, FaUser } from "react-icons/fa";
 import { ShortcutBtn } from "@/utils/ShortcutBtn";
 import { LuNetwork } from "react-icons/lu";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { uiActions } from "@/redux_store/UI/uiSlice";
 import { HiSpeakerphone } from "react-icons/hi";
 import { TfiStatsUp } from "react-icons/tfi";
 import { MdContacts, MdSpaceDashboard } from "react-icons/md";
 import { AnimatePresence } from "framer-motion";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
-import { fetchCloseAccount, fetchDeactiveAccount } from "../api/profile";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/redux_store";
+import { closeAccount, deActiveAccount } from "@/redux_store/common/commonAPI";
+import { tabfilter } from "@/redux_store/accesstab/tabApi";
 
 export const ShortcutsBox: FC = () => {
   const dispatch = cusDispatch();
   const router = useRouter();
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [showCloseConfirmBox, setShowCloseConfirmBox] = useState(false);
-  const { userDetails } = cusSelector(
-    (state: RootState) => state.auth
-  );
+  const { userDetails } = cusSelector((state: RootState) => state.auth);
+  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
+  const NAV_ROUTES = [
+    {
+      link: '/user',
+      name: 'feed',
+      Icon: FaClipboard,
+      tabname: "Leader"
+    },
+    {
+      link: '/user/profile',
+      name: 'my profile',
+      Icon: FaUser,
+      tabname: "Leader"
+    },
+    {
+      link: '/user/profile/notifications',
+      name: 'notifications',
+      Icon: FaBell,
+      tabname: "Leader"
+    },
+    {
+      link: '/user/profile/networks',
+      name: 'Manage Group',
+      Icon: LuNetwork,
+      tabname: "Manage Group"
+    },
+    {
+      link: ' /user/profile/polls',
+      name: 'Polls',
+      Icon: HiSpeakerphone,
+      tabname: "Manage Polls"
+    },
+    {
+      link: '/user/profile/directory',
+      name: 'Manage Directory',
+      Icon: MdContacts,
+      tabname: "Manage Directory"
+    },
+    {
+      link: '/user/analytics',
+      name: 'account stats',
+      Icon: TfiStatsUp,
+      tabname: "Leader"
+    },
+    {
+      link: '/user',
+      name: 'Dashboard',
+      Icon: MdSpaceDashboard,
+      tabname: "Leader"
+    },
+  ]
+
+
 
   const onClose = () => {
     setShowConfirmBox(false);
     setShowCloseConfirmBox(false);
   };
   const deactiveAccountHandler = async () => {
-    const citizenid = userDetails?.id || "";
-
-    const data = await fetchDeactiveAccount(citizenid);
-
+    const data = await closeAccount(userDetails?.id as string)
     if (data?.success) {
       setShowConfirmBox(false);
       router.push("/");
     }
   };
   const CloseAccountHandler = async () => {
-    const citizenid = userDetails?.id;
-    const data = await fetchCloseAccount(citizenid);
+    const data = await deActiveAccount(userDetails?.id as string)
     if (data?.success) {
       setShowCloseConfirmBox(false);
       router.push("/");
@@ -50,54 +97,14 @@ export const ShortcutsBox: FC = () => {
   return (
     <>
       <CommonBox title="shortcuts">
-        <div className="flex flex-col py-4 gap-5 pr-16 font-normal" >
-          <ShortcutBtn Icon={FaClipboard} title="feed" route={`/user`} />
-
-          <ShortcutBtn
-            Icon={FaUser}
-            title="my profile"
-            route={`/user/profile`}
-          />
-
-          <ShortcutBtn
-            Icon={FaBell}
-            title="notifications"
-            route={`/user/profile/notifications`}
-          />
-
-          <ShortcutBtn
-            Icon={LuNetwork}
-            title="networks"
-            route="/user/profile/networks"
-          />
-
-          <ShortcutBtn
-            Icon={HiSpeakerphone}
-            title="polls"
-            route="/user/profile/polls"
-          />
-
-          <ShortcutBtn
-            Icon={MdContacts}
-            title="My Directory"
-            route="/user/profile/directory"
-          />
-
-          <ShortcutBtn
-            Icon={TfiStatsUp}
-            title="account stats"
-            route="/user/analytics"
-          />
-
-          <ShortcutBtn
-            Icon={MdSpaceDashboard}
-            title="Dashboard"
-            target
-            route="http://localhost:5000/"
-          />
-
-
-
+        <div className="flex flex-col py-4 gap-5 font-normal" >
+          {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any) => (
+            <ShortcutBtn
+              Icon={El.Icon}
+              title={El.name}
+              route={El.link}
+            />
+          ))}
           <AnimatePresence mode="wait">
             {showConfirmBox && (
               <ConfirmDialogBox

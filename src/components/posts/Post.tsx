@@ -14,7 +14,7 @@ import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import PostGrid from "../PostGrid";
 import { Shortlistbytime, islike } from "./utils";
-import { LikePost, UnlikePostorStory } from "@/redux_store/posts/postAPI";
+import { DeletePost, LikePost, UnlikePostorStory } from "@/redux_store/posts/postAPI";
 import { PostOptions } from "./PostOptions";
 
 
@@ -26,11 +26,13 @@ interface PostProps extends PostDetails {
   Getpost: () => void;
   index: string,
   allData: any,
+  is_my: boolean
 }
 
-export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData, }) => {
+export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData, is_my = false }) => {
   const [firstTime, setFirstTime] = useState(true);
   const [showComments, setShowComments] = useState(false);
+  const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const { userDetails } = cusSelector((st) => st.auth);
   var is_like = islike(post?.likes, userDetails?.id)
   const [showLikeAnimation, setShowLikeAnimation] = useState((post?.likes as Like[])?.some((el) => el.userId === userDetails?.id));
@@ -63,6 +65,12 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
     }
   };
 
+  const handleDelete = async () => {
+    const Body = { "id": post?.id, "leaderid": userDetails?.leaderId }
+    const deletes = await DeletePost(Body)
+    Getpost()
+  };
+
 
 
 
@@ -89,19 +97,18 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             </span>
           </p>
         </div>
-        {/* <div className="ml-auto relative" id="moreOptions">
-          <button onClick={() => { }}>
+        <div className="ml-auto relative" id="moreOptions" style={{ display: is_my ? "flex" : "none" }}>
+          <button onClick={() => { setShowMorePostOptions(!showMorePostOptions) }}>
             <BsThreeDots className="text-2xl" />
           </button>
-          
-            {showMorePostOptions && (
-              <PostOptions
-                deletePostHandler={() => deletePostHandler(leaderid, id)}
-                userId={userId}
-                onClose={() => setShowMorePostOptions(false)}
-              />
-            )}
-        </div> */}
+          {showMorePostOptions && (
+            <PostOptions
+              deletePostHandler={() => handleDelete()}
+              userId={''}
+              onClose={() => { }}
+            />
+          )}
+        </div>
       </div>
 
       {/* Post */}
@@ -131,12 +138,6 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             {post?.comments?.length}
           </span>
         </button>
-        {/* <button className="flex flex-col gap-3 relative transition-all hover:text-rose-500">
-          <BiShareAlt className="text-[1.4rem]" />
-          <span className="text-[14px] absolute -top-4 left-5 font-[500]">
-            0
-          </span>
-        </button> */}
       </div>
 
 
@@ -146,7 +147,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
         {showComments && (
           <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ul className="flex flex-col gap-5">
-              {(Shortlistbytime(post?.comments) as Comment[]).map((el:any, index:number) => (
+              {(Shortlistbytime(post?.comments) as Comment[]).map((el: any, index: number) => (
                 <SingleComment
                   {...el}
                   comments={el}
@@ -161,6 +162,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             <NewCommentForm
               CommentHandler={() => Getpost()}
               allData={allData}
+              is_my={is_my}
             />
           </m.div>
         )}

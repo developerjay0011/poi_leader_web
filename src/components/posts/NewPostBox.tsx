@@ -13,10 +13,11 @@ import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { PostTypes } from "./PostTypes";
 import CustomImage from "@/utils/CustomImage";
-import { addPost, addStories } from "@/redux_store/posts/postAPI";
+import { GetPostsForLeader, addPost, addStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import { tryCatch } from "@/config/try-catch";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import { groupBy } from "@/config/groupby";
 
 interface NewPostBoxProps {
   type: UserPostType;
@@ -34,6 +35,49 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const [accessType, setAccessType] = useState("");
   const { creatingPost } = cusSelector((st) => st.posts);
   const { userDetails } = cusSelector((state) => state.auth);
+  const fetchStories = async () => {
+    const data = await getStoriesForLeader(userDetails?.leaderId as string);
+    if (data?.length > 0) {
+      let mergeAllPosts: any = [];
+      let allLeaderProfile: any = {};
+      let allLeaderName: any = {};
+
+      data.forEach((item: any) => {
+        mergeAllPosts.push(...item.posts);
+        allLeaderProfile[item.leaderid] = item.image;
+        allLeaderName[item.leaderid] = item.name;
+      });
+      const groupByLeaderId = await groupBy(
+        mergeAllPosts,
+        (item: any) => item.leaderid
+      );
+
+      let finalStories: Record<string, any> = {};
+      Object.keys(groupByLeaderId).forEach((stItem: string) => {
+        groupByLeaderId[stItem].map((item: any) => {
+          if (!finalStories[item.leaderid]) {
+            finalStories[item.leaderid] = {
+              id: "",
+              image: "",
+              leaderid: item.leaderid,
+              media: [],
+              name: "",
+              written_text: ""
+            };
+          }
+          finalStories[item.leaderid].id = item.id;
+          finalStories[item.leaderid].name = allLeaderName[item.leaderid];
+          finalStories[item.leaderid].written_text = item.written_text;
+          finalStories[item.leaderid].image =
+            allLeaderProfile[item.leaderid];
+          finalStories[item.leaderid].media = finalStories[
+            item.leaderid
+          ].media.concat(item.media);
+        });
+      });
+      mergeAllPosts = Object.values(finalStories);
+    }
+  };
 
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -60,9 +104,14 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
       let response: any = "";
       if (type === "post") {
         response = await addPost(formData);
+        if (response?.success) {
+          GetPostsForLeader(userDetails?.leaderId as string)
+        }
       } else if (type === "story") {
         response = await addStories(formData);
-       
+        if (response?.success) {
+          fetchStories()
+        }
       }
       handleAdd()
       if (response?.success) {
@@ -76,7 +125,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
             message: response.message,
           })
         );
-        if(handleClose) handleClose();
+        if (handleClose) handleClose();
       } else {
         dispatch(
           commonActions.showNotification({
@@ -148,12 +197,11 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
           <div className="flex items-start gap-3">
             <CustomImage
               src={
-                `${
-                  (userDetails?.image &&
-                    process.env.NEXT_PUBLIC_BASE_URL +
-                      "" +
-                      userDetails?.image) ||
-                  ""
+                `${(userDetails?.image &&
+                  process.env.NEXT_PUBLIC_BASE_URL +
+                  "" +
+                  userDetails?.image) ||
+                ""
                 }` as string
               }
               alt="user image"
@@ -191,9 +239,8 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                 className="cursor-pointer"
                 onClick={() => setShowMorePostOptions(!showMorePostOptions)}
               >
-                <span className="capitalize">{`Post Type ${
-                  (accessType && ": " + accessType) || ""
-                }`}</span>
+                <span className="capitalize">{`Post Type ${(accessType && ": " + accessType) || ""
+                  }`}</span>
               </div>
               {showMorePostOptions && (
                 <PostTypes

@@ -212,11 +212,10 @@ export interface UserDetails {
 }
 export const yearlistfuture = () => {
   var current_year = moment().year()
-  var listdata = []
+  var listdata = [] as any
   for (let i = 0; i < 11; i++) {
     listdata?.push({ value: String(current_year + i), id: current_year + i })
   }
-
   return listdata
 }
 

@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import { ShortcutsBox } from "./ShortcutsBox";
 
 export const ProfileShortcutsBox: FC = () => {
-  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
-  const dispatch = cusDispatch();
-  const router = useRouter();
+  const { usertype } = cusSelector((state) => state.access);
 
   return (
     <>

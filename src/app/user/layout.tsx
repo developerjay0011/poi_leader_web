@@ -22,7 +22,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
         }
         dispatch(accessAction.storeUsertype(user_type))
         var tabs = user_type == "leader" ? await fetchAccessTabs(userDetails?.id) : await fetchEmployeeAccessTabs(userDetails?.employeeid)
-        await dispatch(accessAction.storeAccesstabs(tabs))
+        if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
         dispatch(accessAction.storeLoader(false))
       }
     })()

@@ -19,8 +19,8 @@ import { getImageUrl } from "@/config/get-image-url";
 import { followLeader, getFollowering, getNotification, getProfile, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { TOKEN_KEY, ToastType, USER_TYPE, USER_VERIFY } from "@/constants/common";
-import { getCookie } from "cookies-next";
+import { ToastType } from "@/constants/common";
+import { getCookies } from "cookies-next";
 import { tryCatch } from "@/config/try-catch";
 import { getLetterTemplates } from "@/redux_store/letter/letterApi";
 import { letterActions } from "@/redux_store/letter/letterSlice";
@@ -28,13 +28,8 @@ import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
-import { motion } from "framer-motion"
 
 
-const variants = {
-  open: { opacity: 1, x: 0 },
-  closed: { opacity: 0, x: "-100%" },
-}
 export const TopNavbar: FC = () => {
   const router = useRouter();
   const curRoute = usePathname();
@@ -47,9 +42,7 @@ export const TopNavbar: FC = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
   const { usertype } = cusSelector((state) => state.access);
-  let token: any = getCookie(TOKEN_KEY);
-  let isuserverify = getCookie(USER_VERIFY)
-  let user_type = getCookie(USER_TYPE)
+  let allcookies: any = getCookies()
   const searchFilterFunction = (text: string) => {
     if (text) {
       const newData = trendingLeader?.filter(
@@ -64,8 +57,6 @@ export const TopNavbar: FC = () => {
       return trendingLeader
     };
   }
-
-  // console.log(usertype)
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -79,11 +70,10 @@ export const TopNavbar: FC = () => {
   }, [dispatch]);
 
 
-
   useEffect(() => {
     (async () => {
-      if (isuserverify == "true" && token) {
-        if (user_type == "leader") {
+      if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
+        if (allcookies?.USER_TYPE == "leader") {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
             if (leaderRes?.request_status === "Rejected") {
@@ -99,12 +89,20 @@ export const TopNavbar: FC = () => {
             dispatch(letterActions.storeLetterTemplate(data));
           }
         } else {
+          if (userDetails?.leaderId) {
+            const leaderRes = await getProfile(userDetails?.leaderId);
+            dispatch(leaderActions.setLeaderProfile(leaderRes));
+            const LeadersDropdown = await getLeadersOptions();
+            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+            const data = await getLetterTemplates(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetterTemplate(data));
+          }
         }
       } else {
         router.push(AuthRoutes.login)
       }
     })();
-  }, [dispatch, token])
+  }, [dispatch, allcookies?.TOKEN_KEY])
 
   // Converting pathname to heading
   let heading = curRoute?.split("/").at(-1)?.includes("-")
@@ -112,6 +110,8 @@ export const TopNavbar: FC = () => {
     : curRoute?.split("/").at(-1);
 
   heading = heading === "user" || heading === "employeehome" ? "home" : heading;
+
+
 
 
   return (
@@ -297,19 +297,19 @@ export const TopNavbar: FC = () => {
                 style={{ display: showMobileNav ? "none" : "flex" }}
               />
               <FaHamburger
-                className="text-2xl"
-                onClick={() => setShowMobileNav(true)}
+                className="text-2xl pointer"
+                onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
             </div>
           </>
         }
       </nav>
 
-      {showMobileNav && (
-        <AnimatePresence mode="wait"  >
-          <MobileLeftNavbar onClose={() => setShowMobileNav(false)} />
-        </AnimatePresence>
-      )}
+      {/* {showMobileNav && ( */}
+      <AnimatePresence mode="wait"  >
+        <MobileLeftNavbar showMobileNav={showMobileNav} onClose={() => setShowMobileNav(false)} />
+      </AnimatePresence>
+      {/* )} */}
     </>
   );
 };

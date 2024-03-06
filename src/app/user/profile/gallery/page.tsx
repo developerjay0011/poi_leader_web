@@ -1,10 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useState } from "react";
 import { BriefPost } from "@/components/posts/BriefPost";
-import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
-import { validate } from "uuid";
-import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
-import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
+import { GenerateId, convertFileToBase64 } from "@/utils/utility";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import { BsImageFill } from "react-icons/bs";

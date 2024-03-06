@@ -8,80 +8,94 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { Story } from "./Story";
 import {
   deleteStory,
+  getLeaderAddedStories,
   getStoriesForLeader,
 } from "@/redux_store/posts/postAPI";
 import { groupBy } from "@/config/groupby";
 import { NewPostBox } from "../posts/NewPostBox";
 import { ProtectedRoutes } from "@/constants/routes";
 
-export const StoriesBox: FC = () => {
+interface StoriesBoxProps {
+  is_my_postandstories: boolean
+}
+export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }) => {
   const [getStories, setGetStories] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const id = GenerateId();
   const { userDetails } = cusSelector((state) => state.auth);
-  const dispatch = cusDispatch();
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const leaderid = userDetails?.leaderId;
+  const Setstories = async (data: any) => {
+    if (data?.length > 0) {
+      let mergeAllPosts: any = [];
+      let allLeaderProfile: any = {};
+      let allLeaderName: any = {};
+
+      data.forEach((item: any) => {
+        mergeAllPosts.push(...item.posts);
+        allLeaderProfile[item.leaderid] = item.image;
+        allLeaderName[item.leaderid] = item.name;
+      });
+      const groupByLeaderId = await groupBy(
+        mergeAllPosts,
+        (item: any) => item.leaderid
+      );
+
+      let finalStories: Record<string, any> = {};
+      Object.keys(groupByLeaderId).forEach((stItem: string) => {
+        groupByLeaderId[stItem].map((item: any) => {
+          if (!finalStories[item.leaderid]) {
+            finalStories[item.leaderid] = {
+              id: "",
+              image: "",
+              leaderid: item.leaderid,
+              media: [],
+              name: "",
+              written_text: ""
+            };
+          }
+          finalStories[item.leaderid].id = item.id;
+          finalStories[item.leaderid].name = allLeaderName[item.leaderid];
+          finalStories[item.leaderid].written_text = item.written_text;
+          finalStories[item.leaderid].image =
+            allLeaderProfile[item.leaderid];
+          finalStories[item.leaderid].media = finalStories[
+            item.leaderid
+          ].media.concat(item.media);
+        });
+      });
+      mergeAllPosts = Object.values(finalStories);
+      setGetStories(mergeAllPosts);
+    }
+  }
+  const fetchmyStories = async () => {
+    if (leaderid && is_my_postandstories) {
+      var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+      const LeaderAddedStories = await getLeaderAddedStories(leaderid, mypostdata);
+      Setstories(LeaderAddedStories)
+    }
+  }
   const fetchStories = async () => {
-    const leaderid = userDetails?.leaderId;
     if (leaderid) {
       const data = await getStoriesForLeader(leaderid);
-      if (data?.length > 0) {
-        let mergeAllPosts: any = [];
-        let allLeaderProfile: any = {};
-        let allLeaderName: any = {};
-
-        data.forEach((item: any) => {
-          mergeAllPosts.push(...item.posts);
-          allLeaderProfile[item.leaderid] = item.image;
-          allLeaderName[item.leaderid] = item.name;
-        });
-        const groupByLeaderId = await groupBy(
-          mergeAllPosts,
-          (item: any) => item.leaderid
-        );
-
-        let finalStories: Record<string, any> = {};
-        Object.keys(groupByLeaderId).forEach((stItem: string) => {
-          groupByLeaderId[stItem].map((item: any) => {
-            if (!finalStories[item.leaderid]) {
-              finalStories[item.leaderid] = {
-                id: "",
-                image: "",
-                leaderid: item.leaderid,
-                media: [],
-                name: "",
-                written_text: ""
-              };
-            }
-            finalStories[item.leaderid].id = item.id;
-            finalStories[item.leaderid].name = allLeaderName[item.leaderid];
-            finalStories[item.leaderid].written_text = item.written_text;
-            finalStories[item.leaderid].image =
-              allLeaderProfile[item.leaderid];
-            finalStories[item.leaderid].media = finalStories[
-              item.leaderid
-            ].media.concat(item.media);
-          });
-        });
-        mergeAllPosts = Object.values(finalStories);
-        setGetStories(mergeAllPosts);
-      }
+      Setstories(data)
     }
   };
 
   useEffect(() => {
+    fetchmyStories();
+  }, [leaderProfile?.image, leaderProfile?.username]);
+  useEffect(() => {
     fetchStories();
-  }, []);
+  }, [leaderProfile?.id]);
 
   const handleDelete = async (leaderid: string, id: string) => {
-    const postBody = {
-      id: id,
-      leaderid: leaderid,
-    };
-
+    const postBody = { id: id, leaderid: leaderid, };
     try {
       const data = await deleteStory(postBody);
       if (data?.success) {
         fetchStories();
+        fetchmyStories();
       }
     } catch (error) {
       console.log(error);
@@ -128,13 +142,14 @@ export const StoriesBox: FC = () => {
                   <Story
                     key={el?.id}
                     userImage={`${(el?.image &&
-                        process.env.NEXT_PUBLIC_BASE_URL + "" + el.image) ||
+                      process.env.NEXT_PUBLIC_BASE_URL + "" + el.image) ||
                       ""
                       }`}
                     data={el}
                     stories={el?.media}
                     id={el?.id || ""}
                     handleDelete={handleDelete}
+                    is_my={is_my_postandstories}
                   />
                 );
               }

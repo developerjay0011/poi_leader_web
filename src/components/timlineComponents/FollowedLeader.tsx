@@ -2,7 +2,6 @@
 import { UserData } from "@/utils/utility";
 import { StaticImageData } from "next/image";
 import { FC, useEffect, useState } from "react";
-import { fetchFollowingList, fetchUnFollowLeader } from "../api/followLeader";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
@@ -23,8 +22,8 @@ interface Leader {
 interface TrendingUsersProps {
   followers: any;
 }
-export const FollowedLeader: FC<TrendingUsersProps> = ({  }) => {
-  const {  leaderProfile, following } = cusSelector((state) => state.leader);
+export const FollowedLeader: FC<TrendingUsersProps> = ({ }) => {
+  const { leaderProfile, following } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
 
   useEffect(() => {
@@ -102,7 +101,7 @@ const TrendingUser: FC<TrendingUserProps> = ({
     };
     tryCatch(
       async () => {
-        const response = await  unFollowLeader(postBody);
+        const response = await unFollowLeader(postBody);
         if (response?.success) {
           const res = await getFollowering(leaderProfile?.id as string)
           dispatch(leaderActions.setFollowing(res))

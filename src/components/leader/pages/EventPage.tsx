@@ -55,7 +55,6 @@ export const EventPage: FC<EventPageProps> = () => {
   useEffect(() => {
     (async () => {
       getEvent()
-
     })();
   }, [userDetails, dispatch, leaderProfile?.id]);
 
@@ -112,7 +111,6 @@ export const EventPage: FC<EventPageProps> = () => {
   };
 
   const editEvent = async (data: any) => {
-    console.log(data);
     setEditEventData(data);
     setIsEvent(true);
     setIsEdit(true);
@@ -188,13 +186,16 @@ export const EventPage: FC<EventPageProps> = () => {
             </button>
           </div>
           {/* Event Table */}
-          <EventTable
 
-            searchStr={searchString}
-            isEvent={isEvent}
-            editEvent={editEvent}
-          />
-          {loading && <LoadingComponent rows={2} columns={6} />}
+          {loading ?
+            <LoadingComponent rows={2} columns={6} />
+            :
+            <EventTable
+              searchStr={searchString}
+              isEvent={isEvent}
+              editEvent={editEvent}
+            />
+          }
 
           {/* {!loading  && (
             <TableWrapper

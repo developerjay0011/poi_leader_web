@@ -1,6 +1,8 @@
+import { USER_INFO } from '@/constants/common';
 import { LeaderProfile } from '@/interfaces/leader';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCookie } from 'cookies-next';
+
 
 interface LeaderState {
   leaderProfile: LeaderProfile;
@@ -11,13 +13,11 @@ interface LeaderState {
   reasons: any[];
 }
 
-let userDetails: any = getCookie("userData");
-userDetails = userDetails && JSON.parse(userDetails) || { leader_detail: {} };
+let userDetails: any = getCookie(USER_INFO);
+userDetails = userDetails && JSON.parse(userDetails);
 
 const initialState: LeaderState = {
-  leaderProfile: {
-    id: userDetails?.leaderId
-  },
+  leaderProfile: { id: userDetails?.leaderId },
   followers: [],
   trendingLeader: [],
   following: [],

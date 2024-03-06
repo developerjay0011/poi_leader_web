@@ -1,15 +1,28 @@
-import { FaBell, FaClipboard, FaUser } from 'react-icons/fa'
+import { FaClipboard, FaUser } from 'react-icons/fa'
 import { GenerateId } from './utility'
 import { LuNetwork } from 'react-icons/lu'
-import { FaUserGroup } from 'react-icons/fa6'
 import { MdContacts } from 'react-icons/md'
-import { BsFillCalendar3WeekFill } from 'react-icons/bs'
+import { BsFillCalendar3WeekFill, BsHouseGearFill } from 'react-icons/bs'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { SlEnvolopeLetter } from "react-icons/sl";
-import { BiSolidUserDetail } from "react-icons/bi";
+import { BiSolidUserDetail, BiTask } from "react-icons/bi";
 
 import { ImTicket } from "react-icons/im";
 export const LEFT_NAV_ROUTES = [
+  {
+    link: '/user/profile/agenda',
+    name: 'agenda',
+    Icon: BiTask,
+    tabname: "Manage Agenda",
+    isuser: "Employee"
+  },
+  {
+    link: '/user/profile/developments',
+    name: 'developments',
+    Icon: BsHouseGearFill,
+    tabname: "Manage Developments",
+    isuser: "Employee"
+  },
   {
     id: GenerateId(),
     link: '/user',

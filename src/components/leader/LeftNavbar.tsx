@@ -2,6 +2,7 @@ import { CusLink } from "@/utils/CusLink";
 import { FC, ReactNode } from "react";
 import { LEFT_NAV_ROUTES } from "@/utils/routes";
 import { cusSelector } from "@/redux_store/cusHooks";
+import { tabfilter } from "@/redux_store/accesstab/tabApi";
 
 const LeftNavLink: FC<{
   children: ReactNode;
@@ -28,19 +29,13 @@ const LeftNavLink: FC<{
 
 export const LeftNavbar: FC = () => {
   const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
-  var tabfilter = (accesstabs: [], usertype: string) => {
-    var tabs = [...LEFT_NAV_ROUTES]
-    tabs = tabs.filter((item: any) => ((usertype === "leader" && item?.tabname == "Leader") || accesstabs.some((element2: any) => element2?.tabname === item?.tabname)))
-    return accesstabs?.length > 0 || usertype === "leader" ? tabs : []
-  }
-
 
 
   return (
     <section className="py-8 px-3 bg-white flex flex-col shadow_left gap-5 h-full max-[1000px]:hidden">
       {loader ? LEFT_NAV_ROUTES.map((El: any) => (
         <LeftNavLink key={El.id} info={''} link={''}><></></LeftNavLink>
-      )) : [...tabfilter(accesstabs, usertype) as []]?.map((El: any) => (
+      )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any) => (
         <LeftNavLink
           key={El.id}
           info={El.name}

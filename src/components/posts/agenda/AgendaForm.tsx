@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "../../Input";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { getAgenda, saveAgenda } from "@/redux_store/agenda/agendaApi";
 import moment from "moment";
@@ -31,22 +30,22 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
   } = useForm<UserDetails>();
 
   const formSubmitHandler = async (data: UserDetails) => {
-   
-    const body: any = { ...data, categoryid:categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
-     try {
-       const response = await saveAgenda(body);  
-       if (response?.success) {
-         const agendaData = await getAgenda(leaderProfile?.id as string);
-         dispatch(agendaAction.storeAgendas(agendaData))
-         onCancel()
-         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-       } else {
-         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-       }
-     
+
+    const body: any = { ...data, categoryid: categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'), leaderid: leaderProfile.id }
+    try {
+      const response = await saveAgenda(body);
+      if (response?.success) {
+        const agendaData = await getAgenda(leaderProfile?.id as string);
+        dispatch(agendaAction.storeAgendas(agendaData))
+        onCancel()
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+      }
+
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
+
     }
   };
 
@@ -120,7 +119,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
             }}
           />
         </div>
-        
+
         {/* <Input
           errors={errors}
           register={register}
@@ -138,8 +137,8 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
           }}
         />
          */}
-       
-      {/* <label className="flex gap-1 items-center" htmlFor="category">
+
+        {/* <label className="flex gap-1 items-center" htmlFor="category">
         <span className='font-semibold'>
             Category  <strong className='text-red-500'>*</strong>
           </span>
@@ -158,7 +157,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel }) => {
             ))}
           </select>
     */}
-      
+
         <div className="flex items-center justify-center gap-5">
           <label className="flex gap-2 items-center" htmlFor="category">
             <span className="font-medium">Category</span>

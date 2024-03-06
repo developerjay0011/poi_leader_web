@@ -4,42 +4,50 @@ import { NewPostBox } from "./NewPostBox";
 import { Post } from "./Post";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { StoriesBox } from "../timlineComponents/StoriesBox";
-import { fetchGetLeaderAddedPosts } from "../api/posts";
-import { GetPostsForLeader } from "@/redux_store/posts/postAPI";
+import { GetLeaderAddedPosts, GetPostsForLeader } from "@/redux_store/posts/postAPI";
 import { postActions } from "@/redux_store/posts/postSlice";
 import { AgendaPost } from "./postagenda/AgendaPost";
 import { PollPost } from "./postpolls/PollPost";
 
-interface TimeLinePageProps { }
-export const TimeLinePage: FC<TimeLinePageProps> = () => {
+interface TimeLinePageProps {
+  is_my_postandstories: boolean
+}
+export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = false }) => {
   const dispatch = cusDispatch();
   const postData: any = cusSelector((state) => state.posts.allPosts);
+  const mypostData: any = cusSelector((state) => state.posts.posts);
   const { userDetails } = cusSelector((state) => state.auth);
+  const { leaderProfile } = cusSelector((state) => state.leader);
   const Getpost = async () => {
     if (userDetails?.leaderId) {
       const data = await GetPostsForLeader(userDetails?.leaderId);
       if (data?.length > 0) {
         dispatch(postActions.setPost(data));
       }
+      const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
+      if (leaderpost?.length > 0 && Array.isArray(leaderpost)) {
+        dispatch(postActions.listPosts(leaderpost));
+      }
     }
   };
+  var setpost = is_my_postandstories ? mypostData : postData
+  var mypostdata = is_my_postandstories ? { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId } : {}
+
   useEffect(() => {
     (async () => {
       await Getpost();
     })();
   }, [userDetails?.leaderId]);
 
-
-
-
-
   return (
     <>
       {/* CENTER FEED */}
       <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
-        <StoriesBox />
-        <NewPostBox handleAdd={()=>Getpost()} type="post" />
-        {postData.map((el: any, index: string) => {
+        <StoriesBox
+          is_my_postandstories={is_my_postandstories}
+        />
+        <NewPostBox handleAdd={() => Getpost()} type="post" />
+        {setpost?.map((el: any, index: string) => {
           var type = el?.type
           return type === "post" ? (
             <div key={index}>
@@ -47,13 +55,14 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
                 {...el}
                 index={index}
                 Getpost={Getpost}
-                userdetails={el.userdetails as any}
-                post={el.post as any}
+                userdetails={!is_my_postandstories ? el.userdetails : mypostdata as any}
+                post={!is_my_postandstories ? el.post : el as any}
                 type={el.type as any}
-                allData={el}
+                is_my={is_my_postandstories}
+                allData={{ ...el, mypostdata }}
               />
             </div>
-          ) : type === "agendas" || type === "developments" ? (
+          ) : (type === "agendas" || type === "developments") && !is_my_postandstories ? (
             <div key={index}>
               <AgendaPost
                 {...el}
@@ -65,7 +74,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = () => {
                 post={el.post as any}
               />
             </div>
-          ) : type === "polls" ? (
+          ) : type === "polls" && !is_my_postandstories ? (
             <div key={index}>
               <PollPost
                 {...el}

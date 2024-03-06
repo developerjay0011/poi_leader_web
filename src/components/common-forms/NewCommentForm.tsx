@@ -9,13 +9,16 @@ import { CommentPost } from "@/redux_store/posts/postAPI";
 interface NewCommentFormProps {
   CommentHandler: (comment: string) => void;
   allData: any;
+  is_my: boolean
 }
 
-export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allData, }) => {
+export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allData, is_my }) => {
   const [commentText, setCommentText] = useState("");
   const { userDetails } = cusSelector((st) => st.auth);
-  const postuser = allData?.userdetails
-  const postdetails = allData?.post
+  const postuser = is_my ? allData : allData?.userdetails
+  const postdetails = is_my ? allData : allData?.post
+
+
   const addNewCommentHandler = async (e: FormEvent) => {
     e.preventDefault();
     const commentBody = {
@@ -27,6 +30,9 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allDat
       "userimg": userDetails?.image ? userDetails?.image : '',
       'comment_text': commentText,
     };
+
+
+    console.log(commentBody)
     try {
       const data = await CommentPost(commentBody);
       if (data?.success) { CommentHandler(commentText); }

@@ -18,9 +18,7 @@ interface TimeLineFormProps {
 }
 
 const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit, data }) => {
-
   const { leaderProfile } = cusSelector((state) => state.leader);
-  const { userDetails } = cusSelector((state) => state.auth);
   const statusOption = [
     { id: 'completed', value: 'completed' },
     { id: 'in progress', value: 'in progress' },

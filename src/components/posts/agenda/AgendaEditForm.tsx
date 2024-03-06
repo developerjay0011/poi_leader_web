@@ -3,21 +3,19 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../../Input";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { getAgenda, editAgenda } from "@/redux_store/agenda/agendaApi";
 import moment from "moment";
-import { AgendaDetails, agendaAction } from "@/redux_store/agenda/agendaSlice";
-import { FaFileAlt } from "react-icons/fa";
+import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { getImageUrl } from '@/config/get-image-url';
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 interface AgendaFormProps {
   onCancel: () => void; // Define the type of onCancel prop
-  data:any
+  data: any
 }
 
-const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel,data }) => {
+const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel, data }) => {
   const [priority, setPriority] = useState("");
   const [access, setAccess] = useState("");
   const { categories } = cusSelector((st) => st.agenda);
@@ -34,34 +32,34 @@ const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel,data }) => {
   } = useForm<UserDetails>();
 
   const formSubmitHandler = async (formdata: UserDetails) => {
-   
-    const body = { ...formdata, id: data?.id, categoryid: categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(formdata.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
-     try {
-       const response = await editAgenda(body);  
-       if (response?.success) {
-         const agendaData = await getAgenda(leaderProfile?.id as string);
-         dispatch(agendaAction.storeAgendas(agendaData))
-         onCancel()
-         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-       } else {
-         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-       }
-     
+
+    const body = { ...formdata, id: data?.id, categoryid: categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(formdata.creation_date).format('YYYY-MM-DD hh:mm:ss'), leaderid: leaderProfile.id }
+    try {
+      const response = await editAgenda(body);
+      if (response?.success) {
+        const agendaData = await getAgenda(leaderProfile?.id as string);
+        dispatch(agendaAction.storeAgendas(agendaData))
+        onCancel()
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+      }
+
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
+
     }
   };
   useEffect(() => {
     // Update the document title using the browser API
     setValue('title', data.title)
     setValue('description', data.description)
-    setValue('creation_date', moment(data.creation_date).format('YYYY-MM-DD') )
+    setValue('creation_date', moment(data.creation_date).format('YYYY-MM-DD'))
     setCategoryFilter(data.categoryid)
     setPriority(data.priority)
     setAccess(data.access)
-  },[]);
-  
+  }, []);
+
   return (
     <div>
       <form
@@ -96,7 +94,7 @@ const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel,data }) => {
         </div>
 
         <div className="flex items-center justify-center gap-5">
-        
+
           <Input
             errors={errors}
             id="attachments"
@@ -104,9 +102,9 @@ const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel,data }) => {
             register={register}
             title="Attachments"
             type="file"
-        
+
           />
-         
+
           <Input
             errors={errors}
             id='creation_date'
@@ -119,9 +117,9 @@ const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel,data }) => {
             }}
           />
         </div>
-        
-     
-      
+
+
+
         <div className="flex items-center justify-center gap-5">
           <label className="flex gap-2 items-center" htmlFor="category">
             <span className="font-medium">Category</span>
@@ -166,7 +164,7 @@ const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel,data }) => {
             </select>
           </label>
         </div>
-        {data?.attachments?.map((el:any) => (
+        {data?.attachments?.map((el: any) => (
           <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
             {el.split('/').pop()}
           </a>

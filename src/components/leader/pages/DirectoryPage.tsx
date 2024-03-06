@@ -36,7 +36,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
   const dispatch = cusDispatch();
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
-  
+
   const {
     register,
     setValue,
@@ -57,10 +57,9 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
         }
       )
     })();
-  }, [userDetails, dispatch, leaderProfile?.id,isDirectory]);
+  }, [userDetails, dispatch, leaderProfile?.id, isDirectory]);
 
   const formSubmitHandler = async (data: UserDetails) => {
-    console.log(data);
     tryCatch(
       async () => {
         const currentDate = new Date().toISOString();
@@ -88,11 +87,9 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
   };
 
   const editDirectory = async (data: any) => {
-    console.log(data);
     setEditDirectoryData(data);
     setIsDirectory(true);
     setIsEdit(true);
-
     setValue("Name", data.name);
     setValue("Phone", data.mobile);
     setValue("Email", data.email);

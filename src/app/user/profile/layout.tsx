@@ -14,7 +14,7 @@ import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers } = cusSelector((state) => state.leader);
-  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
+  const { usertype } = cusSelector((state) => state.access);
   const dispatch = cusDispatch();
 
 

@@ -43,14 +43,14 @@ export const FourColumnImgLayout: FC<{
       </figure>
 
       <AnimatePresence>
-        {showFullPost && (
+        {/* {showFullPost && (
           <FullPost
             onClose={hidePost}
             posts={media}
             postId={postId}
             userId={userId}
           />
-        )}
+        )} */}
       </AnimatePresence>
     </>
   )

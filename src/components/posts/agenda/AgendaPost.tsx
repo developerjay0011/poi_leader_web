@@ -4,12 +4,8 @@ import { BsThreeDots } from "react-icons/bs";
 import { AgendaOptions } from "../AgendaOptions";
 import { GrClose } from "react-icons/gr";
 import {
-  AGENDA_STATUS,
-  AGENDA_VAL,
   PRIORITIES,
   PRIORITY,
-  dateConverter,
-  userImg,
 } from "@/utils/utility";
 import { AgendaDetails, agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
@@ -83,7 +79,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    } )
+      })
   }
 
 
