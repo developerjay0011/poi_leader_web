@@ -21,25 +21,25 @@ interface ManagePollsFormProps {
   edit?: boolean
   title?: string
   pollType?: PollType
-  poll_options?: { text: string; id: string; votes: number}[]
+  poll_options?: { text: string; id: string; votes: number }[]
   imgOptions?: { text: string; image: string; id: string; votes: number }[]
   publishDate?: string
   access?: string
   expiresAt?: string
   id?: string
-  view_access?:string
+  view_access?: string
 }
 
 export interface NewPollsFormFields {
   title: string
   pollType: PollType
-  poll_options: { text: string; id: string; votes: number}[]
+  poll_options: { text: string; id: string; votes: number }[]
   imgOptions: { text: string; image: string; id: string; votes: number }[]
   publishDate: string
   access: string
   expiresAt: string
-  view_access:string
-  votes_by:any[]
+  view_access: string
+  votes_by: any[]
 }
 
 export const ManagePollsForm: FC<ManagePollsFormProps> = ({
@@ -116,7 +116,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
           publish_date: data?.publishDate,
           close_date: data?.expiresAt,
           saved_by_type: userDetails?.usertype.replace('emerging ', ""),
-          saved_by: leaderProfile?.id  
+          saved_by: leaderProfile?.id
 
         };
 
@@ -136,9 +136,9 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 
   useEffect(() => {
     if (edit) {
-  
+
     }
-  },[]) 
+  }, [])
 
   return (
     <>
@@ -148,9 +148,8 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
         exit={{ opacity: 0 }}
         className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
         <div
-          className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center ${
-            fields.length > 4 || imgFields.length > 4 ? 'max-[650px]:py-5' : ''
-          }`}>
+          className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll main_scrollbar flex justify-center ${fields.length > 4 || imgFields.length > 4 ? 'max-[650px]:py-5' : ''
+            }`}>
           <m.section
             initial={{ y: -100 }}
             animate={{ y: 0 }}
@@ -298,10 +297,9 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 
                 <label
                   htmlFor='expiresDate'
-                  className={`flex flex-col gap-2 ${
-                    (fields.length > 0 || imgFields.length > 0) &&
+                  className={`flex flex-col gap-2 ${(fields.length > 0 || imgFields.length > 0) &&
                     'col-span-full'
-                  }`}>
+                    }`}>
                   <span className='capitalize font-[500]'>
                     Poll Close date
                     <strong className='text-rose-500'>*</strong>

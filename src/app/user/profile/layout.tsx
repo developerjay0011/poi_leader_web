@@ -14,6 +14,7 @@ import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers } = cusSelector((state) => state.leader);
+  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
   const dispatch = cusDispatch();
 
 
@@ -52,8 +53,8 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <>
-      <section className='m-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-5 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'>
-        <div className='flex flex-col gap-5'>
+      <section className={`${usertype == "leader" && 'm-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-5 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'}${usertype != "leader" && 'flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'}`}>
+        <div className='flex flex-col gap-5' style={{ display: usertype == "leader" ? "flex" : "none" }}>
           <section className='flex flex-col text-sky-950 border-b border-l border-r w-full'>
             {/* USER PIC and BG pic*/}
             <figure className='relative rounded-tr-lg rounded-tl-lg overflow-hidden'>

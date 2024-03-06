@@ -9,6 +9,7 @@ import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import AgendaForm from "@/components/posts/agenda/AgendaForm";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
+import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 
 const AdminAgendaPage = () => {
 
@@ -28,7 +29,7 @@ const AdminAgendaPage = () => {
       const data = await getAgenda(leaderProfile?.id as string);
       dispatch(agendaAction.storeAgendas(data))
       const categories = await getCategory(leaderProfile?.id as string);
-      dispatch(agendaAction.storeCategories(categories)) 
+      dispatch(agendaAction.storeCategories(categories))
       console.log("categoriescategories", data)
     })()
   }, [userDetails, dispatch, leaderProfile?.id]);
@@ -56,9 +57,10 @@ const AdminAgendaPage = () => {
   return (
     <>
       <div className="flex gap-5 w-full">
-        <div className="sticky top-0 left-0 self-start max-[1000px]:hidden w-max">
+        {/* <div className="sticky top-0 left-0 self-start max-[1000px]:hidden w-max">
           <ShortcutsBox />
-        </div>
+        </div> */}
+        <ProfileShortcutsBox />
 
         <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
           <section className="flex justify-between flex-col">

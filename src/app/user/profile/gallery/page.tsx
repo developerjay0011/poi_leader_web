@@ -17,6 +17,7 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { galleryActions } from "@/redux_store/gallery/gallerySlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 
 const AdminProfileGalleryPage = () => {
   const [searchStr, setSearchStr] = useState("");
@@ -38,9 +39,9 @@ const AdminProfileGalleryPage = () => {
         async () => {
           const data = await getGalleryData(leaderProfile?.id as string);
           dispatch(galleryActions.storeGallery(data))
-      })
+        })
     })();
-  }, [userDetails,dispatch ,updateGallery]);
+  }, [userDetails, dispatch, updateGallery]);
 
   const deletedata = (data: any) => {
     setUpdateGallery(data);
@@ -109,12 +110,12 @@ const AdminProfileGalleryPage = () => {
   const handleSave = async () => {
     tryCatch(
       async () => {
-      const formData = new FormData();
-      formData.append("leaderid", leaderProfile?.id || "");
-      for (let i = 0; i < apimedia.length; i++) {
-        const item: any = apimedia[i];
-        formData.append("media", item?.media);
-      }
+        const formData = new FormData();
+        formData.append("leaderid", leaderProfile?.id || "");
+        for (let i = 0; i < apimedia.length; i++) {
+          const item: any = apimedia[i];
+          formData.append("media", item?.media);
+        }
 
         const response = await saveGallery(formData);
         if (response?.success) {
@@ -126,15 +127,16 @@ const AdminProfileGalleryPage = () => {
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    })
+      })
   };
 
   return (
     <>
       <div className="flex gap-5 w-full relative">
-        <div className="sticky top-0 left-0 self-start max-[1000px]:hidden">
+        {/* <div className="sticky top-0 left-0 self-start max-[1000px]:hidden">
           <ShortcutsBox />
-        </div>
+        </div> */}
+        <ProfileShortcutsBox />
 
         <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
           <section className="flex justify-between flex-col">
@@ -176,7 +178,7 @@ const AdminProfileGalleryPage = () => {
                   return (
                     <BriefPost
                       key={index}
-                      userMedia={userMedia} 
+                      userMedia={userMedia}
                       deletedata={deletedata}
                     />
                   );
@@ -192,9 +194,8 @@ const AdminProfileGalleryPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${
-                false ? "cursor-not-allowed" : ""
-              }`}
+              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
+                }`}
             >
               <div
                 className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"

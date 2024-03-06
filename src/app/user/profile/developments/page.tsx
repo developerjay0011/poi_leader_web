@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { DevelopmentPost } from "@/components/posts/development/Post";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import {  getCategory } from "@/redux_store/agenda/agendaApi";
+import { getCategory } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { AnimatePresence } from "framer-motion";
@@ -11,6 +11,7 @@ import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { getDevelopment } from "@/redux_store/development/developmentApi";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
 import DevelopmentForm from "@/components/posts/development/Form";
+import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 
 const AdminDevelopmentPage = () => {
 
@@ -60,9 +61,10 @@ const AdminDevelopmentPage = () => {
   return (
     <>
       <div className="flex gap-5 w-full">
-        <div className="sticky top-0 left-0 self-start max-[1000px]:hidden w-max">
+        {/* <div className="sticky top-0 left-0 self-start max-[1000px]:hidden w-max">
           <ShortcutsBox />
-        </div>
+        </div> */}
+        <ProfileShortcutsBox />
 
         <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
           <section className="flex justify-between flex-col">

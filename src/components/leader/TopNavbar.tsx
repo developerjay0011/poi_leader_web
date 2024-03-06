@@ -28,8 +28,13 @@ import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
+import { motion } from "framer-motion"
 
 
+const variants = {
+  open: { opacity: 1, x: 0 },
+  closed: { opacity: 0, x: "-100%" },
+}
 export const TopNavbar: FC = () => {
   const router = useRouter();
   const curRoute = usePathname();
@@ -212,6 +217,13 @@ export const TopNavbar: FC = () => {
           :
           <>
             <h3 className="capitalize ml-2">{heading}</h3>
+            <div className="h-10 w-[2px] bg-sky-50 bg-opacity-40" />
+            <section className="flex items-center gap-8">
+              <button type="button" onClick={() => router.push(`/user/employeehome`)}>
+                <BsHouseFill className="text-sky-50 text-2xl" />
+              </button>
+            </section>
+
             <section className="flex items-center gap-4 ml-auto relative">
               <button className="flex items-center gap-2" onClick={() => { dispatch(authActions.logout()) }}>
                 <FaPowerOff />log out
@@ -283,7 +295,6 @@ export const TopNavbar: FC = () => {
                 alt="poi logo"
                 className="h-12 w-auto"
                 style={{ display: showMobileNav ? "none" : "flex" }}
-                onClick={() => router.push("/user")}
               />
               <FaHamburger
                 className="text-2xl"
@@ -295,7 +306,7 @@ export const TopNavbar: FC = () => {
       </nav>
 
       {showMobileNav && (
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait"  >
           <MobileLeftNavbar onClose={() => setShowMobileNav(false)} />
         </AnimatePresence>
       )}

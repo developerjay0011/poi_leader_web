@@ -75,7 +75,7 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             exit={{ y: -100 }}
-            className='z-30 self-center border overflow-y-auto max-h-[98%] self-start bg-white relative w-1/2 rounded-md shadow-md max-[1450px]:w-[80%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
+            className='z-30 self-center border overflow-y-auto main_scrollbar max-h-[98%] self-start bg-white relative w-1/2 rounded-md shadow-md max-[1450px]:w-[80%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
             <button
               type='button'
               onClick={onClose}

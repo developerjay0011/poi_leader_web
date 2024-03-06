@@ -83,7 +83,7 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
-        <div className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center`}>
+        <div className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center main_scrollbar`}>
           <m.section
             initial={{ y: -100 }}
             animate={{ y: 0 }}

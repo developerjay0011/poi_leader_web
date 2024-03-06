@@ -13,6 +13,7 @@ import { ToastType } from '@/constants/common'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { ManageTicketTable } from '@/components/ticket/ManageTicketTable'
+import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const TicketTemplateManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
@@ -62,10 +63,7 @@ export const TicketTemplateManagePage: FC = () => {
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
-                    <ShortcutsBox />
-                </div>
-
+                <ProfileShortcutsBox />
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                     {/* POLLS TABLE */}
                     <TableWrapper

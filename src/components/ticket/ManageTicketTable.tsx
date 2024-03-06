@@ -12,7 +12,7 @@ import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 interface ManageTicketTableProps {
   searchStr: string
   handleDelete: (id: string) => void
-  handleEdit:(value:any)=>void
+  handleEdit: (value: any) => void
 }
 
 export const ManageTicketTable: FC<ManageTicketTableProps> = ({
@@ -22,13 +22,13 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
 
-  const searchFilterData = ticket?.filter((el:any) =>
-    searchStr?
+  const searchFilterData = ticket?.filter((el: any) =>
+    searchStr ?
       el?.ticketid.includes(searchStr)
       : el
   )
   console.log(searchFilterData)
-   
+
   return (
     <>
       <table className='w-full my-8 border'>
@@ -55,20 +55,20 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
             <th className='font-semibold capitalize text-center py-2 pl-2 border'>
               Status
             </th>
-           
+
           </tr>
         </thead>
         <tbody>{searchFilterData?.length > 0 ? (
           searchFilterData?.map((el, i) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
-            
+
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el?.ticketid}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el?.ticket_code}
               </td>
-              
+
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el?.category}
               </td>
@@ -84,12 +84,12 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
               <td className='text-center py-2 pl-2 border printHide'>
                 {/* {el?.status[0]} */}
               </td>
-        
-              </tr>
+
+            </tr>
 
           ))
         ) : (
-          <ErrorTableRow colNo={4} />
+          <ErrorTableRow colNo={8} />
         )}</tbody>
       </table>
       <AnimatePresence>
@@ -97,7 +97,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
           <ConfirmDialogBox
             onCancel={() => setShowDeleteConfirmPopup(false)}
             noAllowed={false}
-            onOk={() => {handleDelete(id), setShowDeleteConfirmPopup(false)}}
+            onOk={() => { handleDelete(id), setShowDeleteConfirmPopup(false) }}
           />
         )}
       </AnimatePresence>

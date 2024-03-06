@@ -20,7 +20,6 @@ export const ShortcutsBox: FC = () => {
   const router = useRouter();
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [showCloseConfirmBox, setShowCloseConfirmBox] = useState(false);
-
   const { userDetails } = cusSelector(
     (state: RootState) => state.auth
   );
@@ -51,7 +50,7 @@ export const ShortcutsBox: FC = () => {
   return (
     <>
       <CommonBox title="shortcuts">
-        <div className="flex flex-col py-4 gap-5 pr-16 font-normal">
+        <div className="flex flex-col py-4 gap-5 pr-16 font-normal" >
           <ShortcutBtn Icon={FaClipboard} title="feed" route={`/user`} />
 
           <ShortcutBtn
@@ -97,8 +96,8 @@ export const ShortcutsBox: FC = () => {
             route="http://localhost:5000/"
           />
 
-        
-        
+
+
           <AnimatePresence mode="wait">
             {showConfirmBox && (
               <ConfirmDialogBox

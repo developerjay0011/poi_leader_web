@@ -90,7 +90,7 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed top-0 left-0 z-10 w-full backdrop-blur-[2px] h-full overflow-y-scroll '>
+        className='fixed top-0 left-0 z-10 w-full backdrop-blur-[2px] h-full overflow-y-scroll main_scrollbar'>
         <div className='bg-gray-700 opacity-25 h-screen w-full absolute top-0 left-0 z-20' />
         <m.div
           initial={{ y: -100 }}

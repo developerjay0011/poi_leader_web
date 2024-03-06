@@ -11,6 +11,7 @@ import { letterActions } from '@/redux_store/letter/letterSlice'
 import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
+import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const LetterTemplateManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
@@ -60,12 +61,12 @@ export const LetterTemplateManagePage: FC = () => {
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
+                {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
                     <ShortcutsBox />
-                </div>
+                </div> */}
+                <ProfileShortcutsBox />
 
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    {/* POLLS TABLE */}
                     <TableWrapper
                         heading='Manage Templates'
                         addBtnTitle='add template'

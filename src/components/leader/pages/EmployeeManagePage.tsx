@@ -9,6 +9,7 @@ import { ManageEmployessForm } from '../forms/ManageEmployessForm'
 import { ChangeActiveStatus, GetEmployees } from '@/redux_store/employee/employeeApi'
 import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
 import { ManageEmployeeTable } from '../employee/ManageEmployeeTable'
+import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const EmployeeManagePage: FC = () => {
     const [showAdd, setShowAdd] = useState(false)
@@ -51,9 +52,10 @@ export const EmployeeManagePage: FC = () => {
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
+                {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
                     <ShortcutsBox />
-                </div>
+                </div> */}
+                <ProfileShortcutsBox />
 
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                     <TableWrapper

@@ -55,10 +55,11 @@ export const EventPage: FC<EventPageProps> = () => {
   useEffect(() => {
     (async () => {
       getEvent()
-   
+
     })();
   }, [userDetails, dispatch, leaderProfile?.id]);
-  const getEvent =async () => {
+
+  const getEvent = async () => {
     tryCatch(
       async () => {
         setLoading(true)
@@ -71,7 +72,7 @@ export const EventPage: FC<EventPageProps> = () => {
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
       async () => {
-       
+
 
         const formData = new FormData();
         formData.append("id", isEdit ? editEventData?.id : "");
@@ -90,10 +91,10 @@ export const EventPage: FC<EventPageProps> = () => {
             formData.append("attachments", element)
           }
         } else {
-          formData.append("attachments",[] as any)
+          formData.append("attachments", [] as any)
         }
-       
-        formData.append("saved_by_type", userDetails?.usertype.replace('emerging ',"") || "");
+
+        formData.append("saved_by_type", userDetails?.usertype.replace('emerging ', "") || "");
         formData.append("saved_by", userDetails?.id || "");
         formData.append("deletedDocs", [] as any);
 
@@ -154,7 +155,7 @@ export const EventPage: FC<EventPageProps> = () => {
             </section>
 
             <section className="flex flex-col gap-5 max-[550px]:ml-auto max-[460px]:mt-4">
-          
+
               {/* FILTERS */}
               <div className="flex items-center gap-3 justify-end">
                 {/* SEARCH FILTER */}
@@ -181,19 +182,19 @@ export const EventPage: FC<EventPageProps> = () => {
             {/* ADD OR EDIT Button */}
             <button
               className="px-5 py-2 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600"
-              onClick={() => {setIsEvent(true),setIsEdit(false),reset()}}
+              onClick={() => { setIsEvent(true), setIsEdit(false), reset() }}
             >
               Add Event
             </button>
           </div>
           {/* Event Table */}
           <EventTable
-            
+
             searchStr={searchString}
             isEvent={isEvent}
             editEvent={editEvent}
           />
-          {loading  && <LoadingComponent rows={2} columns={6} />}
+          {loading && <LoadingComponent rows={2} columns={6} />}
 
           {/* {!loading  && (
             <TableWrapper
@@ -251,35 +252,35 @@ export const EventPage: FC<EventPageProps> = () => {
                 onSubmit={handleSubmit(formSubmitHandler)}
               >
                 <div className="flex items-center justify-center gap-5">
-                <Input
-                  errors={errors}
-                  id="title"
-                  placeholder="Title"
-                  register={register}
-                  title="Event Title"
-                  type="text"
-                  required
-                  validations={{
-                    required: "First name is required",
-                  }}
-                />
-                <Input
-                  errors={errors}
-                  id='event_type'
-                  selectField={{
-                    title: 'select type',
-                    options: [{ id: 'event', value: 'event' }, { id: 'task', value: 'task' }],
-                  }}
-                  register={register}
-                  title='Type'
-                  type='select'
-                  required
-                  validations={{
-                    required: 'Type is required',
-                  }}
+                  <Input
+                    errors={errors}
+                    id="title"
+                    placeholder="Title"
+                    register={register}
+                    title="Event Title"
+                    type="text"
+                    required
+                    validations={{
+                      required: "First name is required",
+                    }}
                   />
-                  </div>
-                  
+                  <Input
+                    errors={errors}
+                    id='event_type'
+                    selectField={{
+                      title: 'select type',
+                      options: [{ id: 'event', value: 'event' }, { id: 'task', value: 'task' }],
+                    }}
+                    register={register}
+                    title='Type'
+                    type='select'
+                    required
+                    validations={{
+                      required: 'Type is required',
+                    }}
+                  />
+                </div>
+
                 <Input
                   errors={errors}
                   id='description'
@@ -326,7 +327,7 @@ export const EventPage: FC<EventPageProps> = () => {
                       }}
                     />
 
-                  
+
                     <Input
                       errors={errors}
                       id="location"
@@ -363,9 +364,9 @@ export const EventPage: FC<EventPageProps> = () => {
                         required: 'Date of Birth is required',
                       }}
                     />
-                 
+
                   </div>)}
-               
+
                 <div className="flex justify-end col-span-full gap-2 mt-5">
                   <a
                     className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
