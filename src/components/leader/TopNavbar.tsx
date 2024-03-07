@@ -61,9 +61,6 @@ export const TopNavbar: FC = () => {
       return trendingLeader
     };
   }
-
-
-
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -75,10 +72,8 @@ export const TopNavbar: FC = () => {
         setShowNotifications(false);
     });
   }, []);
-
-
-  if (allcookies?.USER_TYPE == "leader") {
-    useEffect(() => {
+  useEffect(() => {
+    if (allcookies?.USER_TYPE == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
@@ -124,8 +119,10 @@ export const TopNavbar: FC = () => {
           router.push(AuthRoutes.login)
         }
       })();
-    }, [dispatch, allcookies?.TOKEN_KEY])
-    useEffect(() => {
+    }
+  }, [dispatch, allcookies?.TOKEN_KEY])
+  useEffect(() => {
+    if (allcookies?.USER_TYPE == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
           var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
@@ -133,10 +130,10 @@ export const TopNavbar: FC = () => {
           dispatch(postActions.storeMyStories(LeaderAddedStories))
         }
       })();
-    }, [dispatch, allcookies?.TOKEN_KEY, leaderProfile?.image])
-  }
-  if (allcookies?.USER_TYPE != "leader") {
-    useEffect(() => {
+    }
+  }, [dispatch, leaderProfile?.image])
+  useEffect(() => {
+    if (allcookies?.USER_TYPE != "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
@@ -151,8 +148,8 @@ export const TopNavbar: FC = () => {
           router.push(AuthRoutes.login)
         }
       })();
-    }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
-  }
+    }
+  }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
 
   return (
     <>

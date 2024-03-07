@@ -208,7 +208,7 @@ export interface UserDetails {
   notes: string
   start_datetime: string
   end_datetime: string
-  remark:s
+  remark: string
 }
 export const yearlistfuture = () => {
   var current_year = moment().year()

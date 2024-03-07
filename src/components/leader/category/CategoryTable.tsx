@@ -3,7 +3,6 @@ import { ErrorTableRow } from '@/utils/ErrorTableRow';
 import { FC, useState } from 'react'
 
 import { StatusBtn } from '@/utils/StatusBtn'
-import { FaEdit } from 'react-icons/fa';
 import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
@@ -21,7 +20,7 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({
   const { categories } = cusSelector((state) => state.agenda);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
-  const searchFilterData = categories?.filter((el) => searchStr ? el?.template_name === searchStr : el)
+  const searchFilterData = categories?.filter((el: any) => searchStr ? el?.template_name === searchStr : el)
 
 
   return (
@@ -43,7 +42,7 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({
           </tr>
         </thead>
         <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el, i) => (
+          searchFilterData?.map((el: any, i: number) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
                 {i + 1}
