@@ -6,14 +6,15 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { MdVerified } from 'react-icons/md'
 import CustomImage from '@/utils/CustomImage'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
-import { getFollowers, getProfile, uploadProfileImage } from '@/redux_store/leader/leaderAPI'
+import { getProfile, uploadProfileImage } from '@/redux_store/leader/leaderAPI'
 import { BsPencilSquare } from 'react-icons/bs'
 import { ProtectedRoutes } from '@/constants/routes'
 import { getImageUrl } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { leaderProfile, followers } = cusSelector((state) => state.leader);
+  const { leaderProfile, followers, following } = cusSelector((state) => state.leader);
+  const { posts, mystories } = cusSelector((state) => state.posts);
   const { usertype } = cusSelector((state) => state.access);
   const dispatch = cusDispatch();
 
@@ -21,14 +22,8 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     (async () => {
       if (leaderProfile?.id) {
-        // Get Leader Profiles
         const res = await getProfile(leaderProfile?.id);
-
         dispatch(leaderActions.setLeaderProfile(res));
-
-        // Get Followers of Leader
-        const followersRes = await getFollowers(leaderProfile?.id);
-        dispatch(leaderActions.setFollowers(followersRes));
       }
     })()
   }, [dispatch, leaderProfile?.id]);
@@ -114,15 +109,15 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
               {/* Brief Info */}
               <div className='ml-auto flex items-center gap-8 max-[450px]:ml-0 max-[450px]:gap-4'>
                 <Link
-                  href={'/leader/profile/posts'}
+                  href={'/user/profile/feed'}
                   className='flex flex-col items-center font-[500] capitalize'>
                   posts
                   <span className='text-orange-500 text-2xl font-normal'>
-                    0
+                    {posts?.length}
                   </span>
                 </Link>
                 <Link
-                  href={''}
+                  href={'/user/profile/followers'}
                   className='flex flex-col items-center font-[500] capitalize'>
                   Followers
                   <span className='text-orange-500 text-2xl font-normal'>
@@ -130,11 +125,11 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                   </span>
                 </Link>
                 <Link
-                  href={''}
+                  href={'/user/profile/following'}
                   className='flex flex-col items-center font-[500] capitalize'>
                   following
                   <span className='text-orange-500 text-2xl font-normal '>
-                    0
+                    {following.length}
                   </span>
                 </Link>
               </div>

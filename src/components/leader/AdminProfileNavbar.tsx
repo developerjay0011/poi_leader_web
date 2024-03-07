@@ -23,7 +23,7 @@ export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
       tabname: "Manage Group"
     },
     {
-      link: '/user/profile/networks',
+      link: '/user/profile/gallery',
       name: 'gallery',
       tabname: "Leader"
     },

@@ -13,11 +13,12 @@ import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { PostTypes } from "./PostTypes";
 import CustomImage from "@/utils/CustomImage";
-import { GetPostsForLeader, addPost, addStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
+import { GetLeaderAddedPosts, GetPostsForLeader, addPost, addStories, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import { tryCatch } from "@/config/try-catch";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
-import { groupBy } from "@/config/groupby";
+import { postActions } from "@/redux_store/posts/postSlice";
+import { getImageUrl } from "@/config/get-image-url";
 
 interface NewPostBoxProps {
   type: UserPostType;
@@ -32,52 +33,10 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const [textPost, setTextPost] = useState("");
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
-  const [accessType, setAccessType] = useState("");
+  const [accessType, setAccessType] = useState("open");
   const { creatingPost } = cusSelector((st) => st.posts);
   const { userDetails } = cusSelector((state) => state.auth);
-  const fetchStories = async () => {
-    const data = await getStoriesForLeader(userDetails?.leaderId as string);
-    if (data?.length > 0) {
-      let mergeAllPosts: any = [];
-      let allLeaderProfile: any = {};
-      let allLeaderName: any = {};
-
-      data.forEach((item: any) => {
-        mergeAllPosts.push(...item.posts);
-        allLeaderProfile[item.leaderid] = item.image;
-        allLeaderName[item.leaderid] = item.name;
-      });
-      const groupByLeaderId = await groupBy(
-        mergeAllPosts,
-        (item: any) => item.leaderid
-      );
-
-      let finalStories: Record<string, any> = {};
-      Object.keys(groupByLeaderId).forEach((stItem: string) => {
-        groupByLeaderId[stItem].map((item: any) => {
-          if (!finalStories[item.leaderid]) {
-            finalStories[item.leaderid] = {
-              id: "",
-              image: "",
-              leaderid: item.leaderid,
-              media: [],
-              name: "",
-              written_text: ""
-            };
-          }
-          finalStories[item.leaderid].id = item.id;
-          finalStories[item.leaderid].name = allLeaderName[item.leaderid];
-          finalStories[item.leaderid].written_text = item.written_text;
-          finalStories[item.leaderid].image =
-            allLeaderProfile[item.leaderid];
-          finalStories[item.leaderid].media = finalStories[
-            item.leaderid
-          ].media.concat(item.media);
-        });
-      });
-      mergeAllPosts = Object.values(finalStories);
-    }
-  };
+  const { leaderProfile, } = cusSelector((state) => state.leader);
 
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -105,12 +64,19 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
       if (type === "post") {
         response = await addPost(formData);
         if (response?.success) {
-          GetPostsForLeader(userDetails?.leaderId as string)
+          const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+          dispatch(postActions.setPost(postsForLeader));
+          const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
+          dispatch(postActions.listPosts(leaderpost as any));
         }
       } else if (type === "story") {
         response = await addStories(formData);
         if (response?.success) {
-          fetchStories()
+          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+          const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
+          dispatch(postActions.storeMyStories(LeaderAddedStories))
+          const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
+          dispatch(postActions.storeStories(storiesForLeader as any[]));
         }
       }
       handleAdd()
@@ -196,14 +162,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
         >
           <div className="flex items-start gap-3">
             <CustomImage
-              src={
-                `${(userDetails?.image &&
-                  process.env.NEXT_PUBLIC_BASE_URL +
-                  "" +
-                  userDetails?.image) ||
-                ""
-                }` as string
-              }
+              src={getImageUrl(leaderProfile?.image)}
               alt="user image"
               width={1000}
               height={1000}
@@ -228,7 +187,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                   type="file"
                   className="hidden"
                   id={`medias-${type}`}
-                  multiple
+                  multiple={type === "story" ? false : true}
                   onChange={mediaChangeHandler}
                 />
                 <BsImageFill className="text-sky-950 text-xl text-opacity-70" />

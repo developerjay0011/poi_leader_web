@@ -4,52 +4,46 @@ import Modal from "react-modal";
 import { cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
-import { BsThreeDots } from "react-icons/bs";
 import { PostOptions } from "../posts/PostOptions";
+import { BsThreeDots, BsTrash3Fill } from "react-icons/bs";
+import moment from "moment";
 export const Story: FC<StoryProps> = ({
-  id,
   handleDelete,
   userImage,
   stories,
-  data,
-  is_my
+  self,
+  name,
+  createddate
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const { userDetails } = cusSelector((state) => state.auth);
   const leaderid = userDetails?.leaderId;
-
+  const [storiesdata, setStoriesdata] = useState({}) as any
+  const [pause, setPause] = useState(false) as any
   const deletePostHandler = async () => {
-    handleDelete(leaderid, id);
-
+    handleDelete(leaderid, storiesdata?.postid)
+    setPause(false)
   };
+  const storyContent = { width: 'auto', maxWidth: '100%', maxHeight: '100%', margin: 'auto', }
 
-  const storyContent = {
-    width: 'auto',
-    maxWidth: '100%',
-    maxHeight: '100%',
-    margin: 'auto',
 
-  }
-  const heading = {
-    heading: data.name,
-    subheading: data.written_text,
-    profileImage: userImage
-  }
+
+
+
+
 
   return (
     <>
-      <li>
-        {/* User Img */}
+      <li onClick={() => { setIsOpen(true); }} className="item-center flex flex-col gap-1">
         <CustomImage
+          priority={true}
           src={userImage}
           width={1000}
           height={1000}
           alt="user display pic"
-          className=" top-3 left-3 border-4 border-blue z-20 w-20 aspect-square rounded-full object-cover object-center shadow cursor-pointer"
-          onClick={() => {
-            setIsOpen(true);
-          }}
+          className="border-4 border-blue z-20 w-20 aspect-square rounded-full object-cover object-center shadow"
         />
+        <figcaption className='text-[14px] mt-[1px]'>{self ? moment(createddate).format("DD-MM-YYYY") : name} </figcaption>
       </li>
       {stories && stories.length > 0 && (
         <Modal
@@ -65,23 +59,53 @@ export const Story: FC<StoryProps> = ({
               marginRight: "-50%",
               transform: "translate(-50%, -50%)",
             },
+            overlay: {
+              background: "rgb(0,0,0,0.5)"
+            }
           }}
+
           contentLabel="Example Modal"
         >
-          <div className="object-center">
+          <button
+            onClick={() => { deletePostHandler() }}
+            className="flex items-center  self-right gap-2 last_noti capitalize mb-2 transition-all"
+            style={{ display: self ? "flex" : "none" }}
+          >
+            <BsTrash3Fill /> delete
+          </button>
+          <div className="object-center relative">
             <Stories
-              stories={stories?.map((item) => ({
-                url: `${process.env.NEXT_PUBLIC_BASE_URL}${item.media}`,
-                type: item.type && (item.type.includes("image") ? "image" : "video") || '',
-                header: heading as any
-              }))}
+              stories={stories as any}
+              storyContainerStyles={{ borderRadius: 8, overflow: "hidden" }}
+              defaultInterval={1500}
               // header={(item: any) => {
-              //   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
               //   return (
-              //     <>
-              //       <div className="ml-auto relative" id="moreOptions" style={{ display: is_my ? "flex" : "none" }}>
-              //         <button onClick={() => { setShowMorePostOptions(!showMorePostOptions) }}>
-              //           <BsThreeDots className="text-2xl" />
+              //     <div onClick={() => { alert() }} className="flex gap-[10px] item-start bg-red-200">
+              //       <div className="flex gap-[10px]">
+              //         <div className="h-[60px] w-[60px]">
+              //           <CustomImage
+              //             src={item?.profileImage}
+              //             width={100}
+              //             height={100}
+              //             alt="user display pic"
+              //             className="border-[1px] border-blue aspect-square rounded-full object-cover"
+              //           />
+              //         </div>
+              //         <div className="gap-[10px]">
+              //           <figcaption className='text-[14px] mt-[1px]' style={{ color: "white" }}>{item?.heading}</figcaption>
+              //           <figcaption className='text-[11px]' style={{ color: "white" }}>{item?.subheading}</figcaption>
+              //         </div>
+              //       </div>
+              //       <div id="moreOptions" onClick={(e) => {
+              //         setPause(true); setShowMorePostOptions(!showMorePostOptions)
+              //         alert()
+              //         console.log(e)
+              //       }} className="flex" style={{ display: self ? "flex" : "none" }}>
+              //         <button onClick={() => {
+              //           setPause(true);
+              //           setShowMorePostOptions(!showMorePostOptions)
+              //         }} className="flex flex-col self-end" >
+              //           <BsThreeDots className="text-2xl" style={{ color: "white" }} />
               //         </button>
               //         {showMorePostOptions && (
               //           <PostOptions
@@ -91,17 +115,18 @@ export const Story: FC<StoryProps> = ({
               //           />
               //         )}
               //       </div>
-              //     </>)
+              //     </div>
+              //   )
               // }}
-              storyContainerStyles={{ borderRadius: 8, overflow: "hidden" }}
-              defaultInterval={1500}
               width={432}
               height={768}
               storyStyles={storyContent}
-              onAllStoriesEnd={() => setIsOpen(false)}
+              onAllStoriesEnd={(s: any, st: any) => { setIsOpen(false) }}
+              onStoryStart={(s: any, st: any) => { setStoriesdata(st) }}
+              keyboardNavigation={true}
             />
           </div>
-        </Modal>
+        </Modal >
       )}
     </>
   );

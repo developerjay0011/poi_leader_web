@@ -1,11 +1,11 @@
 "use client";
 
 import { StaticImageData } from "next/image";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { tryCatch } from "@/config/try-catch";
-import { followLeader, getFollowering, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { followLeader, getFollowering, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { getImageUrl } from "@/config/get-image-url";
 import { commonActions } from "@/redux_store/common/commonSlice";
@@ -21,23 +21,7 @@ interface TrendingUsersProps {
   handleFollowers: any;
 }
 export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
-  const { trendingLeader, leaderProfile, following } = cusSelector((state) => state.leader);
-  const dispatch = cusDispatch();
-
-  useEffect(() => {
-    (async () => {
-
-      tryCatch(
-        async () => {
-          const response = await getTrendingLeaderList();
-          dispatch(leaderActions.setTrendingLeader(response))
-        })
-      const followingRes = await getFollowering(leaderProfile?.id as string);
-      dispatch(leaderActions.setFollowing(followingRes));
-      // handleFollowers(data);
-
-    })();
-  }, [following]);
+  const { trendingLeader, following } = cusSelector((state) => state.leader);
 
 
 

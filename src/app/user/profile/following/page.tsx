@@ -4,10 +4,11 @@ import { bgIMG, userImg } from '@/utils/utility'
 import { PeoplesComponentWrapper } from '@/utils/PeoplesComponentWrapper'
 import { Network } from '@/components/peoples/Network'
 import { cusSelector } from '@/redux_store/cusHooks'
+import { Following } from '@/components/peoples/Following'
 
 const AdminFollowingPage = () => {
   const [searchString, setSearchString] = useState('')
-  const { groups } = cusSelector((state) => state.group);
+  const { leaderProfile, following } = cusSelector((state) => state.leader);
   const changeSearchString = (val: string) => setSearchString(val)
 
   return (
@@ -17,12 +18,11 @@ const AdminFollowingPage = () => {
         searchStr={searchString}
         setSearchStr={changeSearchString}>
         <ul className='grid grid-cols-4 gap-5'>
-          {groups?.length > 0 &&
-            groups?.map((item: any, index: number) => {
-              return (
-                <Network onMemberClick={() => { }} key={index} created_date={item?.created_date} member={item.members} name={item.name} backgroundImg={bgIMG} displayImg={userImg} />
-              )
-            })}
+          {following?.length > 0 && following?.map((item: any, index: number) => {
+            return (
+              <Following item={item} key={index} name={item.name} displayImg={item.image} />
+            )
+          })}
         </ul>
       </PeoplesComponentWrapper>
     </>

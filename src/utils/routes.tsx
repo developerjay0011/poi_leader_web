@@ -5,7 +5,7 @@ import { MdContacts } from 'react-icons/md'
 import { BsFillCalendar3WeekFill, BsHouseGearFill } from 'react-icons/bs'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { SlEnvolopeLetter } from "react-icons/sl";
-import { BiSolidUserDetail, BiTask } from "react-icons/bi";
+import { BiCategoryAlt, BiSolidUserDetail, BiTask } from "react-icons/bi";
 
 import { ImTicket } from "react-icons/im";
 export const LEFT_NAV_ROUTES = [
@@ -93,5 +93,12 @@ export const LEFT_NAV_ROUTES = [
     name: 'Manage Employees',
     Icon: BiSolidUserDetail,
     tabname: "Manage Employees"
+  },
+  {
+    id: GenerateId(),
+    link: '/user/manage-categories',
+    name: 'Manage Categories',
+    Icon: BiCategoryAlt,
+    tabname: "Manage Categories"
   },
 ]

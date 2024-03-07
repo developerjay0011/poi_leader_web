@@ -6,7 +6,7 @@ import { APIRoutes } from "@/constants/routes";
 import moment from "moment";
 
 
-export const GetPostsForLeader = async (leaderid: string) => {
+export const GetPostsForLeader = async (leaderid: any) => {
   return tryCatch(async () => {
     const res = await Axios.get(insertVariables(APIRoutes.GetPostsForLeader, { leaderid }));
     var data = Array.isArray(res.data) ? res.data : [];
@@ -82,7 +82,7 @@ const ConvertCommonpost = (list = []): any => {
     const dateB = new Date(b.post.createddate);
     return dateB.getTime() - dateA.getTime();
   });
-  return Array.isArray(combinedData) && combinedData;
+  return Array.isArray(combinedData) ? combinedData : []
 };
 
 
@@ -117,21 +117,46 @@ export const ReplyToComment = async (comment: any) => {
 
 
 
-export const GetLeaderAddedPosts = async (leaderId: string) => {
+export const GetLeaderAddedPosts = async (leaderId: any) => {
   return tryCatch(
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.GetLeaderAddedPosts, { leaderId }));
-      return res.data;
+      return Array.isArray(res.data) ? res.data : []
     }
   );
 };
 
+const setStoiesmidea = (posts: any[], heading: { heading: string; profileImage: string }) => {
+  const postdata = posts.flatMap((element) =>
+    element.media?.map((media: any) => ({
+      postid: element.id,
+      url: getImageUrl(media.media),
+      duration: 5000,
+      type: media.type?.includes("image") ? "image" : "video",
+      header: {
+        ...heading,
+        subheading: element.written_text,
+      },
+    }))
+  );
 
-export const getLeaderAddedStories = async (leaderId: string, mypostdata: any) => {
+  return postdata || [];
+};
+
+export const getLeaderAddedStories = async (leaderId: any, mypostdata: any) => {
   return tryCatch(
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getLeaderAddedStories, { leaderId }));
-      return Setmystory(res.data, mypostdata);
+      var LeaderAddedStories = Setmystory(res.data, mypostdata) as any
+      var setdata = LeaderAddedStories?.map((item: any, index: number) => ({
+        name: item?.name,
+        image: item?.image,
+        leaderid: item?.leaderid,
+        index: index,
+        createddate: item?.createddate,
+        media: setStoiesmidea(item.posts, { heading: item.name, profileImage: getImageUrl(item.image) })
+      }))
+      return Array.isArray(setdata) ? setdata : []
     }
   );
 };
@@ -195,11 +220,19 @@ export const Setmystory = async (list: any[], mypostdata: any) => {
   return []
 }
 
-export const getStoriesForLeader = async (leaderId: string) => {
+export const getStoriesForLeader = async (leaderId: any) => {
   return tryCatch(
     async () => {
-      const res = await Axios.get(insertVariables(APIRoutes.getStoriesForLeader, { leaderId }));
-      return res.data;
+      const res = await Axios.get(insertVariables(APIRoutes.getStoriesForLeader, { leaderId })) as any
+      const setdata = res.map((item: any, index: number) => ({
+        name: item.name,
+        leaderid: item.leaderid,
+        image: item.image,
+        index: index,
+        createddate: '',
+        media: setStoiesmidea(item.posts, { heading: item.name, profileImage: getImageUrl(item.image) }),
+      }));
+      return Array.isArray(setdata) ? setdata : []
     }
   );
 };

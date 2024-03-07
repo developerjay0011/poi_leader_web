@@ -16,7 +16,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl } from "@/config/get-image-url";
-import { followLeader, getFollowering, getNotification, getProfile, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
@@ -28,6 +28,8 @@ import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
+import { GetLeaderAddedPosts, GetPostsForLeader, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
+import { postActions } from "@/redux_store/posts/postSlice";
 
 
 export const TopNavbar: FC = () => {
@@ -43,6 +45,8 @@ export const TopNavbar: FC = () => {
   const { notification } = cusSelector((state) => state.leader);
   const { usertype } = cusSelector((state) => state.access);
   let allcookies: any = getCookies()
+  let heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
+  heading = heading === "user" || heading === "employeehome" ? "home" : heading;
   const searchFilterFunction = (text: string) => {
     if (text) {
       const newData = trendingLeader?.filter(
@@ -57,6 +61,9 @@ export const TopNavbar: FC = () => {
       return trendingLeader
     };
   }
+
+
+
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -67,28 +74,71 @@ export const TopNavbar: FC = () => {
       if (!(e.target as HTMLElement).closest("#briefNotiBox"))
         setShowNotifications(false);
     });
-  }, [dispatch]);
+  }, []);
 
 
-  useEffect(() => {
-    (async () => {
-      if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
-        if (allcookies?.USER_TYPE == "leader") {
+  if (allcookies?.USER_TYPE == "leader") {
+    useEffect(() => {
+      (async () => {
+        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
             if (leaderRes?.request_status === "Rejected") {
               dispatch(authActions.logout())
               return
             }
+            // Leader
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
             dispatch(leaderActions.setLeaderProfile(leaderRes));
+
+            // Follower
+            const followingRes = await getFollowers(leaderProfile?.id as string);
+            dispatch(leaderActions.setFollowers(followingRes));
+            const followering = await getFollowering(leaderProfile?.id as string)
+            dispatch(leaderActions.setFollowing(followering))
+
+            // Stories
+            const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
+            dispatch(postActions.storeStories(storiesForLeader as any[]));
+
+            // Posts
+            const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+            dispatch(postActions.setPost(postsForLeader));
+            const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
+            dispatch(postActions.listPosts(leaderpost as any));
+
+            // TrendingLeader
+            const trendingLeader = await getTrendingLeaderList();
+            dispatch(leaderActions.setTrendingLeader(trendingLeader))
+
+            // Notification
             const response = await getNotification(userDetails?.leaderId as string);
             dispatch(leaderActions.setNotification(response));
+
+            // LetterTemplates
             const data = await getLetterTemplates(userDetails?.leaderId as string);
             dispatch(letterActions.storeLetterTemplate(data));
           }
         } else {
+          router.push(AuthRoutes.login)
+        }
+      })();
+    }, [dispatch, allcookies?.TOKEN_KEY])
+    useEffect(() => {
+      (async () => {
+        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
+          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+          const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
+          dispatch(postActions.storeMyStories(LeaderAddedStories))
+        }
+      })();
+    }, [dispatch, allcookies?.TOKEN_KEY, leaderProfile?.image])
+  }
+  if (allcookies?.USER_TYPE != "leader") {
+    useEffect(() => {
+      (async () => {
+        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
             dispatch(leaderActions.setLeaderProfile(leaderRes));
@@ -97,22 +147,12 @@ export const TopNavbar: FC = () => {
             const data = await getLetterTemplates(userDetails?.leaderId as string);
             dispatch(letterActions.storeLetterTemplate(data));
           }
+        } else {
+          router.push(AuthRoutes.login)
         }
-      } else {
-        router.push(AuthRoutes.login)
-      }
-    })();
-  }, [dispatch, allcookies?.TOKEN_KEY])
-
-  // Converting pathname to heading
-  let heading = curRoute?.split("/").at(-1)?.includes("-")
-    ? curRoute?.split("/").at(-1)?.replaceAll("-", " ")
-    : curRoute?.split("/").at(-1);
-
-  heading = heading === "user" || heading === "employeehome" ? "home" : heading;
-
-
-
+      })();
+    }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
+  }
 
   return (
     <>
@@ -321,7 +361,7 @@ const BriefUserInfo: FC<{
   id: string;
   isFollowing: boolean
 }> = ({ designation, name, userPic, id, isFollowing }) => {
-  const { trendingLeader, leaderProfile, following } = cusSelector((state) => state.leader);
+  const { leaderProfile } = cusSelector((state) => state.leader);
   const dispatch = cusDispatch();
   const handleClick = async (id: string, isFollowing: boolean) => {
     const postBody = {

@@ -35,19 +35,19 @@ export const leaderSlice = createSlice({
         ...action.payload
       };
     },
-    setReason(state, action: PayloadAction<any[]>) {
+    setReason(state, action: any) {
       state.reasons = action.payload
     },
-    setFollowers(state, action: PayloadAction<any[]>) {
+    setFollowers(state, action) {
       state.followers = action.payload;
     },
-    setFollowing(state, action: PayloadAction<any[]>) {
+    setFollowing(state, action) {
       state.following = action.payload;
     },
-    setTrendingLeader(state, action: PayloadAction<any[]>) {
+    setTrendingLeader(state, action: any) {
       state.trendingLeader = action.payload;
     },
-    setNotification(state, action: PayloadAction<any[]>) {
+    setNotification(state, action: any) {
       state.notification = action.payload;
     },
   },

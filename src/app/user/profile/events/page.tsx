@@ -8,9 +8,6 @@ const AdminProfileEventsPage: FC = () => {
   return (
     <>
       <section className='flex gap-5'>
-        {/* <div className='w-max' >
-          <ShortcutsBox />
-        </div> */}
         <ProfileShortcutsBox />
         <section className='flex-grow bg-white border rounded-md self-start'>
           <div className='flex-grow self-start'>

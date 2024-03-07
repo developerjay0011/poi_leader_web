@@ -20,24 +20,18 @@ export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = fal
   const { leaderProfile } = cusSelector((state) => state.leader);
   const Getpost = async () => {
     if (userDetails?.leaderId) {
-      const data = await GetPostsForLeader(userDetails?.leaderId);
-      if (data?.length > 0) {
-        dispatch(postActions.setPost(data));
-      }
+      const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+      dispatch(postActions.setPost(postsForLeader));
       const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
-      if (leaderpost?.length > 0 && Array.isArray(leaderpost)) {
-        dispatch(postActions.listPosts(leaderpost));
-      }
+      dispatch(postActions.listPosts(leaderpost as any));
     }
   };
   var setpost = is_my_postandstories ? mypostData : postData
   var mypostdata = is_my_postandstories ? { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId } : {}
 
   useEffect(() => {
-    (async () => {
-      await Getpost();
-    })();
-  }, [userDetails?.leaderId]);
+    (async () => { await Getpost(); })();
+  }, []);
 
   return (
     <>

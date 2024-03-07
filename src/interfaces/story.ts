@@ -1,11 +1,10 @@
 export interface StoryProps {
   self?: boolean;
-  id: string;
   handleDelete: any;
   userImage: string;
   stories?: Array<any>;
-  data: any,
-  is_my: boolean
+  name: string;
+  createddate: string
 }
 
 export interface Media {
