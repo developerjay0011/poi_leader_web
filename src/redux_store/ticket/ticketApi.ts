@@ -5,9 +5,8 @@ import { APIRoutes } from '@/constants/routes'
 
 // Add Letter API
 export const getTickets = async (leaderid: string) => {
-  console.log(leaderid)
   return tryCatch(
-   
+
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getTickets, { leaderid }));
       return res.data;

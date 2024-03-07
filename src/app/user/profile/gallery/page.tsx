@@ -22,10 +22,8 @@ const AdminProfileGalleryPage = () => {
   const [isGallery, setIsGallery] = useState(false);
   const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
   const [media, setMedia] = useState<NewPostFields[]>([]);
-  const changeSearchStr = (val: string) => setSearchStr(val);
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((st) => st.auth);
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { gallery } = cusSelector((state) => state.gallery);
 
 
@@ -34,11 +32,11 @@ const AdminProfileGalleryPage = () => {
     (async () => {
       tryCatch(
         async () => {
-          const data = await getGalleryData(leaderProfile?.id as string);
+          const data = await getGalleryData(userDetails?.leaderId as string);
           dispatch(galleryActions.storeGallery(data))
         })
     })();
-  }, [userDetails, dispatch, updateGallery]);
+  }, [userDetails?.leaderId, dispatch, updateGallery]);
 
   const deletedata = (data: any) => {
     setUpdateGallery(data);
@@ -108,7 +106,7 @@ const AdminProfileGalleryPage = () => {
     tryCatch(
       async () => {
         const formData = new FormData();
-        formData.append("leaderid", leaderProfile?.id || "");
+        formData.append("leaderid", userDetails?.leaderId || "");
         for (let i = 0; i < apimedia.length; i++) {
           const item: any = apimedia[i];
           formData.append("media", item?.media);

@@ -30,6 +30,8 @@ import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
 import { GetLeaderAddedPosts, GetPostsForLeader, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import { postActions } from "@/redux_store/posts/postSlice";
+import { getDirectory } from "@/redux_store/directory/directoryApi";
+import { directoryAction } from "@/redux_store/directory/directorySlice";
 
 
 export const TopNavbar: FC = () => {
@@ -82,15 +84,18 @@ export const TopNavbar: FC = () => {
               dispatch(authActions.logout())
               return
             }
+            const Data = await getDirectory(userDetails?.leaderId as string);
+            dispatch(directoryAction.storedirectory(Data))
+
             // Leader
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
             dispatch(leaderActions.setLeaderProfile(leaderRes));
 
             // Follower
-            const followingRes = await getFollowers(leaderProfile?.id as string);
+            const followingRes = await getFollowers(userDetails?.leaderId as string);
             dispatch(leaderActions.setFollowers(followingRes));
-            const followering = await getFollowering(leaderProfile?.id as string)
+            const followering = await getFollowering(userDetails?.leaderId as string)
             dispatch(leaderActions.setFollowing(followering))
 
             // Stories
@@ -358,18 +363,18 @@ const BriefUserInfo: FC<{
   id: string;
   isFollowing: boolean
 }> = ({ designation, name, userPic, id, isFollowing }) => {
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state: RootState) => state.auth);
   const dispatch = cusDispatch();
   const handleClick = async (id: string, isFollowing: boolean) => {
     const postBody = {
-      senderid: leaderProfile?.id,
+      senderid: userDetails?.leaderId,
       receiverid: id,
     };
     tryCatch(
       async () => {
         const response = await (!isFollowing ? followLeader(postBody) : unFollowLeader(postBody));
         if (response?.success) {
-          const res = await getFollowering(leaderProfile?.id as string)
+          const res = await getFollowering(userDetails?.leaderId as string)
           dispatch(leaderActions.setFollowing(res))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {

@@ -31,7 +31,7 @@ export interface FormFields {
 }
 
 export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, heading, edit, employeedetails, }) => {
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
   const { register, handleSubmit, reset, formState: { errors, isValid }, } = useForm<FormFields>({})
   const formSubmitHandler = (data: FormFields) => {
@@ -39,7 +39,7 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
       async () => {
         const body = {
           id: employeedetails?.id ? employeedetails?.id : null,
-          leaderid: leaderProfile?.id,
+          leaderid: userDetails?.leaderId,
           fullname: data?.fullname,
           username: data?.username,
           email: data?.email,
@@ -50,7 +50,7 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
         };
         const response = await AddEditEmployee(body);
         if (response?.success) {
-          const Data = await GetEmployees(leaderProfile?.id as string);
+          const Data = await GetEmployees(userDetails?.leaderId as string);
           dispatch(employeeAction.storeemployees(Data))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
@@ -95,7 +95,7 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
               className='absolute top-3 right-3 z-40'>
               <BiX className='text-3xl' />
             </button>
-            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-5 border-b font-semibold text-3xl capitalize'>
+            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
               {heading}
             </h3>
             <form

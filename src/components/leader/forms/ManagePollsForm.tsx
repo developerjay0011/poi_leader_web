@@ -10,7 +10,7 @@ import { PollsPreview } from '@/components/posts/polls/PollsPreview'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getPolls, savePolls } from '@/redux_store/polls/pollsApi'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import { tryCatch } from '@/config/try-catch'
 import { pollActions } from '@/redux_store/polls/pollSlice'
 
@@ -59,55 +59,18 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 }) => {
   // MIN Publish Date and time limit
   const minDateLimit = dateTimeConverter(new Date().toISOString(), 0)
-
   const [showPreview, setShowPreview] = useState(false)
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    setValue,
-    getValues,
-    reset,
-    formState: { errors, isValid },
-  } = useForm<NewPollsFormFields>({
-    defaultValues: {
-      publishDate,
-      expiresAt,
-      access,
-      imgOptions,
-      poll_options,
-      pollType,
-      title,
-      view_access
-    },
-  })
-
-  const { fields, append, remove } = useFieldArray({
-    name: 'poll_options',
-    control,
-  })
-
-  const {
-    fields: imgFields,
-    append: addImgField,
-    remove: removeImgField,
-  } = useFieldArray({
-    name: 'imgOptions',
-    control,
-  })
-  console.log("poll_options", poll_options)
+  const { register, handleSubmit, control, watch, setValue, getValues, reset, formState: { errors, isValid }, } = useForm<NewPollsFormFields>({ defaultValues: { publishDate, expiresAt, access, imgOptions, poll_options, pollType, title, view_access }, })
+  const { fields, append, remove } = useFieldArray({ name: 'poll_options', control, })
+  const { fields: imgFields, append: addImgField, remove: removeImgField, } = useFieldArray({ name: 'imgOptions', control, })
   const formSubmitHandler = (data: NewPollsFormFields) => {
-    console.log("dataa", data)
     tryCatch(
       async () => {
-
         const body = {
           id: edit ? id : null,
-          leaderid: leaderProfile?.id || "",
+          leaderid: userDetails?.leaderId || "",
           title: data?.title,
           polltype: data?.pollType,
           access: data?.access,
@@ -115,15 +78,12 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
           poll_options: data?.poll_options,
           publish_date: data?.publishDate,
           close_date: data?.expiresAt,
-          saved_by_type: userDetails?.usertype.replace('emerging ', ""),
-          saved_by: leaderProfile?.id
-
+          ...Savedby()
         };
-
         const response = await savePolls(body);
         if (response?.success) {
           // setIsEdit(false);
-          const Data = await getPolls(leaderProfile?.id as string);
+          const Data = await getPolls(userDetails?.leaderId as string);
           dispatch(pollActions.storePoll(Data))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {

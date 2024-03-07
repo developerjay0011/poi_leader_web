@@ -10,7 +10,7 @@ import { dateTimeConverter } from '@/utils/utility'
 
 interface PollTableRowProps extends PollDetails {
   index: number
-  handleDelete:(id:string)=>void
+  handleDelete: (id: string) => void
 }
 
 export const PollTableRow: FC<PollTableRowProps> = (props) => {
@@ -43,7 +43,7 @@ export const PollTableRow: FC<PollTableRowProps> = (props) => {
 
             <MdInfo
               className='text-2xl'
-              onClick={() => { console.log(props.poll_options),setShowPollChart(true)}}
+              onClick={() => { setShowPollChart(true) }}
             />
           </div>
         </td>

@@ -7,20 +7,21 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { deleteLetterTemplates } from '@/redux_store/letter/letterApi'
 import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 import { getCategory } from '@/redux_store/agenda/agendaApi'
 import { agendaAction } from '@/redux_store/agenda/agendaSlice'
 import { CategoryTable } from '../category/CategoryTable'
+import { CategoryFrom } from '../forms/CategoryFrom'
 
 export const CategoryManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
     const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
+    const { userDetails } = cusSelector((st) => st.auth);
     const { categories } = cusSelector((state) => state.agenda);
 
     const changeFilterData = (str: string) => setSearchFilter(str)
-    const { userDetails } = cusSelector((st) => st.auth);
     const openModal = () => {
         setShowAddTemplateForm(true)
         setEdit(null)
@@ -32,30 +33,16 @@ export const CategoryManagePage: FC = () => {
         setFilterAmount(val)
         setCurPageNo(1)
     }
-    const { leaderProfile } = cusSelector((state) => state.leader);
     const dispatch = cusDispatch();
-
     const getCategorylist = async () => {
-        const data = await getCategory(leaderProfile?.id as string);
+        const data = await getCategory(userDetails?.leaderId as string);
         dispatch(agendaAction.storeCategories(data));
     };
-    const handleTemplateDelete = async (id: string) => {
-        tryCatch(
-            async () => {
-                const response = await deleteLetterTemplates(id, leaderProfile.id as string);
-                if (response?.success) {
-                    getCategorylist()
-                    dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-                } else {
-                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-                }
-            })
-
-    }
-
     useEffect(() => {
         (async () => { getCategorylist(); })();
     }, [userDetails, dispatch]);
+
+
 
     return (
         <>
@@ -75,17 +62,17 @@ export const CategoryManagePage: FC = () => {
                         searchFilterFn={changeFilterData}
                         jsonDataToDownload={null}
                     >
-                        <CategoryTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                        <CategoryTable handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
                     </TableWrapper>
                 </div>
             </div>
 
             <AnimatePresence>
                 {showAddTemplateForm && (
-                    <ManageTemplateForm
+                    <CategoryFrom
                         isEdit={isEdit}
                         err={"err"}
-                        heading={isEdit ? 'Edit Template' : 'Add Template'}
+                        heading={isEdit ? 'Edit Category' : 'Add Category'}
                         status='1'
                         submitting={false}
                         submitHandler={() => { }}

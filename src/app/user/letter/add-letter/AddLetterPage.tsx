@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 import { getLetters, saveLetter } from '@/redux_store/letter/letterApi'
 import { letterActions } from '@/redux_store/letter/letterSlice'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 
@@ -55,33 +55,29 @@ const AddLetterPage: FC = () => {
 
 
   const formSubmitHandler = (data: LetterFormFields) => {
-    console.log(data)
     setLeaderData(data)
-    var letter_format =( letter_templete.find((item) => item?.id == data?.letterType)?.template_html || "")
+    var letter_format = (letter_templete.find((item) => item?.id == data?.letterType)?.template_html || "")
     var letter_formats = letter_format?.replaceAll("${FILENUMBER}", data?.fileNo)?.replaceAll("${DATE}", data?.date)?.replaceAll("${LOCATION}", data?.location)?.replaceAll("${TO}", data?.to)?.replaceAll("${FROM}", data?.from)?.replaceAll("${PHONE}", data?.contactNo)?.replaceAll("${IDNO}", data?.idNo)?.replaceAll("${IMAGE}", "https://www.fillhq.com/wp-content/uploads/2021/08/autodraw-11_2_2022.png")
-    
     setLetterFormat(letter_formats)
-
   }
 
   const { fields, append, remove } = useFieldArray({
-    name: 'attachments',  
+    name: 'attachments',
     control,
   })
 
   const letterRef = useRef<HTMLDivElement>(null) // for letter output
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { ticket } = cusSelector((state) => state.ticket);
 
   const dispatch = cusDispatch();
 
-  const handleAdd = async() => { 
+  const handleAdd = async () => {
     if (letterFormat == "") {
       toast.error("please press preview frist")
     } else {
       const ticketData = ticket.find((item) => item.ticketid == letterData?.ticketId)
       const body = {
-        leaderid: leaderProfile?.id || "",
+        leaderid: userDetails?.leaderId || "",
         template_id: letterData?.letterType,
         letter_no: GenerateId(),
         location: letterData?.location,
@@ -91,21 +87,18 @@ const AddLetterPage: FC = () => {
         ticket_code: ticketData?.ticket_code,
         id_number: letterData?.idNo,
         file_number: letterData?.fileNo,
-        from: letterData?.from, 
+        from: letterData?.from,
         to: letterData?.to,
         reference: letterData?.reference,
         contact_no: letterData?.contactNo.toString(),
         envelope_type: letterData?.envelopeType,
         letter_html: letterFormat,
         isactive: true,
-        saved_by_type: userDetails?.usertype,
-        saved_by: leaderProfile?.id
-
+        ...Savedby()
       };
-
       const response = await saveLetter(body);
       if (response?.success) {
-        const Data = await getLetters(leaderProfile?.id as string);
+        const Data = await getLetters(userDetails?.leaderId as string);
         dispatch(letterActions.storeLetterTemplate(Data))
         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         window.location.href = '/user/letter/manage-letter'
@@ -116,14 +109,14 @@ const AddLetterPage: FC = () => {
   }
 
   const getTicket = async () => {
-    const data = await getTickets(leaderProfile?.id as string);
+    const data = await getTickets(userDetails?.leaderId as string);
     dispatch(ticketActions.storeTicket(data));
   };
   useEffect(() => {
     (async () => {
       getTicket();
     })();
-  }, [userDetails, dispatch,leaderProfile]);
+  }, [userDetails?.leaderId, dispatch]);
   return (
     <>
       <m.section
@@ -192,7 +185,7 @@ const AddLetterPage: FC = () => {
                   }}
                 />
                 <button
-                  onClick={() => { handleAdd()}}
+                  onClick={() => { handleAdd() }}
                   type='button'
                   className=' bg-cyan-700 py-[.4rem] z-10 capitalize text-white px-5 rounded-md shadow-md flex gap-2  items-center'>
                   <i className='fa fa-print text-xl' /> Add

@@ -19,10 +19,9 @@ export const Story: FC<StoryProps> = ({
   const { userDetails } = cusSelector((state) => state.auth);
   const leaderid = userDetails?.leaderId;
   const [storiesdata, setStoriesdata] = useState({}) as any
-  const [pause, setPause] = useState(false) as any
   const deletePostHandler = async () => {
     handleDelete(leaderid, storiesdata?.postid)
-    setPause(false)
+    setIsOpen(false)
   };
   const storyContent = { width: 'auto', maxWidth: '100%', maxHeight: '100%', margin: 'auto', }
 
@@ -41,7 +40,7 @@ export const Story: FC<StoryProps> = ({
           width={1000}
           height={1000}
           alt="user display pic"
-          className="border-4 border-blue z-20 w-20 aspect-square rounded-full object-cover object-center shadow"
+          className="border-4 border-blue w-20 aspect-square rounded-full object-cover object-center shadow"
         />
         <figcaption className='text-[14px] mt-[1px]'>{self ? moment(createddate).format("DD-MM-YYYY") : name} </figcaption>
       </li>

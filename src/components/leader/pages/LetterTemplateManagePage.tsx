@@ -36,7 +36,7 @@ export const LetterTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
 
     const getTemplate = async () => {
-        const data = await getLetterTemplates(leaderProfile?.id as string);
+        const data = await getLetterTemplates(userDetails?.leaderId as string);
         dispatch(letterActions.storeLetterTemplate(data));
     };
     const handleTemplateDelete = async (id: string) => {

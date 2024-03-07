@@ -29,7 +29,6 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
   const filterDataOnDirectory = directory?.filter((el) =>
     searchStr ? el.name.includes(searchStr) : el
   );
-  console.log(directory)
   const confirmDelete = (id: string, leaderid: string) => {
     setDeleteValue({
       id: id,

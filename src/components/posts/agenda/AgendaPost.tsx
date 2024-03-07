@@ -23,6 +23,8 @@ import { tryCatch } from "@/config/try-catch";
 interface AgendaPostProps extends AgendaDetails {
   userId: string;
   timeline: TimeLineDetails[]
+  setAgenda: any,
+  Agenda: any
 }
 
 export const AgendaPost: FC<AgendaPostProps> = ({
@@ -36,23 +38,22 @@ export const AgendaPost: FC<AgendaPostProps> = ({
   categoryid,
   timeline,
   attachments,
-  access, id
+  access, id,
+  setAgenda,
+  Agenda
 }) => {
   const dispatch = cusDispatch();
-  const [isAgenda, setIsAgenda] = useState(false);
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const [addMileStone, setAddMileStone] = useState(false);
-
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
   const deletehandler = async () => {
     tryCatch(
       async () => {
-        const response = await deleteAgenda(id, leaderProfile?.id as string);
+        const response = await deleteAgenda(id, userDetails?.leaderId as string);
         if (response?.success) {
-          const agendaData = await getAgenda(leaderProfile?.id as string);
+          const agendaData = await getAgenda(userDetails?.leaderId as string);
           dispatch(agendaAction.storeAgendas(agendaData))
-          onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -61,31 +62,32 @@ export const AgendaPost: FC<AgendaPostProps> = ({
     )
   }
   const edithandler = () => {
-    setIsAgenda(true)
+    setAgenda({
+      description,
+      priority,
+      title,
+      status,
+      created_by_type,
+      categoryid,
+      timeline, access, attachments, id
+    })
   }
-
-  const onCancel = () => {
-    setIsAgenda(false);
-  };
   const posthandler = async () => {
     tryCatch(
       async () => {
-        const response = await makeAgendaPost(id, leaderProfile?.id as string);
+        const response = await makeAgendaPost(id, userDetails?.leaderId as string);
         if (response?.success) {
-          const agendaData = await getAgenda(leaderProfile?.id as string);
+          const agendaData = await getAgenda(userDetails?.leaderId as string);
           dispatch(agendaAction.storeAgendas(agendaData))
-          onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
       })
   }
-
-
   return (
     <>
-      <article className="border bg-white gap-5 rounded-md relative flex items-start overflow-hidden max-[700px]:flex-col">
+      <article className="border bg-white gap-5 rounded-md relative flex items-start max-[700px]:flex-col">
         <h3
           className={`self-stretch uppercase border flex flex-col-reverse justify-evenly items-center px-[10px] text-[18px] max-[700px]:flex-row max-[700px]:justify-around max-[700px]:py-1 min-[700px]:py-3 ${PRIORITIES[priority as PRIORITY]?.classes
             } `}
@@ -158,7 +160,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
           </div>
         </section>
       </article>
-      <AnimatePresence mode="wait">
+      {/* <AnimatePresence mode="wait">
         {isAgenda && (
           <m.div
             initial={{ opacity: 0 }}
@@ -191,7 +193,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
             </m.div>
           </m.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
       <AnimatePresence mode="wait">
         {showTimeline && (
           <DevelopmentAgendaTimeLine
@@ -200,6 +202,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
             onAddMileStone={() => { setShowTimeline(false), setAddMileStone(true) }}
             agendaid={id}
             title={title}
+            status={status}
           />
         )}
       </AnimatePresence>
@@ -223,7 +226,6 @@ export const AgendaPost: FC<AgendaPostProps> = ({
               className="shadow-md border rounded-md border-gray-200 py-8 px-20 z-30 bg-white relative flex flex-col items-center"
             >
               <h2 className="mt-4 mb-8 text-3xl">Add Milestone</h2>
-
               <TimeLineForm isedit={false} agendaid={id} data={null} onCancel={() => setAddMileStone(false)} />
             </m.div>
           </m.div>

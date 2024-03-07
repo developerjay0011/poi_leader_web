@@ -1,4 +1,5 @@
 import { DropdownOptions } from "@/interfaces/common";
+import { getCookie, getCookies } from "cookies-next";
 
 export const TOKEN_KEY = "TOKEN_KEY";
 export const USER_VERIFY = "USER_VERIFY";
@@ -6,6 +7,26 @@ export const USER_TYPE = "USER_TYPE";
 export const USER_INFO = "USER_INFO";
 export const LOGIN_BODY = "LOGIN_BODY";
 export const DEFAULT_CONTENT_TYPE = 'application/json';
+
+
+
+export const Savedby = () => {
+  let userDetails: any = getCookie(USER_INFO);
+  userDetails = userDetails && JSON.parse(userDetails);
+  let allcookies: any = getCookies();
+  var leaderid = {
+    "saved_by_type": 'leader',
+    "saved_by": userDetails?.leaderId
+  }
+  var employeeid = {
+    "saved_by_type": "employee",
+    "saved_by": userDetails?.employeeId
+  }
+
+  return allcookies?.USER_TYPE == "leader" ? leaderid : employeeid
+}
+
+
 
 export enum ToastType {
   SUCCESS = 'success',

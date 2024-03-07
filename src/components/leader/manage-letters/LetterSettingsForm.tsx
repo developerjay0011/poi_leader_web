@@ -41,7 +41,6 @@ export const LetterSettingsForm: FC<LetterSettingsFormProps> = ({
   })
 
   const formSubmitHandler = (data: LetterSettingsFormFields) => {
-    console.log(data)
   }
 
   return (

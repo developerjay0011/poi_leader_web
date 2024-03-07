@@ -38,27 +38,23 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const { userDetails } = cusSelector((state) => state.auth);
   const { leaderProfile, } = cusSelector((state) => state.leader);
 
+
+
+
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (
-      textPost.trim().length === 0 &&
-      previewImages.length === 0 &&
-      accessType?.length === 0
-    )
+    if (previewImages.length === 0 || accessType?.length === 0 || apimedia?.length === 0) {
       return setPostErr({ errTxt: "Post can't be empty", isErr: true });
-
+    }
     const formData = new FormData();
-
     formData.append("leaderid", userDetails?.leaderId || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", accessType);
-
     for (let i = 0; i < apimedia.length; i++) {
       const item: any = apimedia[i];
       formData.append("media", item?.media);
     }
-
     tryCatch(async () => {
       let response: any = "";
       if (type === "post") {
@@ -102,6 +98,10 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
       }
     });
   };
+
+
+
+
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setPostErr({
@@ -187,7 +187,6 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                   type="file"
                   className="hidden"
                   id={`medias-${type}`}
-                  multiple={type === "story" ? false : true}
                   onChange={mediaChangeHandler}
                 />
                 <BsImageFill className="text-sky-950 text-xl text-opacity-70" />

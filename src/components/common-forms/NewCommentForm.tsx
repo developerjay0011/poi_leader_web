@@ -30,14 +30,10 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allDat
       "userimg": userDetails?.image ? userDetails?.image : '',
       'comment_text': commentText,
     };
-
-
-    console.log(commentBody)
     try {
       const data = await CommentPost(commentBody);
       if (data?.success) { CommentHandler(commentText); }
     } catch (error) {
-      console.log(error);
     }
     if (commentText.length === 0) return;
     setCommentText("");

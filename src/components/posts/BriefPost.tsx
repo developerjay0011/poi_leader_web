@@ -19,9 +19,7 @@ interface BriefPostProps {
 }
 export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
-  console.log(userMedia);
-
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
 
 
@@ -29,11 +27,7 @@ export const BriefPost: FC<BriefPostProps> = ({ userMedia, deletedata }) => {
   const deletePostHandler = async (id: string) => {
     tryCatch(
       async () => {
-        const DeleteGalleryIds = {
-          leaderid: leaderProfile?.id || "",
-          deleteids: [id],
-        };
-
+        const DeleteGalleryIds = { leaderid: userDetails?.leaderId || "", deleteids: [id], };
         const response = await deleteGallery(DeleteGalleryIds);
         if (response?.success) {
           deletedata(response);

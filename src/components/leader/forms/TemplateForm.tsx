@@ -7,7 +7,7 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getLetterTemplates, saveLetterTemplate } from '@/redux_store/letter/letterApi'
 import { letterActions } from '@/redux_store/letter/letterSlice'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import dynamic from 'next/dynamic';
 interface ManageTemplateFormProps {
   tempHeader: string
@@ -48,25 +48,21 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
       tempHeader,
     },
   })
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
 
   const formSubmitHandler = async (data: TemplateFormFields) => {
     const body = {
       id: isEdit ? isEdit.id : null,
-      leaderid: leaderProfile?.id || "",
+      leaderid: userDetails?.leaderId || "",
       template_name: data.tempHeader,
       template_html: content,
       isactive: data.status == "1" ? true : false,
-      saved_by_type: userDetails?.usertype.replace('emerging ', ""),
-      saved_by: leaderProfile?.id
-
+      ...Savedby()
     };
-
     const response = await saveLetterTemplate(body);
     if (response?.success) {
-      const Data = await getLetterTemplates(leaderProfile?.id as string);
+      const Data = await getLetterTemplates(userDetails?.leaderId as string);
       dispatch(letterActions.storeLetterTemplate(Data))
       dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
     } else {

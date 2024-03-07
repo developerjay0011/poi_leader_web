@@ -10,7 +10,6 @@ import { RootState } from "@/redux_store";
 
 const AdminProfileFeedsPage = () => {
   const handleFollowers = (data: any) => {
-    console.log(data);
   };
 
   return (

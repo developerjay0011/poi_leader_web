@@ -35,7 +35,6 @@ export const ConnectToAPI = async (
 
   // FOR DEV
   // console.log('URL: ', url)
-  console.log('PAYLOAD: ', body)
 
   let response
 

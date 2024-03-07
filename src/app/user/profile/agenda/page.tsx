@@ -10,6 +10,7 @@ import { motion as m } from "framer-motion";
 import AgendaForm from "@/components/posts/agenda/AgendaForm";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
+import { BiX } from "react-icons/bi";
 
 const AdminAgendaPage = () => {
 
@@ -18,21 +19,19 @@ const AdminAgendaPage = () => {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [isAgenda, setIsAgenda] = useState(false);
+  const [Agenda, setAgenda] = useState({}) as any
 
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((st) => st.auth);
   const { categories, agendas } = cusSelector((st) => st.agenda);
-  const { leaderProfile, followers } = cusSelector((state) => state.leader);
-
   useEffect(() => {
     (async () => {
-      const data = await getAgenda(leaderProfile?.id as string);
+      const data = await getAgenda(userDetails?.leaderId as string);
       dispatch(agendaAction.storeAgendas(data))
-      const categories = await getCategory(leaderProfile?.id as string);
+      const categories = await getCategory(userDetails?.leaderId as string);
       dispatch(agendaAction.storeCategories(categories))
-      console.log("categoriescategories", data)
     })()
-  }, [userDetails, dispatch, leaderProfile?.id]);
+  }, [dispatch, userDetails?.leaderId]);
 
   const filterDataOnPriority = agendas?.filter((el) =>
     priorityFilter ? el.priority === priorityFilter : el
@@ -47,7 +46,10 @@ const AdminAgendaPage = () => {
   );
 
   const agendaJSX = filterData?.map((el) => (
-    <AgendaPost userId={el.id}  {...el} key={el.id} />
+    <AgendaPost userId={el.id}
+      setAgenda={(data: any) => { setAgenda(data); setIsAgenda(true) }}
+      Agenda={Agenda}
+      {...el} key={el.id} />
   ));
 
   const onCancel = () => {
@@ -57,9 +59,6 @@ const AdminAgendaPage = () => {
   return (
     <>
       <div className="flex gap-5 w-full">
-        {/* <div className="sticky top-0 left-0 self-start max-[1000px]:hidden w-max">
-          <ShortcutsBox />
-        </div> */}
         <ProfileShortcutsBox />
 
         <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
@@ -108,7 +107,6 @@ const AdminAgendaPage = () => {
                       ))}
                     </select>
                   </label>
-
                   <label className="flex gap-2 items-center" htmlFor="status">
                     <span className="font-medium">Status</span>
                     <select
@@ -127,8 +125,8 @@ const AdminAgendaPage = () => {
                   </label>
                 </div>
                 <button
-                  className={`text-sm mt-5 transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-                  onClick={() => setIsAgenda(true)}
+                  className={`text-1xl px-3 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                  onClick={() => { setAgenda({}); setIsAgenda(true) }}
                 >
                   Add Agenda
                 </button>
@@ -143,23 +141,27 @@ const AdminAgendaPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
-                }`}
-            >
-              <div
-                className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"
-                onClick={onCancel}
-              />
-              <m.div
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.7, opacity: 0 }}
-                className="shadow-md border rounded-md border-gray-200 py-8 px-20 z-30 bg-white relative flex flex-col items-center"
-              >
-                <h2 className="mt-4 mb-8 text-3xl">Add Agenda</h2>
-
-                <AgendaForm onCancel={onCancel} />
-              </m.div>
+              className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
+              <div className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center main_scrollbar`}>
+                <m.section
+                  initial={{ y: -100 }}
+                  animate={{ y: 0 }}
+                  exit={{ y: -100 }}
+                  className='z-30  border self-start bg-white mt-10 relative w-1/2 rounded-md shadow-md max-[1450px]:w-[65%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
+                  <button
+                    type='button'
+                    onClick={onCancel}
+                    className='absolute top-3 right-3 z-40'>
+                    <BiX className='text-3xl' />
+                  </button>
+                  <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
+                    {Agenda?.id as string ? "Edit Agenda" : "Add Agenda"}
+                  </h3>
+                  <AgendaForm onCancel={onCancel}
+                    Agenda={Agenda}
+                  />
+                </m.section>
+              </div>
             </m.div>
           )}
         </AnimatePresence>

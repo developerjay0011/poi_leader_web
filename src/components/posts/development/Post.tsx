@@ -43,14 +43,13 @@ export const DevelopmentPost: FC<DevelopmentPostProps> = ({
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   const [addMileStone, setAddMileStone] = useState(false);
-
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
   const deletehandler = async () => {
     tryCatch(
       async () => {
-        const response = await deleteDevelopment(id, leaderProfile?.id as string);
+        const response = await deleteDevelopment(id, userDetails?.leaderId as string);
         if (response?.success) {
-          const agendaData = await getDevelopment(leaderProfile?.id as string);
+          const agendaData = await getDevelopment(userDetails?.leaderId as string);
           dispatch(developmentAction.storeDevelopments(agendaData))
           onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
@@ -70,16 +69,16 @@ export const DevelopmentPost: FC<DevelopmentPostProps> = ({
   const posthandler = async () => {
     tryCatch(
       async () => {
-        const response = await makeDevelopmentPost(id, leaderProfile?.id as string);
+        const response = await makeDevelopmentPost(id, userDetails?.leaderId as string);
         if (response?.success) {
-          const agendaData = await getDevelopment(leaderProfile?.id as string);
+          const agendaData = await getDevelopment(userDetails?.leaderId as string);
           dispatch(developmentAction.storeDevelopments(agendaData))
           onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    } )
+      })
   }
 
 
@@ -98,7 +97,7 @@ export const DevelopmentPost: FC<DevelopmentPostProps> = ({
 
             ))}
           </h3>
-        )} 
+        )}
 
         <section className="flex flex-col pr-5 w-full max-[700px]:px-5">
           <div className="flex items-center gap-3 py-4 text-sky-950 border-b max-[650px]:flex-wrap">

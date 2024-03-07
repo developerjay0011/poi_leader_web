@@ -38,7 +38,7 @@ export const TicketTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
 
     const getTicket = async () => {
-        const data = await getTickets(leaderProfile?.id as string);
+        const data = await getTickets(userDetails?.leaderId as string);
         dispatch(ticketActions.storeTicket(data));
     };
     const handleTemplateDelete = async (id: string) => {

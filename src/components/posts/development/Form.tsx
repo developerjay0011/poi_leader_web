@@ -6,7 +6,7 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import moment from "moment";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
+import { Savedby, ToastType } from "@/constants/common";
 import { getDevelopment, saveDevelopment } from "@/redux_store/development/developmentApi";
 
 interface DevelopmentFormProps {
@@ -30,22 +30,25 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
   } = useForm<UserDetails>();
 
   const formSubmitHandler = async (data: UserDetails) => {
-   
-    const body: any = { ...data, categoryid:categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
-     try {
-       const response = await saveDevelopment(body);  
-       if (response?.success) {
-         const Data = await getDevelopment(leaderProfile?.id as string);
-         dispatch(developmentAction.storeDevelopments(Data))
-         onCancel()
-         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-       } else {
-         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-       }
-     
+    const body: any = {
+      ...data, categoryid: categoryFilter, access, priority,
+      ...Savedby(),
+      creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'), leaderid: leaderProfile.id
+    }
+    try {
+      const response = await saveDevelopment(body);
+      if (response?.success) {
+        const Data = await getDevelopment(userDetails?.leaderId as string);
+        dispatch(developmentAction.storeDevelopments(Data))
+        onCancel()
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+      }
+
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
+
     }
   };
 
@@ -83,7 +86,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
         </div>
 
         <div className="flex items-center justify-center gap-5">
-      
+
           <Input
             errors={errors}
             id="attachments"
@@ -108,7 +111,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
             }}
           />
         </div>
-      
+
         <div className="flex items-center justify-center gap-5">
           <label className="flex gap-2 items-center" htmlFor="category">
             <span className="font-medium">Category</span>

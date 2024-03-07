@@ -58,11 +58,10 @@ export const Input: FC<InputProps> = ({
         })}
         rows={rows || 3}
         placeholder={placeholder}
-        className={`w-full num_inp text-base py-3 px-3 rounded-md outline-none border resize-none ${
-          errors[id]
-            ? 'bg-red-100 text-red-500 border-red-400'
-            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-        }`}
+        className={`w-full num_inp text-base py-3 px-3 rounded-md outline-none border resize-none ${errors[id]
+          ? 'bg-red-100 text-red-500 border-red-400'
+          : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+          }`}
       />
     ),
     normal: (
@@ -80,19 +79,17 @@ export const Input: FC<InputProps> = ({
             },
           })}
           placeholder={placeholder}
-          className={`w-full num_inp py-2 text-base px-3 rounded-md outline-none border ${
-            errors[id]
-              ? 'bg-red-100 text-red-500 border-red-400'
-              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-          }`}
+          className={`w-full num_inp py-2 text-base px-3 rounded-md outline-none border ${errors[id]
+            ? 'bg-red-100 text-red-500 border-red-400'
+            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+            }`}
         />
 
         {type === 'password' && (
           <span
             onClick={() => setIsPassword((lst) => !lst)}
-            className={`cursor-pointer absolute top-1/2 translate-y-[-50%] right-3 ${
-              errors[id] ? 'text-red-500' : ''
-            }`}>
+            className={`cursor-pointer absolute top-1/2 translate-y-[-50%] right-3 ${errors[id] ? 'text-red-500' : ''
+              }`}>
             {isPassword ? <HiEyeOff /> : <HiEye />}
           </span>
         )}
@@ -111,11 +108,10 @@ export const Input: FC<InputProps> = ({
               message: 'Field is required',
             },
           })}
-          className={`w-full capitalize num_inp text-base py-2 px-3 rounded-md outline-none border ${
-            errors[id]
-              ? 'bg-red-100 text-red-500 border-red-400'
-              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-          }`}>
+          className={`w-full capitalize num_inp text-base py-2 px-3 rounded-md outline-none border ${errors[id]
+            ? 'bg-red-100 text-red-500 border-red-400'
+            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+            }`}>
           <option value=''>
             {selectField.options.length > 0
               ? selectField.title

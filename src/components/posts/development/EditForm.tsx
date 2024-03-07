@@ -8,15 +8,15 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import moment from "moment";
 import { getImageUrl } from '@/config/get-image-url';
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
+import { Savedby, ToastType } from "@/constants/common";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
 import { editDevelopment, getDevelopment } from "@/redux_store/development/developmentApi";
 interface DevelopmentFormProps {
   onCancel: () => void; // Define the type of onCancel prop
-  data:any
+  data: any
 }
 
-const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel,data }) => {
+const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel, data }) => {
   const [priority, setPriority] = useState("");
   const [access, setAccess] = useState("");
   const { categories } = cusSelector((st) => st.agenda);
@@ -33,34 +33,37 @@ const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel,data }) 
   } = useForm<UserDetails>();
 
   const formSubmitHandler = async (formdata: UserDetails) => {
-   
-    const body = { ...formdata, id: data?.id, categoryid: categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(formdata.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
-     try {
-       const response = await editDevelopment(body);  
-       if (response?.success) {
-         const Data = await getDevelopment(leaderProfile?.id as string);
-         dispatch(developmentAction.storeDevelopments(Data))
-         onCancel()
-         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-       } else {
-         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-       }
-     
+    const body = {
+      ...formdata, id: data?.id, categoryid: categoryFilter, access, priority,
+      ...Savedby(),
+      creation_date: moment(formdata.creation_date).format('YYYY-MM-DD hh:mm:ss'), leaderid: leaderProfile.id
+    }
+    try {
+      const response = await editDevelopment(body);
+      if (response?.success) {
+        const Data = await getDevelopment(userDetails?.leaderId as string);
+        dispatch(developmentAction.storeDevelopments(Data))
+        onCancel()
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+      }
+
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
+
     }
   };
   useEffect(() => {
     // Update the document title using the browser API
     setValue('development_title', data.development_title)
     setValue('description', data.description)
-    setValue('creation_date', moment(data.creation_date).format('YYYY-MM-DD') )
+    setValue('creation_date', moment(data.creation_date).format('YYYY-MM-DD'))
     setCategoryFilter(data.categoryid)
     setPriority(data.priority)
     setAccess(data.access)
-  },[]);
-  
+  }, []);
+
   return (
     <div>
       <form
@@ -95,7 +98,7 @@ const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel,data }) 
         </div>
 
         <div className="flex items-center justify-center gap-5">
-        
+
           <Input
             errors={errors}
             id="attachments"
@@ -103,9 +106,9 @@ const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel,data }) 
             register={register}
             title="Attachments"
             type="file"
-        
+
           />
-         
+
           <Input
             errors={errors}
             id='creation_date'
@@ -118,9 +121,9 @@ const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel,data }) 
             }}
           />
         </div>
-        
-     
-      
+
+
+
         <div className="flex items-center justify-center gap-5">
           <label className="flex gap-2 items-center" htmlFor="category">
             <span className="font-medium">Category</span>
@@ -165,7 +168,7 @@ const DevelopmentEditForm: React.FC<DevelopmentFormProps> = ({ onCancel,data }) 
             </select>
           </label>
         </div>
-        {data?.attachments?.map((el:any) => (
+        {data?.attachments?.map((el: any) => (
           <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
             {el.split('/').pop()}
           </a>

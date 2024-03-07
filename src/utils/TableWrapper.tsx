@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react'
+import { FC, useRef, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 import { motion as m } from 'framer-motion'
 import { DownloadExcelButton } from './ExcelConverter'
@@ -51,6 +51,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
 }) => {
   const searchRef = useRef<HTMLInputElement>(null)
   const paginationBtnsJSX: JSX.Element[] = []
+  const [searchFilter, setSearchFilter] = useState('');
 
   let totalPages = subTotalCount
     ? Math.ceil(subTotalCount / filterDataCount)
@@ -157,12 +158,11 @@ export const TableWrapper: FC<TableWrapperProps> = ({
                 <input
                   type='search'
                   ref={searchRef}
-                  onChange={(e) => searchFilterFn(e.target.value.toLowerCase())}
+                  onChange={(e) => { setSearchFilter(e.target.value.toLowerCase()); searchFilterFn(e.target.value.toLowerCase()) }}
                   className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md outline-none focus:bg-gray-50 focus:border-gray-400 transition-all placeholder:capitalize'
                   placeholder={`Search ${heading.split(' ').at(-1)}`}
                 />
-
-                <button className='absolute top-[8px] right-2'>
+                <button style={{ display: !searchFilter ? "flex" : "none" }} className='absolute top-[8px] right-2'>
                   <FiSearch className='stroke-gray-400' />
                 </button>
               </label>

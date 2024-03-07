@@ -31,6 +31,7 @@ export const APIRoutes = {
 
   // Leader Endpoints
   login: `${API_Prefix}/leader/login`,
+  DeleteGroups: `${API_Prefix}/leader/DeleteGroups`,
   register: `${API_Prefix}/leader/registration`,
   upsertLeaders: `${API_Prefix}/leader/addEditLeader`,
   getAccessTabs: `${API_Prefix}/leader/getAccessTabs/{{userId}}`,
@@ -47,7 +48,9 @@ export const APIRoutes = {
   ChangeActiveStatus: `${API_Prefix}/leader/ChangeActiveStatus`,
   GetLeaderEmployeeTabAccess: `${API_Prefix}/leader/GetLeaderEmployeeTabAccess/{{employeeid}}`,
   SavePermission: `${API_Prefix}/leader/SavePermission`,
-
+  SaveCategory: `${API_Prefix}/leader/SaveCategory`,
+  AddMember: `${API_Prefix}/leader/AddMember`,
+  DeleteMembers: `${API_Prefix}/leader/DeleteMembers`,
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,

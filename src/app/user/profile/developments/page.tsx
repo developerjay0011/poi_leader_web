@@ -25,18 +25,14 @@ const AdminDevelopmentPage = () => {
   const { userDetails } = cusSelector((st) => st.auth);
   const { categories } = cusSelector((st) => st.agenda);
   const { developments } = cusSelector((st) => st.development);
-
-  const { leaderProfile, followers } = cusSelector((state) => state.leader);
-
   useEffect(() => {
     (async () => {
-      const data = await getDevelopment(leaderProfile?.id as string);
+      const data = await getDevelopment(userDetails?.leaderId as string);
       dispatch(developmentAction.storeDevelopments(data))
-      const categories = await getCategory(leaderProfile?.id as string);
+      const categories = await getCategory(userDetails?.leaderId as string);
       dispatch(agendaAction.storeCategories(categories))
-      console.log("categoriescategories", data)
     })()
-  }, [userDetails, dispatch, leaderProfile?.id]);
+  }, [dispatch, userDetails?.leaderId]);
 
   const filterDataOnPriority = developments?.filter((el) =>
     priorityFilter ? el.priority === priorityFilter : el

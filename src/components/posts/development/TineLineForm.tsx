@@ -43,7 +43,7 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, developmentid, is
       async () => {
         const response = await saveDevelopmentTimeLine(body);
         if (response?.success) {
-          const agendaData = await getDevelopment(leaderProfile?.id as string);
+          const agendaData = await getDevelopment(userDetails?.leaderId as string);
           dispatch(developmentAction.storeDevelopments(agendaData))
           onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))

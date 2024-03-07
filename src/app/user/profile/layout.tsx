@@ -15,24 +15,25 @@ import { authActions } from '@/redux_store/auth/authSlice'
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers, following } = cusSelector((state) => state.leader);
   const { posts, mystories } = cusSelector((state) => state.posts);
+  const { userDetails } = cusSelector((st) => st.auth);
   const { usertype } = cusSelector((state) => state.access);
   const dispatch = cusDispatch();
 
 
   useEffect(() => {
     (async () => {
-      if (leaderProfile?.id) {
-        const res = await getProfile(leaderProfile?.id);
+      if (userDetails?.leaderId) {
+        const res = await getProfile(userDetails?.leaderId);
         dispatch(leaderActions.setLeaderProfile(res));
       }
     })()
-  }, [dispatch, leaderProfile?.id]);
+  }, [dispatch, userDetails?.leaderId]);
 
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const files = e.target.files as FileList;
     if (files.length > 0) {
       const formData = new FormData();
-      formData.append("leaderid", leaderProfile?.id || "");
+      formData.append("leaderid", userDetails?.leaderId || "");
       formData.append(fieldName, files[0] || "");
       const profileRes = await uploadProfileImage(formData);
       // Leader data update in redux

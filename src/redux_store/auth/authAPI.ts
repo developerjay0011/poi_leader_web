@@ -2,10 +2,6 @@ import Axios from '@/config/axios'
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { LoginData, RegisterData } from '@/utils/typesUtils'
-import { ConnectToAPI } from '@/utils/utility'
-
-const LOGIN_URL = 'http://dev-api.sourceinfosys.in:30702'
-
 export const registerUser =
   async (body: RegisterData) => {
     return tryCatch(

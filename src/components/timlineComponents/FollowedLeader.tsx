@@ -64,17 +64,17 @@ const TrendingUser: FC<TrendingUserProps> = ({
   id,
 }) => {
   const dispatch = cusDispatch();
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
   const handleFollowers = async (id: string) => {
     const postBody = {
-      senderid: leaderProfile?.id,
+      senderid: userDetails?.leaderId,
       receiverid: id,
     };
     tryCatch(
       async () => {
         const response = await unFollowLeader(postBody);
         if (response?.success) {
-          const res = await getFollowering(leaderProfile?.id as string)
+          const res = await getFollowering(userDetails?.leaderId as string)
           dispatch(leaderActions.setFollowing(res))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {

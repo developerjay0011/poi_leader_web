@@ -146,16 +146,19 @@ const setStoiesmidea = (posts: any[], heading: { heading: string; profileImage: 
 export const getLeaderAddedStories = async (leaderId: any, mypostdata: any) => {
   return tryCatch(
     async () => {
+      var setdata = []
       const res = await Axios.get(insertVariables(APIRoutes.getLeaderAddedStories, { leaderId }));
-      var LeaderAddedStories = Setmystory(res.data, mypostdata) as any
-      var setdata = LeaderAddedStories?.map((item: any, index: number) => ({
-        name: item?.name,
-        image: item?.image,
-        leaderid: item?.leaderid,
-        index: index,
-        createddate: item?.createddate,
-        media: setStoiesmidea(item.posts, { heading: item.name, profileImage: getImageUrl(item.image) })
-      }))
+      if (Array.isArray(res?.data)) {
+        var LeaderAddedStories = await Setmystory(res?.data, mypostdata) as any
+        setdata = LeaderAddedStories?.map((item: any, index: number) => ({
+          name: item?.name,
+          image: item?.image,
+          leaderid: item?.leaderid,
+          index: index,
+          createddate: item?.createddate,
+          media: setStoiesmidea(item.posts, { heading: item.name, profileImage: getImageUrl(item.image) })
+        }))
+      }
       return Array.isArray(setdata) ? setdata : []
     }
   );
@@ -223,15 +226,18 @@ export const Setmystory = async (list: any[], mypostdata: any) => {
 export const getStoriesForLeader = async (leaderId: any) => {
   return tryCatch(
     async () => {
+      var setdata = []
       const res = await Axios.get(insertVariables(APIRoutes.getStoriesForLeader, { leaderId })) as any
-      const setdata = res.map((item: any, index: number) => ({
-        name: item.name,
-        leaderid: item.leaderid,
-        image: item.image,
-        index: index,
-        createddate: '',
-        media: setStoiesmidea(item.posts, { heading: item.name, profileImage: getImageUrl(item.image) }),
-      }));
+      if (Array.isArray(res?.data)) {
+        setdata = res?.data?.map((item: any, index: number) => ({
+          name: item.name,
+          leaderid: item.leaderid,
+          image: item.image,
+          index: index,
+          createddate: '',
+          media: setStoiesmidea(item.posts, { heading: item.name, profileImage: getImageUrl(item.image) }),
+        }));
+      }
       return Array.isArray(setdata) ? setdata : []
     }
   );

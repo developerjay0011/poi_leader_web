@@ -16,8 +16,8 @@ export const EmployeeManagePage: FC = () => {
     const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
     const dispatch = cusDispatch();
-    const { leaderProfile } = cusSelector((state) => state.leader);
     const { employees } = cusSelector((state) => state.employee);
+    const { userDetails } = cusSelector((state) => state.auth);
     const changeFilterData = (str: string) => setSearchFilter(str)
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
@@ -27,8 +27,8 @@ export const EmployeeManagePage: FC = () => {
         setCurPageNo(1)
     }
     const getemployee = async () => {
-        if (leaderProfile?.id) {
-            const data = await GetEmployees(leaderProfile?.id as string);
+        if (userDetails?.leaderId) {
+            const data = await GetEmployees(userDetails?.leaderId as string);
             if (Array.isArray(data)) {
                 dispatch(employeeAction.storeemployees(data as any));
             }
@@ -37,7 +37,7 @@ export const EmployeeManagePage: FC = () => {
 
     const changeActiveStatus = async (id: string) => {
         let body = {
-            "leaderid": leaderProfile?.id,
+            "leaderid": userDetails?.leaderId,
             "employeeid": id
         }
         await ChangeActiveStatus(body)
@@ -47,7 +47,7 @@ export const EmployeeManagePage: FC = () => {
         (async () => {
             await getemployee();
         })();
-    }, [leaderProfile?.id, dispatch]);
+    }, [userDetails?.leaderId, dispatch]);
 
     return (
         <>

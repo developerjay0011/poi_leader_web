@@ -12,7 +12,7 @@ import { Input } from "@/components/Input";
 import { tryCatch } from "@/config/try-catch";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
+import { Savedby, ToastType } from "@/constants/common";
 import { getEvents, saveEvent } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
 import { EventTable } from "../event/EventTable";
@@ -39,7 +39,6 @@ export const EventPage: FC<EventPageProps> = () => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = cusDispatch();
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const { event } = cusSelector((state) => state.event);
 
@@ -56,13 +55,13 @@ export const EventPage: FC<EventPageProps> = () => {
     (async () => {
       getEvent()
     })();
-  }, [userDetails, dispatch, leaderProfile?.id]);
+  }, [userDetails, dispatch, userDetails?.leaderId]);
 
   const getEvent = async () => {
     tryCatch(
       async () => {
         setLoading(true)
-        const Data = await getEvents(leaderProfile?.id as string);
+        const Data = await getEvents(userDetails?.leaderId as string);
         dispatch(eventAction.storeEvent(Data))
         setLoading(false)
       }
@@ -71,11 +70,9 @@ export const EventPage: FC<EventPageProps> = () => {
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
       async () => {
-
-
         const formData = new FormData();
         formData.append("id", isEdit ? editEventData?.id : "");
-        formData.append("leaderid", leaderProfile?.id || "");
+        formData.append("leaderid", userDetails?.leaderId || "");
         formData.append("title", data?.title || "");
         formData.append("description", data?.description || "");
         formData.append("event_type", data?.event_type || "");
@@ -92,11 +89,9 @@ export const EventPage: FC<EventPageProps> = () => {
         } else {
           formData.append("attachments", [] as any)
         }
-
-        formData.append("saved_by_type", userDetails?.usertype.replace('emerging ', "") || "");
-        formData.append("saved_by", userDetails?.id || "");
+        formData.append("saved_by_type", Savedby()?.saved_by_type || "");
+        formData.append("saved_by", Savedby()?.saved_by || "");
         formData.append("deletedDocs", [] as any);
-
         const response = await saveEvent(formData);
         if (response?.success) {
           setIsEvent(false);

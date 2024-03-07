@@ -39,7 +39,7 @@ export const LetterManagePage: FC = () => {
     const dispatch = cusDispatch();
 
     const getletter = async () => {
-        const data = await getLetters(leaderProfile?.id as string);
+        const data = await getLetters(userDetails?.leaderId as string);
         dispatch(letterActions.storeLetter(data));
     };
     const handleTemplateDelete = async (id: string) => {
@@ -59,7 +59,7 @@ export const LetterManagePage: FC = () => {
         (async () => {
             getletter();
         })();
-    }, [userDetails, dispatch,leaderProfile]);
+    }, [userDetails, dispatch, leaderProfile]);
 
     return (
         <>
@@ -75,8 +75,8 @@ export const LetterManagePage: FC = () => {
                         heading='Manage Letter'
                         addBtnTitle='add Letter'
                         addBtnClickFn={async () => {
-                        
-                         
+
+
                             location.href = '/user/letter/add-letter'
                         }}
                         curDataCount={1}

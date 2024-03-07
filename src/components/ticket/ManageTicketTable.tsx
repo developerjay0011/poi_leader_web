@@ -20,21 +20,11 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
   searchStr, handleEdit, handleDelete
 }) => {
   const { ticket } = cusSelector((state) => state.ticket);
-  const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [showStatus, setShowStatus] = useState(false)
   const [timeline, setTimeline] = useState<any>([])
-
   const [addMileStone, setAddMileStone] = useState(false)
-
-  
   const [ticketdata, setticketdata] = useState<any>()
-
-  const searchFilterData = ticket?.filter((el: any) =>
-    searchStr ?
-      el?.ticketid.includes(searchStr)
-      : el
-  )
-  console.log(searchFilterData)
+  const searchFilterData = ticket?.filter((el: any) => searchStr ? el?.ticketid.includes(searchStr) : el)
 
   return (
     <>
@@ -91,8 +81,8 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
               <td className='text-center py-2 pl-2 border printHide'>
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() => { setticketdata(el),setShowStatus(true), setTimeline(el?.status) }}>
-                  <IoMdEye  
+                  onClick={() => { setticketdata(el), setShowStatus(true), setTimeline(el?.status) }}>
+                  <IoMdEye
                     className='text-2xl'
 
                   />

@@ -47,8 +47,8 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
     tryCatch(
       async () => {
         const formData = new FormData();
-        formData.append("id", isedit ?  id: "");
-        formData.append("leaderid", leaderProfile?.id || "");
+        formData.append("id", isedit ? id : "");
+        formData.append("leaderid", userDetails?.leaderId || "");
         formData.append("ticketid", ticketdata?.ticketid || "");
         formData.append("category", ticketdata?.category || "");
         formData.append("status", data?.status || "");
@@ -63,7 +63,7 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
 
         const response = await saveTicketStatus(formData);
         if (response?.success) {
-          const ticketData = await getTickets(leaderProfile?.id as string);
+          const ticketData = await getTickets(userDetails?.leaderId as string);
           dispatch(ticketActions.storeTicket(ticketData))
           onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
@@ -125,7 +125,7 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
           }}
         />
 
-       
+
         {isedit && data?.attachments?.map((el: any) => (
           <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
             {el.match(/[^/]+$/)[0]}

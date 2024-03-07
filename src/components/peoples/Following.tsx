@@ -18,17 +18,17 @@ interface FollowerProps {
 
 export const Following: FC<FollowerProps> = ({ displayImg, name, count = 0, item }) => {
   const dispatch = cusDispatch();
-  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { userDetails } = cusSelector((state) => state.auth);
   const handleFollowers = async () => {
     const postBody = {
-      senderid: leaderProfile?.id,
+      senderid: userDetails?.leaderId,
       receiverid: item?.leaderid,
     };
     tryCatch(
       async () => {
         const response = await unFollowLeader(postBody);
         if (response?.success) {
-          const res = await getFollowering(leaderProfile?.id as string)
+          const res = await getFollowering(userDetails?.leaderId as string)
           dispatch(leaderActions.setFollowing(res))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {

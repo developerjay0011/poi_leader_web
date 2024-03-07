@@ -9,7 +9,7 @@ import moment from "moment";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { getImageUrl } from '@/config/get-image-url';
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
+import { Savedby, ToastType } from "@/constants/common";
 interface AgendaFormProps {
   onCancel: () => void; // Define the type of onCancel prop
   data: any
@@ -32,12 +32,15 @@ const AgendaEditForm: React.FC<AgendaFormProps> = ({ onCancel, data }) => {
   } = useForm<UserDetails>();
 
   const formSubmitHandler = async (formdata: UserDetails) => {
-
-    const body = { ...formdata, id: data?.id, categoryid: categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(formdata.creation_date).format('YYYY-MM-DD hh:mm:ss'), leaderid: leaderProfile.id }
+    const body = {
+      ...formdata, id: data?.id, categoryid: categoryFilter, access, priority,
+      ...Savedby(),
+      creation_date: moment(formdata.creation_date).format('YYYY-MM-DD hh:mm:ss'), leaderid: leaderProfile.id
+    }
     try {
       const response = await editAgenda(body);
       if (response?.success) {
-        const agendaData = await getAgenda(leaderProfile?.id as string);
+        const agendaData = await getAgenda(userDetails?.leaderId as string);
         dispatch(agendaAction.storeAgendas(agendaData))
         onCancel()
         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))

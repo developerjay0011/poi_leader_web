@@ -27,7 +27,6 @@ const COLORS = [
 ]
 
 export const CusPieChart: FC<any> = ({ options }) => {
-  console.log("options", options)
   return (
     <ResponsiveContainer width='100%' height='100%'>
       <PieChart>
@@ -38,7 +37,7 @@ export const CusPieChart: FC<any> = ({ options }) => {
           outerRadius='100%'
           fill='#8884d8'
           dataKey='value'>
-          {options?.map((entry:any, index:any) => (
+          {options?.map((entry: any, index: any) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>

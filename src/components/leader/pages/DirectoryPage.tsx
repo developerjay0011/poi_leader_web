@@ -50,14 +50,12 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
     (async () => {
       tryCatch(
         async () => {
-
-          const Data = await getDirectory(leaderProfile?.id as string);
+          const Data = await getDirectory(userDetails?.leaderId as string);
           dispatch(directoryAction.storedirectory(Data))
-
         }
       )
     })();
-  }, [userDetails, dispatch, leaderProfile?.id, isDirectory]);
+  }, [dispatch, userDetails?.leaderId, isDirectory]);
 
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
@@ -66,7 +64,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
 
         const body = {
           id: isEdit ? editDirectoryData?.id : null,
-          leaderid: leaderProfile?.id || "",
+          leaderid: userDetails?.leaderId || "",
           name: data?.Name,
           mobile: data?.Phone,
           email: data?.Email,
