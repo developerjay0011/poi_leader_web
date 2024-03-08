@@ -1,7 +1,6 @@
 'use client'
 import { FC, useEffect } from 'react'
 import { PollTableRow } from './PollTableRow'
-import { GenerateId } from '@/utils/utility'
 import { tryCatch } from '@/config/try-catch'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { deletePoll, getPolls } from '@/redux_store/polls/pollsApi'
@@ -10,9 +9,8 @@ import { ErrorTableRow } from '@/utils/ErrorTableRow'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 
-interface PollsTableProps {}
+interface PollsTableProps { }
 export const PollsTable: FC<PollsTableProps> = () => {
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const { poll } = cusSelector((state) => state.poll);
 
@@ -21,7 +19,7 @@ export const PollsTable: FC<PollsTableProps> = () => {
   const getPoll = async () => {
     tryCatch(
       async () => {
-        const Data = await getPolls(leaderProfile?.id as string);
+        const Data = await getPolls(userDetails?.leaderId as string);
         dispatch(pollActions.storePoll(Data))
       }
     )
@@ -31,12 +29,12 @@ export const PollsTable: FC<PollsTableProps> = () => {
       getPoll()
 
     })();
-  }, [userDetails, dispatch, leaderProfile?.id]);
-  const handlePollDelete = async (id:string) => {
+  }, [userDetails, dispatch, userDetails?.leaderId]);
+  const handlePollDelete = async (id: string) => {
     tryCatch(
       async () => {
 
-        const response = await deletePoll(id, leaderProfile?.id as string);
+        const response = await deletePoll(id, userDetails?.leaderId as string);
         if (response?.success) {
           getPoll()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
@@ -56,30 +54,30 @@ export const PollsTable: FC<PollsTableProps> = () => {
           </tr>
         </thead>
         <tbody>{
-          
-            poll.length ?
-          poll?.map((pollitem: any, index: number) => {
-            return (
-              <PollTableRow
-                key={index}
-                access={pollitem?.access}
-                id={pollitem?.id}
-                imgOptions={pollitem?.poll_options}
-                index={1}
-                poll_options={pollitem?.poll_options}
-                pollType={pollitem?.polltype}
-                publishDate={pollitem?.publish_date}
-                title={pollitem?.title}
-                expiresAt={pollitem?.close_date}
-                view_access={pollitem?.view_access}
-                handleDelete={handlePollDelete}
-                votes_by={pollitem?.votes_by}
-              />
-            )
-          }):(
-            <ErrorTableRow colNo={5} />)
-          }
-         
+
+          poll.length ?
+            poll?.map((pollitem: any, index: number) => {
+              return (
+                <PollTableRow
+                  key={index}
+                  access={pollitem?.access}
+                  id={pollitem?.id}
+                  imgOptions={pollitem?.poll_options}
+                  index={1}
+                  poll_options={pollitem?.poll_options}
+                  pollType={pollitem?.polltype}
+                  publishDate={pollitem?.publish_date}
+                  title={pollitem?.title}
+                  expiresAt={pollitem?.close_date}
+                  view_access={pollitem?.view_access}
+                  handleDelete={handlePollDelete}
+                  votes_by={pollitem?.votes_by}
+                />
+              )
+            }) : (
+              <ErrorTableRow colNo={5} />)
+        }
+
         </tbody>
       </table>
     </>

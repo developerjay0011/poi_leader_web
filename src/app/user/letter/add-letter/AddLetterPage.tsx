@@ -5,12 +5,20 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { LetterForm } from '../../../../components/leader/forms/LetterForm'
 import ReactToPrint from 'react-to-print'
 import { BiRightArrowAlt } from 'react-icons/bi'
-import { ConnectToAPI } from '@/utils/utility'
-import { cusSelector } from '@/redux_store/cusHooks'
+import { ConnectToAPI, GenerateId } from '@/utils/utility'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import toast from 'react-hot-toast'
+import { getLetters, saveLetter } from '@/redux_store/letter/letterApi'
+import { letterActions } from '@/redux_store/letter/letterSlice'
+import { commonActions } from '@/redux_store/common/commonSlice'
+import { Savedby, ToastType } from '@/constants/common'
+import { getTickets } from '@/redux_store/ticket/ticketApi'
+import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 
 export interface LetterFormFields {
   location: string
   letterType: string
+  ticketId: string
   language: string
   date: string
   idNo: string
@@ -37,33 +45,78 @@ const AddLetterPage: FC = () => {
     watch,
     control,
   } = useForm<LetterFormFields>({
-    defaultValues: { language: 'english', idNo: '12324' },
+    defaultValues: { language: 'english' },
   })
   const { leaderOptions } = cusSelector((state) => state.common);
   const { letter_templete } = cusSelector((state) => state.letter);
-  const [templateID, setTemplateID] = useState<any>();
+  const [letterData, setLeaderData] = useState<any>();
   const [letterFormat, setLetterFormat] = useState("");
+  const { userDetails } = cusSelector((state) => state.auth);
 
 
   const formSubmitHandler = (data: LetterFormFields) => {
-    console.log(data)
-    setTemplateID(data?.letterType)
-    var letter_format =( letter_templete.find((item) => item?.id == data?.letterType)?.template_html || "")
-    var letter_formats = letter_format?.replaceAll("${FILENUMBER}", data?.fileNo).replaceAll("${DATE}", data?.date).replaceAll("${TO}", data?.to).replaceAll("${FROM}", data?.from).replaceAll("${PHONE}", data?.contactNo).replaceAll("${IMAGE}", "https://www.fillhq.com/wp-content/uploads/2021/08/autodraw-11_2_2022.png")
-    
+    setLeaderData(data)
+    var letter_format = (letter_templete.find((item) => item?.id == data?.letterType)?.template_html || "")
+    var letter_formats = letter_format?.replaceAll("${FILENUMBER}", data?.fileNo)?.replaceAll("${DATE}", data?.date)?.replaceAll("${LOCATION}", data?.location)?.replaceAll("${TO}", data?.to)?.replaceAll("${FROM}", data?.from)?.replaceAll("${PHONE}", data?.contactNo)?.replaceAll("${IDNO}", data?.idNo)?.replaceAll("${IMAGE}", "https://www.fillhq.com/wp-content/uploads/2021/08/autodraw-11_2_2022.png")
     setLetterFormat(letter_formats)
-
   }
 
   const { fields, append, remove } = useFieldArray({
-    name: 'attachments',  
+    name: 'attachments',
     control,
   })
 
   const letterRef = useRef<HTMLDivElement>(null) // for letter output
+  const { ticket } = cusSelector((state) => state.ticket);
 
+  const dispatch = cusDispatch();
 
+  const handleAdd = async () => {
+    if (letterFormat == "") {
+      toast.error("please press preview frist")
+    } else {
+      const ticketData = ticket.find((item) => item.ticketid == letterData?.ticketId)
+      const body = {
+        leaderid: userDetails?.leaderId || "",
+        template_id: letterData?.letterType,
+        letter_no: GenerateId(),
+        location: letterData?.location,
+        language: letterData?.language,
+        date: letterData?.date,
+        category: ticketData?.category,
+        ticket_code: ticketData?.ticket_code,
+        id_number: letterData?.idNo,
+        file_number: letterData?.fileNo,
+        from: letterData?.from,
+        to: letterData?.to,
+        reference: letterData?.reference,
+        contact_no: letterData?.contactNo.toString(),
+        envelope_type: letterData?.envelopeType,
+        letter_html: letterFormat,
+        isactive: true,
+        ...Savedby()
+      };
+      const response = await saveLetter(body);
+      if (response?.success) {
+        const Data = await getLetters(userDetails?.leaderId as string);
+        dispatch(letterActions.storeLetterTemplate(Data))
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+        window.location.href = '/user/letter/manage-letter'
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+      }
+    }
+  }
 
+  const getTicket = async () => {
+    const data = await getTickets(userDetails?.leaderId as string);
+    dispatch(ticketActions.storeTicket(data));
+  };
+  useEffect(() => {
+    (async () => {
+      getTicket();
+    })();
+  }, [userDetails?.leaderId, dispatch]);
   return (
     <>
       <m.section
@@ -131,6 +184,12 @@ const AddLetterPage: FC = () => {
                     letterRef.current?.classList.add('letter_template')
                   }}
                 />
+                <button
+                  onClick={() => { handleAdd() }}
+                  type='button'
+                  className=' bg-cyan-700 py-[.4rem] z-10 capitalize text-white px-5 rounded-md shadow-md flex gap-2  items-center'>
+                  <i className='fa fa-print text-xl' /> Add
+                </button>
               </div>
             </section>
           </div>

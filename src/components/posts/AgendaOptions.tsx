@@ -12,6 +12,7 @@ interface AgendaOptionsProps {
   postAgendaHandler: () => void;
   onClose: () => void;
   userId: string;
+  ispost: any
 }
 
 export const AgendaOptions: FC<AgendaOptionsProps> = ({
@@ -20,6 +21,7 @@ export const AgendaOptions: FC<AgendaOptionsProps> = ({
   postAgendaHandler,
   onClose,
   userId,
+  ispost
 }) => {
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
@@ -31,28 +33,31 @@ export const AgendaOptions: FC<AgendaOptionsProps> = ({
         exit={{ opacity: 0 }}
         className="flex flex-col z-50 bg-white rounded-sm shadow-lg absolute top-full right-0"
       >
-        <button 
-        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+        <button
+          className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
           onClick={editAgendaHandler}
         >
           <FaEdit className="text-xl" /> Edit
         </button>
-        <button
-          className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
-          onClick={postAgendaHandler}
-        >
-          <IoSend className="text-xl" /> Post
-        </button>
+        {!ispost &&
           <button
+            className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+            onClick={postAgendaHandler}
+          >
+            <IoSend className="text-xl" /> Post
+          </button>
+        }
+
+        <button
           onClick={() => {
             onClose()
-              setShowConfirmBox(true);
-            }}
-            className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
-          >
-            <BsTrash3Fill /> Delete
-          </button>
-       
+            setShowConfirmBox(true);
+          }}
+          className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+        >
+          <BsTrash3Fill /> Delete
+        </button>
+
 
       </m.div>
 

@@ -32,18 +32,17 @@ export const StatusBtn: FC<StatusBtnProps> = ({
     <>
       <button
         onClick={showModal}
-        className={`text-white rounded-full py-0.5 px-4 text-[13px] capitalize enable_transition ${
-          status === '0'
-            ? 'bg-red-600 hover:bg-red-500'
-            : 'bg-green-600 hover:bg-green-500'
-        }`}>
+        className={`text-white rounded-full py-0.5 px-4 text-[13px] capitalize enable_transition ${status === '0'
+          ? 'bg-red-600 hover:bg-red-500'
+          : 'bg-green-600 hover:bg-green-500'
+          }`}>
         {status === '0' && 'deactive'}
         {status === '1' && 'active'}
       </button>
       <AnimatePresence mode='wait'>
         {showConfirmBox && (
           <ConfirmDialogBox
-            onOk={changeStatus}
+            onOk={() => { changeStatus(); closeModal() }}
             onCancel={closeModal}
             noAllowed={inProgress}
           />

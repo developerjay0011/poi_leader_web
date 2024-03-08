@@ -1,6 +1,8 @@
+import { USER_INFO } from '@/constants/common';
 import { LeaderProfile } from '@/interfaces/leader';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCookie } from 'cookies-next';
+
 
 interface LeaderState {
   leaderProfile: LeaderProfile;
@@ -11,13 +13,11 @@ interface LeaderState {
   reasons: any[];
 }
 
-let userDetails: any = getCookie("userData");
-userDetails = userDetails && JSON.parse(userDetails) || { leader_detail: {} };
+let userDetails: any = getCookie(USER_INFO);
+userDetails = userDetails && JSON.parse(userDetails);
 
 const initialState: LeaderState = {
-  leaderProfile: {
-    id: userDetails?.leaderId
-  },
+  leaderProfile: { id: userDetails?.leaderId },
   followers: [],
   trendingLeader: [],
   following: [],
@@ -35,19 +35,19 @@ export const leaderSlice = createSlice({
         ...action.payload
       };
     },
-    setReason(state, action: PayloadAction<any[]>) {
+    setReason(state, action: any) {
       state.reasons = action.payload
     },
-    setFollowers(state, action: PayloadAction<any[]>) {
+    setFollowers(state, action) {
       state.followers = action.payload;
     },
-    setFollowing(state, action: PayloadAction<any[]>) {
+    setFollowing(state, action) {
       state.following = action.payload;
     },
-    setTrendingLeader(state, action: PayloadAction<any[]>) {
+    setTrendingLeader(state, action: any) {
       state.trendingLeader = action.payload;
     },
-    setNotification(state, action: PayloadAction<any[]>) {
+    setNotification(state, action: any) {
       state.notification = action.payload;
     },
   },

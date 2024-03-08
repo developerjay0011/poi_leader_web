@@ -61,7 +61,7 @@ export const getFollowers = async (leaderId: string) => {
   return tryCatch(
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getFollowers, { leaderId }));
-      return res.data;
+      return Array.isArray(res.data) ? res.data : []
     }
   );
 };
@@ -69,7 +69,7 @@ export const getFollowering = async (leaderId: string) => {
   return tryCatch(
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getFollowering, { leaderId }));
-      return res.data;
+      return Array.isArray(res.data) ? res.data : []
     }
   );
 };

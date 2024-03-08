@@ -7,10 +7,10 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { BiShareAlt, BiSolidMessageAltDetail, BiX } from "react-icons/bi";
 import { userImg } from "@/utils/utility";
 import { BsFillHeartFill } from "react-icons/bs";
-import {
-  addNewNestedComment,
-  changeNestedLike,
-} from "@/redux_store/posts/postAPI";
+// import {
+//   addNewNestedComment,
+//   changeNestedLike,
+// } from "@/redux_store/posts/postAPI";
 import { motion as m } from "framer-motion";
 import { IoIosArrowForward } from "react-icons/io";
 import CustomImage from "@/utils/CustomImage";
@@ -32,16 +32,16 @@ export const FullPost: FC<FullPostProps> = ({
   const curPost = posts[curPostIndex];
   const { userDetails } = cusSelector((st) => st.UI);
   const dispatch = cusDispatch();
-  const likePerPostHandler = () =>
-    dispatch(
-      changeNestedLike({
-        id: curPost.id,
-        likeTypeStatus: "_media",
-        postId,
-        userId,
-        eventID: "0008",
-      })
-    );
+  const likePerPostHandler = () => { }
+  // dispatch(
+  //   changeNestedLike({
+  //     id: curPost.id,
+  //     likeTypeStatus: "_media",
+  //     postId,
+  //     userId,
+  //     eventID: "0008",
+  //   })
+  // );
 
   const increasePostCount = () => {
     setCurPostIndex((lst) => {
@@ -72,15 +72,15 @@ export const FullPost: FC<FullPostProps> = ({
   };
 
   const likeOnCommentPerPostHandler = (id: string) => {
-    dispatch(
-      changeNestedLike({
-        id,
-        likeTypeStatus: "_media",
-        postId,
-        userId,
-        eventID: "0010",
-      })
-    );
+    // dispatch(
+    //   changeNestedLike({
+    //     id,
+    //     likeTypeStatus: "_media",
+    //     postId,
+    //     userId,
+    //     eventID: "0010",
+    //   })
+    // );
   };
 
   return (
@@ -248,9 +248,8 @@ const InteractionsPerMedia: FC<InteractionsPerMediaProps> = ({
   return (
     <div className="mt-6 pb-3 flex items-center gap-6 border-b">
       <button
-        className={`flex flex-col gap-3 relative transition-all ${
-          showLikeAnimation ? "text-rose-500" : "text-black"
-        }`}
+        className={`flex flex-col gap-3 relative transition-all ${showLikeAnimation ? "text-rose-500" : "text-black"
+          }`}
         onClick={() => {
           setFirstTime(false);
           likePerPostHandler();
@@ -261,9 +260,8 @@ const InteractionsPerMedia: FC<InteractionsPerMediaProps> = ({
 
         {!firstTime && (
           <BsFillHeartFill
-            className={`text-lg overlay ${
-              showLikeAnimation ? "fadeOut" : "fadeIn"
-            }`}
+            className={`text-lg overlay ${showLikeAnimation ? "fadeOut" : "fadeIn"
+              }`}
           />
         )}
 

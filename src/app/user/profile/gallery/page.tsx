@@ -1,10 +1,7 @@
 "use client";
 import { ChangeEvent, useEffect, useState } from "react";
 import { BriefPost } from "@/components/posts/BriefPost";
-import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
-import { validate } from "uuid";
-import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
-import { GenerateId, UserData, convertFileToBase64 } from "@/utils/utility";
+import { GenerateId, convertFileToBase64 } from "@/utils/utility";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import { BsImageFill } from "react-icons/bs";
@@ -17,6 +14,7 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { galleryActions } from "@/redux_store/gallery/gallerySlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 
 const AdminProfileGalleryPage = () => {
   const [searchStr, setSearchStr] = useState("");
@@ -24,10 +22,8 @@ const AdminProfileGalleryPage = () => {
   const [isGallery, setIsGallery] = useState(false);
   const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
   const [media, setMedia] = useState<NewPostFields[]>([]);
-  const changeSearchStr = (val: string) => setSearchStr(val);
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((st) => st.auth);
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { gallery } = cusSelector((state) => state.gallery);
 
 
@@ -36,11 +32,11 @@ const AdminProfileGalleryPage = () => {
     (async () => {
       tryCatch(
         async () => {
-          const data = await getGalleryData(leaderProfile?.id as string);
+          const data = await getGalleryData(userDetails?.leaderId as string);
           dispatch(galleryActions.storeGallery(data))
-      })
+        })
     })();
-  }, [userDetails,dispatch ,updateGallery]);
+  }, [userDetails?.leaderId, dispatch, updateGallery]);
 
   const deletedata = (data: any) => {
     setUpdateGallery(data);
@@ -109,12 +105,12 @@ const AdminProfileGalleryPage = () => {
   const handleSave = async () => {
     tryCatch(
       async () => {
-      const formData = new FormData();
-      formData.append("leaderid", leaderProfile?.id || "");
-      for (let i = 0; i < apimedia.length; i++) {
-        const item: any = apimedia[i];
-        formData.append("media", item?.media);
-      }
+        const formData = new FormData();
+        formData.append("leaderid", userDetails?.leaderId || "");
+        for (let i = 0; i < apimedia.length; i++) {
+          const item: any = apimedia[i];
+          formData.append("media", item?.media);
+        }
 
         const response = await saveGallery(formData);
         if (response?.success) {
@@ -126,15 +122,16 @@ const AdminProfileGalleryPage = () => {
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    })
+      })
   };
 
   return (
     <>
       <div className="flex gap-5 w-full relative">
-        <div className="sticky top-0 left-0 self-start max-[1000px]:hidden">
+        {/* <div className="sticky top-0 left-0 self-start max-[1000px]:hidden">
           <ShortcutsBox />
-        </div>
+        </div> */}
+        <ProfileShortcutsBox />
 
         <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
           <section className="flex justify-between flex-col">
@@ -143,8 +140,7 @@ const AdminProfileGalleryPage = () => {
                 Gallery
               </h2>
             </div>
-
-            <div className="w-[96%] h-[1px] bg-zinc-200 m-auto max-[500px]:w-[90%]" />
+            <div className="w-[100%] h-[1px] bg-zinc-200 m-auto max-[500px]:w-[90%]" />
           </section>
 
           <div className="py-7 px-7 max-[650px]:px-3 flex items-center justify-between">
@@ -176,7 +172,7 @@ const AdminProfileGalleryPage = () => {
                   return (
                     <BriefPost
                       key={index}
-                      userMedia={userMedia} 
+                      userMedia={userMedia}
                       deletedata={deletedata}
                     />
                   );
@@ -192,9 +188,8 @@ const AdminProfileGalleryPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${
-                false ? "cursor-not-allowed" : ""
-              }`}
+              className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
+                }`}
             >
               <div
                 className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"

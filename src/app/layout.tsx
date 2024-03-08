@@ -2,8 +2,9 @@ import './globals.scss'
 import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
 import { CusProvider } from '@/redux_store/CusProvider' // Provider for Managing state using REDUX
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
+import { cusDispatch } from '@/redux_store/cusHooks'
 
 const font = Open_Sans({
   subsets: ['latin'],
@@ -16,8 +17,9 @@ export const metadata: Metadata = {
 }
 
 const RootLayout: FC<{ children: ReactNode }> = ({ children }) => {
+
   return (
-    <html lang='en'>
+    <html lang='en' >
       <body className={font.className + ' font-normal '}>
         <div>
           <Toaster />

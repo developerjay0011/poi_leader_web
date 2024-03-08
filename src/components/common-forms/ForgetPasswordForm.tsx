@@ -5,13 +5,6 @@ import Logo from '@/assets/favicon.png'
 import { ForgetUserIdField } from '../forgetPassword/ForgetUserIdField'
 import { BiX } from 'react-icons/bi'
 import { CreateNewPasswordForm } from './CreateNewPasswordForm'
-import { cusDispatch } from '@/redux_store/cusHooks'
-import {
-  changePassword,
-  verifyForgetOTP,
-  verifyUserId,
-} from '@/redux_store/auth/authAPI'
-import toast from 'react-hot-toast'
 import { ForgetOTPForm } from './ForgetOTPForm'
 import CustomImage from '@/utils/CustomImage'
 

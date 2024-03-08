@@ -13,10 +13,12 @@ import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { PostTypes } from "./PostTypes";
 import CustomImage from "@/utils/CustomImage";
-import { addPost, addStories } from "@/redux_store/posts/postAPI";
+import { GetLeaderAddedPosts, GetPostsForLeader, addPost, addStories, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import { tryCatch } from "@/config/try-catch";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import { postActions } from "@/redux_store/posts/postSlice";
+import { getImageUrl } from "@/config/get-image-url";
 
 interface NewPostBoxProps {
   type: UserPostType;
@@ -31,38 +33,47 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const [textPost, setTextPost] = useState("");
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
-  const [accessType, setAccessType] = useState("");
+  const [accessType, setAccessType] = useState("open");
   const { creatingPost } = cusSelector((st) => st.posts);
   const { userDetails } = cusSelector((state) => state.auth);
+  const { leaderProfile, } = cusSelector((state) => state.leader);
+
+
+
 
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (
-      textPost.trim().length === 0 &&
-      previewImages.length === 0 &&
-      accessType?.length === 0
-    )
+    if (previewImages.length === 0 || accessType?.length === 0 || apimedia?.length === 0) {
       return setPostErr({ errTxt: "Post can't be empty", isErr: true });
-
+    }
     const formData = new FormData();
-
     formData.append("leaderid", userDetails?.leaderId || "");
     formData.append("written_text", textPost || "");
     formData.append("access_type", accessType);
-
     for (let i = 0; i < apimedia.length; i++) {
       const item: any = apimedia[i];
       formData.append("media", item?.media);
     }
-
     tryCatch(async () => {
       let response: any = "";
       if (type === "post") {
         response = await addPost(formData);
+        if (response?.success) {
+          const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+          dispatch(postActions.setPost(postsForLeader));
+          const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
+          dispatch(postActions.listPosts(leaderpost as any));
+        }
       } else if (type === "story") {
         response = await addStories(formData);
-       
+        if (response?.success) {
+          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+          const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
+          dispatch(postActions.storeMyStories(LeaderAddedStories))
+          const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
+          dispatch(postActions.storeStories(storiesForLeader as any[]));
+        }
       }
       handleAdd()
       if (response?.success) {
@@ -76,7 +87,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
             message: response.message,
           })
         );
-        if(handleClose) handleClose();
+        if (handleClose) handleClose();
       } else {
         dispatch(
           commonActions.showNotification({
@@ -87,6 +98,10 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
       }
     });
   };
+
+
+
+
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setPostErr({
@@ -147,15 +162,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
         >
           <div className="flex items-start gap-3">
             <CustomImage
-              src={
-                `${
-                  (userDetails?.image &&
-                    process.env.NEXT_PUBLIC_BASE_URL +
-                      "" +
-                      userDetails?.image) ||
-                  ""
-                }` as string
-              }
+              src={getImageUrl(leaderProfile?.image)}
               alt="user image"
               width={1000}
               height={1000}
@@ -180,7 +187,6 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                   type="file"
                   className="hidden"
                   id={`medias-${type}`}
-                  multiple
                   onChange={mediaChangeHandler}
                 />
                 <BsImageFill className="text-sky-950 text-xl text-opacity-70" />
@@ -191,9 +197,8 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                 className="cursor-pointer"
                 onClick={() => setShowMorePostOptions(!showMorePostOptions)}
               >
-                <span className="capitalize">{`Post Type ${
-                  (accessType && ": " + accessType) || ""
-                }`}</span>
+                <span className="capitalize">{`Post Type ${(accessType && ": " + accessType) || ""
+                  }`}</span>
               </div>
               {showMorePostOptions && (
                 <PostTypes

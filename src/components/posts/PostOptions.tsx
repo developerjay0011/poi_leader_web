@@ -18,7 +18,6 @@ export const PostOptions: FC<PostOptionsProps> = ({
   onClose,
   userId,
 }) => {
-  const { userDetails } = cusSelector((st) => st.UI);
   const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   return (
@@ -29,22 +28,15 @@ export const PostOptions: FC<PostOptionsProps> = ({
         exit={{ opacity: 0 }}
         className="flex flex-col z-50 bg-white rounded-sm shadow-lg absolute top-full right-0"
       >
-        {/* <button 
-        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
-        onClick={() => onClose()}
+        <button
+          onClick={() => {
+            setShowConfirmBox(true);
+          }}
+          className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
         >
-          <MdReport className="text-xl" /> report
-        </button> */}
-        
-          <button
-            onClick={() => {
-              setShowConfirmBox(true);
-            }}
-            className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
-          >
-            <BsTrash3Fill /> delete
-          </button>
-        
+          <BsTrash3Fill /> delete
+        </button>
+
       </m.div>
 
       <AnimatePresence mode="wait">
@@ -55,7 +47,11 @@ export const PostOptions: FC<PostOptionsProps> = ({
               setShowConfirmBox(false);
               onClose();
             }}
-            onOk={deletePostHandler}
+            onOk={() => {
+              deletePostHandler();
+              setShowConfirmBox(false);
+              onClose();
+            }}
           />
         )}
       </AnimatePresence>

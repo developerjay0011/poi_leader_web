@@ -7,7 +7,7 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getLetterTemplates, saveLetterTemplate } from '@/redux_store/letter/letterApi'
 import { letterActions } from '@/redux_store/letter/letterSlice'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import dynamic from 'next/dynamic';
 interface ManageTemplateFormProps {
   tempHeader: string
@@ -17,7 +17,7 @@ interface ManageTemplateFormProps {
   submitHandler: () => void
   heading: string
   err: string
-  isEdit:any
+  isEdit: any
 }
 
 interface TemplateFormFields {
@@ -48,26 +48,21 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
       tempHeader,
     },
   })
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
 
-  const formSubmitHandler = async(data: TemplateFormFields) => {
-    console.log(data, content)
+  const formSubmitHandler = async (data: TemplateFormFields) => {
     const body = {
       id: isEdit ? isEdit.id : null,
-      leaderid: leaderProfile?.id || "",
+      leaderid: userDetails?.leaderId || "",
       template_name: data.tempHeader,
-      template_html:content,
-      isactive: data.status == "1" ?true:false,
-      saved_by_type: userDetails?.usertype.replace('emerging ', ""),
-      saved_by: leaderProfile?.id
-
+      template_html: content,
+      isactive: data.status == "1" ? true : false,
+      ...Savedby()
     };
-
     const response = await saveLetterTemplate(body);
     if (response?.success) {
-      const Data = await getLetterTemplates(leaderProfile?.id as string);
+      const Data = await getLetterTemplates(userDetails?.leaderId as string);
       dispatch(letterActions.storeLetterTemplate(Data))
       dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
     } else {
@@ -84,14 +79,14 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
       setValue("status", isEdit.isactive ? "1" : "0")
       setContent(isEdit.template_html)
     }
-  },[])
+  }, [])
   return (
     <>
       <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className='fixed top-0 left-0 z-10 w-full backdrop-blur-[2px] h-full overflow-y-scroll '>
+        className='fixed top-0 left-0 z-10 w-full backdrop-blur-[2px] h-full overflow-y-scroll main_scrollbar'>
         <div className='bg-gray-700 opacity-25 h-screen w-full absolute top-0 left-0 z-20' />
         <m.div
           initial={{ y: -100 }}
@@ -117,7 +112,7 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
               <div className='col-span-2'>
                 <Editor
                   value={content}
-                  onChange={(val:any) => setContent(val)}
+                  onChange={(val: any) => setContent(val)}
                 />
               </div>
 

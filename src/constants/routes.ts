@@ -1,12 +1,16 @@
 // PAGE Routes
 export const ProtectedRoutes = {
   user: "/user",
-  userManagement: "/user-management",
   userProfile: "/user/profile",
   editUserProfile: "/user/profile/settings/personal-information",
   accountSetting: "/user/profile/settings/general",
   followers: "/user/profile/followers",
-  leader: "/leader"
+  leader: "/leader",
+};
+
+
+export const EmployeeProtectedRoutes = {
+  employeehome: "/user/employeehome",
 };
 
 export const AuthRoutes = {
@@ -27,6 +31,7 @@ export const APIRoutes = {
 
   // Leader Endpoints
   login: `${API_Prefix}/leader/login`,
+  DeleteGroups: `${API_Prefix}/leader/DeleteGroups`,
   register: `${API_Prefix}/leader/registration`,
   upsertLeaders: `${API_Prefix}/leader/addEditLeader`,
   getAccessTabs: `${API_Prefix}/leader/getAccessTabs/{{userId}}`,
@@ -37,7 +42,15 @@ export const APIRoutes = {
   getNotification: `${API_Prefix}/leader/getleadernotification/{{leaderId}}`,
   CheckLeaderUserRegExists: `${API_Prefix}/leader/CheckLeaderUserRegExists`,
   ForgotPassword: `${API_Prefix}/leader/ForgotPassword`,
-
+  GetEmployees: `${API_Prefix}/leader/GetEmployees/{{leaderId}}`,
+  AddEditEmployee: `${API_Prefix}/leader/AddEditEmployee`,
+  GetSingleEmployeeDetail: `${API_Prefix}/leader/GetSingleEmployeeDetail`,
+  ChangeActiveStatus: `${API_Prefix}/leader/ChangeActiveStatus`,
+  GetLeaderEmployeeTabAccess: `${API_Prefix}/leader/GetLeaderEmployeeTabAccess/{{employeeid}}`,
+  SavePermission: `${API_Prefix}/leader/SavePermission`,
+  SaveCategory: `${API_Prefix}/leader/SaveCategory`,
+  AddMember: `${API_Prefix}/leader/AddMember`,
+  DeleteMembers: `${API_Prefix}/leader/DeleteMembers`,
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
@@ -54,7 +67,9 @@ export const APIRoutes = {
   getLeaderAddedStories: `${API_Prefix}/post/getLeaderAddedStories/{{leaderId}}`,
   getStoriesForLeader: `${API_Prefix}/post/getStoriesForLeader/{{leaderId}}`,
   GetPostsForLeader: `${API_Prefix}/post/GetPostsForLeader/{{leaderId}}`,
+  GetLeaderAddedPosts: `${API_Prefix}/post/GetLeaderAddedPosts/{{leaderId}}`,
   LikePost: `${API_Prefix}/post/LikePost`,
+  DeletePost: `${API_Prefix}/post/DeletePost`,
   CommentPost: `${API_Prefix}/post/CommentPost`,
   UnlikePostorStory: `${API_Prefix}/post/UnlikePostorStory`,
   ReplyToComment: `${API_Prefix}/post/ReplyToComment`,
@@ -113,6 +128,9 @@ export const APIRoutes = {
   saveLetter: `${API_Prefix}/leader/saveletter`,
   deleteLetter: `${API_Prefix}/leader/deleteletter`,
 
-
+  //Ticket Endpoint
+  getTickets: `${API_Prefix}/leader/gettickets/{{leaderId}}`,
+  saveTicketStatus: `${API_Prefix}/leader/saveticketstatus`,
+  deleteTicketStatus: `${API_Prefix}/leader/deleteticketstatus`,
 
 }

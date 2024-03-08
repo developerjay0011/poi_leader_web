@@ -10,7 +10,7 @@ import { PollsPreview } from '@/components/posts/polls/PollsPreview'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getPolls, savePolls } from '@/redux_store/polls/pollsApi'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import { tryCatch } from '@/config/try-catch'
 import { pollActions } from '@/redux_store/polls/pollSlice'
 
@@ -21,25 +21,25 @@ interface ManagePollsFormProps {
   edit?: boolean
   title?: string
   pollType?: PollType
-  poll_options?: { text: string; id: string; votes: number}[]
+  poll_options?: { text: string; id: string; votes: number }[]
   imgOptions?: { text: string; image: string; id: string; votes: number }[]
   publishDate?: string
   access?: string
   expiresAt?: string
   id?: string
-  view_access?:string
+  view_access?: string
 }
 
 export interface NewPollsFormFields {
   title: string
   pollType: PollType
-  poll_options: { text: string; id: string; votes: number}[]
+  poll_options: { text: string; id: string; votes: number }[]
   imgOptions: { text: string; image: string; id: string; votes: number }[]
   publishDate: string
   access: string
   expiresAt: string
-  view_access:string
-  votes_by:any[]
+  view_access: string
+  votes_by: any[]
 }
 
 export const ManagePollsForm: FC<ManagePollsFormProps> = ({
@@ -59,55 +59,18 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 }) => {
   // MIN Publish Date and time limit
   const minDateLimit = dateTimeConverter(new Date().toISOString(), 0)
-
   const [showPreview, setShowPreview] = useState(false)
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    setValue,
-    getValues,
-    reset,
-    formState: { errors, isValid },
-  } = useForm<NewPollsFormFields>({
-    defaultValues: {
-      publishDate,
-      expiresAt,
-      access,
-      imgOptions,
-      poll_options,
-      pollType,
-      title,
-      view_access
-    },
-  })
-
-  const { fields, append, remove } = useFieldArray({
-    name: 'poll_options',
-    control,
-  })
-
-  const {
-    fields: imgFields,
-    append: addImgField,
-    remove: removeImgField,
-  } = useFieldArray({
-    name: 'imgOptions',
-    control,
-  })
-  console.log("poll_options", poll_options)
+  const { register, handleSubmit, control, watch, setValue, getValues, reset, formState: { errors, isValid }, } = useForm<NewPollsFormFields>({ defaultValues: { publishDate, expiresAt, access, imgOptions, poll_options, pollType, title, view_access }, })
+  const { fields, append, remove } = useFieldArray({ name: 'poll_options', control, })
+  const { fields: imgFields, append: addImgField, remove: removeImgField, } = useFieldArray({ name: 'imgOptions', control, })
   const formSubmitHandler = (data: NewPollsFormFields) => {
-    console.log("dataa", data)
     tryCatch(
       async () => {
-
         const body = {
           id: edit ? id : null,
-          leaderid: leaderProfile?.id || "",
+          leaderid: userDetails?.leaderId || "",
           title: data?.title,
           polltype: data?.pollType,
           access: data?.access,
@@ -115,15 +78,12 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
           poll_options: data?.poll_options,
           publish_date: data?.publishDate,
           close_date: data?.expiresAt,
-          saved_by_type: userDetails?.usertype.replace('emerging ', ""),
-          saved_by: leaderProfile?.id  
-
+          ...Savedby()
         };
-
         const response = await savePolls(body);
         if (response?.success) {
           // setIsEdit(false);
-          const Data = await getPolls(leaderProfile?.id as string);
+          const Data = await getPolls(userDetails?.leaderId as string);
           dispatch(pollActions.storePoll(Data))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
@@ -136,9 +96,9 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 
   useEffect(() => {
     if (edit) {
-  
+
     }
-  },[]) 
+  }, [])
 
   return (
     <>
@@ -148,9 +108,8 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
         exit={{ opacity: 0 }}
         className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
         <div
-          className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center ${
-            fields.length > 4 || imgFields.length > 4 ? 'max-[650px]:py-5' : ''
-          }`}>
+          className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll main_scrollbar flex justify-center ${fields.length > 4 || imgFields.length > 4 ? 'max-[650px]:py-5' : ''
+            }`}>
           <m.section
             initial={{ y: -100 }}
             animate={{ y: 0 }}
@@ -298,10 +257,9 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
 
                 <label
                   htmlFor='expiresDate'
-                  className={`flex flex-col gap-2 ${
-                    (fields.length > 0 || imgFields.length > 0) &&
+                  className={`flex flex-col gap-2 ${(fields.length > 0 || imgFields.length > 0) &&
                     'col-span-full'
-                  }`}>
+                    }`}>
                   <span className='capitalize font-[500]'>
                     Poll Close date
                     <strong className='text-rose-500'>*</strong>

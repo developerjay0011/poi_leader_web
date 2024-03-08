@@ -4,53 +4,54 @@ import { FC, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { motion as m } from 'framer-motion'
 import { TfiStatsUp } from 'react-icons/tfi'
+import { cusSelector } from '@/redux_store/cusHooks'
+import { tabfilter } from '@/redux_store/accesstab/tabApi'
 
-interface AdminProfileNavbarProps {}
+interface AdminProfileNavbarProps { }
 export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
   const [showMoreOptions, setShowMoreOptions] = useState(false)
-
+  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
+  const NAV_ROUTES = [
+    {
+      link: '/user/profile/feed',
+      name: 'feed',
+      tabname: "Leader"
+    },
+    {
+      link: '/user/profile/networks',
+      name: 'Groups',
+      tabname: "Manage Group"
+    },
+    {
+      link: '/user/profile/gallery',
+      name: 'gallery',
+      tabname: "Leader"
+    },
+    {
+      link: '/user/profile/agenda',
+      name: 'agenda',
+      tabname: "Manage Agenda",
+    },
+    {
+      link: '/user/profile/developments',
+      name: 'developments',
+      tabname: "Manage Developments",
+    },
+  ]
   return (
     <>
       <nav className='flex items-center gap-8 ml-20 max-[1480px]:ml-10 max-[1200px]:ml-5 max-[450px]:gap-4 max-[1100px]:flex-wrap max-[620px]:justify-center'>
-        <CusLink
-          activeLinkClasses='active_profile_link'
-          normalClasses='text-sky-950'
-          className='text-lg font-[500] capitalize relative'
-          href={'/user/profile/feed'}>
-          Feed
-        </CusLink>
 
-        <CusLink
-          activeLinkClasses='active_profile_link'
-          normalClasses='text-sky-950'
-          className='text-lg font-[500] capitalize relative'
-          href={'/user/profile/networks'}>
-          groups
-        </CusLink>
 
-        <CusLink
-          activeLinkClasses='active_profile_link'
-          normalClasses='text-sky-950'
-          className='text-lg font-[500] capitalize relative'
-          href={'/user/profile/gallery'}>
-          gallery
-        </CusLink>
-
-        <CusLink
-          activeLinkClasses='active_profile_link'
-          normalClasses='text-sky-950'
-          className='text-lg font-[500] capitalize relative'
-          href={'/user/profile/agenda'}>
-          agenda
-        </CusLink>
-
-        <CusLink
-          activeLinkClasses='active_profile_link'
-          normalClasses='text-sky-950'
-          className='text-lg font-[500] capitalize relative'
-          href={'/user/profile/developments'}>
-          developments
-        </CusLink>
+        {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any) => (
+          <CusLink
+            activeLinkClasses='active_profile_link'
+            normalClasses='text-sky-950'
+            className='text-lg font-[500] capitalize relative'
+            href={El.link}>
+            {El.name}
+          </CusLink>
+        ))}
 
         <button
           type='button'

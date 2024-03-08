@@ -3,6 +3,7 @@ import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { AgendaDetails, TimeLineFormField } from './agendaSlice';
+import { Savedby } from '@/constants/common';
 
 // Get Agenda API
 export const getAgenda = async (userId: string) => {
@@ -26,7 +27,7 @@ export const getCategory = async (userId: string) => {
 export const deleteAgenda = async (id: string, leaderid: string) => {
   return tryCatch(
     async () => {
-      const res = await Axios.post(APIRoutes.deleteAgenda, { id,leaderid });
+      const res = await Axios.post(APIRoutes.deleteAgenda, { id, leaderid });
       return res.data;
     }
   );
@@ -47,21 +48,25 @@ export const saveAgenda =
     return tryCatch(
       async () => {
         const formData = new FormData();
+        if (body?.id) {
+          formData.append("id", body?.id || "");
+        }
         formData.append("leaderid", body?.leaderid || "");
         formData.append("categoryid", body?.categoryid || "");
         formData.append("title", body?.title || "");
         formData.append("description", body?.description || "");
         for (let i = 0; i < body?.attachments?.length; i++) {
-          const element = body?.attachments?.[i]
-          formData.append("attachments", element)
-
+          const element = body?.attachments?.[i] as any
+          const isFile = element.type !== undefined
+          if (isFile) {
+            formData.append("attachments", element)
+          }
         }
         formData.append("priority", body?.priority || "");
         formData.append("access", body?.access || "");
         formData.append("creation_date", body?.creation_date || "");
-        formData.append("saved_by_type", body?.saved_by_type || "");
-        formData.append("saved_by", body?.saved_by || "");
-        console.log(formData);
+        formData.append("saved_by_type", Savedby()?.saved_by_type || "");
+        formData.append("saved_by", Savedby()?.saved_by || "");
         const res = await Axios.post(APIRoutes.saveAgenda, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
@@ -71,7 +76,7 @@ export const saveAgenda =
       }
     );
   }
-  
+
 //  Update Agenda API
 export const editAgenda =
   async (body: any) => {
@@ -88,14 +93,13 @@ export const editAgenda =
           for (let i = 0; i < body?.attachments?.length; i++) {
             const element = body?.attachments?.[i]
             formData.append("attachments", element)
-          } 
+          }
         }
         formData.append("priority", body?.priority || "");
         formData.append("access", body?.access || "");
         formData.append("creation_date", body?.creation_date || "");
-        formData.append("saved_by_type", body?.saved_by_type || "");
-        formData.append("saved_by", body?.saved_by || "");
-        console.log(formData);
+        formData.append("saved_by_type", Savedby()?.saved_by_type || "");
+        formData.append("saved_by", Savedby()?.saved_by || "");
         const res = await Axios.post(APIRoutes.saveAgenda, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
@@ -108,10 +112,8 @@ export const editAgenda =
 // Create / Update TimeLine API
 export const saveTimeLine =
   async (body: TimeLineFormField) => {
-
     return tryCatch(
       async () => {
-        console.log("body",body)
         const formData = new FormData();
         formData.append("id", body?.id || "");
         formData.append("leaderid", body?.leaderid || "");
@@ -126,8 +128,8 @@ export const saveTimeLine =
 
           }
         }
-        
-      
+
+
         const res = await Axios.post(APIRoutes.saveTimeLine, formData, {
           headers: {
             "Content-Type": "multipart/form-data"
@@ -138,10 +140,19 @@ export const saveTimeLine =
     );
   }
 // Delete Agenda API
-export const deleteTimeLine = async (id: string, leaderid: string, agendaid:string) => {
+export const deleteTimeLine = async (id: string, leaderid: string, agendaid: string) => {
   return tryCatch(
     async () => {
-      const res = await Axios.post(APIRoutes.deleteTimeLine, { id, leaderid ,agendaid});
+      const res = await Axios.post(APIRoutes.deleteTimeLine, { id, leaderid, agendaid });
+      return res.data;
+    }
+  );
+};
+
+export const SaveCategory = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.SaveCategory, body);
       return res.data;
     }
   );

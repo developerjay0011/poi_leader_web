@@ -1,91 +1,50 @@
 import { CommonBox } from "@/utils/CommonBox";
 import { GenerateId } from "@/utils/utility";
 import Link from "next/link";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import Modal from "react-modal";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { Story } from "./Story";
-import {
-  deleteStory,
-  getStoriesForLeader,
-} from "@/redux_store/posts/postAPI";
-import { groupBy } from "@/config/groupby";
+import { deleteStory, getLeaderAddedStories, getStoriesForLeader, } from "@/redux_store/posts/postAPI";
 import { NewPostBox } from "../posts/NewPostBox";
 import { ProtectedRoutes } from "@/constants/routes";
-import { getNotification } from "@/redux_store/leader/leaderAPI";
-import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { getImageUrl } from "@/config/get-image-url";
+import { postActions } from "@/redux_store/posts/postSlice";
+import { HiCubeTransparent } from "react-icons/hi";
 
-export const StoriesBox: FC = () => {
-  const [getStories, setGetStories] = useState([]);
+interface StoriesBoxProps {
+  is_my_postandstories: boolean
+}
+export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }) => {
   const [openPopup, setOpenPopup] = useState(false);
-  const id = GenerateId();
   const { userDetails } = cusSelector((state) => state.auth);
+  const { leaderProfile } = cusSelector((state) => state.leader);
+  const { stories, mystories } = cusSelector((state) => state.posts);
+  const leaderid = userDetails?.leaderId;
+  var setstories = is_my_postandstories ? mystories : stories
   const dispatch = cusDispatch();
-  const fetchStories = async() => {
-    const leaderid = userDetails?.leaderId;
+  const fetchMyStories = async () => {
+    if (leaderid && is_my_postandstories) {
+      var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+      const LeaderAddedStories = await getLeaderAddedStories(leaderid, mypostdata) as any
+      dispatch(postActions.storeMyStories(LeaderAddedStories))
+    }
+  }
+  const fetchStories = async () => {
     if (leaderid) {
-      const response = await getNotification(leaderid as string);
-      dispatch(leaderActions.setNotification(response));
       const data = await getStoriesForLeader(leaderid);
-      if (data?.length > 0) {
-        let mergeAllPosts: any = [];
-        let allLeaderProfile: any = {};
-        let allLeaderName: any = {};
-
-        data.forEach((item: any) => {
-          mergeAllPosts.push(...item.posts);
-          allLeaderProfile[item.leaderid] = item.image;
-          allLeaderName[item.leaderid] = item.name;
-        });
-        const groupByLeaderId = await groupBy(
-          mergeAllPosts,
-          (item: any) => item.leaderid
-        );
-  
-        let finalStories: Record<string, any> = {};
-        Object.keys(groupByLeaderId).forEach((stItem: string) => {
-          groupByLeaderId[stItem].map((item: any) => {
-            if (!finalStories[item.leaderid]) {
-              finalStories[item.leaderid] = {
-                id: "",
-                image: "",
-                leaderid: item.leaderid,
-                media: [],
-                name: "",
-                written_text:""
-              };
-            }
-            finalStories[item.leaderid].id = item.id;
-            finalStories[item.leaderid].name = allLeaderName[item.leaderid];
-            finalStories[item.leaderid].written_text = item.written_text;
-            finalStories[item.leaderid].image =
-              allLeaderProfile[item.leaderid];
-            finalStories[item.leaderid].media = finalStories[
-              item.leaderid
-            ].media.concat(item.media);
-          });
-        });
-        mergeAllPosts = Object.values(finalStories);
-        setGetStories(mergeAllPosts);
-      }
+      dispatch(postActions.storeStories(data as any[]));
     }
   };
-
-  useEffect(() => {
-    fetchStories();
-  }, []);
-
-  const handleDelete = async (leaderid: string, id: string) => {
-    const postBody = {
-      id: id,
-      leaderid: leaderid,
-    };
-
+  // console.log(mystories)
+  const handleDelete = async (id: string) => {
+    const postBody = { id: id, leaderid: userDetails?.leaderId, };
     try {
       const data = await deleteStory(postBody);
       if (data?.success) {
         fetchStories();
+        fetchMyStories();
       }
     } catch (error) {
       console.log(error);
@@ -94,62 +53,38 @@ export const StoriesBox: FC = () => {
 
   return (
     <>
-      <CommonBox
-        title="Stories"
-        cusJSX={[
-          <Link
-            key={id}
-            href={ProtectedRoutes.leader}
-            className="text-sm font-normal hover:underline text-orange-500"
-          >
-            see all
-          </Link>,
-        ]}
-      >
-        <div className="w-[660px] ">
+      <CommonBox title="Stories" cusJSX={[
+        // <Link key={id} href={ProtectedRoutes.leader} className="text-sm font-normal hover:underline text-orange-500"    >      see all    </Link>
+        <BsPlusCircle className="text-orange-500 text-[25px] aspect-square object-cover object-center cursor-pointer" onClick={() => setOpenPopup(true)} />
+      ]}>
+        <div className="w-[660px]">
           <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
-            <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
+            {/* <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
               <label className="flex h-[80px] justify-center items-center rounded-full shadow">
                 <BsPlusCircle
-                  className="z-10 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
+                  className="z-0 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
                   onClick={() => setOpenPopup(true)}
                 />
               </label>
-            </li>
-            {getStories.map(
-              (
-                el:
-                  | {
-                      media?: any[];
-                      id: string;
-                      leaderid: string;
-                    image: string;
-                    name: string;
-                    }
-                  | undefined
-              ) => {
-                return (
-                  <Story
-                    key={el?.id}
-                    userImage={`${
-                      (el?.image &&
-                        process.env.NEXT_PUBLIC_BASE_URL + "" + el.image) ||
-                      ""
-                      }`}
-                    data={el}
-                    stories={el?.media}
-                    id={el?.id || ""}
-                    handleDelete={handleDelete}
-                  />
-                );
-              }
-            )}
+            </li> */}
+            {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string } | undefined, index: null) => {
+              return (
+                <Story
+                  userImage={getImageUrl(el?.image as string)}
+                  key={index}
+                  stories={el?.media}
+                  handleDelete={handleDelete}
+                  self={is_my_postandstories}
+                  name={el?.name as string}
+                  createddate={el?.createddate as string}
+                />
+              )
+            })}
           </ul>
         </div>
       </CommonBox>
       <Modal
         isOpen={openPopup}
-        // onAfterOpen={afterOpenModal}
         onRequestClose={() => setOpenPopup(false)}
         style={{
           content: {
@@ -159,11 +94,16 @@ export const StoriesBox: FC = () => {
             bottom: "auto",
             marginRight: "-50%",
             transform: "translate(-50%, -50%)",
+            padding: 0,
+            background: 'white',
           },
+          overlay: {
+            background: "rgb(0,0,0,0.5)"
+          }
         }}
       >
-        <div className="object-center w-96">
-          <NewPostBox handleAdd={() => { fetchStories() }} type="story" handleClose={() => setOpenPopup(false)} />
+        <div className="object-center w-[400px]">
+          <NewPostBox handleAdd={() => { fetchStories(); fetchMyStories(); }} type="story" handleClose={() => setOpenPopup(false)} />
         </div>
       </Modal>
     </>

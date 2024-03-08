@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../../Input";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
@@ -6,62 +6,82 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import moment from "moment";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
+import { Savedby, ToastType } from "@/constants/common";
 import { getDevelopment, saveDevelopment } from "@/redux_store/development/developmentApi";
+import { getImageUrl } from "@/config/get-image-url";
 
 interface DevelopmentFormProps {
   onCancel: () => void; // Define the type of onCancel prop
+  development: any
 }
 
-const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
-  const [priority, setPriority] = useState("");
-  const [access, setAccess] = useState("");
-  const { categories } = cusSelector((st) => st.agenda);
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const { leaderProfile } = cusSelector((state) => state.leader);
-  const { userDetails } = cusSelector((state) => state.auth);
+interface AgendaFormsProps {
+  priority: string,
+  category: string,
+  access: string,
+  creation_date: string,
+  title: string,
+  description: string,
+}
+const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development }) => {
   const dispatch = cusDispatch();
-  const {
-    register,
-    setValue,
-    watch,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<UserDetails>();
+  const { categories } = cusSelector((st) => st.agenda);
+  const { userDetails } = cusSelector((state) => state.auth);
+  const { register, setValue, watch, formState: { errors }, handleSubmit, } = useForm<AgendaFormsProps>();
 
-  const formSubmitHandler = async (data: UserDetails) => {
-   
-    const body: any = { ...data, categoryid:categoryFilter, access, priority, saved_by_type: userDetails?.usertype, saved_by: userDetails?.id, creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),leaderid:leaderProfile.id}
-     try {
-       const response = await saveDevelopment(body);  
-       if (response?.success) {
-         const Data = await getDevelopment(leaderProfile?.id as string);
-         dispatch(developmentAction.storeDevelopments(Data))
-         onCancel()
-         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-       } else {
-         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-       }
-     
+  const formSubmitHandler = async (data: AgendaFormsProps) => {
+    const body: any = {
+      ...data,
+      id: development?.id ? development?.id : "" as string,
+      leaderid: userDetails?.leaderId,
+      categoryid: data?.category,
+      access: data?.access,
+      priority: data?.priority,
+      development_title: data?.title,
+      ...Savedby(),
+      creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),
+    }
+    try {
+      const response = await saveDevelopment(body);
+      if (response?.success) {
+        const Data = await getDevelopment(userDetails?.leaderId as string);
+        dispatch(developmentAction.storeDevelopments(Data))
+        onCancel()
+        dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      } else {
+        dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+      }
+
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
+
     }
   };
 
+
+
+  useEffect(() => {
+    if (development?.id) {
+      setValue('title', development?.development_title)
+      setValue('description', development?.description)
+      setValue('category', development?.categoryid)
+      setValue('attachments' as any, development?.attachments)
+      setValue('access', development?.access)
+      setValue('priority', development?.priority)
+      setValue('creation_date', moment(development.creation_date).format('YYYY-MM-DD'))
+    }
+  }, []);
+
   return (
-    <div>
-      <form
-        className="grid grid-cols-1 gap-x-4 gap-y-5"
-        onSubmit={handleSubmit(formSubmitHandler)}
-      >
-        <div className="flex items-center justify-center gap-5">
+    <>
+      <form className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5" onSubmit={handleSubmit(formSubmitHandler)}>
+        <div className=" flex items-center justify-center gap-5">
           <Input
             errors={errors}
-            id="development_title"
+            id="title"
             placeholder="title"
-            register={register}
-            title="Development Title"
+            register={register as any}
+            title="title"
             type="text"
             required
             validations={{
@@ -72,8 +92,8 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
             errors={errors}
             id="description"
             placeholder="description"
-            register={register}
-            title="Description"
+            register={register as any}
+            title="description"
             type="text"
             required
             validations={{
@@ -83,15 +103,14 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
         </div>
 
         <div className="flex items-center justify-center gap-5">
-      
           <Input
             errors={errors}
             id="attachments"
             placeholder="attachments"
-            register={register}
-            title="Attachments"
+            register={register as any}
+            title="attachments"
             type="file"
-            required
+            required={development?.attachments?.length > 0 ? false : true}
             validations={{
               required: "attachments is required",
             }}
@@ -99,7 +118,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
           <Input
             errors={errors}
             id='creation_date'
-            register={register}
+            register={register as any}
             title='Creation Date'
             type='date'
             required
@@ -108,60 +127,80 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
             }}
           />
         </div>
-      
-        <div className="flex items-center justify-center gap-5">
-          <label className="flex gap-2 items-center" htmlFor="category">
-            <span className="font-medium">Category</span>
-            <select
-              id="category"
-              required
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-            >
-              <option value="">All</option>
-              {categories?.map((el) => (
-                <option key={el.id} value={el.id}>
-                  {el.category}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex gap-2 items-center" htmlFor="priority">
-            <span className="font-medium">Priority</span>
-            <select
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-              className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-            >
-              <option value="high">high</option>
-              <option value="moderate">moderate</option>
-              <option value="low">low</option>
-            </select>
-          </label>
 
-          <label className="flex gap-2 items-center" htmlFor="priority">
-            <span className="font-medium">Access</span>
-            <select
-              id="access"
-              value={access}
-              onChange={(e) => setAccess(e.target.value)}
-              className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-            >
-              <option value="open">Open To All</option>
-              <option value="followers">Followers</option>
-            </select>
-          </label>
+        <div className="flex items-center justify-center gap-5">
+          <Input
+            errors={errors}
+            id={"category" as any}
+            selectField={{
+              title: "Category",
+              options: categories?.map((el) => ({ id: el?.id, value: el.category })),
+            }}
+            register={register as any}
+            title="Category"
+            type="select"
+            required
+            validations={{
+              required: "Category is required",
+            }}
+          />
+
+          <Input
+            errors={errors}
+            id={"priority" as any}
+            selectField={{
+              title: "select priority",
+              options: [
+                { id: "high", value: "high" },
+                { id: "moderate", value: "moderate" },
+                { id: "low", value: "low" },
+              ],
+            }}
+            register={register as any}
+            title="Priority"
+            type="select"
+            required
+            validations={{
+              required: "Priority is required",
+            }}
+          />
+
+
+          <Input
+            errors={errors}
+            id="access"
+            selectField={{
+              title: "select Access",
+              options: [
+                { id: "open", value: "Open To All" },
+                { id: "followers", value: "Followers" },
+              ],
+            }}
+            register={register as any}
+            title="Access"
+            type="select"
+            required
+            validations={{
+              required: "Access is required",
+            }}
+          />
         </div>
 
-        <div className="flex justify-end col-span-full gap-2 mt-5">
-          <a
+        {development?.attachments?.map((el: any) => (
+          <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
+            {el.split('/').pop()}
+          </a>
+        ))}
+
+        <div className='w-full bg-zinc-200 h-[1px]' />
+
+        <div className="flex justify-end col-span-full gap-2">
+          <button
             className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
             onClick={() => onCancel()}
           >
             close
-          </a>
+          </button>
           <button
             className="rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
             type="submit"
@@ -170,7 +209,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel }) => {
           </button>
         </div>
       </form>
-    </div>
+    </>
   );
 };
 

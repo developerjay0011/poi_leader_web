@@ -33,10 +33,9 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({ onClose, ti
               className='absolute top-3 right-3 z-40'>
               <BiX className='text-3xl' />
             </button>
-            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-5 border-b font-semibold text-3xl capitalize'>
+            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-3 py-3 border-b font-semibold text-2xl capitalize'>
               {title} timeline
             </h3>
-
             <ul className='py-8 px-10'>
               {timeline?.map((item: any, index: any) =>
                 <TimeLineData

@@ -3,6 +3,9 @@ import { AnimatePresence } from 'framer-motion'
 import moment from 'moment'
 import { FC, useState } from 'react'
 import { motion as m } from "framer-motion";
+import { MdDelete, MdEdit } from 'react-icons/md';
+import { DeleteGroups } from '@/redux_store/group/groupAPI';
+import { cusSelector } from '@/redux_store/cusHooks';
 
 interface NetworkProps {
   backgroundImg: string
@@ -10,13 +13,17 @@ interface NetworkProps {
   name: string
   member: [],
   created_date: string
-  onMemberClick:()=>void
+  onMemberClick: () => void
+  DeleteGroups: () => void
+  setIsEdit: () => void
+  item: any
 }
 
-export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, member, created_date, onMemberClick }) => {
+export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, member, created_date, onMemberClick, DeleteGroups, item, setIsEdit }) => {
 
   return (
-    <li onClick={() => onMemberClick()} className='border rounded-md overflow-hidden w-full bg-white shadow-sm'>
+
+    <li onClick={(e) => { e.preventDefault(); onMemberClick() }} className='border rounded-md overflow-hidden w-full bg-white shadow-sm'>
       {/* <figure className='relative'>
      
         <CustomImage
@@ -47,7 +54,7 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, mem
         <p className='capitalize flex items-center gap-3 text-[14px]'>
           <span className='font-[600]'>Name:  </span>
           <span className='text-[13px]'>{name}</span>
-          
+
         </p>
         <p className='capitalize flex items-center gap-3 text-[14px]'>
           <span className='font-[600]'>member: </span>
@@ -72,8 +79,22 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, mem
           <span className='font-[600]'>since: </span>
           <span className='text-[13px]'>{moment(created_date).format('MMM YYYY')}</span>
         </p>
+
+        <div className='flex items-center gap-3 self-end'>
+          <MdEdit
+            className='text-[20px]'
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEdit()
+            }}
+          />
+          <MdDelete className='text-[20px]' onClick={(e) => {
+            e.stopPropagation();
+            DeleteGroups()
+          }} />
+        </div>
       </div>
-      
+
     </li>
   )
 }

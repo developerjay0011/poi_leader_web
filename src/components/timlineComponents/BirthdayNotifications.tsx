@@ -41,7 +41,7 @@ const birthdays = [
 
 const prefixArr = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th']
 
-interface BirthdayNotificationsProps {}
+interface BirthdayNotificationsProps { }
 export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
   const { userDetails } = cusSelector((st) => st.UI)
   const [index, setIndex] = useState(0)
@@ -70,13 +70,13 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
   return (
     <section className='border rounded-md bg-white text-sky-950 overflow-hidden'>
       <div className='flex gap-3 bg-violet-500 px-4 py-2 items-center text-violet-50'>
-        <CustomImage
+        {/* <CustomImage
           src={birthday.img}
           alt='display pic'
           width={1000}
           height={1000}
           className='w-[42px] aspect-square rounded-full object-cover object-center'
-        />
+        /> */}
 
         <strong>
           {age}
@@ -102,7 +102,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
           onClick={() =>
             setIndex((lst) => (lst > 0 ? lst - 1 : birthdays.length - 1))
           }
-          className='flex items-center justify-center w-10 aspect-square text-orange-500 bg-orange-100 rounded-full absolute top-1/2 left-2 z-20 translate-y-[-50%] hover:bg-orange-500 hover:text-orange-50 transition-all'>
+          className='flex items-center justify-center w-10 aspect-square text-orange-500 bg-orange-100 rounded-full absolute top-1/2 left-2  translate-y-[-50%] hover:bg-orange-500 hover:text-orange-50 transition-all'>
           <BiSolidLeftArrow />
         </button>
         <button
@@ -110,11 +110,11 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
           onClick={() =>
             setIndex((lst) => (lst < birthdays.length - 1 ? lst + 1 : 0))
           }
-          className='flex items-center justify-center w-10 aspect-square text-orange-500 bg-orange-100 rounded-full absolute top-1/2 right-2 z-20 translate-y-[-50%] hover:bg-orange-500 hover:text-orange-50 transition-all'>
+          className='flex items-center justify-center w-10 aspect-square text-orange-500 bg-orange-100 rounded-full absolute top-1/2 right-2  translate-y-[-50%] hover:bg-orange-500 hover:text-orange-50 transition-all'>
           <BiSolidRightArrow />
         </button>
         <li
-          className={`flex flex-col items-center transition-all relative z-10`}>
+          className={`flex flex-col items-center transition-all relative `}>
           {/*  */}
 
           <CustomImage
@@ -126,7 +126,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
             className='w-[85%] aspect-square object-contain'
           />
 
-          <h2 className='text-center text-xl text-slate-500 w-max z-10'>
+          <h2 className='text-center text-xl text-slate-500 w-max '>
             <strong className='text-orange-500 capitalize'>
               {birthday.name}
             </strong>{' '}

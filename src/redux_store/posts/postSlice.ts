@@ -14,6 +14,8 @@ interface PostState {
   developments?: any
   polls?: any
   allPosts: any,
+  stories: any,
+  mystories: any,
 }
 
 const init: PostState = {
@@ -21,6 +23,8 @@ const init: PostState = {
   allPosts: [],
   creatingPost: false,
   likingPost: false,
+  stories: [],
+  mystories: [],
 }
 
 export const postSlice = createSlice({
@@ -41,6 +45,12 @@ export const postSlice = createSlice({
     },
     setCreatingPost(state, action: PayloadAction<boolean>) {
       state.creatingPost = action.payload
+    },
+    storeStories(state, action: PayloadAction<PostDetails[]>) {
+      state.stories = action.payload
+    },
+    storeMyStories(state, action: PayloadAction<PostDetails[]>) {
+      state.mystories = action.payload
     },
   },
 })

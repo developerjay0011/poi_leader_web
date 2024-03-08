@@ -10,7 +10,6 @@ import { RootState } from "@/redux_store";
 
 const AdminProfileFeedsPage = () => {
   const handleFollowers = (data: any) => {
-    console.log(data);
   };
 
   return (
@@ -23,7 +22,10 @@ const AdminProfileFeedsPage = () => {
             <ShortcutsBox />
           </div>
 
-          <TimeLinePage />
+          <TimeLinePage
+            is_my_postandstories={true}
+
+          />
 
           {/* RIGHT FEED */}
           <div className="flex flex-col self-start gap-5 max-[1200px]:hidden">

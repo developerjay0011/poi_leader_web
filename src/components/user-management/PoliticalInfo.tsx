@@ -6,14 +6,7 @@ import {
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-/* import {
-  AssemblyConstituencyDetails,
-  DesignationDetails,
-  LeaderFormFields,
-  ParliamentaryConstituencyDetails,
-  PartyDetails,
-  StateDetails,
-} from '../../../pages/user-management/AddLeaderPage' */
+
 
 import { LEADER_IDS } from "@/utils/typesUtils";
 import { LeaderPoliticalInfo } from "./LeaderPoliticalInfo";

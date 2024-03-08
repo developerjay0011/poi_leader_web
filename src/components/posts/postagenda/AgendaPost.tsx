@@ -27,7 +27,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
 
   return (
     <>
-      <article className="border bg-white gap-5 rounded-md relative flex items-start overflow-hidden max-[700px]:flex-col">
+      <article className="border bg-white rounded-md relative flex items-start overflow-hidden max-[700px]:flex-col">
         <h3 className={`self-stretch uppercase border flex flex-col-reverse justify-evenly items-center px-[10px] text-[18px] max-[700px]:flex-row max-[700px]:justify-around max-[700px]:py-1 min-[700px]:py-3 ${PRIORITIES[post?.priority as PRIORITY].classes} `}>
           {PRIORITIES[post?.priority as PRIORITY].name.split("").map((el, index) => (
             <span className="min-[700px]:-rotate-90" key={index}>
@@ -36,8 +36,8 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
           ))}
         </h3>
 
-        <section className="flex flex-col pr-5 w-full max-[700px]:px-5">
-          <div className="flex items-center gap-3 py-4 text-sky-950 border-b max-[650px]:flex-wrap">
+        <section className="flex flex-col w-full">
+          <div className="flex items-center pr-5 gap-3 py-4 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
             <CustomImage
               src={getImageUrl(userdetails?.image)}
               alt="user pic"
@@ -82,7 +82,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
           </div>
 
           {/* Agenda */}
-          <div className="py-5 flex flex-col gap-4">
+          <div className="py-5 flex flex-col gap-4 pr-5 px-5">
             <div className="flex flex-col gap-2">
               <h2 className="text-xl font-medium capitalize flex items-center justify-between gap-3">
                 {title}

@@ -28,7 +28,9 @@ const AdminHomePage = () => {
             <BriefEventsBox />
           </div>
 
-          <TimeLinePage />
+          <TimeLinePage
+            is_my_postandstories={false}
+          />
 
           {/* RIGHT FEED */}
           <div className="w-max flex flex-col self-start gap-5 max-[1200px]:hidden">

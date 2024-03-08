@@ -11,6 +11,7 @@ import { letterActions } from '@/redux_store/letter/letterSlice'
 import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
+import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const LetterTemplateManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
@@ -22,7 +23,7 @@ export const LetterTemplateManagePage: FC = () => {
     const { userDetails } = cusSelector((st) => st.auth);
     const openModal = () => {
         setShowAddTemplateForm(true)
-            setEdit(null)
+        setEdit(null)
     };
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
@@ -35,58 +36,52 @@ export const LetterTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
 
     const getTemplate = async () => {
-        const data = await getLetterTemplates(leaderProfile?.id as string);
+        const data = await getLetterTemplates(userDetails?.leaderId as string);
         dispatch(letterActions.storeLetterTemplate(data));
     };
-    const handleTemplateDelete = async (id:string) => {
+    const handleTemplateDelete = async (id: string) => {
         tryCatch(
             async () => {
-                const response = await deleteLetterTemplates(id,leaderProfile.id as string);
-        if (response?.success) {
-            getTemplate()
-            dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-        } else {
-            dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-        }
+                const response = await deleteLetterTemplates(id, leaderProfile.id as string);
+                if (response?.success) {
+                    getTemplate()
+                    dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+                } else {
+                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+                }
             })
 
     }
-     useEffect(() => {
+    useEffect(() => {
         (async () => {
-             getTemplate();
+            getTemplate();
         })();
-    }, [userDetails,dispatch]);
+    }, [userDetails, dispatch]);
 
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
+                {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
                     <ShortcutsBox />
-                </div>
+                </div> */}
+                <ProfileShortcutsBox />
 
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-
-
-                    <section className='flex flex-col px-5 gap-6 mb-5'>
-
-
-                        {/* POLLS TABLE */}
-                        <TableWrapper
-                            heading='Manage Templates'
-                            addBtnTitle='add template'
-                            addBtnClickFn={openModal}
-                            curDataCount={1}
-                            totalCount={letter_templete?.length}
-                            changeFilterFn={changeFilterCount}
-                            filterDataCount={filterDataCount}
-                            changePageNo={changeCurPageNo}
-                            curPageNo={curPageNo}
-                            searchFilterFn={changeFilterData}
-                            jsonDataToDownload={letter_templete}
-                        >
-                            <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value)}} searchStr={searchFilter} />
-                        </TableWrapper>
-                    </section>
+                    <TableWrapper
+                        heading='Manage Templates'
+                        addBtnTitle='add template'
+                        addBtnClickFn={openModal}
+                        curDataCount={1}
+                        totalCount={letter_templete?.length}
+                        changeFilterFn={changeFilterCount}
+                        filterDataCount={filterDataCount}
+                        changePageNo={changeCurPageNo}
+                        curPageNo={curPageNo}
+                        searchFilterFn={changeFilterData}
+                        jsonDataToDownload={letter_templete}
+                    >
+                        <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                    </TableWrapper>
                 </div>
             </div>
 
@@ -95,7 +90,7 @@ export const LetterTemplateManagePage: FC = () => {
                     <ManageTemplateForm
                         isEdit={isEdit}
                         err={"err"}
-                        heading={isEdit ? 'Edit Template' :'Add Template' }
+                        heading={isEdit ? 'Edit Template' : 'Add Template'}
                         status='1'
                         submitting={false}
                         submitHandler={() => { }}

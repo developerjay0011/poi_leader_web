@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import {
   UseFormRegister,
   FieldErrors,
@@ -13,7 +13,9 @@ import { LetterFormFields } from '@/app/user/letter/add-letter/AddLetterPage'
 import { LetterInputField } from '../manage-letters/LetterInputField'
 import { LetterSelectField } from '../manage-letters/LetterSelectField'
 import { LetterTextarea } from '../manage-letters/LetterTextarea'
-import { cusSelector } from '@/redux_store/cusHooks'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { getTickets } from '@/redux_store/ticket/ticketApi'
+import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>
@@ -32,10 +34,31 @@ export const LetterForm: FC<LetterFormProps> = ({
   register,
   states,
 }) => {
+  const { userDetails } = cusSelector((state) => state.auth);
   const { letter_templete } = cusSelector((state) => state.letter);
-  
+  const { ticket } = cusSelector((state) => state.ticket);
+  const dispatch = cusDispatch()
+  useEffect(() => {
+    (async () => {
+      const data = await getTickets(userDetails?.leaderId as string);
+      dispatch(ticketActions.storeTicket(data));
+    })();
+  }, [userDetails, dispatch]);
   return (
     <>
+      <LetterSelectField
+        error={errors}
+        id='ticketId'
+        title='Select Ticket'
+        selectOptions={ticket?.map((el) => ({
+          id: el.ticketid,
+          val: el.ticketid,
+        }))}
+        register={register}
+        required
+        validations={{ required: 'ticketid is required' }}
+      />
+      <Line />
       <LetterSelectField
         error={errors}
         register={register}
@@ -100,7 +123,7 @@ export const LetterForm: FC<LetterFormProps> = ({
         register={register}
         required
         validations={{ required: 'IdNo is required' }}
-        readonly
+      // readonly
       />
 
       <Line />

@@ -12,6 +12,9 @@ import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 import { ManageLetterTable } from '../letter/ManageLetterTable'
+import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
+import { getTickets } from '@/redux_store/ticket/ticketApi'
+import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 
 export const LetterManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
@@ -23,7 +26,7 @@ export const LetterManagePage: FC = () => {
     const { userDetails } = cusSelector((st) => st.auth);
     const openModal = () => {
         setShowAddTemplateForm(true)
-            setEdit(null)
+        setEdit(null)
     };
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
@@ -36,75 +39,59 @@ export const LetterManagePage: FC = () => {
     const dispatch = cusDispatch();
 
     const getletter = async () => {
-        const data = await getLetters(leaderProfile?.id as string);
+        const data = await getLetters(userDetails?.leaderId as string);
         dispatch(letterActions.storeLetter(data));
     };
-    const handleTemplateDelete = async (id:string) => {
+    const handleTemplateDelete = async (id: string) => {
         tryCatch(
             async () => {
-                const response = await deleteLetter(id,leaderProfile.id as string);
-        if (response?.success) {
-            getletter()
-            dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-        } else {
-            dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-        }
+                const response = await deleteLetter(id, leaderProfile.id as string);
+                if (response?.success) {
+                    getletter()
+                    dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+                } else {
+                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+                }
             })
 
     }
-     useEffect(() => {
+    useEffect(() => {
         (async () => {
             getletter();
         })();
-    }, [userDetails,dispatch]);
+    }, [userDetails, dispatch, leaderProfile]);
 
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
+                {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
                     <ShortcutsBox />
-                </div>
+                </div> */}
+                <ProfileShortcutsBox />
 
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
+                    {/* POLLS TABLE */}
+                    <TableWrapper
+                        heading='Manage Letter'
+                        addBtnTitle='add Letter'
+                        addBtnClickFn={async () => {
 
 
-                    <section className='flex flex-col px-5 gap-6 mb-5'>
-
-
-                        {/* POLLS TABLE */}
-                        <TableWrapper
-                            heading='Manage Letter'
-                            addBtnTitle='add Letter'
-                            addBtnClickFn={() => location.href ='/user/letter/add-letter'}
-                            curDataCount={1}
-                            totalCount={letter_templete?.length}
-                            changeFilterFn={changeFilterCount}
-                            filterDataCount={filterDataCount}
-                            changePageNo={changeCurPageNo}
-                            curPageNo={curPageNo}
-                            searchFilterFn={changeFilterData}
-                            jsonDataToDownload={letter_templete}
-                        >
-                            <ManageLetterTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value)}} searchStr={searchFilter} />
-                        </TableWrapper>
-                    </section>
+                            location.href = '/user/letter/add-letter'
+                        }}
+                        curDataCount={1}
+                        totalCount={letter_templete?.length}
+                        changeFilterFn={changeFilterCount}
+                        filterDataCount={filterDataCount}
+                        changePageNo={changeCurPageNo}
+                        curPageNo={curPageNo}
+                        searchFilterFn={changeFilterData}
+                        jsonDataToDownload={letter_templete}
+                    >
+                        <ManageLetterTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                    </TableWrapper>
                 </div>
             </div>
-{/* 
-            <AnimatePresence>
-                {showAddTemplateForm && (
-                    <ManageTemplateForm
-                        isEdit={isEdit}
-                        err={"err"}
-                        heading={isEdit ? 'Edit Letter' :'Add Letter' }
-                        status='1'
-                        submitting={false}
-                        submitHandler={() => { }}
-                        tempHeader=''
-                        onClose={() => setShowAddTemplateForm(false)}
-                    />
-                )}
-            </AnimatePresence> */}
         </>
     )
 }

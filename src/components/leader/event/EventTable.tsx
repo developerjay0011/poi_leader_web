@@ -7,16 +7,15 @@ import { deleteEvent, getEvents } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { ErrorTableRow } from "@/utils/ErrorTableRow";
-import { UserData } from "@/utils/utility";
 import { AnimatePresence } from "framer-motion";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { BsTrash3Fill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 
 interface EventTableProps {
   searchStr: string;
   isEvent: boolean;
-  editEvent:any
+  editEvent: any
 }
 
 export const EventTable: FC<EventTableProps> = ({
@@ -24,12 +23,11 @@ export const EventTable: FC<EventTableProps> = ({
   isEvent,
   editEvent
 }) => {
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [showConfirmBox, setShowConfirmBox] = useState<boolean>(false);
   const { event } = cusSelector((state) => state.event);
   const dispatch = cusDispatch();
-  const [deleteValue, setDeleteValue] = useState({ id: "", leaderid :""});
-  const filterDataOnEvent = event?.filter((el:any) =>
+  const [deleteValue, setDeleteValue] = useState({ id: "", leaderid: "" });
+  const filterDataOnEvent = event?.filter((el: any) =>
     searchStr ? el?.title.includes(searchStr) : el
   );
   const confirmDelete = (id: string, leaderid: string) => {
@@ -53,7 +51,7 @@ export const EventTable: FC<EventTableProps> = ({
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-    })
+      })
   };
 
   const onClose = () => {
@@ -95,25 +93,25 @@ export const EventTable: FC<EventTableProps> = ({
                         className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
                         onClick={() => editEvent(Event)}
                       >
-                        <FaEdit className="text-xl" /> 
+                        <FaEdit className="text-xl" />
                       </button>
-                     
+
                       <button
                         onClick={() =>
                           confirmDelete(Event.id, Event.leaderid)
                         }
                         className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
                       >
-                        <BsTrash3Fill /> 
+                        <BsTrash3Fill />
                       </button>
-                     
+
                     </td>
                   </tr>
                 </>
               );
             })
           ) : (
-            <ErrorTableRow colNo={5} />
+            <ErrorTableRow colNo={10} />
           )}
         </tbody>
       </table>

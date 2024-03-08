@@ -35,7 +35,6 @@ export const ConnectToAPI = async (
 
   // FOR DEV
   // console.log('URL: ', url)
-  console.log('PAYLOAD: ', body)
 
   let response
 
@@ -92,12 +91,7 @@ export const ConnectToAPI = async (
 
 
 // Function to convert date in easy to read format
-export const dateConverter = (date: string) =>
-  new Intl.DateTimeFormat('en-IN', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  }).format(new Date(date))
+export const dateConverter = (date: string) => date ? new Intl.DateTimeFormat('en-IN', { month: 'short', day: '2-digit', year: 'numeric', }).format(new Date(date)) : ""
 
 // Convert file to base64
 export const convertFileToBase64: (u: File) => Promise<string> = (

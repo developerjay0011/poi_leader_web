@@ -1,3 +1,4 @@
+import { AccessField } from './../components/Access';
 import moment from 'moment'
 import { StaticImageData } from 'next/image'
 
@@ -207,14 +208,14 @@ export interface UserDetails {
   notes: string
   start_datetime: string
   end_datetime: string
+  remark: string
 }
 export const yearlistfuture = () => {
   var current_year = moment().year()
-  var listdata = []
+  var listdata = [] as any
   for (let i = 0; i < 11; i++) {
     listdata?.push({ value: String(current_year + i), id: current_year + i })
   }
-
   return listdata
 }
 
@@ -254,11 +255,33 @@ export interface PartyDetails {
   id: string
   party_name: string
 }
+export interface AccessFieldDetails {
+  id: string
+  tabs: AccessFieldprops[]
+  userid: string
+}
+
+
+export interface AccessFieldprops {
+  tabid: string
+  tabname: string
+  ischecked: string
+  parentid: string
+  id: string
+}
+
 export interface TimeLineDetails {
   id: string
   status: string
   description: string
   milestone: string
+  created_date: string
+  attachments: string[]
+}
+export interface TicketTimeLineDetails {
+  id: string
+  status: string
+  remark: string
   created_date: string
   attachments: string[]
 }
@@ -287,7 +310,7 @@ export interface PollDetails {
   access: string
   expiresAt: string
   view_access: string
-  votes_by:any[]
+  votes_by: any[]
 }
 
 export type PostType = 'image' | 'video'

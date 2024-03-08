@@ -6,37 +6,34 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { MdVerified } from 'react-icons/md'
 import CustomImage from '@/utils/CustomImage'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
-import { getFollowers, getProfile, uploadProfileImage } from '@/redux_store/leader/leaderAPI'
+import { getProfile, uploadProfileImage } from '@/redux_store/leader/leaderAPI'
 import { BsPencilSquare } from 'react-icons/bs'
 import { ProtectedRoutes } from '@/constants/routes'
 import { getImageUrl } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { leaderProfile, followers } = cusSelector((state) => state.leader);
+  const { leaderProfile, followers, following } = cusSelector((state) => state.leader);
+  const { posts, mystories } = cusSelector((state) => state.posts);
+  const { userDetails } = cusSelector((st) => st.auth);
+  const { usertype } = cusSelector((state) => state.access);
   const dispatch = cusDispatch();
 
 
   useEffect(() => {
     (async () => {
-      if (leaderProfile?.id) {
-        // Get Leader Profiles
-        const res = await getProfile(leaderProfile?.id);
-
+      if (userDetails?.leaderId) {
+        const res = await getProfile(userDetails?.leaderId);
         dispatch(leaderActions.setLeaderProfile(res));
-
-        // Get Followers of Leader
-        const followersRes = await getFollowers(leaderProfile?.id);
-        dispatch(leaderActions.setFollowers(followersRes));
       }
     })()
-  }, [dispatch, leaderProfile?.id]);
+  }, [dispatch, userDetails?.leaderId]);
 
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const files = e.target.files as FileList;
     if (files.length > 0) {
       const formData = new FormData();
-      formData.append("leaderid", leaderProfile?.id || "");
+      formData.append("leaderid", userDetails?.leaderId || "");
       formData.append(fieldName, files[0] || "");
       const profileRes = await uploadProfileImage(formData);
       // Leader data update in redux
@@ -52,8 +49,8 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <>
-      <section className='m-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-5 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'>
-        <div className='flex flex-col gap-5'>
+      <section className={`${usertype == "leader" && 'm-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-5 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'}${usertype != "leader" && 'flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'}`}>
+        <div className='flex flex-col gap-5' style={{ display: usertype == "leader" ? "flex" : "none" }}>
           <section className='flex flex-col text-sky-950 border-b border-l border-r w-full'>
             {/* USER PIC and BG pic*/}
             <figure className='relative rounded-tr-lg rounded-tl-lg overflow-hidden'>
@@ -113,15 +110,15 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
               {/* Brief Info */}
               <div className='ml-auto flex items-center gap-8 max-[450px]:ml-0 max-[450px]:gap-4'>
                 <Link
-                  href={'/leader/profile/posts'}
+                  href={'/user/profile/feed'}
                   className='flex flex-col items-center font-[500] capitalize'>
                   posts
                   <span className='text-orange-500 text-2xl font-normal'>
-                    0
+                    {posts?.length}
                   </span>
                 </Link>
                 <Link
-                  href={''}
+                  href={'/user/profile/followers'}
                   className='flex flex-col items-center font-[500] capitalize'>
                   Followers
                   <span className='text-orange-500 text-2xl font-normal'>
@@ -129,11 +126,11 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                   </span>
                 </Link>
                 <Link
-                  href={''}
+                  href={'/user/profile/following'}
                   className='flex flex-col items-center font-[500] capitalize'>
                   following
                   <span className='text-orange-500 text-2xl font-normal '>
-                    0
+                    {following.length}
                   </span>
                 </Link>
               </div>

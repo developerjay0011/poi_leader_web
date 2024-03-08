@@ -1,12 +1,9 @@
 "use client";
-import { UserData } from "@/utils/utility";
 import { StaticImageData } from "next/image";
-import { FC, useEffect, useState } from "react";
-import { fetchFollowingList, fetchUnFollowLeader } from "../api/followLeader";
+import { FC } from "react";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
-import { getFollowering, getFollowers, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { getFollowering, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { tryCatch } from "@/config/try-catch";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { getImageUrl } from "@/config/get-image-url";
@@ -17,33 +14,13 @@ interface Leader {
   designation: string;
   name: string;
   leaderid: string;
-  handleunfollow: (data: any) => void;
 }
 
 interface TrendingUsersProps {
   followers: any;
 }
-export const FollowedLeader: FC<TrendingUsersProps> = ({  }) => {
-  const {  leaderProfile, following } = cusSelector((state) => state.leader);
-  const dispatch = cusDispatch();
-
-  useEffect(() => {
-    (async () => {
-
-      tryCatch(
-        async () => {
-          const followingRes = await getFollowers(leaderProfile?.id as string);
-          dispatch(leaderActions.setFollowers(followingRes));
-        })
-
-    })();
-  }, [following]);
-
-
-  const handleunfollow = (data: any) => {
-
-  };
-
+export const FollowedLeader: FC<TrendingUsersProps> = ({ }) => {
+  const { following } = cusSelector((state) => state.leader);
   return (
     <>
       <section
@@ -64,7 +41,6 @@ export const FollowedLeader: FC<TrendingUsersProps> = ({  }) => {
                     username={item?.name || ""}
                     id={item?.leaderid || ""}
                     key={index}
-                    handleunfollow={handleunfollow}
                   />
                 );
               })}
@@ -79,7 +55,6 @@ interface TrendingUserProps {
   username: string;
   userImg: string | StaticImageData;
   id: string;
-  handleunfollow: (data: any) => void;
 }
 
 const TrendingUser: FC<TrendingUserProps> = ({
@@ -88,23 +63,18 @@ const TrendingUser: FC<TrendingUserProps> = ({
   username,
   id,
 }) => {
-  const userDetails: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
   const dispatch = cusDispatch();
-  const { leaderProfile } = cusSelector((state) => state.leader);
-
-
+  const { userDetails } = cusSelector((state) => state.auth);
   const handleFollowers = async (id: string) => {
     const postBody = {
-      senderid: leaderProfile?.id,
+      senderid: userDetails?.leaderId,
       receiverid: id,
     };
     tryCatch(
       async () => {
-        const response = await  unFollowLeader(postBody);
+        const response = await unFollowLeader(postBody);
         if (response?.success) {
-          const res = await getFollowering(leaderProfile?.id as string)
+          const res = await getFollowering(userDetails?.leaderId as string)
           dispatch(leaderActions.setFollowing(res))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {

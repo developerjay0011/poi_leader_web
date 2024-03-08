@@ -5,7 +5,7 @@ import { APIRoutes } from '@/constants/routes'
 
 export const getGroups = async (leaderId: string) => {
   return tryCatch(
-    
+
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getGroups, { leaderId }));
       return res.data;
@@ -17,7 +17,7 @@ export const getSingleGroup = async (body: any) => {
   return tryCatch(
 
     async () => {
-      const res = await Axios.post(APIRoutes.getSingleGroup,body);
+      const res = await Axios.post(APIRoutes.getSingleGroup, body);
       return res.data;
     }
   );
@@ -33,6 +33,22 @@ export const saveGroup = async (body: any) => {
     }
   );
 };
+export const AddMember = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.AddMember, body);
+      return res.data;
+    }
+  );
+};
+export const DeleteMembers = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.DeleteMembers, body);
+      return res.data;
+    }
+  );
+};
 
 export const deleteGallery = async (body: any) => {
   return tryCatch(
@@ -43,3 +59,11 @@ export const deleteGallery = async (body: any) => {
   );
 };
 
+export const DeleteGroups = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.DeleteGroups, body);
+      return res.data;
+    }
+  );
+};

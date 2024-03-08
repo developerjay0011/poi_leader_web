@@ -10,10 +10,6 @@ import {
   useFieldArray,
 } from 'react-hook-form'
 import {
-  MdOutlineCheckBox,
-  MdOutlineCheckBoxOutlineBlank,
-} from 'react-icons/md'
-import {
   LEADER_IDS,
   UserDetails,
   ParliamentaryConstituencyDetails,

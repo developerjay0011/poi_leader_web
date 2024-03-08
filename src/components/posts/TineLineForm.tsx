@@ -18,7 +18,6 @@ interface TimeLineFormProps {
 }
 
 const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit, data }) => {
-
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const statusOption = [
@@ -44,7 +43,7 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit,
       async () => {
         const response = await saveTimeLine(body);
         if (response?.success) {
-          const agendaData = await getAgenda(leaderProfile?.id as string);
+          const agendaData = await getAgenda(userDetails?.leaderId as string);
           dispatch(agendaAction.storeAgendas(agendaData))
           onCancel()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))

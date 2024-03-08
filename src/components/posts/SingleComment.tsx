@@ -78,7 +78,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
       postid: post?.id,
       post_leaderid: post?.leaderid,
       userid: userDetails?.id,
-      usertype: "citizen",
+      usertype: "leader",
       username: userDetails?.username,
       userimg: userDetails?.image,
       comment_text: commentReply,
