@@ -12,7 +12,7 @@ import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShort
 import { getCategory } from '@/redux_store/agenda/agendaApi'
 import { agendaAction } from '@/redux_store/agenda/agendaSlice'
 import { CategoryTable } from '../category/CategoryTable'
-import { CategoryFrom } from '../forms/CategoryFrom'
+import { CategoryFrom } from '../forms/CategoryForm'
 
 export const CategoryManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)

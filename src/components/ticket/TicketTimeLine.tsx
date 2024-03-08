@@ -55,7 +55,7 @@ export const TicketTimeLine: FC<TicketTimeLineProps> = ({
               className='absolute top-3 right-3 z-40'>
               <BiX className='text-3xl' />
             </button>
-            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-5 border-b font-semibold text-3xl capitalize'>
+            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
               Status
             </h3>
 
@@ -143,14 +143,8 @@ export const FileOpen: FC<TicketTimeLineProps> = ({
               className='absolute top-3 right-3 z-40'>
               <BiX className='text-3xl' />
             </button>
-            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-5 border-b font-semibold text-3xl capitalize'> timeline
+            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'> timeline
             </h3>
-
-            <ul className='py-8 px-10'>
-
-
-
-            </ul>
           </m.div>
         </div>
       </m.div>

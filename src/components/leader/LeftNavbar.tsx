@@ -33,11 +33,11 @@ export const LeftNavbar: FC = () => {
 
   return (
     <section className="py-8 px-3 bg-white flex flex-col shadow_left gap-5 h-full max-[1000px]:hidden">
-      {loader ? LEFT_NAV_ROUTES.map((El: any) => (
-        <LeftNavLink key={El.id} info={''} link={''}><></></LeftNavLink>
-      )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any) => (
+      {loader ? LEFT_NAV_ROUTES.map((El: any, index: number) => (
+        <LeftNavLink key={index} info={''} link={''}><></></LeftNavLink>
+      )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any, index: number) => (
         <LeftNavLink
-          key={El.id}
+          key={index}
           info={El.name}
           link={El.link}
         >

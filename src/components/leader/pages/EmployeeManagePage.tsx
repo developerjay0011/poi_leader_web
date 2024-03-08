@@ -1,7 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 import { TableWrapper } from '@/utils/TableWrapper'
 
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
@@ -52,11 +51,7 @@ export const EmployeeManagePage: FC = () => {
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
-                    <ShortcutsBox />
-                </div> */}
                 <ProfileShortcutsBox />
-
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                     <TableWrapper
                         heading='Manage Employees'

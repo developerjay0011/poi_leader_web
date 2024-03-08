@@ -25,7 +25,6 @@ interface AgendaFormsProps {
 }
 const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
   const { categories } = cusSelector((st) => st.agenda);
-  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
   const { register, setValue, watch, formState: { errors }, handleSubmit, } = useForm<AgendaFormsProps>();
@@ -38,7 +37,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
       priority: data?.priority,
       ...Savedby(),
       creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),
-      leaderid: leaderProfile.id,
+      leaderid: userDetails?.leaderId,
     }
     try {
       const response = await saveAgenda(body);
@@ -57,23 +56,22 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
   };
 
   useEffect(() => {
-    setValue('title', Agenda?.title)
-    setValue('description', Agenda?.description)
-    setValue('category', Agenda?.categoryid)
-    setValue('attachments' as any, Agenda?.attachments)
-    setValue('access', Agenda?.access)
-    setValue('priority', Agenda?.priority)
-    setValue('creation_date', moment(Agenda.creation_date).format('YYYY-MM-DD'))
+    if (Agenda?.id) {
+      setValue('title', Agenda?.title)
+      setValue('description', Agenda?.description)
+      setValue('category', Agenda?.categoryid)
+      setValue('attachments' as any, Agenda?.attachments)
+      setValue('access', Agenda?.access)
+      setValue('priority', Agenda?.priority)
+      setValue('creation_date', moment(Agenda.creation_date).format('YYYY-MM-DD'))
+    }
   }, []);
 
 
 
   return (
     <div>
-      <form
-        className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5"
-        onSubmit={handleSubmit(formSubmitHandler)}
-      >
+      <form className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5" onSubmit={handleSubmit(formSubmitHandler)}>
         <div className=" flex items-center justify-center gap-5">
           <Input
             errors={errors}

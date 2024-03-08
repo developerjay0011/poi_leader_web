@@ -4,7 +4,6 @@ import { AgendaPost } from "@/components/posts/agenda/AgendaPost";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
-import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import AgendaForm from "@/components/posts/agenda/AgendaForm";
@@ -47,9 +46,12 @@ const AdminAgendaPage = () => {
 
   const agendaJSX = filterData?.map((el) => (
     <AgendaPost userId={el.id}
-      setAgenda={(data: any) => { setAgenda(data); setIsAgenda(true) }}
+      setAgenda={(data: any) => {
+        setAgenda(data);
+        setIsAgenda(true)
+      }}
       Agenda={Agenda}
-      {...el} key={el.id} />
+      {...el} key={el.id} el={el} />
   ));
 
   const onCancel = () => {
@@ -69,7 +71,7 @@ const AdminAgendaPage = () => {
               </h2>
             </div>
 
-            <div className="w-[96%] h-[1px] bg-zinc-200 m-auto" />
+            <div className="w-[100%] h-[1px] bg-zinc-200 m-auto" />
 
             <section className="px-7 py-8 flex flex-col gap-8 max-[450px]:px-3">
               <div className="flex items-center justify-between">
@@ -135,6 +137,7 @@ const AdminAgendaPage = () => {
             </section>
           </section>
         </section>
+
         <AnimatePresence mode="wait">
           {isAgenda && (
             <m.div

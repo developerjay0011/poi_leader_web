@@ -96,15 +96,6 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({
           <ErrorTableRow colNo={8} />
         )}</tbody>
       </table>
-      {/* <AnimatePresence>
-        {showDeleteConfirmPopup && (
-          <ConfirmDialogBox
-            onCancel={() => setShowDeleteConfirmPopup(false)}
-            noAllowed={false}
-            onOk={() => { handleDelete(id), setShowDeleteConfirmPopup(false) }}
-          />
-        )}
-      </AnimatePresence> */}
       <AnimatePresence>
         {showStatus && (
           <TicketTimeLine

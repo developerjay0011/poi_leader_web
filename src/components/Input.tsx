@@ -7,7 +7,7 @@ import { HiEye, HiEyeOff } from 'react-icons/hi'
 interface InputProps {
   errors: FieldErrors<UserDetails>
   id: keyof UserDetails
-  register: UseFormRegister<UserDetails>
+  register: any
   validations?: RegisterOptions<UserDetails, keyof UserDetails>
   title: string | JSX.Element
   required?: boolean

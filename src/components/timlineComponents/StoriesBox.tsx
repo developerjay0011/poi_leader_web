@@ -18,7 +18,6 @@ interface StoriesBoxProps {
 }
 export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }) => {
   const [openPopup, setOpenPopup] = useState(false);
-  const id = GenerateId();
   const { userDetails } = cusSelector((state) => state.auth);
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { stories, mystories } = cusSelector((state) => state.posts);
@@ -38,10 +37,9 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
       dispatch(postActions.storeStories(data as any[]));
     }
   };
-
-
-  const handleDelete = async (leaderid: string, id: string) => {
-    const postBody = { id: id, leaderid: leaderid, };
+  // console.log(mystories)
+  const handleDelete = async (id: string) => {
+    const postBody = { id: id, leaderid: userDetails?.leaderId, };
     try {
       const data = await deleteStory(postBody);
       if (data?.success) {
@@ -69,11 +67,11 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
                 />
               </label>
             </li> */}
-            {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string } | undefined) => {
+            {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string } | undefined, index: null) => {
               return (
                 <Story
                   userImage={getImageUrl(el?.image as string)}
-                  key={el?.index}
+                  key={index}
                   stories={el?.media}
                   handleDelete={handleDelete}
                   self={is_my_postandstories}

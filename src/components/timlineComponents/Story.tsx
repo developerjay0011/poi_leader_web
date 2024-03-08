@@ -4,8 +4,7 @@ import Modal from "react-modal";
 import { cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
-import { PostOptions } from "../posts/PostOptions";
-import { BsThreeDots, BsTrash3Fill } from "react-icons/bs";
+import { BsTrash3Fill } from "react-icons/bs";
 import moment from "moment";
 export const Story: FC<StoryProps> = ({
   handleDelete,
@@ -16,15 +15,12 @@ export const Story: FC<StoryProps> = ({
   createddate
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const { userDetails } = cusSelector((state) => state.auth);
-  const leaderid = userDetails?.leaderId;
   const [storiesdata, setStoriesdata] = useState({}) as any
   const deletePostHandler = async () => {
-    handleDelete(leaderid, storiesdata?.postid)
+    handleDelete(storiesdata?.postid)
     setIsOpen(false)
   };
   const storyContent = { width: 'auto', maxWidth: '100%', maxHeight: '100%', margin: 'auto', }
-
 
 
 

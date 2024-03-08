@@ -1,14 +1,12 @@
 'use client'
 import { useState } from 'react'
-import { bgIMG, userImg } from '@/utils/utility'
 import { PeoplesComponentWrapper } from '@/utils/PeoplesComponentWrapper'
-import { Network } from '@/components/peoples/Network'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { Following } from '@/components/peoples/Following'
 
 const AdminFollowingPage = () => {
   const [searchString, setSearchString] = useState('')
-  const { leaderProfile, following } = cusSelector((state) => state.leader);
+  const { following } = cusSelector((state) => state.leader);
   const changeSearchString = (val: string) => setSearchString(val)
 
   return (
@@ -16,6 +14,7 @@ const AdminFollowingPage = () => {
       <PeoplesComponentWrapper
         heading='following'
         searchStr={searchString}
+        rightButton={null}
         setSearchStr={changeSearchString}>
         <ul className='grid grid-cols-4 gap-5'>
           {following?.length > 0 && following?.map((item: any, index: number) => {

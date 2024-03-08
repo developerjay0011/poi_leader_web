@@ -79,9 +79,9 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
                 />
               ))}
               {status != "completed" &&
-                <div className='flex justify-center col-span-full gap-2 mt-5'>
+                <div className='flex justify-center col-span-full gap-2'>
                   <button
-                    className={`text-sm mt-5 mb-5 align-center transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                    className={`text-sm mt-3 align-center transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
                     onClick={() => onAddMileStone()}
                   >
                     Add Milestone
@@ -95,23 +95,27 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""
-                      }`}
-                  >
-                    <div
-                      className="bg-gray-700 opacity-20 h-screen w-screen absolute top-0 left-0 z-20"
-                      onClick={() => setEditTimeLine(false)}
-                    />
-                    <m.div
-                      initial={{ scale: 0.7, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.7, opacity: 0 }}
-                      className="shadow-md border rounded-md border-gray-200 py-8 px-20 z-30 bg-white relative flex flex-col items-center"
-                    >
-                      <h2 className="mt-4 mb-8 text-3xl">Edit Milestone</h2>
-
-                      <TimeLineForm data={editData} isedit={true} agendaid={agendaid} onCancel={() => setEditTimeLine(false)} />
-                    </m.div>
+                    className={`fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center backdrop-blur-[2px] ${false ? "cursor-not-allowed" : ""}`}>
+                    <div className='bg-black bg-opacity-20 backdrop-blur-[2px] w-full h-full main_scrollbar overflow-y-scroll'>
+                      <m.div
+                        initial={{ y: -100 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: -100 }}
+                        className='m-auto my-5 bg-white relative overflow-hidden rounded shadow-md w-[40%] max-[1600px]:w-1/2 max-[1050px]:w-[70%] max-[750px]:w-[85%] max-[600px]:w-[95%] max-[600px]:my-3'>
+                        <button
+                          type='button'
+                          onClick={() => setEditTimeLine(false)}
+                          className='absolute top-3 right-3 z-40'>
+                          <BiX className='text-3xl' />
+                        </button>
+                        <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
+                          Edit Milestone
+                        </h3>
+                        <div className="py-5 px-5">
+                          <TimeLineForm data={editData} isedit={true} agendaid={agendaid} onCancel={() => setEditTimeLine(false)} />
+                        </div>
+                      </m.div>
+                    </div>
                   </m.div>
                 )}
 
@@ -149,7 +153,7 @@ export const FileOpen: FC<AgendaTimelineProps> = ({
               className='absolute top-3 right-3 z-40'>
               <BiX className='text-3xl' />
             </button>
-            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-5 border-b font-semibold text-3xl capitalize'>
+            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:rounded-full after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
               {title} timeline
             </h3>
           </m.div>

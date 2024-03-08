@@ -140,8 +140,7 @@ const AdminProfileGalleryPage = () => {
                 Gallery
               </h2>
             </div>
-
-            <div className="w-[96%] h-[1px] bg-zinc-200 m-auto max-[500px]:w-[90%]" />
+            <div className="w-[100%] h-[1px] bg-zinc-200 m-auto max-[500px]:w-[90%]" />
           </section>
 
           <div className="py-7 px-7 max-[650px]:px-3 flex items-center justify-between">

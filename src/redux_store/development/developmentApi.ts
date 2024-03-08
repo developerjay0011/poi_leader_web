@@ -40,6 +40,9 @@ export const saveDevelopment =
     return tryCatch(
       async () => {
         const formData = new FormData();
+        if (body?.id) {
+          formData.append("id", body?.id || "");
+        }
         formData.append("leaderid", body?.leaderid || "");
         formData.append("categoryid", body?.categoryid || "");
         formData.append("development_title", body?.development_title || "");
@@ -47,7 +50,6 @@ export const saveDevelopment =
         for (let i = 0; i < body?.attachments?.length; i++) {
           const element = body?.attachments?.[i]
           formData.append("attachments", element)
-
         }
         formData.append("priority", body?.priority || "");
         formData.append("access", body?.access || "");
@@ -64,38 +66,7 @@ export const saveDevelopment =
     );
   }
 
-//  Update Development API
-export const editDevelopment =
-  async (body: any) => {
 
-    return tryCatch(
-      async () => {
-        const formData = new FormData();
-        formData.append("id", body?.id || "");
-        formData.append("leaderid", body?.leaderid || "");
-        formData.append("categoryid", body?.categoryid || "");
-        formData.append("development_title", body?.development_title || "");
-        formData.append("description", body?.description || "");
-        if (body?.attachments.length > 0) {
-          for (let i = 0; i < body?.attachments?.length; i++) {
-            const element = body?.attachments?.[i]
-            formData.append("attachments", element)
-          }
-        }
-        formData.append("priority", body?.priority || "");
-        formData.append("access", body?.access || "");
-        formData.append("creation_date", body?.creation_date || "");
-        formData.append("saved_by_type", Savedby()?.saved_by_type || "");
-        formData.append("saved_by", Savedby()?.saved_by || "");
-        const res = await Axios.post(APIRoutes.saveDevelopment, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
-        return res.data;
-      }
-    );
-  }
 // Create / Update TimeLine API
 export const saveDevelopmentTimeLine =
   async (body: TimeLineFormField) => {

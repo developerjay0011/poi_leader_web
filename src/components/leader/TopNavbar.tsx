@@ -125,7 +125,7 @@ export const TopNavbar: FC = () => {
         }
       })();
     }
-  }, [dispatch, allcookies?.TOKEN_KEY])
+  }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
   useEffect(() => {
     if (allcookies?.USER_TYPE == "leader") {
       (async () => {
@@ -148,6 +148,8 @@ export const TopNavbar: FC = () => {
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
             const data = await getLetterTemplates(userDetails?.leaderId as string);
             dispatch(letterActions.storeLetterTemplate(data));
+            const Data = await getDirectory(userDetails?.leaderId as string);
+            dispatch(directoryAction.storedirectory(Data))
           }
         } else {
           router.push(AuthRoutes.login)
