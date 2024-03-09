@@ -18,7 +18,7 @@ const AdminFollowersPage = () => {
       rightButton={null}
     >
       <ul className='grid grid-cols-3 max-[1160px]:grid-cols-2 max-[670px]:grid-cols-1 gap-5'>
-        {followers.length && followers.map((item: any, index: number) => (
+        {followers.length > 0 && followers.map((item: any, index: number) => (
           <Follower item={item} key={index} name={item.name} displayImg={item.image} />
         ))}
       </ul>
