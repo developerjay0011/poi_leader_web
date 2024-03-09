@@ -61,12 +61,12 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
     <>
       <table className="w-full mt-5">
         <thead className="text-left">
-          <tr className="bg-orange-500 text-orange-50">
-            <th className="p-2 font-medium">S.No</th>
-            <th className="p-2 font-medium">Name</th>
-            <th className="p-2 font-medium">Phone No</th>
-            <th className="p-2 font-medium">Email</th>
-            <th className="p-2 font-medium">Actions</th>
+          <tr className='border-b border-gray-300'>
+            <th className='font-semibold text-left p-2 border text-center'>S.No</th>
+            <th className='font-semibold text-left p-2 border text-center'>Name</th>
+            <th className='font-semibold text-left p-2 border text-center'>Phone No</th>
+            <th className='font-semibold text-left p-2 border text-center'>Email</th>
+            <th className='font-semibold text-left p-2 border text-center'>Actions</th>
           </tr>
         </thead>
         <tbody className="text-left">
@@ -74,24 +74,24 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
             filterDataOnDirectory.map((directory: any, index: number) => {
               return (
                 <>
-                  <tr key={index}>
-                    <td className="p-2">{index + 1}</td>
-                    <td className="p-2">{directory.name}</td>
-                    <td className="p-2">{directory.mobile}</td>
-                    <td className="p-2">{directory.email}</td>
-                    <td className="p-2 flex  gap-3">
+                  <tr className={`bg-white border-b border-gray-300 transition-all`} key={index}>
+                    <td className='font-semibold text-left p-2 border text-center'>{index + 1}</td>
+                    <td className='font-semibold text-left p-2 border text-center'>{directory.name}</td>
+                    <td className='font-semibold text-left p-2 border text-center'>{directory.mobile}</td>
+                    <td className='font-semibold text-left p-2 border text-center'>{directory.email}</td>
+                    <td className='text-center py-2 pl-2 border printHide gap-2 '>
                       <button
-                        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+                        className='hover:scale-110 transition-all ease-out duration-200 active:scale-100 mr-2'
                         onClick={() => editDirectory(directory)}
                       >
-                        <FaEdit className="text-xl" />
+                        <FaEdit />
                       </button>
 
                       <button
                         onClick={() =>
                           confirmDelete(directory.id, directory.leaderid)
                         }
-                        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+                        className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
                       >
                         <BsTrash3Fill />
                       </button>
@@ -106,7 +106,7 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
           )}
         </tbody>
       </table>
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" >
         {showConfirmBox && (
           <ConfirmDialogBox
             noAllowed={false}

@@ -55,9 +55,8 @@ export default function DummPage() {
           />
 
           <ul
-            className={`absolute top-full left-0 w-full border-gray-600 shadow-md rounded ${
-              showOptions ? 'border' : ''
-            } overflow-hidden flex flex-col`}>
+            className={`absolute top-full left-0 w-full border-gray-600 shadow-md rounded ${showOptions ? 'border' : ''
+              } overflow-hidden flex flex-col`}>
             {showOptions && (
               <>
                 {Politicians.map((el, i) => (
@@ -96,6 +95,7 @@ const CustomOptions = forwardRef<HTMLButtonElement, CustomOptionsProps>(
           src={img}
           alt='Display pic'
           className='w-10 aspect-square rounded-full object-cover object-center'
+          loading="eager"
         />
 
         <div className='flex flex-col items-center text-sm'>

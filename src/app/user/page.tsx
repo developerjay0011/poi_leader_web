@@ -7,9 +7,12 @@ import { BriefEventsBox } from "@/components/timlineComponents/BriefEventsBox";
 import { BirthdayNotifications } from "@/components/timlineComponents/BirthdayNotifications";
 import { FollowedLeader } from "@/components/timlineComponents/FollowedLeader";
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { cusSelector } from "@/redux_store/cusHooks";
 
 const AdminHomePage = () => {
   const [followers, setFollowers] = useState<any>({});
+  const { birthdaylist } = cusSelector((state) => state.leader);
   const handleFollowers = (data: any) => {
     setFollowers(data);
   };
@@ -20,11 +23,9 @@ const AdminHomePage = () => {
         <div className="flex gap-5">
           {/* LEFT FEED */}
           <div className="flex flex-col gap-5 self-start max-[1200px]:hidden w-[23%]">
-            <BirthdayNotifications />
+            {birthdaylist?.length > 0 && <BirthdayNotifications />}
             <TrendingUsers handleFollowers={handleFollowers} />
-
             <FollowedLeader followers={followers} />
-
             <BriefEventsBox />
           </div>
 

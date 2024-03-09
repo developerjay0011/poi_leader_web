@@ -15,6 +15,8 @@ import { galleryActions } from "@/redux_store/gallery/gallerySlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
+import { Datanotfound } from "@/utils/Datanotfound";
+import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 
 const AdminProfileGalleryPage = () => {
   const [searchStr, setSearchStr] = useState("");
@@ -128,59 +130,57 @@ const AdminProfileGalleryPage = () => {
   return (
     <>
       <div className="flex gap-5 w-full relative">
-        {/* <div className="sticky top-0 left-0 self-start max-[1000px]:hidden">
-          <ShortcutsBox />
-        </div> */}
         <ProfileShortcutsBox />
 
-        <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
-          <section className="flex justify-between flex-col">
-            <div className="flex justify-between">
-              <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-4 text-[22px] font-semibold capitalize max-[650px]:px-3">
-                Gallery
-              </h2>
+        <section className="flex-1">
+          <PeoplesComponentWrapper
+            heading='Gallery'
+            searchStr={''}
+            setSearchStr={''}
+            rightButton={
+              <div className="flex items-center justify-end">
+                <button
+                  className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                  onClick={() => setIsGallery(true)}
+                >
+                  Add Media
+                </button>
+              </div>
+            }
+          >
+            <div className="py-7 pt-3 flex items-center justify-between">
+              <label htmlFor="filter" className="flex items-center gap-2">
+                <span>Media</span>
+                <select
+                  id="filter"
+                  className="py-1 px-3 text-md border border-gray-300 outline-none text-gray-900 bg-white rounded-md cursor-pointer capitalize"
+                >
+                  <option value="">All</option>
+                  <option value="video">video</option>
+                  <option value="image">image</option>
+                </select>
+              </label>
             </div>
-            <div className="w-[100%] h-[1px] bg-zinc-200 m-auto max-[500px]:w-[90%]" />
-          </section>
 
-          <div className="py-7 px-7 max-[650px]:px-3 flex items-center justify-between">
-            <label htmlFor="filter" className="flex items-center gap-2">
-              <span>Media</span>
-              <select
-                id="filter"
-                className="py-1 px-3 text-md border border-gray-300 outline-none text-gray-900 bg-white rounded-md cursor-pointer capitalize"
-              >
-                <option value="">All</option>
-                <option value="video">video</option>
-                <option value="image">image</option>
-              </select>
-            </label>
-
-            <button
-              className={`text-sm mt-5 transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-              onClick={() => setIsGallery(true)}
-            >
-              Add Media
-            </button>
-          </div>
-
-          <section className="px-7 pb-8 max-[650px]:px-3">
-            <ul className="grid grid-cols-5 gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
-              {gallery &&
-                gallery.length > 0 &&
-                gallery.map((userMedia, index) => {
-                  return (
-                    <BriefPost
-                      key={index}
-                      userMedia={userMedia}
-                      deletedata={deletedata}
-                    />
-                  );
-                })}
-              {/* <BriefPost />
-              <BriefPost /> */}
-            </ul>
-          </section>
+            {gallery.length > 0 ?
+              <section className="pb-8">
+                <ul className="grid grid-cols-5 gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
+                  {gallery &&
+                    gallery.map((userMedia, index) => {
+                      return (
+                        <BriefPost
+                          key={index}
+                          userMedia={userMedia}
+                          deletedata={deletedata}
+                        />
+                      );
+                    })}
+                </ul>
+              </section>
+              :
+              <Datanotfound name={"Gallery data"} />
+            }
+          </PeoplesComponentWrapper>
         </section>
         <AnimatePresence mode="wait">
           {isGallery && (

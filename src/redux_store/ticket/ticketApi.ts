@@ -9,7 +9,7 @@ export const getTickets = async (leaderid: string) => {
 
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getTickets, { leaderid }));
-      return res.data;
+      return Array.isArray(res.data) ? res.data : []
     }
   );
 };

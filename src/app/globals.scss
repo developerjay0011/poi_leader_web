@@ -4,35 +4,35 @@
 // @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital@0;1&display=swap');
 
 @layer components {
-  .focusEvent:focus ~ svg {
+  .focusEvent:focus~svg {
     @apply text-sky-800 transition-all;
   }
 
-  .focusEvent:placeholder-shown ~ span {
+  .focusEvent:placeholder-shown~span {
     @apply text-sky-800 top-1/2 translate-y-[-50%] transition-all font-semibold;
   }
 
-  .focusEvent:focus ~ span {
+  .focusEvent:focus~span {
     @apply text-sky-800 font-semibold transition-all top-7 translate-y-[-50%] text-sm;
   }
 
-  .errInp:placeholder-shown ~ span {
+  .errInp:placeholder-shown~span {
     @apply text-red-500;
   }
 
   .errInp {
     @apply bg-red-50 text-red-500;
 
-    &:focus ~ svg {
+    &:focus~svg {
       @apply text-red-500;
     }
 
-    &:focus ~ span {
+    &:focus~span {
       @apply text-red-500;
     }
   }
 
-  .checkbox:checked + span {
+  .checkbox:checked+span {
     @apply after:opacity-100;
   }
 
@@ -41,6 +41,7 @@
 
     &::-webkit-scrollbar {
       width: 4px;
+      height: 8px;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -106,7 +107,7 @@
   }
 
   .post_hover {
-    & > * {
+    &>* {
       transition: all 0.2s ease;
     }
 
@@ -114,6 +115,7 @@
       #ImgBackdrop {
         opacity: 1;
       }
+
       #postIcon {
         opacity: 1;
       }
@@ -121,6 +123,7 @@
   }
 
   .num_inp {
+
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
       appearance: none;
@@ -159,11 +162,11 @@
   }
 
   .permission_checkbox {
-    &:checked ~ .un_checked_box {
+    &:checked~.un_checked_box {
       @apply hidden;
     }
 
-    &:checked ~ .checked_box {
+    &:checked~.checked_box {
       @apply block;
     }
   }
@@ -186,13 +189,15 @@
   }
 
   .overlap_task {
-    white-space: nowrap; /* Prevents text from wrapping to the next line */
-    overflow: hidden; /* Hides the overflowing content */
+    white-space: nowrap;
+    /* Prevents text from wrapping to the next line */
+    overflow: hidden;
+    /* Hides the overflowing content */
     text-overflow: ellipsis;
   }
 
   .poll_checked {
-    &:checked ~ span {
+    &:checked~span {
       @apply bg-orange-50 border-orange-400 text-orange-500 font-medium;
     }
   }
@@ -218,15 +223,15 @@
   }
 
   .cus_check_box {
-    &:checked + div {
+    &:checked+div {
       @apply bg-orange-500;
     }
 
-    &:checked + div p {
+    &:checked+div p {
       left: 15%;
     }
 
-    &:checked + div span {
+    &:checked+div span {
       left: 54%;
     }
   }
@@ -289,6 +294,7 @@
 
   .active_profile_link {
     @apply text-orange-500;
+
     &::after {
       @apply border-orange-500;
       content: '';
@@ -312,7 +318,6 @@
   .letter_preview {
     width: 21cm; // letter width
     height: 29.7cm; // letter height
-    padding: 2.54cm; // letter margin
     font-size: 12pt; // letter font size
     font-family: 'Merriweather', serif;
     background: white;

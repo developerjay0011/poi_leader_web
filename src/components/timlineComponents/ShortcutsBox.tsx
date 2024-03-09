@@ -66,7 +66,7 @@ export const ShortcutsBox: FC = () => {
       tabname: "Leader"
     },
     {
-      link: '/user',
+      link: '/',
       name: 'Dashboard',
       Icon: MdSpaceDashboard,
       tabname: "Leader"

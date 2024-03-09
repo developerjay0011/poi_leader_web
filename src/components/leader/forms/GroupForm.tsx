@@ -103,10 +103,10 @@ export const GroupForm: FC<GroupFormProps> = ({ setShowModal, setIsEdit, isEdit,
             />
             <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
             <div className="flex justify-end col-span-full gap-2">
-              <a className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50" onClick={() => { setShowModal(false), setIsEdit(false); }}>
+              <a className="rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50" onClick={() => { setShowModal(false), setIsEdit(false); }}>
                 close
               </a>
-              <button className="rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize" type="submit">
+              <button className="rounded-full px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize" type="submit">
                 Save
               </button>
             </div>

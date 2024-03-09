@@ -124,7 +124,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
       tabname: "Manage Employees"
     },
     {
-      link: '/user',
+      link: '/',
       name: 'Dashboard',
       Icon: MdSpaceDashboard,
       tabname: "Leader"

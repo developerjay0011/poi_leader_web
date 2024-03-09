@@ -8,7 +8,7 @@ export const GetEmployees = async (leaderid: string) => {
     return tryCatch(
         async () => {
             const res = await Axios.get(insertVariables(APIRoutes.GetEmployees, { leaderid }));
-            return res.data;
+            return Array.isArray(res.data) ? res.data : []
         }
     );
 };

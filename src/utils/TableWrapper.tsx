@@ -10,7 +10,7 @@ import { FaPlus } from "react-icons/fa";
 interface TableWrapperProps {
   heading: string
   children: JSX.Element
-  addBtnClickFn: () => void
+  addBtnClickFn: any
   addBtnTitle: string
   totalCount: number
   subTotalCount?: number // applicable to some components like parliamentary constituency and assembly constituency
@@ -77,7 +77,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
 
   return (
     <>
-      <div className='gap-5 w-full relative'>
+      <div className='gap-5 w-full relative min-h-[410px]'>
 
         <div className='overflow-hidden flex flex-col flex-1 self-start px-5 border-b py-3 after:h-1/2 after:w-[3px] after:bg-orange-600 
             after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%]
@@ -103,7 +103,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
                 <button
                   type='button'
                   onClick={addBtnClickFn}
-                  className="px-5 py-2 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600 items-center flex gap-2"
+                  className="flex items-center gap-2 flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium"
                 // className='rounded-full bg-orange-500 ml-5 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'
                 >
                   <FaPlus className='text-1xl' /> {addBtnTitle}
@@ -120,7 +120,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
           )}
         </div>
 
-        <div id='filterBox' className='flex justify-between mt-10 items-end  px-5'>
+        <div id='filterBox' className='flex justify-between mt-5 items-end  px-5 '>
           <section className='flex flex-col gap-3'>
             {conditionalData && conditionalData.jsx}
 
@@ -147,9 +147,6 @@ export const TableWrapper: FC<TableWrapperProps> = ({
           </section>
 
           <section className='flex flex-col gap-5'>
-            {/* CTA'S */}
-
-
             {/* FILTERS */}
             <div className='flex items-center gap-3 justify-end'>
               {/* SEARCH FILTER */}
@@ -227,6 +224,8 @@ export const TableWrapper: FC<TableWrapperProps> = ({
           )}
         </section>
       </div>
+
+
     </>
   )
 }

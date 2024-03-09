@@ -5,7 +5,7 @@ import { FiSearch } from 'react-icons/fi'
 interface PeoplesComponentWrapperProps {
   children: ReactNode
   searchStr: string
-  setSearchStr: (val: string) => void
+  setSearchStr: any
   heading: string
   rightButton: ReactNode
 }
@@ -27,27 +27,29 @@ export const PeoplesComponentWrapper: FC<PeoplesComponentWrapperProps> = ({
           </h2>
 
           <div className='flex gap-5 mr-7 max-[450px]:ml-auto max-[450px]:mr-2'>
-            <label className='relative self-center  max-[450px]:self-start'>
-              <input
-                type='search'
-                className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md outline-none focus:bg-gray-50 focus:border-gray-400 transition-all placeholder:capitalize'
-                placeholder={`search ${heading}`}
-                value={searchStr}
-                onChange={(e) => setSearchStr(e.target.value.toLowerCase())}
-              />
-              {searchStr.length === 0 && (
-                <button className='absolute top-[8px] right-2'>
-                  <FiSearch className='stroke-gray-400' />
-                </button>
-              )}
-            </label>
             {rightButton && rightButton}
+            {typeof setSearchStr == "function" &&
+              <label className='relative self-center  max-[450px]:self-start'>
+                <input
+                  type='search'
+                  className='py-1 px-3 text-sm border border-gray-300 text-gray-900 bg-white rounded-md outline-none focus:bg-gray-50 focus:border-gray-400 transition-all placeholder:capitalize'
+                  placeholder={`search ${heading}`}
+                  value={searchStr}
+                  onChange={(e) => setSearchStr(e.target.value.toLowerCase())}
+                />
+                {searchStr.length === 0 && (
+                  <button className='absolute top-[8px] right-2'>
+                    <FiSearch className='stroke-gray-400' />
+                  </button>
+                )}
+              </label>
+            }
           </div>
         </div>
       </section>
       <div className='w-[100%] h-[1px] bg-zinc-200 m-auto' />
 
-      <section className='px-7 py-5'>{children}</section>
+      <section className='px-7 py-5 min-h-[345px]'>{children}</section>
     </section>
   )
 }

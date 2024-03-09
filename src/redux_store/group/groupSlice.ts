@@ -23,7 +23,7 @@ export const groupSlice = createSlice({
   name: 'group',
   initialState,
   reducers: {
-    storeGroups(state, action: PayloadAction<GroupDetails[]>) {
+    storeGroups(state, action) {
       state.groups = action.payload
     },
   },

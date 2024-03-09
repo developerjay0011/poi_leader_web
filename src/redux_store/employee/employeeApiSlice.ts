@@ -14,7 +14,7 @@ export const employeeSlice = createSlice({
   name: 'employee',
   initialState: init,
   reducers: {
-    storeemployees(state, action: any) {
+    storeemployees(state, action) {
       state.employees = action.payload
     },
     setemployeaccess(state, action: any) {

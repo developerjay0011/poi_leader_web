@@ -79,75 +79,74 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
     }
   }, [])
   return (
-    <div>
-      <form
-        className="grid grid-cols-1 gap-x-4 gap-y-5"
-        onSubmit={handleSubmit(formSubmitHandler)}
-      >
-        <Input
-          register={register}
-          errors={errors}
-          title={'Status'}
-          type='select'
-          id="status"
-          required
-          validations={{
-            required: `status is required`,
-          }}
-          selectField={{
-            title: 'select status',
-            options: statusOption.map((el) => ({
-              id: el.id,
-              value: el.value,
-            })),
-          }}
-        />
-        <Input
-          errors={errors}
-          id="remark"
-          placeholder="remark"
-          register={register}
-          title="Remark"
-          type="text"
-        />
+    <form
+      className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5"
+      onSubmit={handleSubmit(formSubmitHandler)}
+    >
+      <Input
+        register={register}
+        errors={errors}
+        title={'Status'}
+        type='select'
+        id="status"
+        required
+        validations={{
+          required: `status is required`,
+        }}
+        selectField={{
+          title: 'select status',
+          options: statusOption.map((el) => ({
+            id: el.id,
+            value: el.value,
+          })),
+        }}
+      />
+      <Input
+        errors={errors}
+        id="remark"
+        placeholder="remark"
+        register={register}
+        title="Remark"
+        type="text"
+      />
 
 
-        <Input
-          errors={errors}
-          id="attachments"
-          placeholder="attachments"
-          register={register}
-          title="Attachments"
-          type="file"
-          required={!isedit}
-          validations={{
-            required: "attachments is required",
-          }}
-        />
+      <Input
+        errors={errors}
+        id="attachments"
+        placeholder="attachments"
+        register={register}
+        title="Attachments"
+        type="file"
+        required={!isedit}
+        validations={{
+          required: "attachments is required",
+        }}
+      />
 
 
-        {isedit && data?.attachments?.map((el: any) => (
-          <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
-            {el.match(/[^/]+$/)[0]}
-          </a>
-        ))}
+      {isedit && data?.attachments?.map((el: any) => (
+        <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
+          {el.match(/[^/]+$/)[0]}
+        </a>
+      ))}
 
-        <div className="flex justify-end col-span-full gap-2 mt-5">
-          <a
-            className="rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
-            onClick={() => onCancel()}
-          >
-            close
-          </a>
-          <button
-            className="rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
-            type="submit"
-          >
-            Save
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
+      <div className="flex justify-end col-span-full gap-2">
+        <a
+          className="rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
+          onClick={() => onCancel()}
+        >
+          close
+        </a>
+        <button
+          className="rounded-full px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
+          type="submit"
+        >
+          Save
+        </button>
+      </div>
+    </form>
   );
 };
 

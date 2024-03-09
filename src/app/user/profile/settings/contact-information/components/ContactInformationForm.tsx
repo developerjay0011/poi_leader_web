@@ -55,13 +55,13 @@ export const ContactForm: FC = () => {
       }
     );
   }
+  const { contact_info } = leaderProfile;
   useEffect(() => {
-    const { contact_info } = leaderProfile;
     reset({
       ...contact_info,
       bothAddressIsSame: leaderProfile.contact_info?.is_same_as_permanent ? "yes" : null
     })
-  }, [leaderProfile, reset]);
+  }, [contact_info, reset]);
 
   return (
     <>

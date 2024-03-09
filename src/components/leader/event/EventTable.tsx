@@ -90,7 +90,7 @@ export const EventTable: FC<EventTableProps> = ({
                     <td className="p-2">{Event.end_datetime}</td>
                     <td className="p-2 flex  gap-3">
                       <button
-                        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+                        className="flex items-center gap-2  capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 transition-all"
                         onClick={() => editEvent(Event)}
                       >
                         <FaEdit className="text-xl" />
@@ -100,7 +100,7 @@ export const EventTable: FC<EventTableProps> = ({
                         onClick={() =>
                           confirmDelete(Event.id, Event.leaderid)
                         }
-                        className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
+                        className="flex items-center gap-2  capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 transition-all"
                       >
                         <BsTrash3Fill />
                       </button>

@@ -65,8 +65,8 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { fields, append, remove } = useFieldArray({ name: 'activity_pictures', control, });
   const { fields: references, append: newRef, remove: removeRef, } = useFieldArray({ name: 'referencies', control, })
+  const { political_info } = leaderProfile;
   useEffect(() => {
-    const { political_info } = leaderProfile;
     reset({
       ...political_info,
       joined_date: moment(political_info?.joined_date).format("YYYY-MM-DD"),
@@ -76,7 +76,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
       familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no',
       position: leaderProfile.political_info?.position
     });
-  }, [leaderProfile, reset]);
+  }, [political_info, reset]);
 
 
   return (

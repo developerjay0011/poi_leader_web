@@ -33,11 +33,11 @@ export interface TicketDetails {
   created_date: string
 }
 interface TicketState {
-  ticket: TicketDetails[]
+  ticket: any
 }
 
 const initialState: TicketState = {
-  ticket:[],
+  ticket: [],
 };
 
 export const ticketSlice = createSlice({
@@ -45,7 +45,7 @@ export const ticketSlice = createSlice({
   initialState,
   reducers: {
 
-    storeTicket(state, action: PayloadAction<TicketDetails[]>) {
+    storeTicket(state, action) {
       state.ticket = action.payload
     },
   },
