@@ -61,26 +61,26 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   const parliamentHouse = watch('parliament_house')
   const stateid = watch('stateid')
   const rajyaSabhaNominated = watch('rajyaSabhaNominated')
+  const { political_info } = leaderProfile;
   const hasMinistry = watch('hasMinistry')
   useEffect(() => {
-    const { political_info } = leaderProfile;
     reset({
       ...political_info,
       hasMinistry: political_info?.is_hold_ministry ? 'yes' : null,
       rajyaSabhaNominated: political_info?.is_nominated ? 'yes' : null,
     })
-  }, [leaderProfile?.id, reset]);
+  }, [political_info, reset]);
   useEffect(() => {
     if (designation_id) {
       if (((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID)) && hasMinistry == "yes") {
       } else {
-        setValue("hasMinistry", '')
+        setValue("hasMinistry", 'no')
       }
     }
     if (hasMinistry == 'yes' && fields?.length == 0 && ((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID))) {
       append({ ministryid: '', ministrytype: '' })
     }
-  }, [hasMinistry])
+  }, [political_info])
 
 
 
@@ -271,79 +271,73 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
       )}
 
 
-      {
-        designation_id &&
-        (designation_id === LEADER_IDS.mpID ||
-          designation_id === LEADER_IDS.mlaID) && (
-          <YesNoField
-            errors={errors}
-            id='hasMinistry'
-            question='Hold any ministry'
-            register={register}
-            required
-            validations={{ required: 'Question is necessary' }}
-          />
-        )
-      }
+      {designation_id && (designation_id === LEADER_IDS.mpID || designation_id === LEADER_IDS.mlaID) && (
+        <YesNoField
+          errors={errors}
+          id='hasMinistry'
+          question='Hold any ministry'
+          register={register}
+          required
+          validations={{ required: 'Question is necessary' }}
+        />
+      )}
 
-      {
-        hasMinistry == "yes" && (
-          <div className='col-span-full flex flex-col gap-4'>
-            {fields.map((el, i) => (
-              <div key={el.id} className='grid grid-cols-3 gap-x-4'>
-                <Input
-                  errors={errors}
-                  register={register}
-                  required
-                  validations={{ required: 'Ministry Name is required' }}
-                  id={`ministries.${i}.ministryid` as keyof UserDetails}
-                  title='Ministry Name'
-                  type='select'
-                  selectField={{
-                    title: 'select Ministry',
-                    options: ministries?.map((el: any) => ({
-                      id: el.id,
-                      value: el.name,
-                    })),
-                  }}
-                />
-                <Input
-                  errors={errors}
-                  register={register}
-                  required
-                  validations={{ required: 'Ministry Type is required' }}
-                  id={`ministries.${i}.ministrytype` as keyof UserDetails}
-                  title='Ministry Type'
-                  type='select'
-                  selectField={{
-                    title: 'select ministry type',
-                    options: [
-                      { id: 'Cabinet', value: 'Cabinet' },
-                      { value: 'MOS', id: 'MOS' },
-                      { value: 'MOS(I/C)', id: 'MOS(I/C)' },
-                    ],
-                  }}
-                />
-                {i !== 0 && (
-                  <button
-                    type='button'
-                    onClick={() => remove(i)}
-                    className='outline-none justify-self-start self-center text-sm mt-5 capitalize py-2 px-4 rounded bg-rose-500 text-rose-50 hover:bg-rose-600 transition-all'>
-                    remove ministry
-                  </button>
-                )}
-              </div>
-            ))}
+      {hasMinistry == "yes" && (
+        <div className='col-span-full flex flex-col gap-4'>
+          {fields.map((el, i) => (
+            <div key={el.id} className='grid grid-cols-3 gap-x-4'>
+              <Input
+                errors={errors}
+                register={register}
+                required
+                validations={{ required: 'Ministry Name is required' }}
+                id={`ministries.${i}.ministryid` as keyof UserDetails}
+                title='Ministry Name'
+                type='select'
+                selectField={{
+                  title: 'select Ministry',
+                  options: ministries?.map((el: any) => ({
+                    id: el.id,
+                    value: el.name,
+                  })),
+                }}
+              />
+              <Input
+                errors={errors}
+                register={register}
+                required
+                validations={{ required: 'Ministry Type is required' }}
+                id={`ministries.${i}.ministrytype` as keyof UserDetails}
+                title='Ministry Type'
+                type='select'
+                selectField={{
+                  title: 'select ministry type',
+                  options: [
+                    { id: 'Cabinet', value: 'Cabinet' },
+                    { value: 'MOS', id: 'MOS' },
+                    { value: 'MOS(I/C)', id: 'MOS(I/C)' },
+                  ],
+                }}
+              />
+              {i !== 0 && (
+                <button
+                  type='button'
+                  onClick={() => remove(i)}
+                  className='outline-none justify-self-start self-center text-sm mt-5 capitalize py-2 px-4 rounded bg-rose-500 text-rose-50 hover:bg-rose-600 transition-all'>
+                  remove ministry
+                </button>
+              )}
+            </div>
+          ))}
 
-            <button
-              type='button'
-              onClick={() => append({ ministryid: '', ministrytype: '' })}
-              className='outline-none self-start col-span-full text-sm mt-1 capitalize py-2 px-4 rounded bg-teal-500 text-teal-50 hover:bg-teal-600 transition-all'>
-              add ministry
-            </button>
-          </div>
-        )
-      }
+          <button
+            type='button'
+            onClick={() => append({ ministryid: '', ministrytype: '' })}
+            className='outline-none self-start col-span-full text-sm mt-1 capitalize py-2 px-4 rounded bg-teal-500 text-teal-50 hover:bg-teal-600 transition-all'>
+            add ministry
+          </button>
+        </div>
+      )}
     </div>
   )
 }

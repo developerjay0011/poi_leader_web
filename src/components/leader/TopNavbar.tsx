@@ -16,15 +16,15 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl } from "@/config/get-image-url";
-import { followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { GetBirthdayList, followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import { getCookies } from "cookies-next";
 import { tryCatch } from "@/config/try-catch";
-import { getLetterTemplates } from "@/redux_store/letter/letterApi";
+import { getLetterTemplates, getLetters } from "@/redux_store/letter/letterApi";
 import { letterActions } from "@/redux_store/letter/letterSlice";
-import { getLeadersOptions } from "@/redux_store/common/commonAPI";
+import { deActiveAccount, getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
@@ -32,6 +32,18 @@ import { GetLeaderAddedPosts, GetPostsForLeader, getLeaderAddedStories, getStori
 import { postActions } from "@/redux_store/posts/postSlice";
 import { getDirectory } from "@/redux_store/directory/directoryApi";
 import { directoryAction } from "@/redux_store/directory/directorySlice";
+import { GetDashboardEvents } from "@/redux_store/event/eventApi";
+import { eventAction } from "@/redux_store/event/eventSlice";
+import { getTickets, } from "@/redux_store/ticket/ticketApi";
+import { ticketActions } from "@/redux_store/ticket/ticketSlice";
+import { getGroups } from "@/redux_store/group/groupAPI";
+import { groupActions } from "@/redux_store/group/groupSlice";
+import { GetEmployees } from "@/redux_store/employee/employeeApi";
+import { employeeAction } from "@/redux_store/employee/employeeApiSlice";
+import { getDevelopment } from "@/redux_store/development/developmentApi";
+import { developmentAction } from "@/redux_store/development/developmentSlice";
+import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
+import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 
 
 export const TopNavbar: FC = () => {
@@ -45,7 +57,7 @@ export const TopNavbar: FC = () => {
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
-  const { usertype } = cusSelector((state) => state.access);
+  const { usertype, accesstabs } = cusSelector((state) => state.access);
   let allcookies: any = getCookies()
   let heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
   heading = heading === "user" || heading === "employeehome" ? "home" : heading;
@@ -74,6 +86,8 @@ export const TopNavbar: FC = () => {
         setShowNotifications(false);
     });
   }, []);
+
+
   useEffect(() => {
     if (allcookies?.USER_TYPE == "leader") {
       (async () => {
@@ -102,6 +116,15 @@ export const TopNavbar: FC = () => {
             const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
             dispatch(postActions.storeStories(storiesForLeader as any[]));
 
+
+            // GetBirthdayList
+            const BirthdayList = await GetBirthdayList();
+            dispatch(leaderActions.setBirthdayList(BirthdayList));
+
+            //event
+            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+            dispatch(eventAction.storeDashboardevents(DashboardEvents));
+
             // Posts
             const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
             dispatch(postActions.setPost(postsForLeader));
@@ -116,28 +139,42 @@ export const TopNavbar: FC = () => {
             const response = await getNotification(userDetails?.leaderId as string);
             dispatch(leaderActions.setNotification(response));
 
-            // LetterTemplates
-            const data = await getLetterTemplates(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetterTemplate(data));
+            // Letter
+            const Letters = await getLetters(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetter(Letters));
+            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
+            const Tickets = await getTickets(userDetails?.leaderId as string);
+            dispatch(ticketActions.storeTicket(Tickets));
+
+            // Groups
+            const Groups = await getGroups(userDetails?.leaderId as string);
+            dispatch(groupActions.storeGroups(Groups));
+
+            // GetEmployees
+            const Employees = await GetEmployees(userDetails?.leaderId as string);
+            dispatch(employeeAction.storeemployees(Employees));
+
+            // Category
+            const Category = await getCategory(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeCategories(Category));
+
+            // Development
+            const Development = await getDevelopment(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeDevelopments(Development));
+
+            // Agenda
+            const Agenda = await getAgenda(userDetails?.leaderId as string);
+            dispatch(agendaAction.storeAgendas(Agenda));
+
+
+
           }
         } else {
           router.push(AuthRoutes.login)
         }
       })();
     }
-  }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
-  useEffect(() => {
-    if (allcookies?.USER_TYPE == "leader") {
-      (async () => {
-        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
-          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
-          const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
-          dispatch(postActions.storeMyStories(LeaderAddedStories))
-        }
-      })();
-    }
-  }, [dispatch, leaderProfile?.image])
-  useEffect(() => {
     if (allcookies?.USER_TYPE != "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
@@ -157,6 +194,18 @@ export const TopNavbar: FC = () => {
       })();
     }
   }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
+  useEffect(() => {
+    if (allcookies?.USER_TYPE == "leader") {
+      (async () => {
+        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
+          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+          const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
+          dispatch(postActions.storeMyStories(LeaderAddedStories))
+        }
+      })();
+    }
+  }, [dispatch, leaderProfile?.image])
+
 
   return (
     <>
@@ -230,7 +279,7 @@ export const TopNavbar: FC = () => {
                 )}
               </button>
 
-              <Link href={''} target="_parent">
+              <Link href={'/'} target="_parent">
                 <MdSpaceDashboard className="text-sky-50 text-2xl" />
               </Link>
             </section>

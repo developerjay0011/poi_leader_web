@@ -92,3 +92,12 @@ export const unFollowLeader = async (body: any) => {
   );
 };
 
+
+export const GetBirthdayList = async () => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(APIRoutes.GetBirthdayList);
+      return res.data;
+    }
+  );
+};

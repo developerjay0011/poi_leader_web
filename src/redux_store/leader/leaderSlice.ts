@@ -11,6 +11,7 @@ interface LeaderState {
   trendingLeader: any[];
   notification: any[];
   reasons: any[];
+  birthdaylist: any[];
 }
 
 let userDetails: any = getCookie(USER_INFO);
@@ -22,7 +23,8 @@ const initialState: LeaderState = {
   trendingLeader: [],
   following: [],
   notification: [],
-  reasons: []
+  reasons: [],
+  birthdaylist: []
 };
 
 export const leaderSlice = createSlice({
@@ -40,6 +42,9 @@ export const leaderSlice = createSlice({
     },
     setFollowers(state, action) {
       state.followers = action.payload;
+    },
+    setBirthdayList(state, action) {
+      state.birthdaylist = action.payload;
     },
     setFollowing(state, action) {
       state.following = action.payload;

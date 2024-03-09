@@ -12,20 +12,24 @@ export interface EventDetails {
 
 interface EventState {
   event: EventDetails[]
+  dashboardevents: any
 }
 
 const init: EventState = {
   event: [],
+  dashboardevents: []
 }
 
 export const eventSlice = createSlice({
   name: 'event',
   initialState: init,
   reducers: {
-    storeEvent(state, action: PayloadAction<EventDetails[]>) {
+    storeEvent(state, action) {
       state.event = action.payload
     },
-   
+    storeDashboardevents(state, action) {
+      state.dashboardevents = action.payload
+    },
   },
 })
 

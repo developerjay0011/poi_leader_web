@@ -16,14 +16,17 @@ import { FaEdit } from 'react-icons/fa'
 import { cusSelector } from '@/redux_store/cusHooks'
 import CustomImage from '@/utils/CustomImage'
 import { getImageUrl } from '@/config/get-image-url'
+import { useRouter } from 'next/router'
 
-interface BriefProfileInfoBoxProps {}
+interface BriefProfileInfoBoxProps {
 
-export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
+}
+
+export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = ({ }) => {
   const { userDetails } = cusSelector((st) => st.UI)
   const { leaderProfile } = cusSelector((state) => state.leader);
+  const { notification } = cusSelector((state) => state.leader);
   const [showLikes, setShowLikes] = useState(true)
-
   const showLike = () => setShowLikes(true)
   const hideLike = () => setShowLikes(false)
 
@@ -48,14 +51,14 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
             </Link>
 
             {/* Messages */}
-            <div className='flex items-center gap-1 text-[13px] font-[500]'>
+            {/* <div className='flex items-center gap-1 text-[13px] font-[500]'>
               <FaMessage /> <p className='capitalize'>messages</p>
               <CountBubble
                 bgColor='bg-red-500'
                 textColor='text-white'
                 count={2}
               />
-            </div>
+            </div> */}
 
             {/* Notifications */}
             <div className='flex items-center gap-1 text-[13px] font-[500]'>
@@ -63,14 +66,14 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
               <CountBubble
                 bgColor='bg-blue-500'
                 textColor='text-white'
-                count={3}
+                count={notification?.length}
               />
             </div>
           </div>
         </section>
 
         {/* CTA's */}
-        <div className='border-t border-b py-3 flex justify-between'>
+        {/* <div className='border-t border-b py-3 flex justify-between'>
           <figure className='flex flex-col gap-1 items-center'>
             <FaEdit className='text-xl text-sky-950' />
             <figcaption className='capitalize text-[13px]'>Publish</figcaption>
@@ -90,18 +93,17 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
             <FaCamera className='text-xl text-sky-950' />
             <figcaption className='capitalize text-[13px]'>Photo</figcaption>
           </figure>
-        </div>
+        </div> */}
 
         {/* Interactions */}
         <div className='py-4 my-5'>
           <div className='flex items-center gap-1'>
             <button
               type='button'
-              className={`text-[13px]  px-3 font-[500] py-[.4rem] rounded-full capitalize flex-1 ${
-                showLikes
-                  ? ' bg-orange-500 text-orange-50 '
-                  : 'text-orange-500 bg-orange-100'
-              }`}
+              className={`text-[13px]  px-3 font-[500] py-[.4rem] rounded-full capitalize flex-1 ${showLikes
+                ? ' bg-orange-500 text-orange-50 '
+                : 'text-orange-500 bg-orange-100'
+                }`}
               onClick={showLike}>
               likes
             </button>
@@ -109,11 +111,10 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = () => {
             <button
               type='button'
               onClick={hideLike}
-              className={`text-[13px] px-3  font-[500] py-[.4rem] rounded-full capitalize flex-1 ${
-                !showLikes
-                  ? ' bg-orange-500 text-orange-50 '
-                  : 'text-orange-500 bg-orange-100'
-              }`}>
+              className={`text-[13px] px-3  font-[500] py-[.4rem] rounded-full capitalize flex-1 ${!showLikes
+                ? ' bg-orange-500 text-orange-50 '
+                : 'text-orange-500 bg-orange-100'
+                }`}>
               comments
             </button>
           </div>

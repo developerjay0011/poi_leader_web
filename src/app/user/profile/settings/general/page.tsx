@@ -23,9 +23,6 @@ const AdminGeneralSettingPage: FC = () => {
   const [showAgendas, setShowAgendas] = useState(general_setting?.show_agendas)
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-
-
-
   const deleteHandler = async () => {
     tryCatch(
       async () => {

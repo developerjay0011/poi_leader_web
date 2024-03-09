@@ -12,6 +12,8 @@ import { developmentAction } from "@/redux_store/development/developmentSlice";
 import DevelopmentForm from "@/components/posts/development/Form";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 import { BiX } from "react-icons/bi";
+import { Datanotfound } from "@/utils/Datanotfound";
+import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 
 const AdminDevelopmentPage = () => {
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -62,85 +64,83 @@ const AdminDevelopmentPage = () => {
     <>
       <div className="flex gap-5 w-full">
         <ProfileShortcutsBox />
-
-        <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
-          <section className="flex justify-between flex-col">
-            <div className="flex justify-between">
-              <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-4 text-[22px] font-semibold capitalize">
-                Development
-              </h2>
-            </div>
-
-            <div className="w-[100%] h-[1px] bg-zinc-200 m-auto" />
-
-            <section className="px-7 py-8 flex flex-col gap-8 max-[450px]:px-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 max-[750px]:flex-wrap">
-                  <p className="font-semibold text-lg">Filters</p>
-
-                  <label className="flex gap-2 items-center" htmlFor="priority">
-                    <span className="font-medium">Priority</span>
-                    <select
-                      id="priority"
-                      value={priorityFilter}
-                      onChange={(e) => setPriorityFilter(e.target.value)}
-                      className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-                    >
-                      <option value="">All</option>
-                      <option value="low">low</option>
-                      <option value="moderate">moderate</option>
-                      <option value="high">high</option>
-                    </select>
-                  </label>
-
-                  <label className="flex gap-2 items-center" htmlFor="category">
-                    <span className="font-medium">Category</span>
-                    <select
-                      id="category"
-                      value={categoryFilter}
-                      onChange={(e) => setCategoryFilter(e.target.value)}
-                      className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-                    >
-                      <option value="">All</option>
-                      {categories?.map((el) => (
-                        <option key={el.id} value={el.id}>
-                          {el.category}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="flex gap-2 items-center" htmlFor="status">
-                    <span className="font-medium">Status</span>
-                    <select
-                      id="status"
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-                    >
-                      <option value="">All</option>
-                      {Object.keys(AGENDA_STATUS).map((el) => (
-                        <option value={el} key={el}>
-                          {AGENDA_STATUS[el as AGENDA_VAL].name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
+        <section className="flex-1">
+          <PeoplesComponentWrapper
+            heading='Development'
+            searchStr={''}
+            setSearchStr={''}
+            rightButton={
+              <div className="flex items-center justify-end">
                 <button
-                  className={`text-sm mt-5 transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                  className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
                   onClick={() => { setDevelopment({}); setIsAgenda(true) }}
                 >
                   Add Development
                 </button>
               </div>
-              {developmentJSX}
+            }
+          >
+            <section className="flex flex-col gap-8 max-[450px]:px-3">
+              <div className="flex items-center gap-3 max-[750px]:flex-wrap">
+                <p className="font-semibold text-lg">Filters</p>
+
+                <label className="flex gap-2 items-center" htmlFor="priority">
+                  <span className="font-medium">Priority</span>
+                  <select
+                    id="priority"
+                    value={priorityFilter}
+                    onChange={(e) => setPriorityFilter(e.target.value)}
+                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                  >
+                    <option value="">All</option>
+                    <option value="low">low</option>
+                    <option value="moderate">moderate</option>
+                    <option value="high">high</option>
+                  </select>
+                </label>
+
+                <label className="flex gap-2 items-center" htmlFor="category">
+                  <span className="font-medium">Category</span>
+                  <select
+                    id="category"
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                  >
+                    <option value="">All</option>
+                    {categories?.map((el) => (
+                      <option key={el.id} value={el.id}>
+                        {el.category}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="flex gap-2 items-center" htmlFor="status">
+                  <span className="font-medium">Status</span>
+                  <select
+                    id="status"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                  >
+                    <option value="">All</option>
+                    {Object.keys(AGENDA_STATUS).map((el) => (
+                      <option value={el} key={el}>
+                        {AGENDA_STATUS[el as AGENDA_VAL].name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              {filterData?.length > 0 ? developmentJSX
+                :
+                <Datanotfound name={"Development"} />
+
+              }
             </section>
-          </section>
+          </PeoplesComponentWrapper>
         </section>
-
-
-
 
         <AnimatePresence mode="wait">
           {isAgenda && (

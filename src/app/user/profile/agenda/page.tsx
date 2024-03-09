@@ -10,6 +10,8 @@ import AgendaForm from "@/components/posts/agenda/AgendaForm";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 import { BiX } from "react-icons/bi";
+import { Datanotfound } from "@/utils/Datanotfound";
+import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 
 const AdminAgendaPage = () => {
 
@@ -62,18 +64,23 @@ const AdminAgendaPage = () => {
     <>
       <div className="flex gap-5 w-full">
         <ProfileShortcutsBox />
-
-        <section className="border bg-white shadow-sm flex flex-col rounded-md flex-1">
-          <section className="flex justify-between flex-col">
-            <div className="flex justify-between">
-              <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-4 text-[22px] font-semibold capitalize">
-                Agenda
-              </h2>
-            </div>
-
-            <div className="w-[100%] h-[1px] bg-zinc-200 m-auto" />
-
-            <section className="px-7 py-8 flex flex-col gap-8 max-[450px]:px-3">
+        <section className="flex-1">
+          <PeoplesComponentWrapper
+            heading='Agenda'
+            searchStr={''}
+            setSearchStr={''}
+            rightButton={
+              <div className="flex items-center justify-end">
+                <button
+                  className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                  onClick={() => { setAgenda({}); setIsAgenda(true) }}
+                >
+                  Add Media
+                </button>
+              </div>
+            }
+          >
+            <section className="flex flex-col gap-8 max-[450px]:px-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 max-[750px]:flex-wrap">
                   <p className="font-semibold text-lg">Filters</p>
@@ -126,18 +133,14 @@ const AdminAgendaPage = () => {
                     </select>
                   </label>
                 </div>
-                <button
-                  className={`text-1xl px-3 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-                  onClick={() => { setAgenda({}); setIsAgenda(true) }}
-                >
-                  Add Agenda
-                </button>
               </div>
-              {agendaJSX}
+              {filterData?.length > 0 ? agendaJSX
+                :
+                <Datanotfound name={"Agenda"} />
+              }
             </section>
-          </section>
+          </PeoplesComponentWrapper>
         </section>
-
         <AnimatePresence mode="wait">
           {isAgenda && (
             <m.div

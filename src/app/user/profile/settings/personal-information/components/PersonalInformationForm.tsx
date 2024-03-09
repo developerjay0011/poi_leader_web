@@ -29,20 +29,17 @@ export const PersonalInformationForm: FC = () => {
       ...leaderProfile.personal_info
     }
   });
-
+  const { personal_info } = leaderProfile;
   const maritalStatus = watch('marital_status');
-
   useEffect(() => {
-    const { personal_info } = leaderProfile;
     reset({
       ...personal_info,
       dob: moment(personal_info?.dob).format("YYYY-MM-DD")
     })
-  }, [leaderProfile, reset]);
+  }, [personal_info, reset]);
 
   const formSubmitHandler = async (data: UserDetails) => {
     const resBody: ProfileInfo = { ...data };
-
     tryCatch(
       async () => {
         const param = {

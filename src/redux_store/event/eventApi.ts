@@ -9,7 +9,7 @@ export const getEvents = async (leaderid: string) => {
   return tryCatch(
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getEvents, { leaderid }));
-      return res.data;
+      return Array.isArray(res.data) ? res.data : []
     }
   );
 };
@@ -18,7 +18,7 @@ export const getEvents = async (leaderid: string) => {
 export const deleteEvent = async (id: string, leaderid: string) => {
   return tryCatch(
     async () => {
-      const res = await Axios.post(APIRoutes.deleteEvent, { id,leaderid });
+      const res = await Axios.post(APIRoutes.deleteEvent, { id, leaderid });
       return res.data;
     }
   );
@@ -38,3 +38,13 @@ export const saveEvent =
       }
     );
   }
+
+// Get Event API
+export const GetDashboardEvents = async (leaderid: string) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(insertVariables(APIRoutes.GetDashboardEvents, { leaderid }));
+      return Array.isArray(res.data) ? res.data : []
+    }
+  );
+};

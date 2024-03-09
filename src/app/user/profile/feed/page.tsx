@@ -3,10 +3,7 @@
 import { BriefProfileInfoBox } from "@/components/timlineComponents/BriefProfileInfoBox";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { TrendingUsers } from "@/components/timlineComponents/TrendingUsers";
-import { Post } from "@/components/posts/Post";
 import { TimeLinePage } from "@/components/posts/TimeLinePage";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux_store";
 
 const AdminProfileFeedsPage = () => {
   const handleFollowers = (data: any) => {
@@ -29,7 +26,8 @@ const AdminProfileFeedsPage = () => {
 
           {/* RIGHT FEED */}
           <div className="flex flex-col self-start gap-5 max-[1200px]:hidden">
-            <BriefProfileInfoBox />
+            <BriefProfileInfoBox
+            />
           </div>
         </div>
       </section>

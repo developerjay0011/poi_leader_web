@@ -42,7 +42,7 @@ interface LetterState {
 }
 
 const initialState: LetterState = {
-  letter:[],
+  letter: [],
   letter_templete: [],
 };
 
@@ -50,7 +50,7 @@ export const letterSlice = createSlice({
   name: 'letter',
   initialState,
   reducers: {
-    storeLetterTemplate(state, action: PayloadAction<LetterTemplateDetails[]>) {
+    storeLetterTemplate(state, action) {
       state.letter_templete = action.payload
     },
     storeLetter(state, action: PayloadAction<LetterDetails[]>) {

@@ -16,7 +16,7 @@ const AdminFollowingPage = () => {
         searchStr={searchString}
         rightButton={null}
         setSearchStr={changeSearchString}>
-        <ul className='grid grid-cols-4 gap-5'>
+        <ul className='grid grid-cols-3 max-[1160px]:grid-cols-2 max-[670px]:grid-cols-1 gap-5'>
           {following?.length > 0 && following?.map((item: any, index: number) => {
             return (
               <Following item={item} key={index} name={item.name} displayImg={item.image} />

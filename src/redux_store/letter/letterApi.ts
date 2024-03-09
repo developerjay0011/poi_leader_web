@@ -41,7 +41,7 @@ export const getLetterTemplates = async (leaderId: string) => {
 
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getLetterTemplates, { leaderId }));
-      return res.data;
+      return Array.isArray(res.data) ? res.data : []
     }
   );
 };

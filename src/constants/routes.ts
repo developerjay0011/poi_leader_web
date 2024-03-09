@@ -51,6 +51,7 @@ export const APIRoutes = {
   SaveCategory: `${API_Prefix}/leader/SaveCategory`,
   AddMember: `${API_Prefix}/leader/AddMember`,
   DeleteMembers: `${API_Prefix}/leader/DeleteMembers`,
+  GetBirthdayList: `${API_Prefix}/leader/GetBirthdayList`,
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
@@ -105,6 +106,7 @@ export const APIRoutes = {
   getEvents: `${API_Prefix}/leader/getevents/{{leaderId}}`,
   saveEvent: `${API_Prefix}/leader/saveevent`,
   deleteEvent: `${API_Prefix}/leader/deleteevent`,
+  GetDashboardEvents: `${API_Prefix}/leader/GetDashboardEvents/{{leaderId}}`,
 
   // polls Endpoint
   getPolls: `${API_Prefix}/leader/getaddedpolls/{{leaderId}}`,

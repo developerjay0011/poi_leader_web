@@ -94,12 +94,6 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
       })
   }
 
-  useEffect(() => {
-    if (edit) {
-
-    }
-  }, [])
-
   return (
     <>
       <m.div
@@ -121,7 +115,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
               className='absolute top-3 right-3 z-40'>
               <BiX className='text-3xl' />
             </button>
-            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-5 border-b font-semibold text-3xl capitalize'>
+            <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
               {heading}
             </h3>
 
@@ -132,7 +126,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({
           )} */}
 
             <form
-              className='flex flex-col px-7 py-5 mt-5 gap-5 max-[550px]:px-4'
+              className='flex flex-col px-7 py-5 gap-5 max-[550px]:px-4'
               noValidate
               onSubmit={handleSubmit(formSubmitHandler)}>
               <section className='grid gap-5 grid-cols-2 gap-y-7 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>

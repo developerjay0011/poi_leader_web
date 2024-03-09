@@ -27,7 +27,6 @@ export const DownloadExcelButton: React.FC<Props> = ({
     const excelBlob = new Blob([excelBuffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     })
-
     saveAs(excelBlob, 'data.xlsx')
     onClick && onClick()
   }
@@ -36,7 +35,7 @@ export const DownloadExcelButton: React.FC<Props> = ({
     <button
       type='button'
       onClick={handleDownload} id={id ? id : ''}
-      className="px-5 py-2 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600  gap-2 flex items-center transition-all"
+      className="flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium"
     // className='rounded-full bg-orange-500 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'
     >
       {children}

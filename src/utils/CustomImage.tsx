@@ -19,13 +19,14 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, ...props }) => {
   return (
     <Image
       {...props}
-      src={ imageError ? NoImg : src }
+      src={imageError ? NoImg : src}
       alt={alt}
       onLoadingComplete={(result) => {
         if (result.naturalWidth === 0) setImageError(true)
       }}
       onError={(event) => setImageError(true)}
-      onEmptied={() => setImageError(true) }
+      onEmptied={() => setImageError(true)}
+      loading="eager"
     />
   );
 };
