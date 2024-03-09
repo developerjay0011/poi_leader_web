@@ -94,9 +94,8 @@ export const LoginForm: FC<LoginFormProps> = () => {
 
   const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string) => {
     setCookie(TOKEN_KEY, loginResponse.token);
-    setCookie(USER_VERIFY, 'true');
-    deleteCookie(LOGIN_BODY);
     if (usertype == "leader employee") {
+      setCookie(USER_VERIFY, 'true');
       const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid };
       const serializedData = JSON.stringify(userData);
       setCookie(USER_INFO, serializedData);
@@ -110,10 +109,11 @@ export const LoginForm: FC<LoginFormProps> = () => {
       const userData = { ...data.user_detail, leaderId: data?.leader_detail.id };
       dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       dispatch(authActions.setUserData(userData));
+      const serializedData = JSON.stringify(userData);
+      setCookie(USER_INFO, serializedData);
       if (data?.leader_detail?.is_profile_complete && data?.leader_detail?.request_status === "Approved") {
-        const serializedData = JSON.stringify(userData);
         setCookie(USER_TYPE, 'leader');
-        setCookie(USER_INFO, serializedData);
+        setCookie(USER_VERIFY, 'true');
         router.push(ProtectedRoutes.user);
       }
     }

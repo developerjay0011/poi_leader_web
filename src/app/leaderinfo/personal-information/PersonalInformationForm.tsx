@@ -39,7 +39,7 @@ export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setP
     defaultValues: {
       email: leaderProfile?.email,
       mobile: leaderProfile?.mobile,
-      username: leaderProfile?.email,
+      username: leaderProfile?.username,
       about_me: leaderProfile?.about_me,
     },
   });
@@ -50,7 +50,7 @@ export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setP
     const userdetails = {
       email: leaderProfile?.email,
       mobile: leaderProfile?.mobile,
-      username: leaderProfile?.email,
+      username: leaderProfile?.username,
       about_me: leaderProfile?.about_me
     }
     var personal_infolist = leaderProfile?.request_status === "Rejected" && Array.isArray(reasons) ? getRejectedFieldsObject(reasons) : {}
