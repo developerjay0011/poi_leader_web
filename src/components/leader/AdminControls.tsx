@@ -13,7 +13,7 @@ export const AdminControls: FC = () => {
 
   return (
     <>
-      <aside className='flex flex-col py-5 px-4 w-full bg-white rounded shadow-lg gap-4 border'>
+      <aside className='flex flex-col py-5 px-4 w-full bg-white rounded-[10px] shadow-lg gap-4 border'>
         <ShortcutBtn
           Icon={FaUser}
           title='view profile'

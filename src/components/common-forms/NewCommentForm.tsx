@@ -2,7 +2,7 @@
 import { cusSelector } from "@/redux_store/cusHooks";
 import { FC, FormEvent, useState } from "react";
 import { BiRightArrow } from "react-icons/bi";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import { CommentPost } from "@/redux_store/posts/postAPI";
 
@@ -15,6 +15,7 @@ interface NewCommentFormProps {
 export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allData, is_my }) => {
   const [commentText, setCommentText] = useState("");
   const { userDetails } = cusSelector((st) => st.auth);
+  const { leaderProfile } = cusSelector((st) => st.leader);
   const postuser = is_my ? allData : allData?.userdetails
   const postdetails = is_my ? allData : allData?.post
 
@@ -26,7 +27,7 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allDat
       "post_leaderid": postuser?.leaderid,
       "userid": userDetails?.id,
       "usertype": "leader",
-      "username": userDetails?.username,
+      "username": setusername(leaderProfile),
       "userimg": userDetails?.image ? userDetails?.image : '',
       'comment_text': commentText,
     };

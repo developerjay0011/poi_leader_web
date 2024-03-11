@@ -12,6 +12,7 @@ import { CusPieChart } from '@/components/charts/CusPieChart'
 import { CusBarChart } from '@/components/charts/CusBarChart'
 import CustomImage from '@/utils/CustomImage'
 import { cusSelector } from '@/redux_store/cusHooks'
+import { setusername } from '@/config/get-image-url'
 
 type Graph = 'LINE' | 'AREA' | 'PIE' | 'BAR'
 const GraphType = [
@@ -36,7 +37,7 @@ const AdminAccountStatsPage: FC = () => {
         />
 
         <div className='flex flex-col relative items-center z-[10] w-full gap-3'>
-          <h2 className='text-5xl fo  nt-semibold'>{leaderProfile?.username} Statistics</h2>
+          <h2 className='text-5xl fo  nt-semibold'>{setusername(leaderProfile)} Statistics</h2>
           <p>View all your account activity here</p>
         </div>
       </div>
@@ -145,7 +146,7 @@ const AdminAccountStatsPage: FC = () => {
                   id='graphFilter'
                   value={graphTypeVal}
                   onChange={(e) => {
-                    
+
                     setGraphTypeVal(e.target.value as Graph)
                   }}
                   className='py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md cursor-pointer capitalize'>

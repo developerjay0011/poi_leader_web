@@ -18,22 +18,22 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    clearUserData(state) {
+      state.userDetails = null;
+    },
+    logout(state) {
+      state.userDetails = null;
+      deleteCookie(TOKEN_KEY);
+      deleteCookie(USER_INFO);
+      deleteCookie(USER_VERIFY);
+      deleteCookie(USER_TYPE);
+    },
     setUserData(state, action: PayloadAction<any | null>) {
       state.userDetails = {
         ...state.userDetails,
         ...action.payload
       };
     },
-    clearUserData(state) {
-      state.userDetails = null;
-    },
-    logout(state) {
-      deleteCookie(TOKEN_KEY);
-      state.userDetails = null;
-      deleteCookie(USER_INFO);
-      deleteCookie(USER_VERIFY);
-      deleteCookie(USER_TYPE);
-    }
   },
 });
 

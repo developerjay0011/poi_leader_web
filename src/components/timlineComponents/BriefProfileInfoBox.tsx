@@ -15,7 +15,7 @@ import Link from 'next/link'
 import { FaEdit } from 'react-icons/fa'
 import { cusSelector } from '@/redux_store/cusHooks'
 import CustomImage from '@/utils/CustomImage'
-import { getImageUrl } from '@/config/get-image-url'
+import { getImageUrl, setusername } from '@/config/get-image-url'
 import { useRouter } from 'next/router'
 
 interface BriefProfileInfoBoxProps {
@@ -47,7 +47,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = ({ }) => {
             <Link
               href={`/user/profile`}
               className='text-lg font-[600] max-[1300px]:text-[1.05rem] hover:text-orange-500 transition-all capitalize'>
-              {leaderProfile?.username}
+              {setusername(leaderProfile)}
             </Link>
 
             {/* Messages */}

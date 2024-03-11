@@ -14,6 +14,7 @@ interface Leader {
   image: string;
   designation: string;
   username: string;
+  name: string
   id: string;
 }
 
@@ -42,7 +43,7 @@ export const TrendingUsers: FC<TrendingUsersProps> = ({ handleFollowers }) => {
                   <TrendingUser
                     userImg={getImageUrl(item?.image) || ""}
                     designation={item?.designation || ""}
-                    username={item?.username || ""}
+                    username={item?.name || ""}
                     id={item?.id || ""}
                     key={index}
                     following={following}

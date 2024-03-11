@@ -1,11 +1,6 @@
-import CustomImage from '@/utils/CustomImage'
-import { AnimatePresence } from 'framer-motion'
 import moment from 'moment'
-import { FC, useState } from 'react'
-import { motion as m } from "framer-motion";
+import { FC } from 'react'
 import { MdDelete, MdEdit } from 'react-icons/md';
-import { DeleteGroups } from '@/redux_store/group/groupAPI';
-import { cusSelector } from '@/redux_store/cusHooks';
 
 interface NetworkProps {
   backgroundImg: string
@@ -23,7 +18,7 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, mem
 
   return (
 
-    <li onClick={(e) => { e.preventDefault(); onMemberClick() }} className='border rounded-md overflow-hidden w-full bg-white shadow-sm'>
+    <li onClick={(e) => { e.preventDefault(); onMemberClick() }} className='bg-gray-50 cursor-pointer border rounded-md overflow-hidden w-full shadow-sm py-3 px-3'>
       {/* <figure className='relative'>
      
         <CustomImage
@@ -50,7 +45,7 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, mem
       </figure> */}
 
       {/* Info box */}
-      <div className='py-5 px-5 flex flex-col '>
+      <div className='flex flex-col'>
         <p className='capitalize flex items-center gap-3 text-[14px]'>
           <span className='font-[600]'>Name:  </span>
           <span className='text-[13px]'>{name}</span>
@@ -81,17 +76,8 @@ export const Network: FC<NetworkProps> = ({ backgroundImg, displayImg, name, mem
         </p>
 
         <div className='flex items-center gap-3 self-end'>
-          <MdEdit
-            className='text-[20px]'
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEdit()
-            }}
-          />
-          <MdDelete className='text-[20px]' onClick={(e) => {
-            e.stopPropagation();
-            DeleteGroups()
-          }} />
+          <MdEdit className='text-[18px] cursor-pointer' onClick={(e) => { e.stopPropagation(); setIsEdit() }} />
+          <MdDelete className='text-[18px] cursor-pointer' onClick={(e) => { e.stopPropagation(); DeleteGroups() }} />
         </div>
       </div>
 

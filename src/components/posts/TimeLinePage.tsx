@@ -8,6 +8,7 @@ import { GetLeaderAddedPosts, GetPostsForLeader } from "@/redux_store/posts/post
 import { postActions } from "@/redux_store/posts/postSlice";
 import { AgendaPost } from "./postagenda/AgendaPost";
 import { PollPost } from "./postpolls/PollPost";
+import { setusername } from "@/config/get-image-url";
 
 interface TimeLinePageProps {
   is_my_postandstories: boolean
@@ -27,7 +28,7 @@ export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = fal
     }
   };
   var setpost = is_my_postandstories ? mypostData : postData
-  var mypostdata = is_my_postandstories ? { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId } : {}
+  var mypostdata = is_my_postandstories ? { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId } : {}
 
   useEffect(() => {
     (async () => { await Getpost(); })();

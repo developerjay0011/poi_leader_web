@@ -80,7 +80,7 @@ const AdminProfileNetworksPage = () => {
           }
         >
           {searchFilterFunction(searchString)?.length > 0 ?
-            <ul className="grid grid-cols-5 min-h-[200px] gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
+            <ul className="grid grid-cols-4 gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
               {searchFilterFunction(searchString)?.length > 0 &&
                 searchFilterFunction(searchString)?.map((item: any, index: number) => {
                   return (

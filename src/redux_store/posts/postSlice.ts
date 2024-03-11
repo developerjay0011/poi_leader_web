@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface PostState {
   posts: PostDetails[]
-  creatingPost: boolean
   likingPost: boolean
   leaderid?: string
   name?: string
@@ -21,7 +20,6 @@ interface PostState {
 const init: PostState = {
   posts: [],
   allPosts: [],
-  creatingPost: false,
   likingPost: false,
   stories: [],
   mystories: [],
@@ -42,9 +40,6 @@ export const postSlice = createSlice({
     },
     addPost(state, action: PayloadAction<PostDetails>) {
       state.posts = [...state.posts, action.payload]
-    },
-    setCreatingPost(state, action: PayloadAction<boolean>) {
-      state.creatingPost = action.payload
     },
     storeStories(state, action: PayloadAction<PostDetails[]>) {
       state.stories = action.payload

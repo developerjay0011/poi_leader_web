@@ -1,5 +1,5 @@
 'use client'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import {
@@ -23,21 +23,11 @@ interface ContactFormProps {
 
 
 export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
+  const dispatch = cusDispatch();
   const { leaderProfile, reasons } = cusSelector((state) => state.leader);
   const { leaderOptions } = cusSelector((state) => state.common);
-  const dispatch = cusDispatch();
-  const {
-    register,
-    setValue,
-    watch,
-    reset,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<UserDetails>({
-    defaultValues: { ...leaderProfile.contact_info, },
-    mode: 'onTouched',
-  });
-
+  const { register, setValue, watch, reset, formState: { errors }, handleSubmit, } = useForm<UserDetails>({ defaultValues: { ...leaderProfile.contact_info, }, mode: 'onTouched', });
+  const [registering, setRegistering] = useState(false);
   const bothAddressIsSame = watch('bothAddressIsSame');
   const pAddress = watch("permanent_address");
   const pState = watch("permanent_state_id");
@@ -45,13 +35,12 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
   const pPincode = watch("permanent_pincode");
   const cState = watch("present_state_id");
   const formSubmitHandler = async (data: UserDetails) => {
-    const resBody: ContactInfo = {
-      ...data,
-      is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false,
-    };
+    const resBody: ContactInfo = { ...data, is_same_as_permanent: data?.bothAddressIsSame === 'yes' ? true : false, };
     tryCatch(
       async () => {
+        setRegistering(true)
         const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, });
+        setRegistering(false)
         if (response?.success) {
           moveLogin()
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
@@ -313,9 +302,10 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
             Previous
           </button>
           <button
+            disabled={registering}
             className='rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize'
             type='submit'>
-            Save
+            {registering ? "Saving..." : 'Save'}
           </button>
         </div>
       </form>

@@ -75,7 +75,7 @@ const AdminAgendaPage = () => {
                   className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
                   onClick={() => { setAgenda({}); setIsAgenda(true) }}
                 >
-                  Add Media
+                  Add Agenda
                 </button>
               </div>
             }

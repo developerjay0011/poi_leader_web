@@ -76,10 +76,13 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
     })
   }, [leaderProfile?.id, reset]);
   useEffect(() => {
+    const { political_info } = leaderProfile;
     if (designation_id) {
       if (((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID)) && hasMinistry == "yes") {
       } else {
-        setValue("hasMinistry", '')
+        if (political_info?.is_hold_ministry == false) {
+          setValue("hasMinistry", 'no')
+        }
       }
     }
     if (hasMinistry == 'yes' && fields?.length == 0 && ((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID))) {

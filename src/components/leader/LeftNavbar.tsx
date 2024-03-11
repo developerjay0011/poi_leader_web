@@ -4,12 +4,7 @@ import { LEFT_NAV_ROUTES } from "@/utils/routes";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { tabfilter } from "@/redux_store/accesstab/tabApi";
 
-const LeftNavLink: FC<{
-  children: ReactNode;
-  link: string;
-  info: string;
-  target?: boolean;
-}> = ({ children, link, info, target }) => {
+const LeftNavLink: FC<{ children: ReactNode; link: string; info: string; target?: boolean; }> = ({ children, link, info, target }) => {
   return (
     <CusLink
       activeLinkClasses="bg-sky-950 text-sky-50"

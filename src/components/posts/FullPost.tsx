@@ -57,31 +57,6 @@ export const FullPost: FC<FullPostProps> = ({
     });
   };
 
-  const createNewComment = (comment: any) => {
-    /*  dispatch(
-      addNewNestedComment({
-        commentReplyText: comment,
-        commentTypeStatus: '_media',
-        id: curPost.id,
-        postId,
-        userId,
-        userImg: userDetails?.image as string,
-        username: '',
-      })
-    ) */
-  };
-
-  const likeOnCommentPerPostHandler = (id: string) => {
-    // dispatch(
-    //   changeNestedLike({
-    //     id,
-    //     likeTypeStatus: "_media",
-    //     postId,
-    //     userId,
-    //     eventID: "0010",
-    //   })
-    // );
-  };
 
   return (
     <>

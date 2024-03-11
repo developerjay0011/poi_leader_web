@@ -38,7 +38,7 @@ export const Follower: FC<FollowerProps> = ({ displayImg, name, count = 0, item 
             {/* <button
             type='button'
             className='border border-orange-500 text-orange-500 font-medium text-sm bg-orange-50 px-2 py-[2px] rounded hover:bg-orange-500 hover:text-orange-50 transition-all'>
-            un Follow
+            Unfollow
           </button> */}
           </p>
         }
