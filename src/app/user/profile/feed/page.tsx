@@ -18,16 +18,9 @@ const AdminProfileFeedsPage = () => {
             <TrendingUsers handleFollowers={handleFollowers} />
             <ShortcutsBox />
           </div>
-
-          <TimeLinePage
-            is_my_postandstories={true}
-
-          />
-
-          {/* RIGHT FEED */}
+          <TimeLinePage is_my_postandstories={true} />
           <div className="flex flex-col self-start gap-5 max-[1200px]:hidden">
-            <BriefProfileInfoBox
-            />
+            <BriefProfileInfoBox />
           </div>
         </div>
       </section>

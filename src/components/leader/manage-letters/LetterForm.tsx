@@ -9,10 +9,10 @@ import {
   UseFieldArrayAppend,
   FieldArrayWithId,
 } from 'react-hook-form'
-import { LetterFormFields } from '@/app/user/letter/add-letter/AddLetterPage'
 import { LetterInputField } from './LetterInputField'
 import { LetterSelectField } from './LetterSelectField'
 import { LetterTextarea } from './LetterTextarea'
+import { LetterFormFields } from '../pages/CreateLetterpage'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>

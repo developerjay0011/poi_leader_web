@@ -5,8 +5,8 @@ import { FieldErrors, RegisterOptions, UseFormRegister } from 'react-hook-form'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 
 interface InputProps {
-  errors: FieldErrors<UserDetails>
-  id: keyof UserDetails
+  errors: FieldErrors<UserDetails> | any
+  id: any
   register: any
   validations?: RegisterOptions<UserDetails, keyof UserDetails>
   title: string | JSX.Element

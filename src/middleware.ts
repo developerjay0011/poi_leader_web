@@ -11,6 +11,7 @@ export function middleware(request: NextRequest) {
 
   let pathname = request.nextUrl.pathname;
   const routeList = Object.values(ProtectedRoutes);
+  const employeerouteList = Object.values(EmployeeProtectedRoutes);
   const authRouteList = Object.values(AuthRoutes);
 
   if (isuserverify != "true" && !token && routeList.includes(pathname)) {
@@ -18,7 +19,15 @@ export function middleware(request: NextRequest) {
     return response;
   }
   if (isuserverify == "true" && token && authRouteList.includes(pathname)) {
-    const response = NextResponse.redirect(new URL(user_type != "leader" ? EmployeeProtectedRoutes.employeehome : ProtectedRoutes.user, request.url));
+    const response = NextResponse.redirect(new URL(user_type == "leader" ? ProtectedRoutes.user : EmployeeProtectedRoutes.employee, request.url));
     return response;
   }
+  // if (isuserverify == "true" && token && (authRouteList.includes(pathname) || employeerouteList.includes(pathname)) && user_type == "leader") {
+  //   const response = NextResponse.redirect(new URL(ProtectedRoutes.user, request.url));
+  //   return response;
+  // }
+  // if (isuserverify == "true" && token && (authRouteList.includes(pathname) || routeList.includes(pathname)) && user_type == "employee") {
+  //   const response = NextResponse.redirect(new URL(EmployeeProtectedRoutes.employee, request.url));
+  //   return response;
+  // }
 }

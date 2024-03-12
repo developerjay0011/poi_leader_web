@@ -133,7 +133,10 @@ const AdminDevelopmentPage = () => {
                   </select>
                 </label>
               </div>
-              {filterData?.length > 0 ? developmentJSX
+              {filterData?.length > 0 ?
+                <ul className='grid min-[1160px]:grid-cols-2 max-[670px]:grid-cols-1 gap-5'>
+                  {developmentJSX}
+                </ul>
                 :
                 <Datanotfound name={"Development"} />
 

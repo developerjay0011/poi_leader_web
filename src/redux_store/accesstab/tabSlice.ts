@@ -1,5 +1,8 @@
+import { USER_TYPE } from '@/constants/common';
 import { createSlice } from '@reduxjs/toolkit'
+import { getCookie } from 'cookies-next';
 
+let usertype: any = getCookie(USER_TYPE);
 
 interface AccessState {
   accesstabs: []

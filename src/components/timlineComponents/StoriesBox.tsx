@@ -9,7 +9,7 @@ import { Story } from "./Story";
 import { deleteStory, getLeaderAddedStories, getStoriesForLeader, } from "@/redux_store/posts/postAPI";
 import { NewPostBox } from "../posts/NewPostBox";
 import { ProtectedRoutes } from "@/constants/routes";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 import { postActions } from "@/redux_store/posts/postSlice";
 import { HiCubeTransparent } from "react-icons/hi";
 
@@ -26,7 +26,7 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
   const dispatch = cusDispatch();
   const fetchMyStories = async () => {
     if (leaderid && is_my_postandstories) {
-      var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+      var mypostdata = { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId }
       const LeaderAddedStories = await getLeaderAddedStories(leaderid, mypostdata) as any
       dispatch(postActions.storeMyStories(LeaderAddedStories))
     }

@@ -11,13 +11,15 @@ import { LPInputField } from "@/utils/LPInputField";
 import { MdLock, MdMail, MdPerson, MdPhone } from "react-icons/md";
 import { USER_TYPE } from "@/utils/utility";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { AuthRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { cusDispatch } from "@/redux_store/cusHooks";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
-import { CheckLeaderUserRegExists, registerUser, sendOtp, verifyOtp } from "@/redux_store/auth/authAPI";
+import { LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_VERIFY } from "@/constants/common";
+import { CheckLeaderUserRegExists, registerUser, sendOtp, userLogin, verifyOtp } from "@/redux_store/auth/authAPI";
+import { setCookie } from "cookies-next";
+import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { authActions } from "@/redux_store/auth/authSlice";
 
 
 let interval: NodeJS.Timer;
@@ -105,7 +107,20 @@ export const RegisterForm: FC = () => {
         };
         const response = await registerUser(resBody as any);
         if (response?.success) {
+          const resBody = {
+            email: registerdata2?.email,
+            password: registerdata2?.password,
+            fcm_token: {
+              deviceid: "",
+              token: "",
+            },
+          };
+          const userlogin = await userLogin(resBody);
+          const loginResponse = userlogin as any;
+          const { data } = loginResponse;
+          SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype, resBody)
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          return
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
@@ -119,7 +134,17 @@ export const RegisterForm: FC = () => {
       setVerifying(false);
     }
   };
-
+  const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string, resBody: any) => {
+    const userData = { ...data.user_detail, leaderId: data?.leader_detail.id };
+    setCookie(USER_VERIFY, 'false');
+    setCookie(LOGIN_BODY, resBody);
+    router.push(AuthRoutes.leaderinfo);
+    dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+    setCookie(TOKEN_KEY, loginResponse.token);
+    dispatch(authActions.setUserData(userData));
+    const serializedData = JSON.stringify(userData);
+    setCookie(USER_INFO, serializedData);
+  }
   const formSubmitHandler = async (data: RegisterFormFields | LoginFormFields) => {
     setRegistering(true);
     const resBody = {

@@ -18,7 +18,7 @@ import { tryCatch } from "@/config/try-catch";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import { postActions } from "@/redux_store/posts/postSlice";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 
 interface NewPostBoxProps {
   type: UserPostType;
@@ -34,9 +34,9 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const [postErr, setPostErr] = useState<ErrObj>({ errTxt: "", isErr: false });
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const [accessType, setAccessType] = useState("open");
-  const { creatingPost } = cusSelector((st) => st.posts);
   const { userDetails } = cusSelector((state) => state.auth);
   const { leaderProfile, } = cusSelector((state) => state.leader);
+  const [loader, setLoading] = useState(false);
 
 
 
@@ -57,6 +57,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
     }
     tryCatch(async () => {
       let response: any = "";
+      setLoading(true)
       if (type === "post") {
         response = await addPost(formData);
         if (response?.success) {
@@ -68,13 +69,14 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
       } else if (type === "story") {
         response = await addStories(formData);
         if (response?.success) {
-          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+          var mypostdata = { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId }
           const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
           dispatch(postActions.storeMyStories(LeaderAddedStories))
           const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
           dispatch(postActions.storeStories(storiesForLeader as any[]));
         }
       }
+      setLoading(false)
       handleAdd()
       if (response?.success) {
         setPreviewImages([]);
@@ -253,12 +255,8 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={creatingPost}
-            className="bg-sky-400 text-sky-50 py-1 rounded-md capitalize font-[500]"
-          >
-            {creatingPost ? "creating.." : type}
+          <button type="submit" disabled={loader} className="bg-sky-400 text-sky-50 py-1 rounded-md capitalize font-[500]">
+            {loader ? "creating.." : type}
           </button>
         </form>
       </CommonBox>

@@ -10,7 +10,7 @@ import { cusSelector } from "@/redux_store/cusHooks";
 import { NewCommentForm } from "../common-forms/NewCommentForm";
 import { SingleComment } from "./SingleComment";
 import toast from "react-hot-toast";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import PostGrid from "../PostGrid";
 import { Shortlistbytime, islike } from "./utils";
@@ -34,6 +34,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
   const [showComments, setShowComments] = useState(false);
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const { userDetails } = cusSelector((st) => st.auth);
+  const { leaderProfile } = cusSelector((st) => st.leader);
   var is_like = islike(post?.likes, userDetails?.id)
   const [showLikeAnimation, setShowLikeAnimation] = useState((post?.likes as Like[])?.some((el) => el.userId === userDetails?.id));
   const handleLike = async () => {
@@ -42,7 +43,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
       post_leaderid: post?.leaderid,
       userid: userDetails?.id,
       usertype: "leader",
-      username: userDetails?.username,
+      username: setusername(leaderProfile),
       userimg: userDetails?.image,
     };
     const UnlikeBody = {

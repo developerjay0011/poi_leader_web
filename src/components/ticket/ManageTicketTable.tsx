@@ -61,7 +61,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
           </tr>
         </thead>
         <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el, i) => (
+          searchFilterData?.map((el: any, i: any) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
 
               <td className='capitalize text-left p-2 border-r text-center align-text-top'>

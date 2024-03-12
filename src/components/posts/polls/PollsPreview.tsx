@@ -5,6 +5,7 @@ import { motion as m } from 'framer-motion'
 import { NewPollsFormFields } from '@/components/leader/forms/ManagePollsForm'
 import { dateConverter } from '@/utils/utility'
 import CustomImage from '@/utils/CustomImage'
+import { setusername } from '@/config/get-image-url'
 
 interface PollsPreviewProps {
   pollDetails: NewPollsFormFields
@@ -15,8 +16,8 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
   onClose,
   pollDetails,
 }) => {
-  const { userDetails } = cusSelector((st) => st.UI)
-
+  const { userDetails } = cusSelector((st) => st.auth)
+  const { leaderProfile } = cusSelector((st) => st.leader)
   return (
     <>
       <m.div
@@ -25,11 +26,10 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
         exit={{ opacity: 0 }}
         className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
         <div
-          className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center ${
-            pollDetails.imgOptions.length > 4 || pollDetails.poll_options.length > 4
+          className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center ${pollDetails.imgOptions.length > 4 || pollDetails.poll_options.length > 4
               ? 'max-[650px]:py-5'
               : ''
-          }`}>
+            }`}>
           <section className='border shadow-sm rounded-md px-5 py-2 bg-white w-1/2 max-[650px]:w-[80%] self-center'>
             <div className='flex items-center gap-3 py-4 text-sky-950 border-b'>
               <CustomImage
@@ -43,7 +43,7 @@ export const PollsPreview: FC<PollsPreviewProps> = ({
               {/* Info and date of publish */}
               <div>
                 <h4 className='font-[600] text-lg text-orange-500'>
-                  {userDetails?.username}
+                  {setusername(leaderProfile)}
                 </h4>
                 <p className='flex items-center capitalize gap-2 text-sm font-[500]'>
                   <span>{dateConverter(pollDetails.publishDate)}</span>

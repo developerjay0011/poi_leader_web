@@ -68,17 +68,17 @@ export const LoginForm: FC<LoginFormProps> = () => {
       const { success, message, data } = loginResponse;
       if (success) {
         if (data?.user_detail?.usertype == "leader employee") {
-          SetCookieAndRedux(data, loginResponse, "leader employee")
+          await SetCookieAndRedux(data, loginResponse, "leader employee")
         } else {
-          SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
+          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
         }
       } else {
         setCookie(USER_VERIFY, 'false');
         if ((loginResponse.token && (data?.leader_detail?.is_profile_complete == false || data?.leader_detail?.request_status == "Rejected")) && (data?.user_detail?.usertype == "leader" || data?.user_detail?.usertype == "emerging leader")) {
-          SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
+          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
           if (data?.leader_detail?.request_status == "Rejected") { dispatch(leaderActions.setReason(data.reason)) }
-          setCookie(LOGIN_BODY, resBody);
-          router.push(AuthRoutes.leaderinfo);
+          await setCookie(LOGIN_BODY, resBody);
+          await router.push(AuthRoutes.leaderinfo);
           return
         } else {
           setErr({ errTxt: message, isErr: true });
@@ -102,7 +102,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       dispatch(authActions.setUserData(userData));
       setCookie(USER_TYPE, 'employee');
-      router.push(EmployeeProtectedRoutes.employeehome);
+      router.push(EmployeeProtectedRoutes.employee);
       return
     }
     if (usertype != "leader employee") {

@@ -1,8 +1,8 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import POILogo from "@/assets/poi_logo_1.png";
 import { StaticImageData } from "next/image";
-import { FaSearch, FaBell, FaHamburger } from "react-icons/fa";
+import { FaSearch, FaBell, FaHamburger, FaUserTimes } from "react-icons/fa";
 import { useRouter, usePathname } from "next/navigation";
 import { AdminControls } from "./AdminControls";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
@@ -15,7 +15,7 @@ import { MobileLeftNavbar } from "./MobileLeftNavbar";
 import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 import { GetBirthdayList, followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
@@ -24,7 +24,7 @@ import { getCookies } from "cookies-next";
 import { tryCatch } from "@/config/try-catch";
 import { getLetterTemplates, getLetters } from "@/redux_store/letter/letterApi";
 import { letterActions } from "@/redux_store/letter/letterSlice";
-import { deActiveAccount, getLeadersOptions } from "@/redux_store/common/commonAPI";
+import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
@@ -65,7 +65,7 @@ export const TopNavbar: FC = () => {
     if (text) {
       const newData = trendingLeader?.filter(
         function (item) {
-          const itemData = item?.["username"] ? item?.["username"].toUpperCase() : ''.toUpperCase();
+          const itemData = item?.["name"] ? item?.["name"].toUpperCase() : ''.toUpperCase();
           const textData = text.toUpperCase();
           return itemData.indexOf(textData) > -1;
         }
@@ -87,8 +87,7 @@ export const TopNavbar: FC = () => {
     });
   }, []);
 
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (allcookies?.USER_TYPE == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
@@ -105,6 +104,10 @@ export const TopNavbar: FC = () => {
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
             dispatch(leaderActions.setLeaderProfile(leaderRes));
+
+            // TrendingLeader
+            const trendingLeader = await getTrendingLeaderList();
+            dispatch(leaderActions.setTrendingLeader(trendingLeader))
 
             // Follower
             const followingRes = await getFollowers(userDetails?.leaderId as string);
@@ -131,9 +134,6 @@ export const TopNavbar: FC = () => {
             const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
             dispatch(postActions.listPosts(leaderpost as any));
 
-            // TrendingLeader
-            const trendingLeader = await getTrendingLeaderList();
-            dispatch(leaderActions.setTrendingLeader(trendingLeader))
 
             // Notification
             const response = await getNotification(userDetails?.leaderId as string);
@@ -166,9 +166,6 @@ export const TopNavbar: FC = () => {
             // Agenda
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
-
-
-
           }
         } else {
           router.push(AuthRoutes.login)
@@ -198,7 +195,7 @@ export const TopNavbar: FC = () => {
     if (allcookies?.USER_TYPE == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
-          var mypostdata = { image: leaderProfile?.image, name: leaderProfile?.username, leaderid: userDetails?.leaderId }
+          var mypostdata = { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId }
           const LeaderAddedStories = await getLeaderAddedStories(userDetails?.leaderId, mypostdata) as any
           dispatch(postActions.storeMyStories(LeaderAddedStories))
         }
@@ -229,7 +226,6 @@ export const TopNavbar: FC = () => {
                 placeholder="search politicians"
               />
               <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
-
               {/* Search box */}
               {searchUserStr.length > 0 && (
                 <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
@@ -238,14 +234,16 @@ export const TopNavbar: FC = () => {
                       key={item?.id}
                       designation={item?.username?.political_party}
                       userPic={getImageUrl(item?.image)}
-                      name={item?.username}
+                      name={item?.name}
                       id={item?.id}
                       isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
                     />
                   )}
-                  <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
-                    no politician found❗
-                  </p>
+                  {searchFilterFunction(searchUserStr)?.length == 0 &&
+                    <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
+                      no politician found❗
+                    </p>
+                  }
                 </ul>
               )}
             </label>
@@ -268,7 +266,7 @@ export const TopNavbar: FC = () => {
               >
                 <FaBell className="text-sky-50 text-2xl" />
 
-                <span className="absolute -top-3 -right-2 bg-orange-500 text-orange-50 w-4 text-[12px] aspect-square flex items-center justify-center rounded-full">
+                <span className="absolute -top-3 -right-2 p-[2px] bg-orange-500 text-orange-50 text-[11px] aspect-square flex items-center justify-center rounded-full">
                   {notification?.length}
                 </span>
 
@@ -279,7 +277,7 @@ export const TopNavbar: FC = () => {
                 )}
               </button>
 
-              <Link href={'/'} target="_parent">
+              <Link href={'/user'} >
                 <MdSpaceDashboard className="text-sky-50 text-2xl" />
               </Link>
             </section>
@@ -341,15 +339,22 @@ export const TopNavbar: FC = () => {
                 onClick={() => router.push("/user")}
               />
 
-              <button id="userMobileDisplayPic">
-                <CustomImage
-                  src={getImageUrl(leaderProfile?.image)}
-                  alt="user pic"
-                  className="w-14 aspect-square object-cover object-center rounded-full"
-                  width={100}
-                  height={100}
-                />
-              </button>
+              <section className="flex items-center  relative">
+                <button onClick={() => { setShowAdminMenu((lst) => !lst) }} id="userDisplayPic">
+                  <CustomImage
+                    src={getImageUrl(leaderProfile?.image)}
+                    alt="user pic"
+                    className="w-14 aspect-square object-cover object-center rounded-full"
+                    width={100}
+                    height={100}
+                  />
+                </button>
+                {showAdminMenu && (
+                  <div className="absolute top-[120%] right-0 w-max z-50">
+                    <AdminControls />
+                  </div>
+                )}
+              </section>
             </div>
             <label htmlFor="searchBox" className="relative w-full">
               <input
@@ -359,8 +364,6 @@ export const TopNavbar: FC = () => {
                 placeholder="search politicians"
               />
               <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
-
-
               {searchUserStr.length > 0 && (
                 <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
                   {searchFilterFunction(searchUserStr)?.map((item: any) =>
@@ -368,17 +371,20 @@ export const TopNavbar: FC = () => {
                       key={item?.id}
                       designation={item?.username?.political_party}
                       userPic={getImageUrl(item?.image)}
-                      name={item?.username}
+                      name={item?.name}
                       id={item?.id}
                       isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
                     />
                   )}
-                  <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
-                    no politician found❗
-                  </p>
+                  {searchFilterFunction(searchUserStr)?.length == 0 &&
+                    <p style={{ display: searchFilterFunction(searchUserStr)?.length == 0 ? "flex" : "none" }} className="text-xl capitalize text-center text-sky-950 font-semibold py-3">
+                      no politician found❗
+                    </p>
+                  }
                 </ul>
               )}
             </label>
+
           </>
           :
           <>
@@ -453,11 +459,11 @@ const BriefUserInfo: FC<{
             {name}
             <span className="font-medium text-[14px]">{designation}</span>
           </p>
-          {!isFollowing &&
-            <button onClick={() => { handleClick(id, isFollowing) }} type="button" className="ml-auto">
-              <RiUserAddFill className="text-sky-950 text-2xl hover:text-orange-500" />
-            </button>
-          }
+          <button onClick={() => { handleClick(id, isFollowing) }} type="button" className="ml-auto">
+            {!isFollowing ? <RiUserAddFill className="text-sky-950 text-2xl hover:text-orange-500" /> :
+              <FaUserTimes className="text-sky-950 text-2xl hover:text-orange-500" />
+            }
+          </button>
         </li>
       </Link>
     </>

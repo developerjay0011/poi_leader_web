@@ -254,21 +254,10 @@ const reducerFn: (
 };
 
 export const AddLeaderPage: FC = () => {
-  const userDetails: any = cusSelector(
-    (state: RootState) => state.auth.userDetails
-  );
+  const userDetails: any = cusSelector((state: RootState) => state.auth.userDetails);
   const [state, dispatchFn] = useReducer(reducerFn, init);
-  const dispatch = cusDispatch();
   const { leaderOptions } = cusSelector((state) => state.common)
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    watch,
-    setValue,
-    control,
-  } = useForm<LeaderFormFields>({
+  const { register, formState: { errors }, handleSubmit, watch, setValue, control, } = useForm<LeaderFormFields>({
     defaultValues: {
       username: userDetails?.data?.user_detail?.username || "",
       email: userDetails?.data?.user_detail?.email || "",
@@ -278,7 +267,6 @@ export const AddLeaderPage: FC = () => {
     },
     mode: "onTouched",
   });
-
   const formSubmitHandler = async (data: LeaderFormFields) => {
     const bodyData = {
       id: userDetails?.data?.user_detail?.id,

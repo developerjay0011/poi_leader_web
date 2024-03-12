@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { RiReplyFill } from "react-icons/ri";
 import { motion as m } from "framer-motion";
 import { BiPlusCircle } from "react-icons/bi";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import moment from "moment";
 import { BsFillHeartFill, BsHeart } from "react-icons/bs";
@@ -27,6 +27,7 @@ interface SingleCommentProps extends Comment {
 
 export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, postPerMedia, newNestedCommentHandler, likeChangeHandler, comment_text, comments, post }) => {
   const { userDetails } = cusSelector((st) => st.auth);
+  const { leaderProfile } = cusSelector((st) => st.leader);
   const [firstTime, setFirstTime] = useState(true);
   const [showNestedComments, setShowNestedComments] = useState(false);
   const [showCommentOptions, setShowCommentOptions] = useState(false);
@@ -42,7 +43,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
       post_leaderid: post?.leaderid,
       userid: userDetails?.id,
       usertype: "leader",
-      username: userDetails?.username,
+      username: setusername(leaderProfile),
       userimg: userDetails?.image,
     };
     const UnlikeBody = {
@@ -79,7 +80,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
       post_leaderid: post?.leaderid,
       userid: userDetails?.id,
       usertype: "leader",
-      username: userDetails?.username,
+      username: setusername(leaderProfile),
       userimg: userDetails?.image,
       comment_text: commentReply,
     };
@@ -231,17 +232,6 @@ interface NestedCommentCmpProps extends NestedComment {
 }
 
 const NestedCommentCmp: FC<NestedCommentCmpProps> = ({ userimg, username, comment_text, created_date }) => {
-  // const [firstTime, setFirstTime] = useState(true);
-  // const { userDetails } = cusSelector((st) => st.auth);
-  // // const { userDetails } = cusSelector((st) => st.UI);
-  // const [likeCount, setLikeCount] = useState(likes.length);
-  // const [showLikeAnimation, setShowLikeAnimation] = useState(
-  //   likes.some((el) => el.userId === userDetails?.id)
-  // );
-
-
-
-
   return (
     <m.li
       initial={{ opacity: 0 }}

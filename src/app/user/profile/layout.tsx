@@ -9,7 +9,7 @@ import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { getProfile, uploadProfileImage } from '@/redux_store/leader/leaderAPI'
 import { BsPencilSquare } from 'react-icons/bs'
 import { ProtectedRoutes } from '@/constants/routes'
-import { getImageUrl } from '@/config/get-image-url'
+import { getImageUrl, setusername } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
@@ -91,14 +91,14 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
               </label>
             </figure>
 
-            <div className='bg-white py-5 px-14 flex items-center max-[1428px]:px-5 max-[1302px]:flex-wrap max-[950px]:gap-5 max-[450px]:flex-nowrap max-[450px]:flex-col'>
+            <div className='bg-white py-5 px-7 flex items-center max-[1428px]:px-5 max-[1302px]:flex-wrap max-[950px]:gap-5 max-[450px]:flex-nowrap max-[450px]:flex-col'>
               <Link href={ProtectedRoutes.userProfile}>
-                <h5 className='flex flex-col items-center text-xl font-[600] capitalize'>
-                  <span className='flex items-center gap-2'>
-                    {leaderProfile?.username}
+                <h5 className='flex  flex-col text-xl font-[600] capitalize'>
+                  <span className='flex gap-2'>
+                    {setusername(leaderProfile)}
                     <MdVerified className='text-2xl text-orange-500' />
                   </span>
-                  <span className='text-[14px] font-normal max[1100px]:text-center'>
+                  <span className='text-[14px] font-normal'>
                     {leaderProfile.political_info?.designation}
                   </span>
                 </h5>

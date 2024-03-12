@@ -31,7 +31,7 @@ export const submitLeaderForm = async (body: any) => {
           "last_name": personal_info?.last_name ? personal_info?.last_name : "",
           "gender": personal_info?.gender ? personal_info?.gender : "",
           "blood_group": personal_info?.blood_group ? personal_info?.blood_group : "",
-          "father_name": personal_info?.blood_group ? personal_info?.blood_group : "",
+          "father_name": personal_info?.father_name ? personal_info?.father_name : "",
           "mother_name": personal_info?.mother_name ? personal_info?.mother_name : "",
           "dob": personal_info?.dob ? personal_info?.dob : "",
           "place_of_birth": personal_info?.place_of_birth ? personal_info?.place_of_birth : "",
