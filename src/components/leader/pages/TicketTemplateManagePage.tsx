@@ -65,7 +65,6 @@ export const TicketTemplateManagePage: FC = () => {
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
                 <ProfileShortcutsBox />
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    {/* POLLS TABLE */}
                     <TableWrapper
                         heading='Manage Ticket'
                         addBtnTitle=''

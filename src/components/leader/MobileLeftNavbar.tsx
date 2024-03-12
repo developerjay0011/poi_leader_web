@@ -15,7 +15,6 @@ import { BiSolidUserDetail, BiTask } from 'react-icons/bi'
 import { cusSelector } from '@/redux_store/cusHooks'
 import Shimmer from "react-shimmer-effect";
 import { tabfilter } from '@/redux_store/accesstab/tabApi'
-import { GrUserWorker } from 'react-icons/gr'
 interface MobileLeftNavbarProps {
   onClose: () => void
   showMobileNav: boolean
@@ -45,6 +44,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
   const Top_NAV_ROUTES = [
     {
       link: '/user/profile/agenda',
+      link2: '/employee-access/profile/agenda',
       name: 'agenda',
       Icon: BiTask,
       tabname: "Manage Agenda",
@@ -52,6 +52,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
     },
     {
       link: '/user/profile/developments',
+      link2: '/employee-access/profile/developments',
       name: 'developments',
       Icon: BsHouseGearFill,
       tabname: "Manage Developments",
@@ -77,18 +78,21 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
     },
     {
       link: '/user/profile/networks',
+      link2: '/employee-access/profile/networks',
       name: 'Manage Group',
       Icon: LuNetwork,
       tabname: "Manage Group"
     },
     {
       link: '/user/profile/directory',
+      link2: '/employee-access/profile/directory',
       name: 'Manage Directory',
       Icon: MdContacts,
       tabname: "Manage Directory"
     },
     {
       link: '/user/profile/events',
+      link2: '/employee-access/profile/events',
       name: 'events',
       Icon: BsFillCalendar3WeekFill,
       tabname: "Manage Events"
@@ -101,24 +105,28 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
     },
     {
       link: '/user/letter/manage-letter',
+      link2: '/employee-access/letter/manage-letter',
       name: 'Manage Letter',
       Icon: SlEnvolopeLetter,
       tabname: "Manage Letters"
     },
     {
       link: '/user/letter/manage-letter-template',
+      link2: '/employee-access/letter/manage-letter-template',
       name: 'Manage Templa Letter',
       Icon: SlEnvolopeLetter,
       tabname: "Manage Letter Templates"
     },
     {
       link: ' /user/profile/polls',
+      link2: '/employee-access/profile/polls',
       name: 'Polls',
       Icon: HiSpeakerphone,
       tabname: "Manage Polls"
     },
     {
       link: '/user/employees/manage-employees',
+      link2: '/employee-access/employees/manage-employees',
       name: 'Manage Employees',
       Icon: BiSolidUserDetail,
       tabname: "Manage Employees"
@@ -171,7 +179,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
                     </TopNavLink>
                   </Shimmer>
                 )) : [...tabfilter(accesstabs, usertype, Top_NAV_ROUTES as any) as []]?.map((El: any) => (
-                  <TopNavLink key={El.id} link={El.link}>
+                  <TopNavLink key={El.id} link={usertype === "leader" ? El.link : El.link2}>
                     {<El.Icon className='text-xl' />}{El.name}
                   </TopNavLink>
                 ))}

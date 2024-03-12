@@ -52,7 +52,6 @@ export const GroupForm: FC<GroupFormProps> = ({ setShowModal, setIsEdit, isEdit,
       })
 
   }
-
   useEffect(() => {
     if (isEdit?.id) {
       setValue("Name", isEdit.name)

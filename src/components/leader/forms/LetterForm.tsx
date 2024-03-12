@@ -29,11 +29,7 @@ interface LetterFormProps {
   attachments: FieldArrayWithId<LetterFormFields>[]
 }
 
-export const LetterForm: FC<LetterFormProps> = ({
-  errors,
-  register,
-  states,
-}) => {
+export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) => {
   const { userDetails } = cusSelector((state) => state.auth);
   const { letter_templete } = cusSelector((state) => state.letter);
   const { ticket } = cusSelector((state) => state.ticket);

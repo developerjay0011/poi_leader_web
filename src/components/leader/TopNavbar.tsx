@@ -46,7 +46,7 @@ import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 
 
-export const TopNavbar: FC = () => {
+export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   const router = useRouter();
   const curRoute = usePathname();
   const dispatch = cusDispatch();
@@ -57,10 +57,9 @@ export const TopNavbar: FC = () => {
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
-  const { usertype, accesstabs } = cusSelector((state) => state.access);
   let allcookies: any = getCookies()
   let heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
-  heading = heading === "user" || heading === "employeehome" ? "home" : heading;
+  heading = heading === "user" || heading === "employee access" ? "home" : heading;
   const searchFilterFunction = (text: string) => {
     if (text) {
       const newData = trendingLeader?.filter(
@@ -86,9 +85,8 @@ export const TopNavbar: FC = () => {
         setShowNotifications(false);
     });
   }, []);
-
-  useLayoutEffect(() => {
-    if (allcookies?.USER_TYPE == "leader") {
+  useEffect(() => {
+    if (user_type == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
@@ -172,7 +170,7 @@ export const TopNavbar: FC = () => {
         }
       })();
     }
-    if (allcookies?.USER_TYPE != "leader") {
+    if (user_type != "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
@@ -192,7 +190,7 @@ export const TopNavbar: FC = () => {
     }
   }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
   useEffect(() => {
-    if (allcookies?.USER_TYPE == "leader") {
+    if (user_type == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
           var mypostdata = { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId }
@@ -214,7 +212,7 @@ export const TopNavbar: FC = () => {
           className="h-12 w-auto"
           onClick={() => router.push("/user")}
         />
-        {usertype == "leader" ?
+        {user_type == "leader" ?
           <>
             {/* Search Bar */}
 
@@ -324,7 +322,7 @@ export const TopNavbar: FC = () => {
         }
       </nav>
       <nav className="py-3 px-8 bg-sky-950 text-sky-50 flex-col gap-5 hidden max-[1000px]:flex  max-[500px]:px-4">
-        {usertype == "leader" ?
+        {user_type == "leader" ?
           <>
             <div className="flex justify-between items-center w-full">
               <FaHamburger

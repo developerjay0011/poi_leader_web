@@ -21,14 +21,7 @@ interface ImagePlusTextInputProps {
   image: string
 }
 
-export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({
-  id,
-  index,
-  register,
-  remove,
-  setValue,
-  image,
-}) => {
+export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({ id, index, register, remove, setValue, image, }) => {
   const [previewImg, setPreviewImg] = useState(image)
 
   return (

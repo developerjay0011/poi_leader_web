@@ -27,30 +27,11 @@ interface TemplateFormFields {
 const Editor = dynamic(() => import('./Editor'), {
   ssr: false
 })
-export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
-  submitting,
-  tempHeader,
-  status,
-  onClose,
-  err,
-  heading,
-  isEdit
-}) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-    reset
-  } = useForm<TemplateFormFields>({
-    defaultValues: {
-      status,
-      tempHeader,
-    },
-  })
+export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({ submitting, tempHeader, status, onClose, err, heading, isEdit }) => {
+  const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm<TemplateFormFields>({ defaultValues: { status, tempHeader, }, })
   const { userDetails } = cusSelector((state) => state.auth);
+  const [content, setContent] = useState('')
   const dispatch = cusDispatch();
-
   const formSubmitHandler = async (data: TemplateFormFields) => {
     const body = {
       id: isEdit ? isEdit.id : null,
@@ -71,8 +52,6 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
     onClose()
     reset();
   }
-
-  const [content, setContent] = useState('')
   useEffect(() => {
     if (isEdit) {
       setValue("tempHeader", isEdit.template_name)
@@ -80,6 +59,7 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
       setContent(isEdit.template_html)
     }
   }, [])
+
   return (
     <>
       <m.div

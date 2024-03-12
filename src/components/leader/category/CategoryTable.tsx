@@ -88,7 +88,6 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, h
                   </button>
                 </td>
               </tr>
-
             )
           })
         ) : (

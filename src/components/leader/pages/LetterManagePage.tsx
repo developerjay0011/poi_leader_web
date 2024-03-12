@@ -1,8 +1,5 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
-import { ManageTemplateForm } from '../forms/TemplateForm'
 import { TableWrapper } from '@/utils/TableWrapper'
 
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
@@ -13,8 +10,6 @@ import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 import { ManageLetterTable } from '../letter/ManageLetterTable'
 import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
-import { getTickets } from '@/redux_store/ticket/ticketApi'
-import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 
 export const LetterManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
@@ -64,21 +59,11 @@ export const LetterManagePage: FC = () => {
     return (
         <>
             <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
-                    <ShortcutsBox />
-                </div> */}
-                <ProfileShortcutsBox />
-
                 <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    {/* POLLS TABLE */}
                     <TableWrapper
                         heading='Manage Letter'
                         addBtnTitle='add Letter'
-                        addBtnClickFn={async () => {
-
-
-                            location.href = '/user/letter/add-letter'
-                        }}
+                        addBtnClickFn={async () => { location.href = '/user/letter/add-letter' }}
                         curDataCount={1}
                         totalCount={letter_templete?.length}
                         changeFilterFn={changeFilterCount}

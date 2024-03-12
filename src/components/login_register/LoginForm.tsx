@@ -27,25 +27,13 @@ import { leaderActions } from "@/redux_store/leader/leaderSlice";
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
   const router = useRouter();
-  const [loggingIn, setLoggingIn] = useState(false);
   const dispatch = cusDispatch();
-
+  const [loggingIn, setLoggingIn] = useState(false);
   const [showForgetPassForm, setShowForgetPassForm] = useState(false);
   const [err, setErr] = useState<ErrObj>({ isErr: false, errTxt: "" });
-
   const openModal = () => setShowForgetPassForm(true);
   const closeModal = () => setShowForgetPassForm(false);
-
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-  } = useForm<LoginFormFields | RegisterFormFields>({
-    defaultValues: {
-      remember: true,
-    },
-    mode: "onChange",
-  });
+  const { register, formState: { errors, isValid }, handleSubmit, } = useForm<LoginFormFields | RegisterFormFields>({ defaultValues: { remember: true, }, mode: "onChange", });
 
   const formSubmitHandler = async (
     data: LoginFormFields | RegisterFormFields
@@ -82,9 +70,9 @@ export const LoginForm: FC<LoginFormProps> = () => {
           return
         } else {
           setErr({ errTxt: message, isErr: true });
+          setLoggingIn(false);
         }
       }
-      setLoggingIn(false);
     } catch (error: any) {
       setLoggingIn(false);
       setErr({ errTxt: error.message, isErr: true });
@@ -103,6 +91,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(authActions.setUserData(userData));
       setCookie(USER_TYPE, 'employee');
       router.push(EmployeeProtectedRoutes.employee);
+      setLoggingIn(false);
       return
     }
     if (usertype != "leader employee") {
@@ -116,6 +105,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
         setCookie(USER_VERIFY, 'true');
         router.push(ProtectedRoutes.user);
       }
+      setLoggingIn(false);
     }
   }
 

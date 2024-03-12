@@ -60,27 +60,23 @@ export const LetterTemplateManagePage: FC = () => {
 
     return (
         <>
-            <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <ProfileShortcutsBox />
-                <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    <TableWrapper
-                        heading='Manage Templates'
-                        addBtnTitle='add template'
-                        addBtnClickFn={openModal}
-                        curDataCount={1}
-                        totalCount={letter_templete?.length}
-                        changeFilterFn={changeFilterCount}
-                        filterDataCount={filterDataCount}
-                        changePageNo={changeCurPageNo}
-                        curPageNo={curPageNo}
-                        searchFilterFn={changeFilterData}
-                        jsonDataToDownload={letter_templete}
-                    >
-                        <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
-                    </TableWrapper>
-                </div>
+            <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
+                <TableWrapper
+                    heading='Manage Templates'
+                    addBtnTitle='add template'
+                    addBtnClickFn={openModal}
+                    curDataCount={1}
+                    totalCount={letter_templete?.length}
+                    changeFilterFn={changeFilterCount}
+                    filterDataCount={filterDataCount}
+                    changePageNo={changeCurPageNo}
+                    curPageNo={curPageNo}
+                    searchFilterFn={changeFilterData}
+                    jsonDataToDownload={letter_templete}
+                >
+                    <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                </TableWrapper>
             </div>
-
             <AnimatePresence>
                 {showAddTemplateForm && (
                     <ManageTemplateForm

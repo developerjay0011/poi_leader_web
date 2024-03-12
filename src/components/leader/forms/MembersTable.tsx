@@ -24,9 +24,9 @@ export interface memeber {
   memeber_id: ''
 }
 export const MembersTable: FC<ManageEmployessFormProps> = ({ setShowMember, showMember, groupdetails, getGroup, getSingleGroupDetails }) => {
+  const dispatch = cusDispatch();
   const { userDetails } = cusSelector((state) => state.auth);
   const { directory } = cusSelector((state) => state.directory);
-  const dispatch = cusDispatch();
   const { register, handleSubmit, reset, formState: { errors, isValid }, } = useForm<memeber>({})
   const Addmember = async (data: any) => {
     tryCatch(

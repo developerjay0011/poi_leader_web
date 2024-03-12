@@ -18,18 +18,13 @@ interface EventTableProps {
   editEvent: any
 }
 
-export const EventTable: FC<EventTableProps> = ({
-  searchStr,
-  isEvent,
-  editEvent
-}) => {
+export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent }) => {
   const [showConfirmBox, setShowConfirmBox] = useState<boolean>(false);
   const { event } = cusSelector((state) => state.event);
   const dispatch = cusDispatch();
   const [deleteValue, setDeleteValue] = useState({ id: "", leaderid: "" });
-  const filterDataOnEvent = event?.filter((el: any) =>
-    searchStr ? el?.title.includes(searchStr) : el
-  );
+  const filterDataOnEvent = event?.filter((el: any) => searchStr ? el?.title.includes(searchStr) : el);
+  const onClose = () => { setShowConfirmBox(false) };
   const confirmDelete = (id: string, leaderid: string) => {
     setDeleteValue({
       id: id,
@@ -37,11 +32,9 @@ export const EventTable: FC<EventTableProps> = ({
     });
     setShowConfirmBox(true);
   };
-
   const handleDelete = async () => {
     tryCatch(
       async () => {
-
         const response = await deleteEvent(deleteValue?.id as string, deleteValue?.leaderid as string);
         if (response?.success) {
           onClose();
@@ -54,9 +47,6 @@ export const EventTable: FC<EventTableProps> = ({
       })
   };
 
-  const onClose = () => {
-    setShowConfirmBox(false);
-  };
 
   return (
     <>

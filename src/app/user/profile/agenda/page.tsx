@@ -9,7 +9,8 @@ const AdminAgendaPage = () => {
       <section className="flex-1">
         <AgendaPage />
       </section>
-    </section>);
+    </section>
+  );
 };
 
 export default AdminAgendaPage;

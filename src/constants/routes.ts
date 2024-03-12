@@ -9,7 +9,7 @@ export const ProtectedRoutes = {
 
 
 export const EmployeeProtectedRoutes = {
-  employee: "/user/employeehome",
+  employee: "/employee-access",
 };
 
 export const AuthRoutes = {

@@ -50,45 +50,39 @@ export const EmployeeManagePage: FC = () => {
 
     return (
         <>
-            <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <ProfileShortcutsBox />
-                <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    <TableWrapper
-                        heading='Manage Employees'
-                        addBtnTitle='add employee'
-                        addBtnClickFn={() => {
-                            setEdit(null)
-                            setShowAdd(true)
-                        }}
-                        curDataCount={1}
-                        totalCount={employees?.length}
-                        changeFilterFn={changeFilterCount}
-                        filterDataCount={filterDataCount}
-                        changePageNo={changeCurPageNo}
-                        curPageNo={curPageNo}
-                        searchFilterFn={changeFilterData}
-                        jsonDataToDownload={null}
-                    >
-                        <ManageEmployeeTable
-                            handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
-                            searchStr={searchFilter}
-                            changeActiveStatus={(id) => { changeActiveStatus(id) }}
-                        />
-                    </TableWrapper>
-                </div>
-            </div>
-
-            <AnimatePresence>
-                {showAdd && (
-                    <ManageEmployessForm
-                        edit={isEdit?.id}
-                        heading={isEdit?.id ? 'Edit Employee' : 'Add Employee'}
-                        employeedetails={isEdit}
-                        submitting={false}
-                        onClose={() => setShowAdd(false)}
+            <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
+                <TableWrapper
+                    heading='Manage Employees'
+                    addBtnTitle='add employee'
+                    addBtnClickFn={() => {
+                        setEdit(null)
+                        setShowAdd(true)
+                    }}
+                    curDataCount={1}
+                    totalCount={employees?.length}
+                    changeFilterFn={changeFilterCount}
+                    filterDataCount={filterDataCount}
+                    changePageNo={changeCurPageNo}
+                    curPageNo={curPageNo}
+                    searchFilterFn={changeFilterData}
+                    jsonDataToDownload={null}
+                >
+                    <ManageEmployeeTable
+                        handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
+                        searchStr={searchFilter}
+                        changeActiveStatus={(id) => { changeActiveStatus(id) }}
                     />
-                )}
-            </AnimatePresence>
+                </TableWrapper>
+            </div>
+            {showAdd && (
+                <ManageEmployessForm
+                    edit={isEdit?.id}
+                    heading={isEdit?.id ? 'Edit Employee' : 'Add Employee'}
+                    employeedetails={isEdit}
+                    submitting={false}
+                    onClose={() => setShowAdd(false)}
+                />
+            )}
         </>
     )
 }

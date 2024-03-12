@@ -22,15 +22,19 @@ export const Modal: FC<ManageTemplateFormProps> = ({ onClose, children, heading 
                         animate={{ y: 0 }}
                         exit={{ y: -100 }}
                         className='z-30  border self-start bg-white mt-10 relative w-1/2 rounded-md shadow-md max-[1450px]:w-[65%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
-                        <button
-                            type='button'
-                            onClick={onClose}
-                            className='absolute top-3 right-3 z-40'>
-                            <BiX className='text-3xl' />
-                        </button>
-                        <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
-                            {heading}
-                        </h3>
+                        {heading &&
+                            <>
+                                <button
+                                    type='button'
+                                    onClick={onClose}
+                                    className='absolute top-3 right-3 z-40'>
+                                    <BiX className='text-3xl' />
+                                </button>
+                                <h3 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-7 py-3 border-b font-semibold text-2xl capitalize'>
+                                    {heading}
+                                </h3>
+                            </>
+                        }
                         {children}
                     </m.section>
                 </div>
