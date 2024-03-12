@@ -1,5 +1,5 @@
 'use client'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useLayoutEffect } from 'react'
 import { TopNavbar } from '@/components/leader/TopNavbar'
 import { LeftNavbar } from '@/components/leader/LeftNavbar'
 import { RightNavbar } from '@/components/leader/RightNavbar'
@@ -14,7 +14,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   var user_type = getCookie(USER_TYPE) as string
   const { userDetails }: any = cusSelector((state) => state.auth);
   const { loader, accesstabs }: any = cusSelector((state) => state.access);
-  useEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       if (user_type) {
         if (accesstabs?.length == 0) {

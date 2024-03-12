@@ -5,12 +5,11 @@ export const ProtectedRoutes = {
   editUserProfile: "/user/profile/settings/personal-information",
   accountSetting: "/user/profile/settings/general",
   followers: "/user/profile/followers",
-  leader: "/leader",
 };
 
 
 export const EmployeeProtectedRoutes = {
-  employeehome: "/user/employeehome",
+  employee: "/user/employeehome",
 };
 
 export const AuthRoutes = {

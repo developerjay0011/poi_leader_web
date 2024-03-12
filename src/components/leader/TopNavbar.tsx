@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import POILogo from "@/assets/poi_logo_1.png";
 import { StaticImageData } from "next/image";
 import { FaSearch, FaBell, FaHamburger, FaUserTimes } from "react-icons/fa";
@@ -87,7 +87,7 @@ export const TopNavbar: FC = () => {
     });
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (allcookies?.USER_TYPE == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {

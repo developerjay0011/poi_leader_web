@@ -102,7 +102,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       dispatch(authActions.setUserData(userData));
       setCookie(USER_TYPE, 'employee');
-      router.push(EmployeeProtectedRoutes.employeehome);
+      router.push(EmployeeProtectedRoutes.employee);
       return
     }
     if (usertype != "leader employee") {

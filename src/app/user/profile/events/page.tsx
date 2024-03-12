@@ -1,7 +1,5 @@
-import { DirectoryPage } from '@/components/leader/pages/DirectoryPage'
 import { EventPage } from '@/components/leader/pages/EventPage'
 import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
-import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 import { FC } from 'react'
 
 const AdminProfileEventsPage: FC = () => {

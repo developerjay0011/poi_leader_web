@@ -9,13 +9,13 @@ import {
   UseFieldArrayAppend,
   FieldArrayWithId,
 } from 'react-hook-form'
-import { LetterFormFields } from '@/app/user/letter/add-letter/AddLetterPage'
 import { LetterInputField } from '../manage-letters/LetterInputField'
 import { LetterSelectField } from '../manage-letters/LetterSelectField'
 import { LetterTextarea } from '../manage-letters/LetterTextarea'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
+import { LetterFormFields } from '../pages/CreateLetterpage'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>

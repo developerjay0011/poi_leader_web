@@ -7,13 +7,7 @@ interface CommonBoxProps {
   cusJSX?: JSX.Element[]
   style?: any
 }
-export const CommonBox: FC<CommonBoxProps> = ({
-  title,
-  children,
-  width,
-  cusJSX,
-  style = {}
-}) => {
+export const CommonBox: FC<CommonBoxProps> = ({ title, children, width, cusJSX, style = {} }) => {
   return (
     <>
       <section className={`border rounded-md ${width} bg-white text-sky-950`} style={style}>

@@ -15,13 +15,11 @@ interface DirectoryTableProps {
   searchStr: string;
   isDirectory: boolean;
   editDirectory: any
+  selectGroup: any
+  setSelectGroup: any
 }
 
-export const DirectoryTable: FC<DirectoryTableProps> = ({
-  searchStr,
-  isDirectory,
-  editDirectory
-}) => {
+export const DirectoryTable: FC<DirectoryTableProps> = ({ searchStr, isDirectory, editDirectory, setSelectGroup, selectGroup }) => {
   const [showConfirmBox, setShowConfirmBox] = useState<boolean>(false);
   const { directory } = cusSelector((state) => state.directory);
   const dispatch = cusDispatch();
@@ -62,6 +60,7 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
       <table className="w-full mt-5">
         <thead className="text-left">
           <tr className='border-b border-gray-300'>
+            <th className='font-semibold text-left p-2 border text-center'></th>
             <th className='font-semibold text-left p-2 border text-center'>S.No</th>
             <th className='font-semibold text-left p-2 border text-center'>Name</th>
             <th className='font-semibold text-left p-2 border text-center'>Phone No</th>
@@ -72,9 +71,26 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({
         <tbody className="text-left">
           {filterDataOnDirectory.length > 0 ? (
             filterDataOnDirectory.map((directory: any, index: number) => {
+              var ischecked = selectGroup?.filter((items: any) => items?.id == directory?.id)?.length > 0
               return (
                 <>
                   <tr className={`bg-white border-b border-gray-300 transition-all`} key={index}>
+                    <td className='font-semibold text-left p-2 border text-center'>
+                      <input type="checkbox"
+                        className='text-[20px] cursor-pointer'
+                        onClick={(e) => { e.stopPropagation(); }}
+                        checked={ischecked}
+                        onChange={() => {
+                          var selected = [...selectGroup]
+                          if (selected?.filter((items: any) => items?.id == directory?.id)?.length > 0) {
+                            selected = selected?.filter((items: any) => items?.id != directory?.id)
+                            setSelectGroup(selected)
+                          } else {
+                            selected.push(directory)
+                            setSelectGroup(selected)
+                          }
+                        }} />
+                    </td>
                     <td className='font-semibold text-left p-2 border text-center'>{index + 1}</td>
                     <td className='font-semibold text-left p-2 border text-center'>{directory.name}</td>
                     <td className='font-semibold text-left p-2 border text-center'>{directory.mobile}</td>
