@@ -34,7 +34,7 @@ import { getDirectory } from "@/redux_store/directory/directoryApi";
 import { directoryAction } from "@/redux_store/directory/directorySlice";
 import { GetDashboardEvents } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
-import { getTickets, } from "@/redux_store/ticket/ticketApi";
+import { GetCategories, getTickets, } from "@/redux_store/ticket/ticketApi";
 import { ticketActions } from "@/redux_store/ticket/ticketSlice";
 import { getGroups } from "@/redux_store/group/groupAPI";
 import { groupActions } from "@/redux_store/group/groupSlice";
@@ -164,6 +164,11 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             // Agenda
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
+
+            // ticketCategories
+            const ticketCategories = await GetCategories();
+            dispatch(ticketActions.storeticketcategory(ticketCategories));
+
           }
         } else {
           router.push(AuthRoutes.login)
@@ -182,6 +187,41 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             dispatch(letterActions.storeLetterTemplate(data));
             const Data = await getDirectory(userDetails?.leaderId as string);
             dispatch(directoryAction.storedirectory(Data))
+
+            const Letters = await getLetters(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetter(Letters));
+            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
+            const Tickets = await getTickets(userDetails?.leaderId as string);
+            dispatch(ticketActions.storeTicket(Tickets));
+
+            //event
+            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+            dispatch(eventAction.storeDashboardevents(DashboardEvents));
+
+            // Groups
+            const Groups = await getGroups(userDetails?.leaderId as string);
+            dispatch(groupActions.storeGroups(Groups));
+
+            // GetEmployees
+            const Employees = await GetEmployees(userDetails?.leaderId as string);
+            dispatch(employeeAction.storeemployees(Employees));
+
+            // Category
+            const Category = await getCategory(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeCategories(Category));
+
+            // Development
+            const Development = await getDevelopment(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeDevelopments(Development));
+
+            // Agenda
+            const Agenda = await getAgenda(userDetails?.leaderId as string);
+            dispatch(agendaAction.storeAgendas(Agenda));
+
+            // ticketCategories
+            const ticketCategories = await GetCategories();
+            dispatch(ticketActions.storeticketcategory(ticketCategories));
           }
         } else {
           router.push(AuthRoutes.login)

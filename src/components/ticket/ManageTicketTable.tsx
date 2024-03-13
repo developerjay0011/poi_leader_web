@@ -1,4 +1,4 @@
-import { cusSelector } from '@/redux_store/cusHooks';
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
 import { FC, useState } from 'react'
 import { motion as m } from "framer-motion";
@@ -9,6 +9,14 @@ import TicketTineLineForm from './TicketTineLineForm';
 import { PDFPreviewCP } from '@/utils/PDFPreviewCP';
 import moment from 'moment';
 import { BiX } from 'react-icons/bi';
+import { SlEnvolopeLetter } from "react-icons/sl";
+import { getTickets, saveTicketStatus } from '@/redux_store/ticket/ticketApi';
+import { ticketActions } from '@/redux_store/ticket/ticketSlice';
+import { commonActions } from '@/redux_store/common/commonSlice';
+import { ToastType } from '@/constants/common';
+import { tryCatch } from '@/config/try-catch';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 interface ManageTicketTableProps {
   searchStr: string
@@ -28,15 +36,13 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const [ticketdata, setticketdata] = useState<any>()
   const searchFilterData = ticket?.filter((el: any) => searchStr ? el?.ticketid.includes(searchStr) : el)
   const [showPreview, setShowPreview] = useState(false);
-
+  const { userDetails } = cusSelector((state) => state.auth);
+  const dispatch = cusDispatch();
   return (
     <>
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold capitalize text-center p-2 border'>
-              Ticket Id
-            </th>
             <th className='font-semibold capitalize text-center p-2 border'>
               Ticket Code
             </th>
@@ -52,52 +58,90 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
             <th className='font-semibold capitalize text-center p-2 border'>
               Date
             </th>
-            <th className='font-semibold capitalize text-center p-2 border'>
-              Letter  Preview
-            </th>
+            {/* <th className='font-semibold capitalize text-center p-2 border'>
+              Letter Preview
+            </th> */}
             <th className='font-semibold capitalize text-center p-2 border'>
               Status
+            </th>
+            <th className='font-semibold capitalize text-center p-2 border'>
+              action
             </th>
           </tr>
         </thead>
         <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el: any, i: any) => (
-            <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
-
-              <td className='capitalize text-left p-2 border-r text-center align-text-top'>
-                {el?.ticketid}
-              </td>
-              <td className='capitalize text-left p-2 border-r text-center align-text-top'>
-                {el?.ticket_code}
-              </td>
-
-              <td className='capitalize text-left p-2 border-r text-center align-text-top'>
-                {el?.category}
-              </td>
-              <td className='capitalize text-left p-2 border-r text-center align-text-top'>
-                {el?.subject}
-              </td>
-              <td className='capitalize text-left p-2 border-r text-center align-text-top max-w-[300px]'>
-                <p className='text-ellipsis overflow-hidden truncate max-h-[100px]'>{el?.description}</p>
-              </td>
-              <td className='capitalize text-left p-2 border-r text-center align-text-top'>
-                {moment(el?.created_date).format("DD-MM-YYYY")}
-              </td>
-              <td className='text-center p-2 border printHide'>
-                <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => { setticketdata(el), setShowPreview(true) }}>
-                  <IoMdEye className='text-2xl' />
-                </button>
-              </td>
-              <td className='text-center p-2 border printHide'>
-                <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => { setticketdata(el), setShowStatus(true), setTimeline(el?.status) }}>
-                  <IoMdEye className='text-2xl' />
-                </button>
-              </td>
-            </tr>
-          ))
+          searchFilterData?.map((el: any, i: any) => {
+            const formSubmitHandler = async () => {
+              tryCatch(
+                async () => {
+                  const formData = new FormData();
+                  formData.append("id", "");
+                  formData.append("leaderid", userDetails?.leaderId || "");
+                  formData.append("ticketid", el?.ticketid || "");
+                  formData.append("category", el?.ticket_category || "");
+                  formData.append("status", 'read');
+                  formData.append("description", "");
+                  const response = await saveTicketStatus(formData);
+                  if (response?.success) {
+                    const ticketData = await getTickets(userDetails?.leaderId as string);
+                    dispatch(ticketActions.storeTicket(ticketData))
+                  }
+                })
+            };
+            return (
+              <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
+                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                  {el?.ticket_code}
+                </td>
+                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                  {el?.category}
+                </td>
+                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                  {el?.subject}
+                </td>
+                <td className='capitalize text-left p-2 border-r text-center align-text-top max-w-[300px]'>
+                  <p className='text-ellipsis overflow-hidden truncate max-h-[100px]'>{el?.description}</p>
+                </td>
+                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                  {moment(el?.created_date).format("DD-MM-YYYY hh:mm a")}
+                </td>
+                {/* <td className='text-center p-2 border printHide'>
+                  <button className='hover:scale-110  transition-all ease-out duration-200 active:scale-100' onClick={() => { setticketdata(el), setShowPreview(true) }}>
+                    <IoMdEye className='text-2xl' />
+                  </button>
+                </td> */}
+                <td className='text-center p-2 border items-center justify-center '>
+                  <div className='gap-2 flex justify-center'>
+                    <button className='capitalize flex items-center gap-1 justify-center self-center transition-all' onClick={() => { setticketdata(el), setShowStatus(true), setTimeline(el?.status) }}>
+                      {el?.status?.slice(-1).pop()?.status}
+                      {/* <IoMdEye className='text-1xl' /> */}
+                    </button>
+                  </div>
+                </td>
+                <td className='text-center p-2 border items-center justify-center'>
+                  <div className='gap-2 flex justify-center'>
+                    <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => {
+                      if (el?.status?.filter((item: any) => item?.status == 'read')?.length == 0) {
+                        formSubmitHandler()
+                      }
+                      setticketdata(el), setShowPreview(true)
+                    }}>
+                      <IoMdEye className='text-2xl' />
+                    </button>
+                    <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' >
+                      <Link href={"/user/letter/add-letter?id=" + el?.ticketid}>
+                        <SlEnvolopeLetter className='text-2xl' />
+                      </Link>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )
+          })
         ) : (
           <ErrorTableRow colNo={8} />
-        )}</tbody>
+        )}
+        </tbody>
       </table>
       <AnimatePresence>
         {showStatus && (
@@ -139,12 +183,11 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
           </m.div>
         )}
       </AnimatePresence>
-
       <AnimatePresence mode="wait">
         {showPreview && (
           <PDFPreviewCP
             onClose={() => setShowPreview(false)}
-            heading={FORM_HEADINGS[ticketdata?.category].split(" ").at(-1) as string}
+            heading={FORM_HEADINGS[ticketdata?.ticket_category].split(" ").at(-1) as string}
             to={ticketdata?.to}
             description={ticketdata?.description}
             signature={ticketdata?.signature}
@@ -154,7 +197,6 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
           />
         )}
       </AnimatePresence>
-
     </>
   )
 }

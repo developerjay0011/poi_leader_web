@@ -44,6 +44,16 @@ export const EducationDropdowns: DropdownOptions[] = [
   { id: 'others', value: 'others' }
 ];
 
+export const statusticketOption: DropdownOptions[] = [
+  { id: 'read', value: 'read' },
+  { id: 'under process', value: 'under process' },
+  { id: 'declined', value: 'declined' },
+  { id: 'forwarded', value: 'forwarded' },
+  { id: 'response generated', value: 'response generated' },
+  { id: 'closed', value: 'closed' },
+]
+
+
 export const GenderDropdowns: DropdownOptions[] = [
   { id: 'male', value: 'male' },
   { id: 'female', value: 'female' },

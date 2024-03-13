@@ -12,23 +12,16 @@ import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 interface AssemblyConstituencyTableProps {
   searchStr: string
   handleDelete: (id: string) => void
-  handleEdit:(value:any)=>void
+  handleEdit: (value: any) => void
 }
 
-export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
-  searchStr, handleEdit, handleDelete
-}) => {
+export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit, handleDelete }) => {
   const { letter_templete } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
+  const searchFilterData = letter_templete?.filter((el) => searchStr ? el?.template_name === searchStr : el)
 
-  const searchFilterData = letter_templete?.filter((el) =>
-    searchStr?
-      el?.template_name === searchStr
-      : el
-  )
 
-   
   return (
     <>
       <table className='w-full my-8 border'>
@@ -51,7 +44,7 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
           searchFilterData?.map((el, i) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
-                {i+1}
+                {i + 1}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el.template_name}
@@ -61,8 +54,8 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
               </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
                 <StatusBtn
-                  status={el.isactive ?'1':'0' }  
-                  clickHandler={()=>{}}
+                  status={el.isactive ? '1' : '0'}
+                  clickHandler={() => { }}
                   inProgress={false}
                 />
               </td>
@@ -74,14 +67,14 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
                 </button>
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() =>{ setid(el?.id),setShowDeleteConfirmPopup(true)}}>
-                <MdDelete
-                  className='text-2xl'
-                 
-                />
-              </button>
+                  onClick={() => { setid(el?.id), setShowDeleteConfirmPopup(true) }}>
+                  <MdDelete
+                    className='text-2xl'
+
+                  />
+                </button>
               </td>
-              </tr>
+            </tr>
 
           ))
         ) : (
@@ -93,7 +86,7 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
           <ConfirmDialogBox
             onCancel={() => setShowDeleteConfirmPopup(false)}
             noAllowed={false}
-            onOk={() => {handleDelete(id), setShowDeleteConfirmPopup(false)}}
+            onOk={() => { handleDelete(id), setShowDeleteConfirmPopup(false) }}
           />
         )}
       </AnimatePresence>

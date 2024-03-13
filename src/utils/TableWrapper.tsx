@@ -20,7 +20,7 @@ interface TableWrapperProps {
   curPageNo: number
   curDataCount: number
   searchFilterFn: (str: string) => void
-  addedFilters?: JSX.Element[]
+  addedFilters?: JSX.Element
   searchFilters?: JSX.Element[]
   moreBtns?: JSX.Element[]
   jsonDataToDownload?: unknown[] | null
@@ -77,7 +77,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({
 
   return (
     <>
-      <div className='gap-5 w-full relative min-h-[410px] overflow-auto main_scrollbar'>
+      <div className='gap-5 w-full relative min-h-[410px] overflow-auto main_scrollbar '>
 
         <div className='overflow-hidden flex flex-col flex-1 self-start px-5 border-b py-3 after:h-1/2 after:w-[3px] after:bg-orange-600 
             after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%]

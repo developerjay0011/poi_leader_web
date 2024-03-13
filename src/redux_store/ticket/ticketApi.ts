@@ -39,3 +39,12 @@ export const deleteTicketStatus = async (id: string, leaderid: string) => {
   );
 };
 
+export const GetCategories = async () => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(APIRoutes.GetCategories);
+      return res.data;
+    }
+  );
+};
+

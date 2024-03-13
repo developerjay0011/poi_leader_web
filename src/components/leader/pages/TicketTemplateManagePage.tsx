@@ -9,34 +9,32 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { deleteLetterTemplates, getLetterTemplates } from '@/redux_store/letter/letterApi'
 import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { ToastType, statusticketOption } from '@/constants/common'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { ManageTicketTable } from '@/components/ticket/ManageTicketTable'
 import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const TicketTemplateManagePage: FC = () => {
+    const dispatch = cusDispatch();
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
     const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
-    const { ticket } = cusSelector((state) => state.ticket);
-
-    const changeFilterData = (str: string) => setSearchFilter(str)
-    const { userDetails } = cusSelector((st) => st.auth);
-    const openModal = () => {
-        setShowAddTemplateForm(true)
-        setEdit(null)
-    };
+    const { leaderProfile } = cusSelector((state) => state.leader);
+    const { ticket, ticketcategory } = cusSelector((state) => state.ticket);
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [priorityFilter, setPriorityFilter] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
+    const changeFilterData = (str: string) => setSearchFilter(str)
+    const { userDetails } = cusSelector((st) => st.auth);
+    const openModal = () => { setShowAddTemplateForm(true); setEdit(null) };
     const changeCurPageNo = (page: number) => setCurPageNo(page)
     const changeFilterCount = (val: number) => {
         setFilterAmount(val)
         setCurPageNo(1)
     }
-    const { leaderProfile } = cusSelector((state) => state.leader);
-    const dispatch = cusDispatch();
-
     const getTicket = async () => {
         const data = await getTickets(userDetails?.leaderId as string);
         dispatch(ticketActions.storeTicket(data));
@@ -60,28 +58,62 @@ export const TicketTemplateManagePage: FC = () => {
         })();
     }, [userDetails, dispatch, leaderProfile]);
 
+
     return (
         <>
-            <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <ProfileShortcutsBox />
-                <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    <TableWrapper
-                        heading='Manage Ticket'
-                        addBtnTitle=''
-                        addBtnClickFn={openModal}
-                        curDataCount={1}
-                        totalCount={ticket?.length}
-                        changeFilterFn={changeFilterCount}
-                        filterDataCount={filterDataCount}
-                        changePageNo={changeCurPageNo}
-                        curPageNo={curPageNo}
-                        searchFilterFn={changeFilterData}
-                        jsonDataToDownload={ticket}
-                    >
+            <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
+                <TableWrapper
+                    heading='Manage Ticket'
+                    addBtnTitle=''
+                    addBtnClickFn={openModal}
+                    curDataCount={1}
+                    totalCount={ticket?.length}
+                    changeFilterFn={changeFilterCount}
+                    filterDataCount={filterDataCount}
+                    changePageNo={changeCurPageNo}
+                    curPageNo={curPageNo}
+                    searchFilterFn={changeFilterData}
+                    jsonDataToDownload={ticket}
+                    addedFilters={
+                        <>
+                            <label className="flex gap-2 items-center" htmlFor="category">
+                                <span className="font-medium">Category</span>
+                                <select
+                                    id="category"
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                >
+                                    <option value="">All</option>
+                                    {ticketcategory?.map((item: any) =>
+                                        <option value={item?.id}>{item?.category}</option>
+                                    )}
+                                </select>
+                            </label>
+                            <label className="flex gap-2 items-center" htmlFor="status">
+                                <span className="font-medium">Status</span>
+                                <select
+                                    id="status"
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                >
+                                    <option value="">All</option>
+                                    {statusticketOption?.map((item: any) =>
+                                        <option value={item?.id}>{item?.value}</option>
+                                    )}
+                                </select>
+                            </label>
+                        </>
+                    }
+                >
+                    <>
+
                         <ManageTicketTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
-                    </TableWrapper>
-                </div>
+                    </>
+                </TableWrapper>
             </div>
+
 
             <AnimatePresence>
                 {showAddTemplateForm && (

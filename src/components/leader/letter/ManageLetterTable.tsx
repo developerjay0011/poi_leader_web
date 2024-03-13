@@ -16,18 +16,11 @@ interface ManageLetterTableProps {
   handleEdit: (value: any) => void
 }
 
-export const ManageLetterTable: FC<ManageLetterTableProps> = ({
-  searchStr, handleEdit, handleDelete
-}) => {
+export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete }) => {
   const { letter } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
-
-  const searchFilterData = letter?.filter((el) =>
-    searchStr ?
-      el?.template_name === searchStr
-      : el
-  )
+  const searchFilterData = letter?.filter((el) => searchStr ? el?.template_name === searchStr : el)
 
 
   return (

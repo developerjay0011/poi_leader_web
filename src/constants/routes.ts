@@ -26,6 +26,7 @@ export const APIRoutes = {
   sendOTP: `${API_Prefix}/common/sendOtp`,
   verifyOTP: `${API_Prefix}/common/verifyOtp`,
   getLeadersForDropdown: `${API_Prefix}/common/getAddLeadersDropdown`,
+  GetCategories: `${API_Prefix}/common/GetCategories`,
 
 
   // Leader Endpoints

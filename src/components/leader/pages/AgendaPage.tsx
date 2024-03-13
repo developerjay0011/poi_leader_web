@@ -68,9 +68,9 @@ export const AgendaPage: FC = () => {
                 }
             >
                 <section className="flex flex-col gap-8 max-[450px]:px-3">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 max-[750px]:flex-wrap">
-                            <p className="font-semibold text-lg">Filters</p>
+                    <div className="flex flex-col w-full gap-2">
+                        <p className="font-semibold text-lg">Filters</p>
+                        <div className="flex items-center w-full gap-3 max-[750px]:flex-wrap">
 
                             <label className="flex gap-2 items-center" htmlFor="priority">
                                 <span className="font-medium">Priority</span>

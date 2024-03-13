@@ -34,17 +34,21 @@ export interface TicketDetails {
 }
 interface TicketState {
   ticket: any
+  ticketcategory: any
 }
 
 const initialState: TicketState = {
   ticket: [],
+  ticketcategory: []
 };
 
 export const ticketSlice = createSlice({
   name: 'ticket',
   initialState,
   reducers: {
-
+    storeticketcategory(state, action) {
+      state.ticketcategory = action.payload
+    },
     storeTicket(state, action) {
       state.ticket = action.payload
     },

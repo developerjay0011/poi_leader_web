@@ -45,7 +45,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      @apply bg-sky-950 rounded-full;
+      @apply bg-sky-950;
     }
   }
 
@@ -78,7 +78,7 @@
   }
 
   .hover_text {
-    @apply bg-sky-800 text-sky-50 w-max inline rounded absolute top-1/2 translate-y-[-50%] left-[115%] px-3 capitalize hidden;
+    @apply bg-sky-800 text-sky-50 w-max inline rounded absolute top-1/2 translate-y-[-50%] left-[115%] px-2 capitalize hidden;
     font-size: 13px;
   }
 
