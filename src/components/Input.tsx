@@ -21,6 +21,7 @@ interface InputProps {
   rows?: number
   readOnly?: boolean
   fullWidth?: boolean
+  multiple?: boolean
 }
 
 export const Input: FC<InputProps> = ({
@@ -37,6 +38,7 @@ export const Input: FC<InputProps> = ({
   readOnly,
   fullWidth,
   disabled,
+  multiple = false
 }) => {
   const [isPassword, setIsPassword] = useState(type === 'password')
 
@@ -101,6 +103,7 @@ export const Input: FC<InputProps> = ({
           disabled={disabled}
           id={id}
           key={id}
+          multiple={multiple}
           {...register(id, {
             ...validations,
             required: {

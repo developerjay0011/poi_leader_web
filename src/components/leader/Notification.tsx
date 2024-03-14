@@ -1,5 +1,7 @@
 import { getImageUrl } from '@/config/get-image-url'
-import { cusSelector } from '@/redux_store/cusHooks'
+import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
+import { DeleteLeaderNotification, getNotification } from '@/redux_store/leader/leaderAPI'
+import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import CustomImage from '@/utils/CustomImage'
 import { user2Img } from '@/utils/utility'
 import { FC } from 'react'
@@ -8,8 +10,11 @@ interface NotificationProps {
   title: string
   description: string
   userimg: string
+  noti: any
 }
-export const Notification: FC<NotificationProps> = ({ title, description, userimg }) => {
+export const Notification: FC<NotificationProps> = ({ title, description, userimg, noti }) => {
+  const { userDetails }: any = cusSelector((state) => state.auth);
+  const dispatch = cusDispatch();
 
 
 
@@ -32,9 +37,16 @@ export const Notification: FC<NotificationProps> = ({ title, description, userim
       </div>
 
       {/* Notification */}
-      {/* <button className='ml-auto hover:text-orange-500'>
+      <button onClick={async () => {
+        await DeleteLeaderNotification({
+          "id": noti?.id,
+          "leaderid": userDetails.leaderId
+        })
+        const response = await getNotification(userDetails?.leaderId as string);
+        dispatch(leaderActions.setNotification(response));
+      }} className='ml-auto hover:text-orange-500'>
         <BiSolidTrashAlt className='' />
-      </button> */}
+      </button>
     </li>
   )
 }

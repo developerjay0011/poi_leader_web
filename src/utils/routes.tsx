@@ -6,9 +6,11 @@ import { BsFillCalendar3WeekFill, BsHouseGearFill } from 'react-icons/bs'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { BiCategoryAlt, BiSolidUserDetail, BiTask } from "react-icons/bi";
-
+import { FaMapLocationDot } from "react-icons/fa6";
 import { ImTicket } from "react-icons/im";
 import { HiSpeakerphone } from 'react-icons/hi'
+import { FaFileInvoice } from "react-icons/fa";
+
 export const LEFT_NAV_ROUTES = [
   {
     link: '/user/profile/agenda',
@@ -99,6 +101,22 @@ export const LEFT_NAV_ROUTES = [
   },
   {
     id: GenerateId(),
+    link: '/user/location/manage-location',
+    link2: '/employee-access/location/manage-location',
+    name: 'Manage Office Location',
+    Icon: FaMapLocationDot,
+    tabname: "Leader"
+  },
+  {
+    id: GenerateId(),
+    link: '/user/filetype/manage-files',
+    link2: '/employee-access/filetype/manage-files',
+    name: 'Manage file type',
+    Icon: FaFileInvoice,
+    tabname: "Leader"
+  },
+  {
+    id: GenerateId(),
     link: '/user/employees/manage-employees',
     link2: '/employee-access/employees/manage-employees',
     name: 'Manage Employees',
@@ -113,7 +131,6 @@ export const LEFT_NAV_ROUTES = [
     Icon: HiSpeakerphone,
     tabname: "Manage Polls"
   },
-
   {
     id: GenerateId(),
     link: '/user/manage-categories',

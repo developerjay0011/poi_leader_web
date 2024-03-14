@@ -71,7 +71,7 @@ export const DevelopmentPage: FC = () => {
                                 id="priority"
                                 value={priorityFilter}
                                 onChange={(e) => setPriorityFilter(e.target.value)}
-                                className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                             >
                                 <option value="">All</option>
                                 <option value="low">low</option>
@@ -86,7 +86,7 @@ export const DevelopmentPage: FC = () => {
                                 id="category"
                                 value={categoryFilter}
                                 onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                             >
                                 <option value="">All</option>
                                 {categories?.map((el) => (
@@ -103,7 +103,7 @@ export const DevelopmentPage: FC = () => {
                                 id="status"
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value)}
-                                className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                             >
                                 <option value="">All</option>
                                 {Object.keys(AGENDA_STATUS).map((el) => (

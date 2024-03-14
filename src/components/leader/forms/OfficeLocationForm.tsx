@@ -1,85 +1,92 @@
 import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
-import { ErrorMessage } from '@hookform/error-message'
-import { Savedby } from '@/constants/common'
-import { SaveCategory, getCategory } from '@/redux_store/agenda/agendaApi'
-import { agendaAction } from '@/redux_store/agenda/agendaSlice'
+import { tryCatch } from '@/config/try-catch'
+import { AddEditEmployee, GetEmployees } from '@/redux_store/employee/employeeApi'
+import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
 import { Modal } from '@/components/modal/modal'
-interface ManageTemplateFormProps {
-  tempHeader: string
-  status: string
-  submitting: boolean
+import { SaveOfficeLocation } from '@/redux_store/location/locationApi'
+
+interface OfficeLocationFormProps {
   onClose: () => void
-  submitHandler: () => void
+  submitting: boolean
   heading: string
-  err: string
-  isEdit: any
+  edit?: boolean
+  details: any
+  GetofficeLocations: any
 }
 
-interface TemplateFormFields {
-  category: string
+export interface FormFields {
+  id: string,
+  leaderid: string,
+  location: string
   isactive: string
 }
-export const CategoryFrom: FC<ManageTemplateFormProps> = ({ submitting, tempHeader, status, onClose, err, heading, isEdit }) => {
-  const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm<TemplateFormFields>({})
+
+export const OfficeLocationForm: FC<OfficeLocationFormProps> = ({ onClose, submitting, heading, edit, details, GetofficeLocations }) => {
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-  const formSubmitHandler = async (data: TemplateFormFields) => {
-    const body = {
-      id: isEdit ? isEdit.id : null,
-      "leaderid": userDetails?.leaderId,
-      "category": data?.category,
-      isactive: data.isactive == "true" ? true : false,
-      ...Savedby()
-    };
-    const response = await SaveCategory(body);
-    if (response?.success) {
-      const data = await getCategory(userDetails?.leaderId as string);
-      dispatch(agendaAction.storeCategories(data));
-      dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-      onClose()
-      reset();
-    } else {
-      dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-    }
-
+  const { register, handleSubmit, reset, formState: { errors, isValid }, } = useForm<FormFields>({})
+  const formSubmitHandler = (data: FormFields) => {
+    tryCatch(
+      async () => {
+        var body: any = {
+          leaderid: userDetails?.leaderId,
+          location: data?.location,
+        };
+        if (details?.id) {
+          body.id = details?.id as string
+        }
+        const response = await SaveOfficeLocation(body);
+        if (response?.success) {
+          GetofficeLocations()
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          onClose()
+          reset();
+        } else {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+        }
+      })
   }
+
   useEffect(() => {
-    if (isEdit) {
-      setValue("category", isEdit?.category)
-      setValue("isactive", isEdit?.isactive)
+    if (edit) {
+      reset({
+        id: details?.id,
+        location: details?.location,
+      })
     }
-  }, [])
+  }, [reset])
 
   return (
-    <Modal heading={heading} onClose={onClose}  >
+    <Modal heading={heading} onClose={onClose}>
       <form
         className='flex flex-col py-5 gap-4 max-[550px]:px-4'
         noValidate
         onSubmit={handleSubmit(formSubmitHandler)}>
-        <section className='grid px-7 gap-5 grid-cols-2 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
-          <label htmlFor='fullname' className={`flex flex-col gap-2`}>
+        <section className='grid px-7 gap-5 grid-cols-1 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
+          <label htmlFor='location' className={`flex flex-col gap-2`}>
             <span className='capitalize font-[500]'>
-              category
+              Location
               {<strong className='text-rose-500'>*</strong>}
             </span>
             <input
-              id='category'
+              id='location'
               type='text'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md  transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('category', { required: 'category is required' })}
+              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+              {...register('location', { required: 'location is required' })}
             />
             <ErrorMessage
-              name={'category'}
+              name={'location'}
               errors={errors}
               as={'span'}
               className='text-red-500 text-sm first-letter:capitalize lowercase'
             />
           </label>
-          <label htmlFor='allowAccess' className={`flex flex-col gap-2`}>
+          {/* <label htmlFor='allowAccess' className={`flex flex-col gap-2`}>
             <span className='capitalize font-[500]'>
               Status
               <strong className='text-rose-500'>*</strong>
@@ -100,8 +107,7 @@ export const CategoryFrom: FC<ManageTemplateFormProps> = ({ submitting, tempHead
               as={'span'}
               className='text-red-500 text-sm first-letter:capitalize lowercase'
             />
-          </label>
-
+          </label> */}
         </section>
 
         <div className='w-full bg-zinc-200 h-[1px] mt-3' />

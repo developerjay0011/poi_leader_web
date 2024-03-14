@@ -2,9 +2,6 @@ import { cusSelector } from '@/redux_store/cusHooks';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
 import { FC, useState } from 'react'
 
-import { StatusBtn } from '@/utils/StatusBtn'
-import { FaEdit } from 'react-icons/fa';
-import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
@@ -20,8 +17,20 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
   const { letter } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
-  const searchFilterData = letter?.filter((el) => searchStr ? el?.template_name === searchStr : el)
-
+  const searchFilterFunction = (text: string) => {
+    if (text) {
+      const newData = letter?.filter(
+        function (item) {
+          const itemData = item?.["template_name"] ? item?.["template_name"].toUpperCase() : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+      )
+      return newData
+    } else {
+      return letter
+    };
+  }
 
   return (
     <>
@@ -56,8 +65,8 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
             </th>
           </tr>
         </thead>
-        <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el, i) => (
+        <tbody>{searchFilterFunction(searchStr)?.length > 0 ? (
+          searchFilterFunction(searchStr)?.map((el, i) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
                 {i + 1}

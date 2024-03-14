@@ -1,7 +1,7 @@
 import { cusSelector } from '@/redux_store/cusHooks'
 import { FC } from 'react'
 import { PollOption } from './PollOption'
-import { NewPollsFormFields } from '@/components/leader/forms/ManagePollsForm'
+import { NewPollsFormFields } from '@/components/leader/forms/PollsForm'
 import { dateConverter } from '@/utils/utility'
 import CustomImage from '@/utils/CustomImage'
 import { getImageUrl, setusername } from '@/config/get-image-url'

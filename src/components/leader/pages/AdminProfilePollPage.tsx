@@ -1,6 +1,6 @@
 'use client'
 import { FC, useState } from 'react'
-import { ManagePollsForm } from '../forms/ManagePollsForm'
+import { ManagePollsForm } from '../forms/PollsForm'
 import { PollsTable } from '@/components/posts/polls/PollsTable'
 import { AnimatePresence } from 'framer-motion'
 import { BiPlusCircle } from 'react-icons/bi'

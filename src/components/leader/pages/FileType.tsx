@@ -1,21 +1,19 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
 import { TableWrapper } from '@/utils/TableWrapper'
-
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { ManageEmployessForm } from '../forms/EmployessForm'
-import { ChangeActiveStatus, GetEmployees } from '@/redux_store/employee/employeeApi'
-import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
-import { ManageEmployeeTable } from '../employee/ManageEmployeeTable'
-import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
+import { ChangeActiveStatus } from '@/redux_store/employee/employeeApi'
+import { FileTypeForm } from '../forms/FileTypeForm'
+import { GetFiles } from '@/redux_store/filetype/filetypeApi'
+import { fileAction } from '@/redux_store/filetype/filetypeSlice'
+import { FiletypeTable } from '../filetype/FiletypeTable'
 
-export const EmployeeManagePage: FC = () => {
+export const FileType: FC = () => {
     const [showAdd, setShowAdd] = useState(false)
     const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
     const dispatch = cusDispatch();
-    const { employees } = cusSelector((state) => state.employee);
+    const { filestype } = cusSelector((state) => state.file);
     const { userDetails } = cusSelector((state) => state.auth);
     const changeFilterData = (str: string) => setSearchFilter(str)
     const [filterDataCount, setFilterAmount] = useState(5)
@@ -25,26 +23,15 @@ export const EmployeeManagePage: FC = () => {
         setFilterAmount(val)
         setCurPageNo(1)
     }
-    const getemployee = async () => {
+    const getFiles = async () => {
         if (userDetails?.leaderId) {
-            const data = await GetEmployees(userDetails?.leaderId as string);
-            if (Array.isArray(data)) {
-                dispatch(employeeAction.storeemployees(data as any));
-            }
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files))
         }
-    };
-
-    const changeActiveStatus = async (id: string) => {
-        let body = {
-            "leaderid": userDetails?.leaderId,
-            "employeeid": id
-        }
-        await ChangeActiveStatus(body)
-        getemployee()
     };
     useEffect(() => {
         (async () => {
-            await getemployee();
+            await getFiles();
         })();
     }, [userDetails?.leaderId, dispatch]);
 
@@ -52,14 +39,14 @@ export const EmployeeManagePage: FC = () => {
         <>
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                 <TableWrapper
-                    heading='Manage Employees'
-                    addBtnTitle='add employee'
+                    heading='Manage File Type'
+                    addBtnTitle='add File Type'
                     addBtnClickFn={() => {
                         setEdit(null)
                         setShowAdd(true)
                     }}
                     curDataCount={1}
-                    totalCount={employees?.length}
+                    totalCount={filestype?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
@@ -67,20 +54,24 @@ export const EmployeeManagePage: FC = () => {
                     searchFilterFn={changeFilterData}
                     jsonDataToDownload={null}
                 >
-                    <ManageEmployeeTable
-                        handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
+                    <FiletypeTable
+                        handleEdit={(value) => {
+                            setShowAdd(true),
+                                setEdit(value)
+                        }}
                         searchStr={searchFilter}
-                        changeActiveStatus={(id) => { changeActiveStatus(id) }}
+                        getFiles={() => getFiles()}
                     />
                 </TableWrapper>
             </div>
             {showAdd && (
-                <ManageEmployessForm
+                <FileTypeForm
                     edit={isEdit?.id}
-                    heading={isEdit?.id ? 'Edit Employee' : 'Add Employee'}
-                    employeedetails={isEdit}
+                    heading={isEdit?.id ? 'Edit File Type' : 'Add File Type'}
+                    details={isEdit}
                     submitting={false}
                     onClose={() => setShowAdd(false)}
+                    getFiles={() => getFiles()}
                 />
             )}
         </>

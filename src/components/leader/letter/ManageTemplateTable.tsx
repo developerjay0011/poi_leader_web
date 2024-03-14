@@ -19,8 +19,20 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ search
   const { letter_templete } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
-  const searchFilterData = letter_templete?.filter((el) => searchStr ? el?.template_name === searchStr : el)
-
+  const searchFilterFunction = (text: string) => {
+    if (text) {
+      const newData = letter_templete?.filter(
+        function (item) {
+          const itemData = item?.["template_name"] ? item?.["template_name"].toUpperCase() : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+      )
+      return newData
+    } else {
+      return letter_templete
+    };
+  }
 
   return (
     <>
@@ -40,8 +52,8 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ search
             </th>
           </tr>
         </thead>
-        <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el, i) => (
+        <tbody>{searchFilterFunction(searchStr)?.length > 0 ? (
+          searchFilterFunction(searchStr)?.map((el, i) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
                 {i + 1}

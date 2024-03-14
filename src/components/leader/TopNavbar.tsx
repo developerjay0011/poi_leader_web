@@ -44,6 +44,10 @@ import { getDevelopment } from "@/redux_store/development/developmentApi";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
 import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
+import { GetFiles } from "@/redux_store/filetype/filetypeApi";
+import { fileAction } from "@/redux_store/filetype/filetypeSlice";
+import { GetOfficeLocations } from "@/redux_store/location/locationApi";
+import { locationAction } from "@/redux_store/location/locationSlice";
 
 
 export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
@@ -169,6 +173,12 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             const ticketCategories = await GetCategories();
             dispatch(ticketActions.storeticketcategory(ticketCategories));
 
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
+
+
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+            dispatch(locationAction.storeLocation(OfficeLocations));
           }
         } else {
           router.push(AuthRoutes.login)
@@ -309,8 +319,10 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 </span>
 
                 {showNotifications && (
-                  <div className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
-                    <BriefNotifications />
+                  <div onClick={(e) => e.stopPropagation()} className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
+                    <BriefNotifications
+                      onClick={() => setShowNotifications((lst) => !lst)}
+                    />
                   </div>
                 )}
               </button>

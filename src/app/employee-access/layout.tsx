@@ -17,7 +17,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
       let usertype = getCookie(USER_TYPE)
       await dispatch(accessAction.storeLoader(true))
       await dispatch(accessAction.storeUsertype(usertype))
-      var tabs = await fetchEmployeeAccessTabs(userDetails?.id)
+      var tabs = await fetchEmployeeAccessTabs(userDetails?.employeeId)
       if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
       await dispatch(accessAction.storeLoader(false))
     })()

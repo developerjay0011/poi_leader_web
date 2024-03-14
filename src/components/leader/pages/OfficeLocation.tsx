@@ -1,21 +1,19 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
 import { TableWrapper } from '@/utils/TableWrapper'
 
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { ManageEmployessForm } from '../forms/EmployessForm'
-import { ChangeActiveStatus, GetEmployees } from '@/redux_store/employee/employeeApi'
-import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
-import { ManageEmployeeTable } from '../employee/ManageEmployeeTable'
-import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
+import { OfficelocationTable } from '../officelocation/OfficelocationTable'
+import { OfficeLocationForm } from '../forms/OfficeLocationForm'
+import { GetOfficeLocations } from '@/redux_store/location/locationApi'
+import { locationAction } from '@/redux_store/location/locationSlice'
 
-export const EmployeeManagePage: FC = () => {
+export const OfficeLocation: FC = () => {
     const [showAdd, setShowAdd] = useState(false)
     const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
     const dispatch = cusDispatch();
-    const { employees } = cusSelector((state) => state.employee);
+    const { location } = cusSelector((state) => state.location);
     const { userDetails } = cusSelector((state) => state.auth);
     const changeFilterData = (str: string) => setSearchFilter(str)
     const [filterDataCount, setFilterAmount] = useState(5)
@@ -25,26 +23,18 @@ export const EmployeeManagePage: FC = () => {
         setFilterAmount(val)
         setCurPageNo(1)
     }
-    const getemployee = async () => {
+    const GetofficeLocations = async () => {
         if (userDetails?.leaderId) {
-            const data = await GetEmployees(userDetails?.leaderId as string);
-            if (Array.isArray(data)) {
-                dispatch(employeeAction.storeemployees(data as any));
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId);
+            if (Array.isArray(OfficeLocations)) {
+                dispatch(locationAction.storeLocation(OfficeLocations));
             }
         }
     };
 
-    const changeActiveStatus = async (id: string) => {
-        let body = {
-            "leaderid": userDetails?.leaderId,
-            "employeeid": id
-        }
-        await ChangeActiveStatus(body)
-        getemployee()
-    };
     useEffect(() => {
         (async () => {
-            await getemployee();
+            await GetofficeLocations();
         })();
     }, [userDetails?.leaderId, dispatch]);
 
@@ -52,14 +42,14 @@ export const EmployeeManagePage: FC = () => {
         <>
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                 <TableWrapper
-                    heading='Manage Employees'
-                    addBtnTitle='add employee'
+                    heading='Manage Office Location'
+                    addBtnTitle='add Location'
                     addBtnClickFn={() => {
                         setEdit(null)
                         setShowAdd(true)
                     }}
                     curDataCount={1}
-                    totalCount={employees?.length}
+                    totalCount={location?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
@@ -67,20 +57,21 @@ export const EmployeeManagePage: FC = () => {
                     searchFilterFn={changeFilterData}
                     jsonDataToDownload={null}
                 >
-                    <ManageEmployeeTable
+                    <OfficelocationTable
                         handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
                         searchStr={searchFilter}
-                        changeActiveStatus={(id) => { changeActiveStatus(id) }}
+                        GetofficeLocations={GetofficeLocations}
                     />
                 </TableWrapper>
             </div>
             {showAdd && (
-                <ManageEmployessForm
+                <OfficeLocationForm
                     edit={isEdit?.id}
-                    heading={isEdit?.id ? 'Edit Employee' : 'Add Employee'}
-                    employeedetails={isEdit}
+                    heading={isEdit?.id ? 'Edit Location' : 'Add Location'}
+                    details={isEdit}
                     submitting={false}
                     onClose={() => setShowAdd(false)}
+                    GetofficeLocations={GetofficeLocations}
                 />
             )}
         </>

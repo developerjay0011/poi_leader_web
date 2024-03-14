@@ -1,35 +1,27 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
-import { ManageTemplateForm } from '../forms/TemplateForm'
 import { TableWrapper } from '@/utils/TableWrapper'
-import { ManageTemplateTable } from '../letter/ManageTemplateTable'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { deleteLetterTemplates, getLetterTemplates } from '@/redux_store/letter/letterApi'
-import { tryCatch } from '@/config/try-catch'
-import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType, statusticketOption } from '@/constants/common'
+import { Savedby, statusticketOption } from '@/constants/common'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { ManageTicketTable } from '@/components/ticket/ManageTicketTable'
-import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
+import { TicketForm } from '../forms/TicketForm'
 
 export const TicketTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
-    const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
+    const [showTicket, setShowTicket] = useState(false)
+    const [ischecked, setIschecked] = useState<any>([])
     const [searchFilter, setSearchFilter] = useState('');
-    const [isEdit, setEdit] = useState<any>();
-    const { leaderProfile } = cusSelector((state) => state.leader);
-    const { ticket, ticketcategory } = cusSelector((state) => state.ticket);
+    const [locationFilter, setLocationFilter] = useState('');
     const [categoryFilter, setCategoryFilter] = useState("");
-    const [priorityFilter, setPriorityFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
     const changeFilterData = (str: string) => setSearchFilter(str)
+    const { ticket, ticketcategory } = cusSelector((state) => state.ticket);
+    const { leaderOptions } = cusSelector((state) => state.common);
     const { userDetails } = cusSelector((st) => st.auth);
-    const openModal = () => { setShowAddTemplateForm(true); setEdit(null) };
     const changeCurPageNo = (page: number) => setCurPageNo(page)
     const changeFilterCount = (val: number) => {
         setFilterAmount(val)
@@ -39,24 +31,26 @@ export const TicketTemplateManagePage: FC = () => {
         const data = await getTickets(userDetails?.leaderId as string);
         dispatch(ticketActions.storeTicket(data));
     };
-    const handleTemplateDelete = async (id: string) => {
-        tryCatch(
-            async () => {
-                const response = await deleteLetterTemplates(id, leaderProfile.id as string);
-                if (response?.success) {
-                    getTicket()
-                    dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-                } else {
-                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-                }
-            })
-
-    }
     useEffect(() => {
         (async () => {
             getTicket();
         })();
-    }, [userDetails, dispatch, leaderProfile]);
+    }, [userDetails, dispatch]);
+    const handleFilter = (ticket: any, statusFilter: any, categoryFilter: any, locationFilter: any) => {
+        var filteredResult = Array.isArray(ticket) ? [...ticket] : []
+        if (filteredResult?.length > 0) {
+            if (statusFilter !== '') {
+                filteredResult = filteredResult?.filter(item => item?.status?.slice(-1).pop()?.status === statusFilter);
+            }
+            if (categoryFilter !== '') {
+                filteredResult = filteredResult?.filter(item => item?.category === categoryFilter);
+            }
+            if (locationFilter !== '') {
+                filteredResult = filteredResult?.filter(item => item?.citizen_detail?.citizen_stateid === locationFilter);
+            }
+        }
+        return Array.isArray(ticket) ? filteredResult : []
+    };
 
 
     return (
@@ -64,8 +58,8 @@ export const TicketTemplateManagePage: FC = () => {
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                 <TableWrapper
                     heading='Manage Ticket'
-                    addBtnTitle=''
-                    addBtnClickFn={openModal}
+                    addBtnTitle='add Ticket'
+                    addBtnClickFn={() => { setShowTicket(true) }}
                     curDataCount={1}
                     totalCount={ticket?.length}
                     changeFilterFn={changeFilterCount}
@@ -82,11 +76,11 @@ export const TicketTemplateManagePage: FC = () => {
                                     id="category"
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
                                     {ticketcategory?.map((item: any) =>
-                                        <option value={item?.id}>{item?.category}</option>
+                                        <option value={item?.category}>{item?.category}</option>
                                     )}
                                 </select>
                             </label>
@@ -96,7 +90,7 @@ export const TicketTemplateManagePage: FC = () => {
                                     id="status"
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
                                     {statusticketOption?.map((item: any) =>
@@ -104,31 +98,42 @@ export const TicketTemplateManagePage: FC = () => {
                                     )}
                                 </select>
                             </label>
+                            <label className="flex gap-2 items-center" htmlFor="status">
+                                <span className="font-medium">Location</span>
+                                <select
+                                    id="status"
+                                    value={locationFilter}
+                                    onChange={(e) => setLocationFilter(e.target.value)}
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                >
+                                    <option value="">All</option>
+                                    {leaderOptions?.states?.length > 0 &&
+                                        leaderOptions?.states?.map((item: any) =>
+                                            <option value={item?.id}>{item?.state}</option>
+                                        )}
+                                </select>
+                            </label>
                         </>
                     }
                 >
-                    <>
-
-                        <ManageTicketTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
-                    </>
+                    <ManageTicketTable
+                        handleDelete={(id) => { }}
+                        handleEdit={(value) => { }}
+                        searchStr={searchFilter}
+                        ticket={handleFilter(ticket, statusFilter, categoryFilter, locationFilter) || []}
+                        ischecked={ischecked}
+                        setIschecked={setIschecked}
+                    />
                 </TableWrapper>
             </div>
-
-
-            <AnimatePresence>
-                {showAddTemplateForm && (
-                    <ManageTemplateForm
-                        isEdit={isEdit}
-                        err={"err"}
-                        heading={isEdit ? 'Edit Template' : 'Add Template'}
-                        status='1'
-                        submitting={false}
-                        submitHandler={() => { }}
-                        tempHeader=''
-                        onClose={() => setShowAddTemplateForm(false)}
-                    />
-                )}
-            </AnimatePresence>
+            {showTicket &&
+                <TicketForm
+                    heading="New Ticket"
+                    onClose={() => setShowTicket(false)}
+                    edit={false}
+                    submitting={() => { }}
+                />
+            }
         </>
     )
 }

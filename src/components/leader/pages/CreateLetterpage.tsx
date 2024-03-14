@@ -1,7 +1,7 @@
 'use client'
 import { FC, useRef, useEffect, useState } from 'react'
 import { motion as m } from 'framer-motion'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm, useFieldArray, set } from 'react-hook-form'
 import ReactToPrint from 'react-to-print'
 import { BiRightArrowAlt } from 'react-icons/bi'
 import { ConnectToAPI, GenerateId } from '@/utils/utility'
@@ -14,6 +14,8 @@ import { Savedby, ToastType } from '@/constants/common'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { LetterForm } from '../forms/LetterForm'
+import { useSearchParams } from 'next/navigation'
+import moment from 'moment'
 
 export interface LetterFormFields {
     location: string
@@ -33,32 +35,26 @@ export interface LetterFormFields {
 }
 
 export const CreateLetterpage: FC = () => {
-    const [stateList, setStateList] = useState<{ stateId: string; stateName: string }[]>([])
     const { register, formState: { errors }, handleSubmit, setValue, getValues, watch, control, } = useForm<LetterFormFields>({ defaultValues: { language: 'english' }, })
     const { leaderOptions } = cusSelector((state) => state.common);
     const { letter_templete } = cusSelector((state) => state.letter);
     const [letterData, setLeaderData] = useState<any>();
     const [letterFormat, setLetterFormat] = useState("");
-    const { userDetails } = cusSelector((state) => state.auth);
-
-
+    const { userDetails, } = cusSelector((state) => state.auth);
+    const { usertype, } = cusSelector((state) => state.access);
+    const { ticket } = cusSelector((state) => state.ticket);
+    const searchParams = useSearchParams();
+    const ticket_id = searchParams.get('id') as string
+    const ticket_data = ticket_id && ticket?.length > 0 ? ticket?.find((item: any) => item?.ticketid == ticket_id) : null
+    const dispatch = cusDispatch();
+    const letterRef = useRef<HTMLDivElement>(null)
+    const { fields, append, remove } = useFieldArray({ name: 'attachments', control, })
     const formSubmitHandler = (data: LetterFormFields) => {
         setLeaderData(data)
         var letter_format = (letter_templete.find((item) => item?.id == data?.letterType)?.template_html || "")
         var letter_formats = letter_format?.replaceAll("${FILENUMBER}", data?.fileNo)?.replaceAll("${DATE}", data?.date)?.replaceAll("${LOCATION}", data?.location)?.replaceAll("${TO}", data?.to)?.replaceAll("${FROM}", data?.from)?.replaceAll("${PHONE}", data?.contactNo)?.replaceAll("${IDNO}", data?.idNo)?.replaceAll("${IMAGE}", "https://www.fillhq.com/wp-content/uploads/2021/08/autodraw-11_2_2022.png")
         setLetterFormat(letter_formats)
     }
-
-    const { fields, append, remove } = useFieldArray({
-        name: 'attachments',
-        control,
-    })
-
-    const letterRef = useRef<HTMLDivElement>(null) // for letter output
-    const { ticket } = cusSelector((state) => state.ticket);
-
-    const dispatch = cusDispatch();
-
     const handleAdd = async () => {
         if (letterFormat == "") {
             toast.error("please press preview frist")
@@ -96,16 +92,17 @@ export const CreateLetterpage: FC = () => {
         }
     }
 
-    const getTicket = async () => {
-        const data = await getTickets(userDetails?.leaderId as string);
-        dispatch(ticketActions.storeTicket(data));
-    };
     useEffect(() => {
         (async () => {
-            getTicket();
+            if (ticket_id) {
+                setValue("ticketId", ticket_id)
+                setValue("date", moment().format("YYYY-MM-DD"))
+            }
         })();
-    }, [userDetails?.leaderId, dispatch]);
-    return (
+    }, [ticket_id, ticket?.length]);
+
+
+    return usertype && (
         <>
             <m.section
                 initial={{ opacity: 0 }}
@@ -128,7 +125,7 @@ export const CreateLetterpage: FC = () => {
                         </button>
 
                         {/* LETTER FORM */}
-                        <section className='py-0 px-6 flex flex-col gap-6'>
+                        <section className='py-0 px-6 flex flex-col gap-6 '>
                             <LetterForm
                                 errors={errors}
                                 register={register}

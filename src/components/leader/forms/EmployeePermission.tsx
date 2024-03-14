@@ -30,11 +30,12 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
         });
         if (response?.success) {
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          onClose()
+          reset();
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-        onClose()
-        reset();
+
       })
   }
   const handleGiveAllAccessChange = () => {

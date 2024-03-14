@@ -12,6 +12,7 @@ interface LetterInputFieldProps {
   title: string
   required?: boolean
   readonly?: boolean
+  disabled?: boolean
 }
 
 export const LetterInputField: FC<LetterInputFieldProps> = ({
@@ -23,7 +24,9 @@ export const LetterInputField: FC<LetterInputFieldProps> = ({
   title,
   required,
   readonly,
+  disabled = false
 }) => {
+
   return (
     <>
       <label htmlFor={id} className='flex gap-4 items-center w-full'>
@@ -38,6 +41,7 @@ export const LetterInputField: FC<LetterInputFieldProps> = ({
               } ${readonly ? 'bg-gray-100' : ''}`}
             {...register(id, validations)}
             readOnly={readonly}
+            disabled={disabled}
           />
           <ErrorMessage
             name={id}

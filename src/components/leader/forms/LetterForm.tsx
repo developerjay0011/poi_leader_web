@@ -16,6 +16,7 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { LetterFormFields } from '../pages/CreateLetterpage'
+import { Savedby } from '@/constants/common'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>
@@ -30,26 +31,17 @@ interface LetterFormProps {
 }
 
 export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) => {
-  const { userDetails } = cusSelector((state) => state.auth);
   const { letter_templete } = cusSelector((state) => state.letter);
   const { ticket } = cusSelector((state) => state.ticket);
-  const dispatch = cusDispatch()
-  useEffect(() => {
-    (async () => {
-      const data = await getTickets(userDetails?.leaderId as string);
-      dispatch(ticketActions.storeTicket(data));
-    })();
-  }, [userDetails, dispatch]);
+
+
   return (
     <>
       <LetterSelectField
         error={errors}
         id='ticketId'
         title='Select Ticket'
-        selectOptions={ticket?.map((el) => ({
-          id: el.ticketid,
-          val: el.ticketid,
-        }))}
+        selectOptions={ticket?.map((el: any) => ({ id: el.ticketid, val: el.ticket_code, }))}
         register={register}
         required
         validations={{ required: 'ticketid is required' }}
@@ -60,10 +52,7 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) =
         register={register}
         id='location'
         title='location'
-        selectOptions={states.map((el) => ({
-          id: el.id,
-          val: el.state,
-        }))}
+        selectOptions={[]}
         required
         validations={{ required: 'Location is required' }}
       />
@@ -99,15 +88,19 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) =
 
       {/* <Line /> */}
 
-      <LetterInputField
-        error={errors}
-        id='date'
-        title='Date'
-        type='date'
-        register={register}
-        required
-        validations={{ required: 'Date is required' }}
-      />
+      {Savedby().saved_by_type &&
+        <LetterInputField
+          error={errors}
+          id='date'
+          title='Date'
+          type='date'
+          register={register}
+          required
+          validations={{ required: 'Date is required' }}
+          disabled={Savedby().saved_by_type != "leader"}
+        />
+      }
+
 
       <Line />
 

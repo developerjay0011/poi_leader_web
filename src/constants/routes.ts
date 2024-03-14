@@ -52,6 +52,15 @@ export const APIRoutes = {
   AddMember: `${API_Prefix}/leader/AddMember`,
   DeleteMembers: `${API_Prefix}/leader/DeleteMembers`,
   GetBirthdayList: `${API_Prefix}/leader/GetBirthdayList`,
+  DeleteLeaderNotification: `${API_Prefix}/leader/DeleteLeaderNotification`,
+  ReadLeaderNotification: `${API_Prefix}/leader/ReadLeaderNotification`,
+  ClearAllLeaderNotification: `${API_Prefix}/leader/ClearAllLeaderNotification/{{leaderId}}`,
+  GetFiles: `${API_Prefix}/leader/GetFiles/{{leaderId}}`,
+  SaveFile: `${API_Prefix}/leader/SaveFile`,
+  DeleteFile: `${API_Prefix}/leader/DeleteFile`,
+  GetOfficeLocations: `${API_Prefix}/leader/GetOfficeLocations/{{leaderId}}`,
+  SaveOfficeLocation: `${API_Prefix}/leader/SaveOfficeLocation`,
+  DeleteOfficeLocation: `${API_Prefix}/leader/DeleteOfficeLocation`,
 
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,

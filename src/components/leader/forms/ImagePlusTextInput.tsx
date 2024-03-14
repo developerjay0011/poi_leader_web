@@ -9,7 +9,7 @@ import {
   UseFormSetValue,
 } from 'react-hook-form'
 import { convertFileToBase64 } from '@/utils/utility'
-import { NewPollsFormFields } from './ManagePollsForm'
+import { NewPollsFormFields } from './PollsForm'
 import CustomImage from '@/utils/CustomImage'
 
 interface ImagePlusTextInputProps {

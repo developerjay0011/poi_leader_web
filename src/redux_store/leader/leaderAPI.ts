@@ -101,3 +101,32 @@ export const GetBirthdayList = async () => {
     }
   );
 };
+
+
+export const ClearAllLeaderNotification = async (leaderId: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(insertVariables(APIRoutes.ClearAllLeaderNotification, { leaderId }));
+      return res.data;
+    }
+  );
+};
+
+export const DeleteLeaderNotification = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.DeleteLeaderNotification, body);
+      return res.data;
+    }
+  );
+};
+
+export const ReadLeaderNotification = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.ReadLeaderNotification, body);
+      return res.data;
+    }
+  );
+};
+

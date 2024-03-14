@@ -46,11 +46,12 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({ submitting, te
       const Data = await getLetterTemplates(userDetails?.leaderId as string);
       dispatch(letterActions.storeLetterTemplate(Data))
       dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      onClose()
+      reset();
     } else {
       dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
     }
-    onClose()
-    reset();
+
   }
   useEffect(() => {
     if (isEdit) {

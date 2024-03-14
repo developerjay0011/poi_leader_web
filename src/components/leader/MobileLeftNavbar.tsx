@@ -4,7 +4,7 @@ import { FC, ReactNode, useEffect } from 'react'
 import POILogo from '@/assets/poi_logo_1.png'
 import { FaBell, FaClipboard, FaUser } from 'react-icons/fa'
 import { LuNetwork } from 'react-icons/lu'
-import { FaUserGroup } from 'react-icons/fa6'
+import { FaFileInvoice, FaMapLocationDot, FaUserGroup } from 'react-icons/fa6'
 import { HiSpeakerphone } from 'react-icons/hi'
 import { TfiStatsUp } from 'react-icons/tfi'
 import { MdContacts, MdSpaceDashboard } from 'react-icons/md'
@@ -118,6 +118,20 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
       tabname: "Manage Letter Templates"
     },
     {
+      link: '/user/filetype/manage-files',
+      link2: '/employee-access/filetype/manage-files',
+      name: 'Manage file type',
+      Icon: FaFileInvoice,
+      tabname: "Leader"
+    },
+    {
+      link: '/user/location/manage-location',
+      link2: '/employee-access/location/manage-location',
+      name: 'Manage Office Location',
+      Icon: FaMapLocationDot,
+      tabname: "Leader"
+    },
+    {
       link: ' /user/profile/polls',
       link2: '/employee-access/profile/polls',
       name: 'Polls',
@@ -130,12 +144,6 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
       name: 'Manage Employees',
       Icon: BiSolidUserDetail,
       tabname: "Manage Employees"
-    },
-    {
-      link: '/',
-      name: 'Dashboard',
-      Icon: MdSpaceDashboard,
-      tabname: "Leader"
     },
   ]
   useEffect(() => {

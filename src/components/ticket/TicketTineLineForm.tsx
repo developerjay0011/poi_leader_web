@@ -3,12 +3,10 @@ import { Input } from "../Input";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { getAgenda, saveTimeLine } from "@/redux_store/agenda/agendaApi";
-import { agendaAction } from "@/redux_store/agenda/agendaSlice";
-import { getImageUrl } from "@/config/get-image-url";
+import { getImageUrl, setusername } from "@/config/get-image-url";
 import { tryCatch } from "@/config/try-catch";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType, statusticketOption } from "@/constants/common";
+import { Savedby, ToastType, statusticketOption } from "@/constants/common";
 import { getTickets, saveTicketStatus } from "@/redux_store/ticket/ticketApi";
 import { ticketActions } from "@/redux_store/ticket/ticketSlice";
 
@@ -20,8 +18,10 @@ interface TicketTineLineFormProps {
 }
 
 const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticketdata, isedit, data }) => {
+  const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const id = data?.id
+  const status = Array.isArray(ticketdata?.status) ? ticketdata?.status?.map((itemL: any) => itemL?.status) : []
   const dispatch = cusDispatch(); const { register, setValue, watch, formState: { errors }, handleSubmit, } = useForm<UserDetails>();
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
@@ -33,6 +33,8 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
         formData.append("category", ticketdata?.ticket_category || "");
         formData.append("status", data?.status || "");
         formData.append("description", data?.remark || "");
+        formData.append("created_by", userDetails?.id || '');
+        formData.append("created_by_name", Savedby()?.saved_by_type == "leader" ? setusername(leaderProfile) : userDetails?.username);
         if (data?.attachments?.length != 0) {
           for (let i = 0; i < data?.attachments?.length; i++) {
             const element = data?.attachments?.[i]
@@ -59,11 +61,9 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
   }, [])
 
 
+
   return (
-    <form
-      className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5"
-      onSubmit={handleSubmit(formSubmitHandler)}
-    >
+    <form className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5" onSubmit={handleSubmit(formSubmitHandler)}>
       <Input
         register={register}
         errors={errors}
@@ -76,7 +76,7 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
         }}
         selectField={{
           title: 'select status',
-          options: statusticketOption.map((el) => ({
+          options: statusticketOption?.filter((item: any) => !status?.includes(item?.id)).map((el) => ({
             id: el.id,
             value: el.value,
           })),
@@ -99,7 +99,6 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
         register={register}
         title="Attachments"
         type="file"
-        required={!isedit}
         validations={{
           required: "attachments is required",
         }}

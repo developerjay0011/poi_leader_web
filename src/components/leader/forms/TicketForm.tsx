@@ -11,10 +11,9 @@ import { Modal } from '@/components/modal/modal'
 
 interface ManageEmployessFormProps {
   onClose: () => void
-  submitting: boolean
+  submitting: any
   heading: string
   edit?: boolean
-  employeedetails: any
 }
 
 export interface FormFields {
@@ -29,7 +28,7 @@ export interface FormFields {
   isactive: string
 }
 
-export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, heading, edit, employeedetails, }) => {
+export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, heading, edit, }) => {
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
   const { register, handleSubmit, reset, formState: { errors, isValid }, } = useForm<FormFields>({})
@@ -37,50 +36,26 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
     tryCatch(
       async () => {
         const body = {
-          id: employeedetails?.id ? employeedetails?.id : null,
-          leaderid: userDetails?.leaderId,
-          fullname: data?.fullname,
-          username: data?.username,
-          email: data?.email,
-          phoneno: data?.phoneno,
-          password: data?.password,
-          location: data?.location,
-          isactive: data?.isactive == 'true' ? true : false,
+
         };
         const response = await AddEditEmployee(body);
         if (response?.success) {
           const Data = await GetEmployees(userDetails?.leaderId as string);
           dispatch(employeeAction.storeemployees(Data))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          onClose()
+          reset();
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-        onClose()
-        reset();
+
       })
   }
 
-  useEffect(() => {
-    if (edit) {
-      reset({
-        id: employeedetails?.id,
-        fullname: employeedetails?.fullname,
-        username: employeedetails?.username,
-        email: employeedetails?.email,
-        phoneno: employeedetails?.phoneno,
-        password: employeedetails?.password,
-        location: employeedetails?.location,
-        isactive: String(employeedetails?.isactive),
-      })
-    }
-  }, [reset])
 
   return (
     <Modal heading={heading} onClose={onClose}>
-      <form
-        className='flex flex-col py-5 gap-4 max-[550px]:px-4'
-        noValidate
-        onSubmit={handleSubmit(formSubmitHandler)}>
+      <form className='flex flex-col py-5 gap-4 max-[550px]:px-4' noValidate onSubmit={handleSubmit(formSubmitHandler)}>
         <section className='grid px-7 gap-5 grid-cols-2 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
           <label htmlFor='fullname' className={`flex flex-col gap-2`}>
             <span className='capitalize font-[500]'>
@@ -280,9 +255,9 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
           </button>
           <button
             type='submit'
-            disabled={submitting}
+            disabled={true}
             className='rounded-full capitalize px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500]'>
-            {submitting ? 'saving..' : 'Submit'}
+            {'Submit'}
           </button>
         </div>
       </form>

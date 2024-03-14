@@ -71,11 +71,12 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
           const Data = await getPolls(userDetails?.leaderId as string);
           dispatch(pollActions.storePoll(Data))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          onClose()
+          reset();
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-        onClose()
-        reset();
+
       })
   }
 

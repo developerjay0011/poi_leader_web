@@ -6,7 +6,8 @@ interface Props {
   jsonData: unknown[] // Your JSON data array,
   children: ReactNode
   onClick?: () => void
-  id?: string
+  id?: string,
+  disabled: boolean
 }
 
 export const DownloadExcelButton: React.FC<Props> = ({
@@ -14,6 +15,7 @@ export const DownloadExcelButton: React.FC<Props> = ({
   children,
   onClick,
   id,
+  disabled = false
 }) => {
   const handleDownload = () => {
     const worksheet = XLSX.utils.json_to_sheet(jsonData)
@@ -34,7 +36,9 @@ export const DownloadExcelButton: React.FC<Props> = ({
   return (
     <button
       type='button'
-      onClick={handleDownload} id={id ? id : ''}
+      onClick={handleDownload}
+      id={id ? id : ''}
+      disabled={disabled}
       className="flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium"
     // className='rounded-full bg-orange-500 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2 hover:bg-orange-600 transition-all'
     >
