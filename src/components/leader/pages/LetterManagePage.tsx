@@ -6,7 +6,7 @@ import { deleteLetter, getLetters } from '@/redux_store/letter/letterApi'
 import { letterActions } from '@/redux_store/letter/letterSlice'
 import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Savedby, ToastType } from '@/constants/common'
 import { ManageLetterTable } from '../letter/ManageLetterTable'
 
 export const LetterManagePage: FC = () => {
@@ -52,7 +52,7 @@ export const LetterManagePage: FC = () => {
                 <TableWrapper
                     heading='Manage Letter'
                     addBtnTitle='add Letter'
-                    addBtnClickFn={'/user/letter/add-letter'}
+                    addBtnClickFn={(Savedby().saved_by_type == "leader" ? "/user" : "/employee-access") + "/letter/add-letter"}
                     curDataCount={1}
                     totalCount={letter_templete?.length}
                     changeFilterFn={changeFilterCount}

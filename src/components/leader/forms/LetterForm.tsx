@@ -17,6 +17,7 @@ import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { LetterFormFields } from '../pages/CreateLetterpage'
 import { Savedby } from '@/constants/common'
+import { watch } from 'fs'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>
@@ -28,19 +29,27 @@ interface LetterFormProps {
   appendField: UseFieldArrayAppend<LetterFormFields>
   removeField: UseFieldArrayRemove
   attachments: FieldArrayWithId<LetterFormFields>[]
+  ticketdata:any
 }
 
-export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) => {
+export const LetterForm: FC<LetterFormProps> = ({ errors, register, states,setValue,ticketdata,watch }) => {
   const { letter_templete } = cusSelector((state) => state.letter);
   const { ticket } = cusSelector((state) => state.ticket);
+  const { location } = cusSelector((state) => state.location);
+  const { userDetails }: any = cusSelector((state) => state.auth);
+  const { filestype }: any = cusSelector((state) => state.file);
 
-
+  
+  useEffect(() => {
+    setValue("location", userDetails?.employee_detail.location)
+  }, [userDetails])
   return (
     <>
       <LetterSelectField
         error={errors}
         id='ticketId'
         title='Select Ticket'
+        disabled={ticketdata}
         selectOptions={ticket?.map((el: any) => ({ id: el.ticketid, val: el.ticket_code, }))}
         register={register}
         required
@@ -52,7 +61,8 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) =
         register={register}
         id='location'
         title='location'
-        selectOptions={[]}
+        disabled={Savedby().saved_by_type != "leader"}
+        selectOptions={location?.map((el: any) => ({ id: el.id, val: el.location, })) }
         required
         validations={{ required: 'Location is required' }}
       />
@@ -117,16 +127,17 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) =
 
       <Line />
 
-      <LetterInputField
+      <LetterSelectField
         error={errors}
+        register={register}
         id='fileNo'
         title='File Number'
-        type='text'
-        register={register}
+        selectOptions={filestype?.map((el: any) => ({
+          id: el?.id, val: el?.file_name + "-" + el?.file_number,
+        }))}
         required
         validations={{ required: 'File number is required' }}
       />
-
       <Line />
 
       <LetterTextarea
@@ -142,16 +153,18 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, }) =
 
       <Line />
 
-      <LetterTextarea
+      
+      <LetterSelectField
         error={errors}
+        register={register}
         id='to'
         title='To'
-        rows={2}
-        register={register}
+        selectOptions={filestype?.find((el: any) => el.id == watch("fileNo"))?.to?.map((el: any) => ({
+          id: el?.ministryid, val: el?.name + "-" + el?.designation,
+        }))}
         required
-        validations={{ required: 'To is required' }}
+        validations={{ required: 'File number is required' }}
       />
-
       <Line />
 
 

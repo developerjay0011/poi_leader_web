@@ -60,15 +60,15 @@ export const ShortcutsBox: FC = () => {
       tabname: "Manage Directory"
     },
     {
+      link: '/user/profile/directory',
+      name: 'Manage Directory',
+      Icon: MdContacts,
+      tabname: "Manage Directory"
+    },
+    {
       link: '/user/analytics',
       name: 'account stats',
       Icon: TfiStatsUp,
-      tabname: "Leader"
-    },
-    {
-      link: '/',
-      name: 'Dashboard',
-      Icon: MdSpaceDashboard,
       tabname: "Leader"
     },
   ]

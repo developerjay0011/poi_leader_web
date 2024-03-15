@@ -56,14 +56,14 @@ export const LoginForm: FC<LoginFormProps> = () => {
       const { success, message, data } = loginResponse;
       if (success) {
         if (data?.user_detail?.usertype == "leader employee") {
-          await SetCookieAndRedux(data, loginResponse, "leader employee")
+          await SetCookieAndRedux(data, loginResponse, "leader employee", data?.employee_detail)
         } else {
-          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
+          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype,null)
         }
       } else {
         setCookie(USER_VERIFY, 'false');
         if ((loginResponse.token && (data?.leader_detail?.is_profile_complete == false || data?.leader_detail?.request_status == "Rejected")) && (data?.user_detail?.usertype == "leader" || data?.user_detail?.usertype == "emerging leader")) {
-          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype)
+          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype, null)
           if (data?.leader_detail?.request_status == "Rejected") { dispatch(leaderActions.setReason(data.reason)) }
           await setCookie(LOGIN_BODY, resBody);
           await router.push(AuthRoutes.leaderinfo);
@@ -80,11 +80,11 @@ export const LoginForm: FC<LoginFormProps> = () => {
   };
 
 
-  const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string) => {
+  const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string,employee_detail:any) => {
     setCookie(TOKEN_KEY, loginResponse.token);
     if (usertype == "leader employee") {
       setCookie(USER_VERIFY, 'true');
-      const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid };
+      const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid, employee_detail };
       const serializedData = JSON.stringify(userData);
       setCookie(USER_INFO, serializedData);
       dispatch(leaderActions.setLeaderProfile(data.leader_detail));

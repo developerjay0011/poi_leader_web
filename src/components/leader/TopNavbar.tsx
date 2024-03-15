@@ -204,7 +204,8 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
 
             const Data = await getDirectory(userDetails?.leaderId as string);
             dispatch(directoryAction.storedirectory(Data))
-
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
             const Letters = await getLetters(userDetails?.leaderId as string);
             dispatch(letterActions.storeLetter(Letters));
             const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
@@ -235,10 +236,8 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             // Agenda
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
-            const Files = await GetFiles(userDetails?.leaderId as string);
-            dispatch(fileAction.storeFiles(Files));
-
-
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+            dispatch(locationAction.storeLocation(OfficeLocations));
           }
         } else {
           router.push(AuthRoutes.login)

@@ -1,6 +1,6 @@
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { motion as m } from "framer-motion";
 import { AnimatePresence } from 'framer-motion';
 import { IoMdEye } from 'react-icons/io';
@@ -35,7 +35,7 @@ const FORM_HEADINGS = {
 };
 export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handleEdit, handleDelete, ticket, ischecked, setIschecked, curPageNo, filterDataCount }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
-  const { userDetails } = cusSelector((state) => state.auth);
+  const { userDetails } :any= cusSelector((state) => state.auth);
   const [showStatus, setShowStatus] = useState(false)
   const [timeline, setTimeline] = useState<any>([])
   const [addMileStone, setAddMileStone] = useState(false)
@@ -43,6 +43,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const searchFilterData = ticket?.filter((el: any) => searchStr ? el?.ticketid.includes(searchStr) : el)
   const [showPreview, setShowPreview] = useState(false);
   const dispatch = cusDispatch();
+
   return (
     <>
       <table className='w-full my-8 border'>
@@ -165,7 +166,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                       <IoMdEye className='text-2xl' />
                     </button>
                     <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' >
-                      <Link href={"/user/letter/add-letter?id=" + el?.ticketid}>
+                      <Link href={(Savedby().saved_by_type == "leader" ? "/user" : "/employee-access") + "/letter/add-letter?id=" + el?.ticketid}>
                         <SlEnvolopeLetter className='text-2xl' />
                       </Link>
                     </button>
