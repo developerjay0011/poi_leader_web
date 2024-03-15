@@ -8,7 +8,7 @@ import { tryCatch } from '@/config/try-catch'
 import { Modal } from '@/components/modal/modal'
 import { Input } from '@/components/Input'
 import { SaveFile } from '@/redux_store/filetype/filetypeApi'
-import { ImageMultiSelectIP } from '@/utils/ImageMultiSelectIP'
+import { ImageMultiSelectIP } from '@/utils/MultiSelectIP'
 
 interface FileTypeFormProps {
   onClose: () => void

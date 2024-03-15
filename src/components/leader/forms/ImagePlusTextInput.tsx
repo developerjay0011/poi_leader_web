@@ -11,6 +11,7 @@ import {
 import { convertFileToBase64 } from '@/utils/utility'
 import { NewPollsFormFields } from './PollsForm'
 import CustomImage from '@/utils/CustomImage'
+import { getImageUrl } from '@/config/get-image-url'
 
 interface ImagePlusTextInputProps {
   id: string
@@ -37,6 +38,7 @@ export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({ id, index, reg
             accept='image/*'
             id={id}
             className='hidden'
+            required
             {...register(`imgOptions.${index}.image`, {
               async onChange(e: ChangeEvent<HTMLInputElement>) {
                 const data = (e.target.files as FileList)[0]
@@ -50,13 +52,14 @@ export const ImagePlusTextInput: FC<ImagePlusTextInputProps> = ({ id, index, reg
               },
             })}
           />
-          {!previewImg && <BsCameraFill className='text-3xl text-zinc-500' />}
+          {!previewImg &&
+            <BsCameraFill className='text-3xl text-zinc-500' />}
           {previewImg && (
             <>
               {/* Preview Img box */}
               <div className='relative'>
                 <CustomImage
-                  src={previewImg}
+                  src={previewImg?.startsWith('data:') ? previewImg : getImageUrl(previewImg)}
                   alt='user dp'
                   width={1000}
                   height={1000}

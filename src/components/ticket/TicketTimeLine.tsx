@@ -170,8 +170,13 @@ const TimeLineData: FC<TimeLineDataProps> = ({ timeline, details, title, index, 
               <FaFileAlt />
             </a>
           ))}
-          <a onClick={() => { deletehandler() }}  ><BsTrash3Fill /></a>
-          <a onClick={() => { edithandler() }} ><FaEdit /></a>
+          {status != "read" &&
+            <>
+              <a onClick={() => { deletehandler() }}  ><BsTrash3Fill /></a>
+              <a onClick={() => { edithandler() }} ><FaEdit /></a>
+            </>
+          }
+
           <div className='flex flex-col w-full'>
             <h4 className='font-medium capitalize'>{status} </h4>
             <p className='text-[15px] text-gray-600'>{moment(created_date).format('DD MMM, yyyy hh:mm:ss a')}</p>

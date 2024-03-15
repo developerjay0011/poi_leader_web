@@ -8,13 +8,14 @@ import { getImageUrl, setusername } from '@/config/get-image-url'
 import { Modal } from '@/components/modal/modal'
 
 interface PollsPreviewProps {
-  pollDetails: NewPollsFormFields
+  pollDetails: any
   onClose: () => void
 }
 
 export const PollsPreview: FC<PollsPreviewProps> = ({ onClose, pollDetails, }) => {
   const { userDetails } = cusSelector((st) => st.auth)
   const { leaderProfile } = cusSelector((st) => st.leader)
+
   return (
     <Modal heading={''} onClose={onClose}>
       <section className='border shadow-sm rounded-md px-5 py-2 bg-white w-full max-[650px]:w-[80%] self-center'>
@@ -46,8 +47,8 @@ export const PollsPreview: FC<PollsPreviewProps> = ({ onClose, pollDetails, }) =
 
           {/* MEDIA */}
           <section className='w-full flex flex-col gap-3'>
-            {pollDetails.pollType === 'image' &&
-              pollDetails.imgOptions.map((el, i) => (
+            {pollDetails.pollType === 'text + image' &&
+              pollDetails.imgOptions.map((el: any, i: any) => (
                 <PollOption
                   id={el.id}
                   index={i + 1}
@@ -58,7 +59,7 @@ export const PollsPreview: FC<PollsPreviewProps> = ({ onClose, pollDetails, }) =
               ))}
 
             {pollDetails.pollType === 'text' &&
-              pollDetails.poll_options.map((el, i) => (
+              pollDetails.poll_options.map((el: any, i: any) => (
                 <PollOption
                   id={el.id}
                   index={i + 1}

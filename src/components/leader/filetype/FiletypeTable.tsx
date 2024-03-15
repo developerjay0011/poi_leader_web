@@ -2,6 +2,7 @@
 import { cusSelector } from '@/redux_store/cusHooks';
 import { DeleteFile } from '@/redux_store/filetype/filetypeApi';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
+import { sliceData } from '@/utils/TableWrapper';
 import { FC } from 'react'
 import { BiEdit, BiSolidTrashAlt } from 'react-icons/bi';
 
@@ -9,9 +10,11 @@ interface FiletypeTableProps {
   searchStr: string
   handleEdit: (value: any) => void
   getFiles: any
+  curPageNo?: any
+  filterDataCount?: any
 }
 
-export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, getFiles }) => {
+export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, getFiles, curPageNo, filterDataCount }) => {
   const { filestype } = cusSelector((state) => state.file);
   const { userDetails }: any = cusSelector((state) => state.auth);
   const searchFilterFunction = (text: string) => {
@@ -23,9 +26,9 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
           return itemData.indexOf(textData) > -1;
         }
       )
-      return newData
+      return sliceData(newData, curPageNo, filterDataCount)
     } else {
-      return filestype
+      return sliceData(filestype, curPageNo, filterDataCount)
     };
   }
 

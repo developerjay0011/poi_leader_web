@@ -61,6 +61,8 @@ export const FileType: FC = () => {
                         }}
                         searchStr={searchFilter}
                         getFiles={() => getFiles()}
+                        curPageNo={curPageNo}
+                        filterDataCount={filterDataCount}
                     />
                 </TableWrapper>
             </div>

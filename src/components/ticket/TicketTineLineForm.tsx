@@ -21,7 +21,8 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const id = data?.id
-  const status = Array.isArray(ticketdata?.status) ? ticketdata?.status?.map((itemL: any) => itemL?.status) : []
+  // const status = Array.isArray(ticketdata?.status) ? ticketdata?.status?.map((itemL: any) => itemL?.status) : []
+  const status = [] as any
   const dispatch = cusDispatch(); const { register, setValue, watch, formState: { errors }, handleSubmit, } = useForm<UserDetails>();
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
@@ -76,7 +77,7 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
         }}
         selectField={{
           title: 'select status',
-          options: statusticketOption?.filter((item: any) => !status?.includes(item?.id)).map((el) => ({
+          options: statusticketOption?.filter((item: any) => !status?.includes(item?.id) && item?.id != "read").map((el) => ({
             id: el.id,
             value: el.value,
           })),

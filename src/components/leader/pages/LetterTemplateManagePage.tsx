@@ -74,7 +74,13 @@ export const LetterTemplateManagePage: FC = () => {
                     searchFilterFn={changeFilterData}
                     jsonDataToDownload={letter_templete}
                 >
-                    <ManageTemplateTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                    <ManageTemplateTable
+                        handleDelete={(id) => { handleTemplateDelete(id) }}
+                        handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }}
+                        searchStr={searchFilter}
+                        curPageNo={curPageNo}
+                        filterDataCount={filterDataCount}
+                    />
                 </TableWrapper>
             </div>
             <AnimatePresence>

@@ -9,13 +9,16 @@ import { SaveCategory, getCategory } from '@/redux_store/agenda/agendaApi';
 import { commonActions } from '@/redux_store/common/commonSlice';
 import { agendaAction } from '@/redux_store/agenda/agendaSlice';
 import { generateCategoricalChart } from 'recharts/types/chart/generateCategoricalChart';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface AssemblyConstituencyTableProps {
   searchStr: string
   handleEdit: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
 }
 
-export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit }) => {
+export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit, curPageNo, filterDataCount }) => {
   const { categories } = cusSelector((state) => state.agenda);
   const { userDetails } = cusSelector((st) => st.auth);
   const dispatch = cusDispatch();
@@ -28,9 +31,9 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, h
           return itemData.indexOf(textData) > -1;
         }
       )
-      return newData
+      return sliceData(newData, curPageNo, filterDataCount)
     } else {
-      return categories
+      return sliceData(categories, curPageNo, filterDataCount)
     };
   }
 

@@ -55,6 +55,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                 key={i}
                 index={i + 1}
                 pollText={el.text}
+                polltype={post?.polltype}
                 pollImg={post?.polltype !== "text" ? el.image : ""}
                 alldata={el}
                 isselected={post?.votes_by?.filter((item2: any) => item2?.userid == userDetails?.id && el?.id == item2?.optionid)?.length > 0}

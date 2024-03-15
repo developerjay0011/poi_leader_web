@@ -58,7 +58,7 @@ export const Input: FC<InputProps> = ({
             message: 'Field is required',
           },
         })}
-        rows={rows || 3}
+        rows={rows || 4}
         placeholder={placeholder}
         className={`w-full num_inp text-base py-3 px-3 rounded-md outline-none border resize-none ${errors[id]
           ? 'bg-red-100 text-red-500 border-red-400'
@@ -111,7 +111,7 @@ export const Input: FC<InputProps> = ({
               message: 'Field is required',
             },
           })}
-          className={`w-full capitalize num_inp text-base py-2 px-3 rounded-md outline-none border ${errors[id]
+          className={`w-full capitalize num_inp text-base py-2 px-2 rounded-md outline-none border ${errors[id]
             ? 'bg-red-100 text-red-500 border-red-400'
             : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
             }`}>

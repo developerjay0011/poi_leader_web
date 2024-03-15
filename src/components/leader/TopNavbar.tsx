@@ -95,6 +95,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
+            dispatch(leaderActions.setLeaderProfile(leaderRes));
             if (leaderRes?.request_status === "Rejected") {
               dispatch(authActions.logout())
               return
@@ -105,7 +106,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             // Leader
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
 
             // TrendingLeader
             const trendingLeader = await getTrendingLeaderList();
@@ -169,10 +169,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
 
-            // ticketCategories
-            const ticketCategories = await GetCategories();
-            dispatch(ticketActions.storeticketcategory(ticketCategories));
-
             const Files = await GetFiles(userDetails?.leaderId as string);
             dispatch(fileAction.storeFiles(Files));
 
@@ -191,10 +187,13 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
             dispatch(leaderActions.setLeaderProfile(leaderRes));
+
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+
             const data = await getLetterTemplates(userDetails?.leaderId as string);
             dispatch(letterActions.storeLetterTemplate(data));
+
             const Data = await getDirectory(userDetails?.leaderId as string);
             dispatch(directoryAction.storedirectory(Data))
 
@@ -229,9 +228,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
 
-            // ticketCategories
-            const ticketCategories = await GetCategories();
-            dispatch(ticketActions.storeticketcategory(ticketCategories));
           }
         } else {
           router.push(AuthRoutes.login)

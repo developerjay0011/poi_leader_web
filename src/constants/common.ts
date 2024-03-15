@@ -65,3 +65,9 @@ export const MaritalStatusDropdowns: DropdownOptions[] = [
   { id: 'Unmarried', value: 'unmarried' },
   { id: 'Divorced', value: 'divorced' }
 ];
+
+export const Tickettype: DropdownOptions[] = [
+  { id: 'suggestion', value: 'suggestion' },
+  { id: 'request', value: 'request' },
+  { id: 'complaint', value: 'complaint' }
+];

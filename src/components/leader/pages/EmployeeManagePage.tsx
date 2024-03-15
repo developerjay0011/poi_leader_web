@@ -71,6 +71,8 @@ export const EmployeeManagePage: FC = () => {
                         handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
                         searchStr={searchFilter}
                         changeActiveStatus={(id) => { changeActiveStatus(id) }}
+                        curPageNo={curPageNo}
+                        filterDataCount={filterDataCount}
                     />
                 </TableWrapper>
             </div>

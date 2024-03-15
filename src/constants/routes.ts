@@ -61,7 +61,7 @@ export const APIRoutes = {
   GetOfficeLocations: `${API_Prefix}/leader/GetOfficeLocations/{{leaderId}}`,
   SaveOfficeLocation: `${API_Prefix}/leader/SaveOfficeLocation`,
   DeleteOfficeLocation: `${API_Prefix}/leader/DeleteOfficeLocation`,
-
+  SaveTicketManually: `${API_Prefix}/leader/SaveTicketManually`,
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
   saveGroup: `${API_Prefix}/leader/savegroup`,

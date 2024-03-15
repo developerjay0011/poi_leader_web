@@ -8,18 +8,34 @@ import { RiTableAltLine } from "react-icons/ri";
 import { EmployeePermissionForm } from '../forms/EmployeePermission';
 import { GetLeaderEmployeeTabAccess } from '@/redux_store/employee/employeeApi';
 import { employeeSlice } from '@/redux_store/employee/employeeApiSlice';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface ManageEmployeeTableProps {
   searchStr: string
   handleEdit: (value: any) => void
   changeActiveStatus: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
 }
 
-export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus }) => {
+export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus, curPageNo, filterDataCount }) => {
   const [showAdd, setShowAdd] = useState(false)
   const { employees } = cusSelector((state) => state.employee);
-  const searchFilterData = employees?.filter((el: any) => searchStr ? el?.fullname === searchStr : el)
   const dispatch = cusDispatch();
+  const searchFilterFunction = (text: string) => {
+    if (text) {
+      const newData = employees?.filter(
+        function (item: any) {
+          const itemData = item?.["fullname"] ? item?.["fullname"].toUpperCase() : ''.toUpperCase();
+          const textData = text.toUpperCase();
+          return itemData.indexOf(textData) > -1;
+        }
+      )
+      return sliceData(newData, curPageNo, filterDataCount)
+    } else {
+      return sliceData(employees, curPageNo, filterDataCount)
+    };
+  }
 
 
   return (
@@ -46,8 +62,8 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
           </tr>
         </thead>
         <tbody>
-          {searchFilterData?.length > 0 ? (
-            searchFilterData?.map((el: any, i: number) => {
+          {searchFilterFunction(searchStr)?.length > 0 ? (
+            searchFilterFunction(searchStr)?.map((el: any, i: number) => {
               return (
                 <tr key={i} className={`bg-white py-2 border-b border-gray-300 transition-all`}>
                   <td className='border-r align-text-center text-center'>

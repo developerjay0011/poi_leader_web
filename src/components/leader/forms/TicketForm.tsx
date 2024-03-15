@@ -1,13 +1,20 @@
-import { FC, useEffect } from 'react'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from '@/redux_store/common/commonSlice'
-import { ToastType } from '@/constants/common'
+import { Tickettype, ToastType } from '@/constants/common'
 import { tryCatch } from '@/config/try-catch'
 import { AddEditEmployee, GetEmployees } from '@/redux_store/employee/employeeApi'
 import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
 import { Modal } from '@/components/modal/modal'
+import { Input } from '@/components/Input'
+import { Attachments } from '@/utils/typesUtils'
+import { BsFolderFill, BsX } from 'react-icons/bs'
+import { GenerateId, convertFileToBase64 } from '@/utils/utility'
+import { FaSignature } from 'react-icons/fa6'
+import Image from 'next/image'
+import { SaveTicketManually } from '@/redux_store/ticket/ticketApi'
 
 interface ManageEmployessFormProps {
   onClose: () => void
@@ -17,232 +24,286 @@ interface ManageEmployessFormProps {
 }
 
 export interface FormFields {
-  fullname: string
-  username: string
+  name: string
   email: string
+  mobile: string
+  address: string
+  ticket_category: string
+  categoryid: string
+  subject: string
+  description: string
+  leaderid: string
+  attachments: any
   id: string,
-  leaderid: string,
-  phoneno: string
-  location: string
-  password: string
-  isactive: string
+  signature: any
 }
 
 export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, heading, edit, }) => {
-  const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-  const { register, handleSubmit, reset, formState: { errors, isValid }, } = useForm<FormFields>({})
+  const { userDetails } = cusSelector((state) => state.auth);
+  const [signature, setSignature] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [signatureDoc, setSignatureDoc] = useState("");
+  const { leaderOptions } = cusSelector((state) => state.common);
+  const [attachmentsDoc, setAttachmentsDoc] = useState<Attachments[]>([]);
+  const { register, handleSubmit, reset, formState: { errors, isValid }, setValue } = useForm<FormFields>({})
+  const addAttachmentsHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files as FileList;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      setAttachmentsDoc((lst) => {
+        const oldData = [...lst];
+        oldData.push({
+          file: file as any,
+          id: GenerateId(),
+          type: file.type,
+        });
+        return oldData;
+      });
+    }
+  };
   const formSubmitHandler = (data: FormFields) => {
     tryCatch(
       async () => {
-        const body = {
-
-        };
-        const response = await AddEditEmployee(body);
+        setLoader(true)
+        const formData = new FormData();
+        formData.append("name", data?.name || "");
+        formData.append("email", data?.email || "");
+        formData.append("mobile", data?.mobile || "");
+        formData.append("address", data?.address || "");
+        formData.append("ticket_category", data?.ticket_category || "");
+        formData.append("categoryid", data?.categoryid || "");
+        formData.append("subject", data?.subject || "");
+        formData.append("description", data?.description || "");
+        formData.append("leaderid", userDetails?.leaderId || "");
+        formData.append("attachments", data?.attachments || [] as any)
+        formData.append("signature", data?.signature || [] as any)
+        const response = await SaveTicketManually(formData);
         if (response?.success) {
-          const Data = await GetEmployees(userDetails?.leaderId as string);
-          dispatch(employeeAction.storeemployees(Data))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          submitting()
           onClose()
           reset();
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-
       })
   }
 
 
   return (
     <Modal heading={heading} onClose={onClose}>
-      <form className='flex flex-col py-5 gap-4 max-[550px]:px-4' noValidate onSubmit={handleSubmit(formSubmitHandler)}>
+      <form className='flex flex-col py-3 gap-4 max-[550px]:px-4' noValidate onSubmit={handleSubmit(formSubmitHandler)}>
         <section className='grid px-7 gap-5 grid-cols-2 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
-          <label htmlFor='fullname' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              Full Name
-              {<strong className='text-rose-500'>*</strong>}
-            </span>
-            <input
-              id='fullname'
-              type='text'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('fullname', { required: 'fullname is required' })}
-            />
-            <ErrorMessage
-              name={'fullname'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
+          <Input
+            errors={errors}
+            id={"name" as any}
+            register={register as any}
+            title="User Full Name"
+            type="text"
+            required
+            validations={{
+              required: 'name is required',
+            }}
+          />
 
-          <label htmlFor='username' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              User Name
-              {<strong className='text-rose-500'>*</strong>}
-            </span>
-            <input
-              id='username'
-              type='text'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('username', { required: 'username is required' })}
-            />
-            <ErrorMessage
-              name={'username'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
+          <Input
+            errors={errors}
+            id={"email" as any}
+            register={register as any}
+            title="E-mail"
+            type="email"
+            required
+            validations={{
+              required: 'email is required',
+              pattern: {
+                value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+                message:
+                  "Please enter a valid email EX: something@example.com",
+              },
+            }}
+          />
 
-          <label htmlFor='email' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              E-mail
-              {<strong className='text-rose-500'>*</strong>}
-            </span>
-            <input
-              id='email'
-              type='text'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('email', {
-                required: 'email is required',
-                pattern: {
-                  value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-                  message:
-                    "Please enter a valid email EX: something@example.com",
+          <Input
+            errors={errors}
+            id={"mobile" as any}
+            register={register as any}
+            title="Mobile No."
+            type="tel"
+            required
+            validations={{
+              required: 'phone number is required',
+              validate: {
+                notAValidNo(val) {
+                  return (
+                    val.toString().length === 10 ||
+                    "please enter a valid phone no"
+                  );
                 },
-              })}
-            />
-            <ErrorMessage
-              name={'email'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
-
-          <label htmlFor='phoneno' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              Phone no.
-              {<strong className='text-rose-500'>*</strong>}
-            </span>
-            <input
-              id='phoneno'
-              type='tel'
-              pattern='[0-9]{10}'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('phoneno', {
-                required: 'phone number is required',
-                validate: {
-                  notAValidNo(val) {
-                    return (
-                      val.toString().length === 10 ||
-                      "please enter a valid phone no"
-                    );
-                  },
-                },
-              })}
-            />
-            <ErrorMessage
-              name={'phoneno'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
+              }
+            }}
+          />
 
 
-          <label htmlFor='location' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              Location
-              {<strong className='text-rose-500'>*</strong>}
-            </span>
-            <input
-              id='location'
-              type='text'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('location', { required: 'location is required' })}
-            />
-            <ErrorMessage
-              name={'location'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
-
-          <label htmlFor='email' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              Password
-              {<strong className='text-rose-500'>*</strong>}
-            </span>
-            <input
-              id='password'
-              type='text'
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('password', {
-                required: 'password is required',
-                validate: {
-                  checkLength(val) {
-                    return (
-                      val.length >= 8 || "Password must atleast 8 char long"
-                    );
-                  },
-                  checkNum(val) {
-                    if (val.split("").some((el: string) => !isNaN(+el)))
-                      return true;
-
-                    return "Password should contain atleast one number";
-                  },
-                  checkSpecialCharacter(val) {
-                    const specialChar = `~!@#$%^&*()-_+={}[]|:;"'<>,.`.split(
-                      ""
-                    );
-
-                    if (
-                      val
-                        .split("")
-                        .some((el: string) => specialChar.includes(el))
-                    )
-                      return true;
-
-                    return `Password should contain atleast one special character`;
-                  },
-                },
-              })}
-            />
-            <ErrorMessage
-              name={'password'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
-
-          <label htmlFor='allowAccess' className={`flex flex-col gap-2`}>
-            <span className='capitalize font-[500]'>
-              Status
-              <strong className='text-rose-500'>*</strong>
-            </span>
-            <select
-              id='allowAccess'
-              {...register('isactive', {
-                required: 'acess is required',
-              })}
-              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400 capitalize'>
-              {[{ value: 'true', label: "Active" }, { value: 'false', label: "Deactivate" }].map((item: any, index: number) =>
-                <option key={index} value={item?.value}>{item?.label}</option>
-              )}
-            </select>
-            <ErrorMessage
-              name={'isactive'}
-              errors={errors}
-              as={'span'}
-              className='text-red-500 text-sm first-letter:capitalize lowercase'
-            />
-          </label>
-
+          <Input
+            errors={errors}
+            id={"address" as any}
+            register={register as any}
+            title="Address"
+            type="text"
+            required
+            validations={{
+              required: "address is required",
+            }}
+          />
         </section>
+        <div className='w-full bg-zinc-200 h-[1px] mt-3' />
+        <section className='grid px-7 gap-5 grid-cols-2 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
+          <Input
+            errors={errors}
+            id={"ticket_category" as any}
+            selectField={{
+              title: "select ticket type",
+              options: Tickettype,
+            }}
+            register={register as any}
+            title="Ticket Type"
+            type="select"
+            required
+            validations={{
+              required: "ticket type is required",
+            }}
+          />
+
+          <Input
+            errors={errors}
+            id={"category" as any}
+            selectField={{
+              title: "Select Category",
+              options: leaderOptions?.categories?.map((el: any) => ({ id: el?.id, value: el.category })),
+            }}
+            register={register as any}
+            title="Category"
+            type="select"
+            required
+            validations={{
+              required: "Category is required",
+            }}
+          />
+
+          <Input
+            errors={errors}
+            id={"subject" as any}
+            register={register as any}
+            title="Subject"
+            type="text"
+            fullWidth
+            required
+            validations={{
+              required: 'subject is required',
+            }}
+          />
+          <Input
+            errors={errors}
+            id={"description" as any}
+            register={register as any}
+            title="Description"
+            type="textarea"
+            required
+            fullWidth
+            validations={{
+              required: 'description is required',
+            }}
+          />
+          <label
+            htmlFor="attachment"
+            className={`flex flex-col gap-2 w-max`}
+          >
+            <span className="capitalize font-[500]">Attachment</span>
+            <input
+              type="file"
+              id="attachment"
+              multiple
+              onChange={addAttachmentsHandler}
+              className="hidden"
+            />
+            <div className="flex items-center cursor-pointer gap-2 capitalize">
+              <BsFolderFill className="text-2xl" />{" "}
+              {attachmentsDoc.length === 0
+                ? "No file selected"
+                : `${attachmentsDoc.length} file selected`}
+            </div>
+          </label>
+          <label
+            htmlFor="signature"
+            className={`flex flex-col gap-2 w-max cursor-pointer`}
+          >
+            <span className="capitalize font-[500] flex items-center gap-2">
+              Upload Signature
+            </span>
+            {!signature && (
+              <FaSignature className="text-2xl" />
+            )}
+            <input
+              type="file"
+              id="signature"
+              className="hidden"
+              accept="image/*"
+              {...register("signature" as any, {
+                async onChange(e: ChangeEvent<HTMLInputElement>) {
+                  if (e.target.files) {
+                    const file = (e.target.files as FileList)[0] as any
+                    if (!file) return;
+                    if (!file.type.includes("image")) return;
+                    if (file) {
+                      const signatureFile = await convertFileToBase64(file);
+                      setSignature(signatureFile);
+                      setValue("signature", file);
+                      setSignatureDoc(file as any);
+                    }
+                  }
+                },
+                validate: {
+                  notAImg(file) {
+                    if (file) {
+                      const type = (file as FileList)[0]?.type;
+                      if (!type) return true;
+                      return (
+                        type.includes("image") ||
+                        "Only Image files are allowed."
+                      );
+                    }
+                  },
+                },
+              })}
+            />
+            {signature && (
+              <div className="relative w-max">
+                <Image
+                  src={signature}
+                  alt=""
+                  priority={true}
+                  width={1000}
+                  height={1000}
+                  className="w-20 aspect-square object-cover object-center bg-white"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSignature("");
+                    setValue("signature", "");
+                  }}
+                  className="absolute top-0 right-[-20%] rounded-full bg-gray-100 z-10 hover:scale-110 transition-all"
+                >
+                  <BsX className="text-xl" />
+                </button>
+              </div>
+            )}
+          </label>
+        </section>
+
+
 
         <div className='w-full bg-zinc-200 h-[1px] mt-3' />
 
@@ -255,9 +316,9 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
           </button>
           <button
             type='submit'
-            disabled={true}
+            disabled={loader}
             className='rounded-full capitalize px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500]'>
-            {'Submit'}
+            {loader ? 'Submitting...' : 'Submit'}
           </button>
         </div>
       </form>

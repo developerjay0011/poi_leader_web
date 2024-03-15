@@ -6,14 +6,17 @@ import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 import moment from 'moment';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface ManageLetterTableProps {
   searchStr: string
   handleDelete: (id: string) => void
   handleEdit: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
 }
 
-export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete }) => {
+export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount }) => {
   const { letter } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
@@ -26,9 +29,9 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
           return itemData.indexOf(textData) > -1;
         }
       )
-      return newData
+      return sliceData(newData, curPageNo, filterDataCount)
     } else {
-      return letter
+      return sliceData(letter, curPageNo, filterDataCount)
     };
   }
 

@@ -8,14 +8,17 @@ import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface AssemblyConstituencyTableProps {
   searchStr: string
   handleDelete: (id: string) => void
   handleEdit: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
 }
 
-export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit, handleDelete }) => {
+export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount }) => {
   const { letter_templete } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
@@ -28,9 +31,9 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ search
           return itemData.indexOf(textData) > -1;
         }
       )
-      return newData
+      return sliceData(newData, curPageNo, filterDataCount)
     } else {
-      return letter_templete
+      return sliceData(letter_templete, curPageNo, filterDataCount)
     };
   }
 

@@ -16,6 +16,7 @@ import { tryCatch } from '@/config/try-catch';
 import Link from 'next/link';
 import { Savedby } from '@/constants/common';
 import { getImageUrl, setusername } from '@/config/get-image-url';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface ManageTicketTableProps {
   searchStr: string
@@ -24,13 +25,15 @@ interface ManageTicketTableProps {
   ticket: any
   ischecked: any
   setIschecked: any
+  curPageNo?: any
+  filterDataCount?: any
 }
 const FORM_HEADINGS = {
   request: "Raise a Request",
   complaint: "Raise a Complaint",
   suggestion: "Create a Suggestion",
 };
-export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handleEdit, handleDelete, ticket, ischecked, setIschecked }) => {
+export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handleEdit, handleDelete, ticket, ischecked, setIschecked, curPageNo, filterDataCount }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const [showStatus, setShowStatus] = useState(false)
@@ -40,8 +43,6 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const searchFilterData = ticket?.filter((el: any) => searchStr ? el?.ticketid.includes(searchStr) : el)
   const [showPreview, setShowPreview] = useState(false);
   const dispatch = cusDispatch();
-
-
   return (
     <>
       <table className='w-full my-8 border'>
@@ -66,7 +67,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                   }
                 }} />
             </td>
-            <th className='font-semibold capitalize text-center p-2 border'>
+            <th className='font-semibold capitalize text-center border max-w-[100px]'>
               Date
             </th>
             <th className='font-semibold capitalize text-center p-2 border'>
@@ -90,7 +91,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
           </tr>
         </thead>
         <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el: any, i: any) => {
+          sliceData(searchFilterData, curPageNo, filterDataCount)?.map((el: any, i: any) => {
             const formSubmitHandler = async () => {
               tryCatch(
                 async () => {
@@ -131,7 +132,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                       }
                     }} />
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left  border-r text-center align-text-top max-w-[100px]'>
                   {moment(el?.created_date).format("DD-MM-YYYY hh:mm a")}
                 </td>
                 <td className='capitalize text-left p-2 border-r text-center align-text-top'>
@@ -148,8 +149,8 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                 </td>
                 <td className='text-center p-2 border items-center justify-center '>
                   <div className='gap-2 flex justify-center'>
-                    <button className='capitalize flex items-center gap-1 justify-center self-center transition-all' onClick={() => { setticketdata(el), setShowStatus(true), setTimeline(el?.status) }}>
-                      {el?.status?.slice(-1).pop()?.status}
+                    <button className='hover:underline text-orange-500  text-[15px] capitalize flex items-center gap-1 justify-center self-center transition-all' onClick={() => { setticketdata(el), setShowStatus(true), setTimeline(el?.status) }}>
+                      <strong>{el?.status?.slice(-1).pop()?.status}</strong>
                     </button>
                   </div>
                 </td>

@@ -1,13 +1,13 @@
 import { FC, useRef, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
-import { motion as m } from 'framer-motion'
 import { DownloadExcelButton } from './ExcelConverter'
 import { FaFileExcel } from 'react-icons/fa'
 import { GenerateId } from './utility'
-import { BiPlusCircle } from 'react-icons/bi'
 import { FaPlus } from "react-icons/fa";
 import Link from 'next/link'
-
+export const sliceData = (data: any, page: any, rowsPerPage: any) => {
+  return Array.isArray(data) ? data?.slice((page - 1) * rowsPerPage, page * rowsPerPage) : []
+};
 interface TableWrapperProps {
   heading: string
   children: JSX.Element
@@ -28,41 +28,15 @@ interface TableWrapperProps {
   conditionalData?: { jsx: JSX.Element }
   fixedBtnsAtTopRight?: JSX.Element[]
 }
-
 const SortFilterKey = GenerateId()
-
-export const TableWrapper: FC<TableWrapperProps> = ({
-  children,
-  heading,
-  addBtnClickFn,
-  addBtnTitle,
-  totalCount,
-  filterDataCount,
-  changeFilterFn,
-  changePageNo,
-  curPageNo,
-  addedFilters,
-  searchFilterFn,
-  moreBtns,
-  searchFilters,
-  subTotalCount,
-  jsonDataToDownload,
-  conditionalData,
-  fixedBtnsAtTopRight,
-}) => {
+export const TableWrapper: FC<TableWrapperProps> = ({ children, heading, addBtnClickFn, addBtnTitle, totalCount, filterDataCount, changeFilterFn, changePageNo, curPageNo, addedFilters, searchFilterFn, moreBtns, searchFilters, subTotalCount, jsonDataToDownload, conditionalData, fixedBtnsAtTopRight, }) => {
   const searchRef = useRef<HTMLInputElement>(null)
   const paginationBtnsJSX: JSX.Element[] = []
   const [searchFilter, setSearchFilter] = useState('');
-
-  let totalPages = subTotalCount
-    ? Math.ceil(subTotalCount / filterDataCount)
-    : Math.ceil(totalCount / filterDataCount)
-
+  let totalPages = subTotalCount ? Math.ceil(subTotalCount / filterDataCount) : Math.ceil(totalCount / filterDataCount)
   if (!subTotalCount)
     totalPages = totalCount <= filterDataCount ? 0 : totalPages
-  // if filter data count is greater than total data count no pagination will appear
   else totalPages = subTotalCount <= filterDataCount ? 0 : totalPages
-
   for (let i = 0; i < totalPages; i++) {
     paginationBtnsJSX.push(
       <button

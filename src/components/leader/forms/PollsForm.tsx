@@ -8,12 +8,13 @@ import { GenerateId, dateTimeConverter } from '@/utils/utility'
 import { ImagePlusTextInput } from './ImagePlusTextInput'
 import { PollsPreview } from '@/components/posts/polls/PollsPreview'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { getPolls, savePolls } from '@/redux_store/polls/pollsApi'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { Savedby, ToastType } from '@/constants/common'
 import { tryCatch } from '@/config/try-catch'
-import { pollActions } from '@/redux_store/polls/pollSlice'
 import { Modal } from '@/components/modal/modal'
+import { getPolls, savePolls } from '@/redux_store/polls/pollsApi'
+import { pollActions } from '@/redux_store/polls/pollSlice'
+import moment from 'moment'
 
 interface ManagePollsFormProps {
   onClose: () => void
@@ -34,8 +35,8 @@ interface ManagePollsFormProps {
 export interface NewPollsFormFields {
   title: string
   pollType: PollType
-  poll_options: { text: string; id: string; votes: number }[]
-  imgOptions: { text: string; image: string; id: string; votes: number }[]
+  poll_options: { text: string; votes: number }[]
+  imgOptions: { text: string; image: string; votes: number }[]
   publishDate: string
   access: string
   expiresAt: string
@@ -51,9 +52,18 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
   const { register, handleSubmit, control, watch, setValue, getValues, reset, formState: { errors, isValid }, } = useForm<NewPollsFormFields>({ defaultValues: { publishDate, expiresAt, access, imgOptions, poll_options, pollType, title, view_access }, })
   const { fields: imgFields, append: addImgField, remove: removeImgField, } = useFieldArray({ name: 'imgOptions', control, })
   const { fields, append, remove } = useFieldArray({ name: 'poll_options', control, })
+  const polltype = watch('pollType') as any
   const formSubmitHandler = (data: NewPollsFormFields) => {
     tryCatch(
       async () => {
+        if ((data?.pollType != "text + image" && data?.poll_options?.length < 2) || (data?.pollType == "text + image" && data?.imgOptions?.length < 2)) {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Add minimum 2 poll" }))
+          return
+        }
+        if (data?.pollType == "text + image" && data?.imgOptions?.filter((item) => item?.image == "")?.length > 0) {
+          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Add image for all polls" }))
+          return
+        }
         const body = {
           id: edit ? id : null,
           leaderid: userDetails?.leaderId || "",
@@ -61,9 +71,9 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
           polltype: data?.pollType,
           access: data?.access,
           view_access: data?.view_access,
-          poll_options: data?.poll_options,
-          publish_date: data?.publishDate,
-          close_date: data?.expiresAt,
+          poll_options: data?.pollType == "text + image" ? data?.imgOptions : data?.poll_options,
+          publish_date: moment(data?.publishDate).format("YYYY-MM-DD hh:mm:ss"),
+          close_date: moment(data?.expiresAt).format("YYYY-MM-DD hh:mm:ss"),
           ...Savedby()
         };
         const response = await savePolls(body);
@@ -76,7 +86,6 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-
       })
   }
 
@@ -118,16 +127,13 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
                   required: 'Poll type is required',
                   onChange(e) {
                     if (e.target.value === 'text') {
-                      append({ text: '', id: GenerateId(), votes: 0 })
+                      append({ text: '', votes: 0 })
+                      append({ text: '', votes: 0 })
                       removeImgField()
                     }
-                    if (e.target.value === 'image') {
-                      addImgField({
-                        image: '',
-                        text: '',
-                        id: GenerateId(),
-                        votes: 0,
-                      })
+                    if (e.target.value === 'text + image') {
+                      addImgField({ image: '', text: '', votes: 0, })
+                      addImgField({ image: '', text: '', votes: 0, })
                       remove()
                     }
                   },
@@ -135,7 +141,7 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
                 className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400 capitalize'>
                 <option value=''> select poll type </option>
                 <option value='text'> text </option>
-                <option value='image'>text + image</option>
+                <option value='text + image'>text + image</option>
               </select>
               <ErrorMessage
                 name={'title'}
@@ -239,13 +245,13 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
                 key={GenerateId()}
                 className={`flex flex-col gap-3 col-span-full`}>
                 <span className='capitalize font-[500] flex items-center'>
-                  poll poll_options
+                  poll options
                   {<strong className='text-rose-500'>*</strong>}
                   {fields.length < 5 && (
                     <button
                       type='button'
                       onClick={() =>
-                        append({ text: '', id: GenerateId(), votes: 0 })
+                        append({ text: '', votes: 0 })
                       }
                       className='text-rose-500 text-3xl ml-2'>
                       <BiPlusCircle />
@@ -277,13 +283,13 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
               </label>
             )}
 
-            {watch('pollType') === 'image' && (
+            {polltype === 'text + image' && (
               <label
                 htmlFor='poll_options'
                 key={GenerateId()}
                 className={`flex flex-col gap-3 col-span-full`}>
                 <span className='capitalize font-[500] flex items-center'>
-                  poll poll_options
+                  poll options
                   {<strong className='text-rose-500'>*</strong>}
                   {imgFields.length < 5 && (
                     <button
@@ -292,7 +298,6 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
                         addImgField({
                           image: '',
                           text: '',
-                          id: GenerateId(),
                           votes: 0,
                         })
                       }

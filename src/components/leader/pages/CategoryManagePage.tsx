@@ -62,7 +62,12 @@ export const CategoryManagePage: FC = () => {
                         searchFilterFn={changeFilterData}
                         jsonDataToDownload={null}
                     >
-                        <CategoryTable handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }} searchStr={searchFilter} />
+                        <CategoryTable
+                            handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }}
+                            searchStr={searchFilter}
+                            curPageNo={curPageNo}
+                            filterDataCount={filterDataCount}
+                        />
                     </TableWrapper>
                 </div>
             </div>

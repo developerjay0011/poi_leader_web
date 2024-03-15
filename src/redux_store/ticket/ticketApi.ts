@@ -14,8 +14,6 @@ export const getTickets = async (leaderid: string) => {
   );
 };
 
-// Add Letter API
-
 export const saveTicketStatus =
   async (formData: any) => {
     return tryCatch(
@@ -29,7 +27,22 @@ export const saveTicketStatus =
       }
     );
   }
-// Delete Letter API
+
+
+export const SaveTicketManually = async (formData: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.SaveTicketManually, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      return res.data;
+    }
+  );
+}
+
+
 export const deleteTicketStatus = async (id: string, leaderid: string) => {
   return tryCatch(
     async () => {

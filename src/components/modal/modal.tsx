@@ -21,7 +21,7 @@ export const Modal: FC<ManageTemplateFormProps> = ({ onClose, children, heading 
                         initial={{ y: -100 }}
                         animate={{ y: 0 }}
                         exit={{ y: -100 }}
-                        className='z-30  border self-start bg-white mt-10 relative w-1/2 rounded-md shadow-md max-[1450px]:w-[65%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
+                        className='z-30  border self-start bg-white relative w-1/2 rounded-md shadow-md max-[1450px]:w-[65%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
                         {heading &&
                             <>
                                 <button

@@ -14,8 +14,8 @@ export const PollOption: FC<{
   calculatePercentage: () => void,
   isUserExist: boolean,
   isselected: boolean
-}> = ({ id, index, pollText, pollImg, Onvote, isUserExist, isselected, calculatePercentage, isshow }) => {
-
+  polltype?: string
+}> = ({ id, index, pollText, pollImg, Onvote, isUserExist, isselected, calculatePercentage, isshow, polltype }) => {
 
 
   return (

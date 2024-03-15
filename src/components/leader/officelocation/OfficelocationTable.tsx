@@ -1,6 +1,7 @@
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks';
 import { DeleteOfficeLocation } from '@/redux_store/location/locationApi';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
+import { sliceData } from '@/utils/TableWrapper';
 import { FC } from 'react'
 import { BiEdit, BiSolidTrashAlt } from 'react-icons/bi';
 import { RiTableAltLine } from "react-icons/ri";
@@ -9,9 +10,11 @@ interface OfficelocationTableProps {
   searchStr: string
   handleEdit: (value: any) => void
   GetofficeLocations: any
+  curPageNo?: any
+  filterDataCount?: any
 }
 
-export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, handleEdit, GetofficeLocations }) => {
+export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, handleEdit, GetofficeLocations, curPageNo, filterDataCount }) => {
   const { location } = cusSelector((state) => state.location);
   const { userDetails }: any = cusSelector((state) => state.auth);
   const searchFilterFunction = (text: string) => {
@@ -23,9 +26,9 @@ export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, h
           return itemData.indexOf(textData) > -1;
         }
       )
-      return newData
+      return sliceData(newData, curPageNo, filterDataCount)
     } else {
-      return location
+      return sliceData(location, curPageNo, filterDataCount)
     };
   }
 

@@ -61,6 +61,8 @@ export const OfficeLocation: FC = () => {
                         handleEdit={(value) => { setShowAdd(true), setEdit(value) }}
                         searchStr={searchFilter}
                         GetofficeLocations={GetofficeLocations}
+                        curPageNo={curPageNo}
+                        filterDataCount={filterDataCount}
                     />
                 </TableWrapper>
             </div>

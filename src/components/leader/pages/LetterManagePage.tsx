@@ -62,7 +62,13 @@ export const LetterManagePage: FC = () => {
                     searchFilterFn={changeFilterData}
                     jsonDataToDownload={letter_templete}
                 >
-                    <ManageLetterTable handleDelete={(id) => { handleTemplateDelete(id) }} handleEdit={(value) => { }} searchStr={searchFilter} />
+                    <ManageLetterTable
+                        handleDelete={(id) => { handleTemplateDelete(id) }}
+                        handleEdit={(value) => { }}
+                        searchStr={searchFilter}
+                        curPageNo={curPageNo}
+                        filterDataCount={filterDataCount}
+                    />
                 </TableWrapper>
             </div>
         </>

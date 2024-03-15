@@ -19,7 +19,7 @@ export const TicketTemplateManagePage: FC = () => {
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
     const changeFilterData = (str: string) => setSearchFilter(str)
-    const { ticket, ticketcategory } = cusSelector((state) => state.ticket);
+    const { ticket } = cusSelector((state) => state.ticket);
     const { leaderOptions } = cusSelector((state) => state.common);
     const { userDetails } = cusSelector((st) => st.auth);
     const changeCurPageNo = (page: number) => setCurPageNo(page)
@@ -27,6 +27,7 @@ export const TicketTemplateManagePage: FC = () => {
         setFilterAmount(val)
         setCurPageNo(1)
     }
+
     const getTicket = async () => {
         const data = await getTickets(userDetails?.leaderId as string);
         dispatch(ticketActions.storeTicket(data));
@@ -79,7 +80,7 @@ export const TicketTemplateManagePage: FC = () => {
                                     className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
-                                    {ticketcategory?.map((item: any) =>
+                                    {leaderOptions?.categories?.map((item: any) =>
                                         <option value={item?.category}>{item?.category}</option>
                                     )}
                                 </select>
@@ -123,6 +124,8 @@ export const TicketTemplateManagePage: FC = () => {
                         ticket={handleFilter(ticket, statusFilter, categoryFilter, locationFilter) || []}
                         ischecked={ischecked}
                         setIschecked={setIschecked}
+                        curPageNo={curPageNo}
+                        filterDataCount={filterDataCount}
                     />
                 </TableWrapper>
             </div>
@@ -131,7 +134,7 @@ export const TicketTemplateManagePage: FC = () => {
                     heading="New Ticket"
                     onClose={() => setShowTicket(false)}
                     edit={false}
-                    submitting={() => { }}
+                    submitting={() => { getTicket() }}
                 />
             }
         </>
