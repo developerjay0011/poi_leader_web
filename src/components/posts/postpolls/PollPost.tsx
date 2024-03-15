@@ -29,7 +29,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
       <section className="border shadow-sm rounded-md px-5 py-2 bg-white">
         <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
           <CustomImage
-            src={getImageUrl(userDetails?.image)}
+            src={userdetails?.leaderid == "admin" ? userdetails?.image : getImageUrl(userdetails?.image)}
             alt="user pic"
             className="w-12 aspect-square object-cover object-center rounded-full"
             width={100}
@@ -62,9 +62,10 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                 Onvote={async () => {
                   const vote = await VoteAdd({
                     "pollid": post?.id,
-                    "leaderid": post?.leaderid,
+                    "leaderid": post?.leaderid || "",
                     "userid": userDetails?.id,
                     "usertype": "leader",
+                    "type": userdetails?.leaderid == "admin" ? "admin" : "leader",
                     "optionid": el?.id
                   })
                   if (vote?.success) {

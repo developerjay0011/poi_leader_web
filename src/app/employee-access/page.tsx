@@ -1,27 +1,38 @@
 "use client";
-import { BriefProfileInfoBox } from "@/components/timlineComponents/BriefProfileInfoBox";
-import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
-import { TrendingUsers } from "@/components/timlineComponents/TrendingUsers";
-import { TimeLinePage } from "@/components/posts/TimeLinePage";
-import { BriefEventsBox } from "@/components/timlineComponents/BriefEventsBox";
-import { BirthdayNotifications } from "@/components/timlineComponents/BirthdayNotifications";
-import { FollowedLeader } from "@/components/timlineComponents/FollowedLeader";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { FC, ReactNode } from "react";
 import { cusSelector } from "@/redux_store/cusHooks";
+import { LEFT_NAV_ROUTES } from "@/utils/routes";
+import { tabfilter } from "@/redux_store/accesstab/tabApi";
+import { CusLink } from "@/utils/CusLink";
+export const ShortcutBtn: FC<{ Icon: JSX.ElementType, title: string, link: string }> = ({ Icon, title, link }) => (
+  <CusLink
+    normalClasses='text-sky-950'
+    className='flex items-center gap-4 hover:text-orange-600 transition-all'
+    href={link}
+    activeLinkClasses='text-orange-600'>
+    <Icon />
+    <span className='capitalize'>{title}</span>
+  </CusLink>
+)
 
 const AdminHomePage = () => {
-  const [followers, setFollowers] = useState<any>({});
-  const { birthdaylist } = cusSelector((state) => state.leader);
-  const handleFollowers = (data: any) => {
-    setFollowers(data);
-  };
+  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
 
   return (
     <>
-      <section className="m-auto my-10 w-[75%] relative main_scrollbar max-[1770px]:w-[80%] max-[1570px]:w-[88%] max-[1440px]:w-[95%] max-[1200px]:w-[85%] max-[1000px]:w-[88%] max-md:w-[90%] max-sm:w-[93%] max-sm:my-5">
-        <div className="flex gap-5">
-
+      <section className="flex m-auto my-5 w-full relative">
+        <div className="flex flex-col w-full py-5 px-5 w-full bg-white  shadow-lg border m-5 rounded-[10px]">
+          <strong className='capitalize mb-5 text-[20px]'>Tab Access</strong>
+          {loader ? null :
+            [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.length > 0 ?
+              <aside className='grid grid grid-cols-2  w-full md:grid-cols-3 flex  gap-5 '>
+                {[...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any, index: number) => (
+                  <ShortcutBtn Icon={El.Icon} key={El.id} link={usertype === "leader" ? El.link : El.link2} title={El.name} />
+                ))}
+              </aside>
+              :
+              <span className='capitalize mb-5 w-full text-[16px] text-center text-red-500'>No Employee Access Found !!</span>
+          }
         </div>
       </section>
     </>

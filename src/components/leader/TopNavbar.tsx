@@ -38,7 +38,7 @@ import { GetCategories, getTickets, } from "@/redux_store/ticket/ticketApi";
 import { ticketActions } from "@/redux_store/ticket/ticketSlice";
 import { getGroups } from "@/redux_store/group/groupAPI";
 import { groupActions } from "@/redux_store/group/groupSlice";
-import { GetEmployees } from "@/redux_store/employee/employeeApi";
+import { GetEmployees, GetSingleEmployeeDetail } from "@/redux_store/employee/employeeApi";
 import { employeeAction } from "@/redux_store/employee/employeeApiSlice";
 import { getDevelopment } from "@/redux_store/development/developmentApi";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
@@ -92,6 +92,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   useEffect(() => {
     if (user_type == "leader") {
       (async () => {
+        let allcookies: any = await getCookies()
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
@@ -183,8 +184,15 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
     }
     if (user_type != "leader") {
       (async () => {
+        let allcookies: any = await getCookies()
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
+            const employee = await GetSingleEmployeeDetail({
+              "leaderid": userDetails?.leaderId,
+              "employeeid": "string"
+            });
+            dispatch(employeeAction.setemployedetails(employee));
+
             const leaderRes = await getProfile(userDetails?.leaderId);
             dispatch(leaderActions.setLeaderProfile(leaderRes));
 
@@ -227,6 +235,9 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             // Agenda
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
+
 
           }
         } else {
@@ -362,7 +373,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             </section>
 
             <section className="flex items-center gap-4 ml-auto relative">
-              <button className="flex items-center gap-2" onClick={() => { dispatch(authActions.logout()) }}>
+              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()); }}>
                 <FaPowerOff />log out
               </button>
             </section>
@@ -374,7 +385,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
           <>
             <div className="flex justify-between items-center w-full">
               <FaHamburger
-                className="text-3xl"
+                className="text-2xl cursor-pointer"
                 onClick={() => setShowMobileNav(true)}
               />
 
@@ -442,9 +453,14 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 style={{ display: showMobileNav ? "none" : "flex" }}
               />
               <FaHamburger
-                className="text-2xl pointer"
+                className="text-2xl cursor-pointer"
                 onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
+              <section className="flex items-center gap-4 ml-auto relative">
+                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()); }}>
+                  <FaPowerOff />log out
+                </button>
+              </section>
             </div>
           </>
         }

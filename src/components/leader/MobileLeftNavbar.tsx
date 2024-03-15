@@ -11,10 +11,13 @@ import { MdContacts, MdSpaceDashboard } from 'react-icons/md'
 import CustomImage from '@/utils/CustomImage'
 import { BsFillCalendar3WeekFill, BsHouseGearFill } from 'react-icons/bs'
 import { SlEnvolopeLetter } from 'react-icons/sl'
-import { BiSolidUserDetail, BiTask } from 'react-icons/bi'
+import { BiCategoryAlt, BiSolidUserDetail, BiTask } from 'react-icons/bi'
 import { cusSelector } from '@/redux_store/cusHooks'
 import Shimmer from "react-shimmer-effect";
 import { tabfilter } from '@/redux_store/accesstab/tabApi'
+import { GenerateId } from '@/utils/utility'
+import { ImTicket } from 'react-icons/im'
+import { LEFT_NAV_ROUTES } from '@/utils/routes'
 interface MobileLeftNavbarProps {
   onClose: () => void
   showMobileNav: boolean
@@ -41,111 +44,6 @@ const TopNavLink: FC<{
 
 export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobileNav }) => {
   const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
-  const Top_NAV_ROUTES = [
-    {
-      link: '/user/profile/agenda',
-      link2: '/employee-access/profile/agenda',
-      name: 'agenda',
-      Icon: BiTask,
-      tabname: "Manage Agenda",
-      isuser: "Employee"
-    },
-    {
-      link: '/user/profile/developments',
-      link2: '/employee-access/profile/developments',
-      name: 'developments',
-      Icon: BsHouseGearFill,
-      tabname: "Manage Developments",
-      isuser: "Employee"
-    },
-    {
-      link: '/user',
-      name: 'feed',
-      Icon: FaClipboard,
-      tabname: "Leader"
-    },
-    {
-      link: '/user/profile',
-      name: 'my profile',
-      Icon: FaUser,
-      tabname: "Leader"
-    },
-    {
-      link: '/user/profile/notifications',
-      name: 'notifications',
-      Icon: FaBell,
-      tabname: "Leader"
-    },
-    {
-      link: '/user/profile/networks',
-      link2: '/employee-access/profile/networks',
-      name: 'Manage Group',
-      Icon: LuNetwork,
-      tabname: "Manage Group"
-    },
-    {
-      link: '/user/profile/directory',
-      link2: '/employee-access/profile/directory',
-      name: 'Manage Directory',
-      Icon: MdContacts,
-      tabname: "Manage Directory"
-    },
-    {
-      link: '/user/profile/events',
-      link2: '/employee-access/profile/events',
-      name: 'events',
-      Icon: BsFillCalendar3WeekFill,
-      tabname: "Manage Events"
-    },
-    {
-      link: '/user/analytics',
-      name: 'account stats',
-      Icon: TfiStatsUp,
-      tabname: "Leader"
-    },
-    {
-      link: '/user/letter/manage-letter',
-      link2: '/employee-access/letter/manage-letter',
-      name: 'Manage Letter',
-      Icon: SlEnvolopeLetter,
-      tabname: "Manage Letters"
-    },
-    {
-      link: '/user/letter/manage-letter-template',
-      link2: '/employee-access/letter/manage-letter-template',
-      name: 'Manage Templa Letter',
-      Icon: SlEnvolopeLetter,
-      tabname: "Manage Letter Templates"
-    },
-    {
-      link: '/user/filetype/manage-files',
-      link2: '/employee-access/filetype/manage-files',
-      name: 'Manage file type',
-      Icon: FaFileInvoice,
-      tabname: "Leader"
-    },
-    {
-      link: '/user/location/manage-location',
-      link2: '/employee-access/location/manage-location',
-      name: 'Manage Office Location',
-      Icon: FaMapLocationDot,
-      tabname: "Leader"
-    },
-    {
-      link: ' /user/profile/polls',
-      link2: '/employee-access/profile/polls',
-      name: 'Polls',
-      Icon: HiSpeakerphone,
-      tabname: "Manage Polls"
-    },
-    {
-      link: '/user/employees/manage-employees',
-      link2: '/employee-access/employees/manage-employees',
-      name: 'Manage Employees',
-      Icon: BiSolidUserDetail,
-      tabname: "Manage Employees"
-    },
-  ]
   useEffect(() => {
     const handleResize = () => { if (window.innerWidth > 1000 && showMobileNav) { onClose(); } };
     window.addEventListener('resize', handleResize);
@@ -179,14 +77,14 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
               </div>
 
               <div className='w-full flex flex-col gap-2 relative h-full items-start  main_scrollbar overflow-y-auto'>
-                {loader ? Top_NAV_ROUTES.map((El: any) => (
+                {loader ? LEFT_NAV_ROUTES.map((El: any) => (
                   <Shimmer>
                     <TopNavLink key={El.id} link={''}>
                       <>
                       </>
                     </TopNavLink>
                   </Shimmer>
-                )) : [...tabfilter(accesstabs, usertype, Top_NAV_ROUTES as any) as []]?.map((El: any) => (
+                )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any) => (
                   <TopNavLink key={El.id} link={usertype === "leader" ? El.link : El.link2}>
                     {<El.Icon className='text-xl' />}{El.name}
                   </TopNavLink>

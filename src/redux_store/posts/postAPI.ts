@@ -46,43 +46,64 @@ export const CommentPost = async (resBody: any) => {
 
 const ConvertCommonpost = (list = []): any => {
   var combinedData = [] as any;
-  list?.forEach((postuserDetails: any) => {
-    var userdetails = { ...postuserDetails, developments: [], post: [], agendas: [], polls: [], }
-    postuserDetails.posts.forEach((post: any) => {
-      combinedData.push({
-        post: { ...post, createddate: moment(post?.createddate).format("YYYY-MM-DD hh:mm:ss") },
-        type: "post",
-        userdetails: userdetails,
-      });
+  try {
+    list?.forEach((userData: any) => {
+      var userdetails = { ...userData, developments: [], post: [], agendas: [], polls: [], }
+      if (userData?.posts) {
+        userData?.posts.forEach((post: any) => {
+          combinedData.push({
+            post: { ...post, createddate: moment(post?.createddate).format("YYYY-MM-DD hh:mm:ss") },
+            type: "post",
+            userdetails: userdetails,
+          });
+        });
+      }
+      if (userData?.agendas) {
+        userData?.agendas.forEach((post: any) => {
+          combinedData.push({
+            post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD hh:mm:ss") },
+            type: "agendas",
+            userdetails: userdetails,
+          });
+        });
+      }
+      if (userData?.polls) {
+        userData?.polls.forEach((post: any) => {
+          combinedData.push({
+            type: "polls",
+            post: { ...post, createddate: moment(post?.publish_date).format("YYYY-MM-DD hh:mm:ss") },
+            userdetails: userdetails,
+          });
+        });
+      }
+      if (userData?.developments) {
+        userData?.developments.forEach((post: any) => {
+          combinedData.push({
+            type: "developments",
+            post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD hh:mm:ss") },
+            userdetails: userdetails,
+          });
+        });
+      }
+      if (userData?.admin_polls) {
+        userData?.admin_polls.forEach((post: any) => {
+          combinedData.push({
+            type: "polls",
+            post: { ...post, createddate: moment(post?.publish_date).format("YYYY-MM-DD hh:mm:ss") },
+            userdetails: userdetails,
+          });
+        });
+      }
     });
-    postuserDetails.agendas.forEach((post: any) => {
-      combinedData.push({
-        post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD hh:mm:ss") },
-        type: "agendas",
-        userdetails: userdetails,
-      });
+    combinedData.sort((a: any, b: any) => {
+      const dateA = new Date(a.post.createddate);
+      const dateB = new Date(b.post.createddate);
+      return dateB.getTime() - dateA.getTime();
     });
-    postuserDetails.polls.forEach((post: any) => {
-      combinedData.push({
-        type: "polls",
-        post: { ...post, createddate: moment(post?.publish_date).format("YYYY-MM-DD hh:mm:ss") },
-        userdetails: userdetails,
-      });
-    });
-    postuserDetails.developments.forEach((post: any) => {
-      combinedData.push({
-        type: "developments",
-        post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD hh:mm:ss") },
-        userdetails: userdetails,
-      });
-    });
-  });
-  combinedData.sort((a: any, b: any) => {
-    const dateA = new Date(a.post.createddate);
-    const dateB = new Date(b.post.createddate);
-    return dateB.getTime() - dateA.getTime();
-  });
-  return Array.isArray(combinedData) ? combinedData : []
+  } catch (error) {
+    console.log(error)
+  }
+  return Array.isArray(combinedData) && combinedData;
 };
 
 
