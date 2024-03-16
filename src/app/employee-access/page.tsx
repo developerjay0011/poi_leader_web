@@ -4,20 +4,20 @@ import { cusSelector } from "@/redux_store/cusHooks";
 import { LEFT_NAV_ROUTES } from "@/utils/routes";
 import { tabfilter } from "@/redux_store/accesstab/tabApi";
 import { CusLink } from "@/utils/CusLink";
-export const ShortcutBtn: FC<{ Icon: JSX.ElementType, title: string, link: string }> = ({ Icon, title, link }) => (
-  <CusLink
-    normalClasses='text-sky-950'
-    className='flex items-center gap-4 hover:text-orange-600 transition-all'
-    href={link}
-    activeLinkClasses='text-orange-600'>
-    <Icon />
-    <span className='capitalize'>{title}</span>
-  </CusLink>
-)
+
 
 const AdminHomePage = () => {
   const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
-
+  const ShortcutBtn: FC<{ Icon: JSX.ElementType, title: string, link: string }> = ({ Icon, title, link }) => (
+    <CusLink
+      normalClasses='text-sky-950'
+      className='flex items-center gap-4 hover:text-orange-600 transition-all'
+      href={link}
+      activeLinkClasses='text-orange-600'>
+      <Icon />
+      <span className='capitalize'>{title}</span>
+    </CusLink>
+  )
   return (
     <>
       <section className="flex m-auto my-5 w-full relative">

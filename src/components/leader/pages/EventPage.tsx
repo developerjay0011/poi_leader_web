@@ -21,6 +21,7 @@ import { LoadingComponent } from "@/utils/LoadingComponent";
 import { BiX } from "react-icons/bi";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { Modal } from "@/components/modal/modal";
+import { TableWrapper, searchFilterFunction } from "@/utils/TableWrapper";
 
 interface EventPageProps { }
 
@@ -38,21 +39,22 @@ export const EventPage: FC<EventPageProps> = () => {
   const [searchString, setSearchString] = useState("");
   const [isEvent, setIsEvent] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("");
   const [editEventData, setEditEventData] = useState<any | null>();
   const [loading, setLoading] = useState(false);
-
+  const [searchFilter, setSearchFilter] = useState('');
+  const changeFilterData = (str: string) => setSearchFilter(str)
+  const [filterDataCount, setFilterAmount] = useState(5)
+  const [curPageNo, setCurPageNo] = useState(1)
+  const changeCurPageNo = (page: number) => setCurPageNo(page)
+  const changeFilterCount = (val: number) => {
+    setFilterAmount(val)
+    setCurPageNo(1)
+  }
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((state) => state.auth);
   const { event } = cusSelector((state) => state.event);
-
-  const {
-    register,
-    setValue,
-    watch,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm<UserDetails>();
+  const { register, setValue, watch, formState: { errors }, handleSubmit, reset, } = useForm<UserDetails>();
 
   useEffect(() => {
     (async () => {
@@ -125,44 +127,62 @@ export const EventPage: FC<EventPageProps> = () => {
     setValue("access", data?.access == true ? "Open To All" : "Followers");
   };
 
+
+
+  const handleFilter = (event: any, statusFilter: any) => {
+    var filteredResult = Array.isArray(event) ? [...event] : []
+    if (filteredResult?.length > 0) {
+      if (statusFilter !== '') {
+        filteredResult = filteredResult?.filter(item => item?.event_type === statusFilter);
+      }
+    }
+
+    return Array.isArray(event) ? searchFilterFunction(searchFilter, filteredResult, "title", { curPageNo, filterDataCount }) : { mainlist: [], filterlist: [] }
+  };
+
+
+
   return (
     <>
-      <PeoplesComponentWrapper
-        heading='my events'
-        searchStr={searchString}
-        setSearchStr={setSearchString}
-        rightButton={
-          <div className="flex items-center justify-end">
-            <button
-              className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-              onClick={() => { setIsEvent(true), setIsEdit(false), reset() }}
+      <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start m-5'>
+        <TableWrapper
+          heading='Manage events/Task'
+          addBtnTitle='add Event/task'
+          addBtnClickFn={() => {
+            setIsEvent(true), setIsEdit(false), reset()
+          }}
+          curDataCount={1}
+          totalCount={handleFilter(event, statusFilter)?.mainlist?.length}
+          changeFilterFn={changeFilterCount}
+          filterDataCount={filterDataCount}
+          changePageNo={changeCurPageNo}
+          curPageNo={curPageNo}
+          searchFilterFn={changeFilterData}
+          jsonDataToDownload={null}
+          addedFilters={<label className="flex gap-2 items-center" htmlFor="status">
+            <span className="font-medium">Type</span>
+            <select
+              id="status"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
             >
-              Add Event
-            </button>
-          </div>
-        }
-      >
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center gap-3 max-[700px]:flex-col max-[700px]:items-start">
-            <label htmlFor="filter" className="flex items-center gap-2">
-              <span>Sort by</span>
-              <select
-                id="filter"
-                className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md cursor-pointer"
-              >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                {event?.length > 10 && <option value={event?.length}>{event?.length}</option>}
-              </select>
-            </label>
-          </div>
-        </section>
-        <EventTable
-          searchStr={searchString}
-          isEvent={isEvent}
-          editEvent={editEvent}
-        />
-      </PeoplesComponentWrapper>
+              <option value="">All</option>
+              <option value={'event'}>{'Event'}</option>
+              <option value={'task'}>{'Task'}</option>
+            </select>
+          </label>
+          }
+        >
+          <EventTable
+            searchStr={searchString}
+            isEvent={isEvent}
+            editEvent={editEvent}
+            events={handleFilter(event, statusFilter)?.filterlist}
+          />
+        </TableWrapper>
+      </div>
+
       {isEvent && (
         <Modal heading={isEdit ? 'Edit Event/Task' : 'Add Event/Task'} onClose={() => { setIsEvent(false), setIsEdit(false); }}>
           <form className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5" onSubmit={handleSubmit(formSubmitHandler)}>

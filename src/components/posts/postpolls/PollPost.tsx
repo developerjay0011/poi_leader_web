@@ -73,8 +73,8 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                     Getpost()
                   }
                 }}
-                isshow={post?.view_access == "public" && isUserExist && el?.votes}
-                calculatePercentage={() => post?.view_access == "public" && isUserExist ? calculatePercentage(el?.votes, post?.poll_options?.reduce((acc: any, cur: any) => acc + cur.votes, 0)) : null}
+                isshow={post?.view_access == "public" && isUserExist}
+                calculatePercentage={() => (post?.view_access == "public" && isUserExist) ? calculatePercentage(el?.votes ? el?.votes : 0, post?.poll_options?.reduce((acc: any, cur: any) => acc + cur.votes, 0)) : null}
               />
             ))}
           </section>

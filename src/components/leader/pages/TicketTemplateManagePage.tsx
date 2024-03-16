@@ -1,6 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { TableWrapper } from '@/utils/TableWrapper'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { Savedby, statusticketOption } from '@/constants/common'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
@@ -50,8 +50,14 @@ export const TicketTemplateManagePage: FC = () => {
                 filteredResult = filteredResult?.filter(item => item?.citizen_detail?.citizen_stateid === locationFilter);
             }
         }
-        return Array.isArray(ticket) ? filteredResult : []
+
+        return Array.isArray(ticket) ? searchFilterFunction(searchFilter, filteredResult, "ticket_code", { curPageNo, filterDataCount }) : { mainlist: [], filterlist: [] }
     };
+
+
+
+
+
 
 
     return (
@@ -62,7 +68,7 @@ export const TicketTemplateManagePage: FC = () => {
                     addBtnTitle='add Ticket'
                     addBtnClickFn={() => { setShowTicket(true) }}
                     curDataCount={1}
-                    totalCount={ticket?.length}
+                    totalCount={handleFilter(ticket, statusFilter, categoryFilter, locationFilter)?.mainlist?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
@@ -121,7 +127,7 @@ export const TicketTemplateManagePage: FC = () => {
                         handleDelete={(id) => { }}
                         handleEdit={(value) => { }}
                         searchStr={searchFilter}
-                        ticket={handleFilter(ticket, statusFilter, categoryFilter, locationFilter) || []}
+                        ticket={handleFilter(ticket, statusFilter, categoryFilter, locationFilter)?.filterlist || []}
                         ischecked={ischecked}
                         setIschecked={setIschecked}
                         curPageNo={curPageNo}

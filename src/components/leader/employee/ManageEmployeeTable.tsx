@@ -16,26 +16,13 @@ interface ManageEmployeeTableProps {
   changeActiveStatus: (value: any) => void
   curPageNo?: any
   filterDataCount?: any
+  employees: any
 }
 
-export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus, curPageNo, filterDataCount }) => {
+export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus, curPageNo, filterDataCount, employees }) => {
   const [showAdd, setShowAdd] = useState(false)
-  const { employees } = cusSelector((state) => state.employee);
   const dispatch = cusDispatch();
-  const searchFilterFunction = (text: string) => {
-    if (text) {
-      const newData = employees?.filter(
-        function (item: any) {
-          const itemData = item?.["fullname"] ? item?.["fullname"].toUpperCase() : ''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        }
-      )
-      return sliceData(newData, curPageNo, filterDataCount)
-    } else {
-      return sliceData(employees, curPageNo, filterDataCount)
-    };
-  }
+
 
 
   return (
@@ -43,7 +30,7 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold text-left py-2 pl-2 border'>S.No</th>
+            <th className='font-semibold text-center py-2 pl-2 border w-[100px]'>S.No</th>
             <th className='font-semibold capitalize text-left py-2 pl-2 border'>
               Name
             </th>
@@ -62,11 +49,11 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
           </tr>
         </thead>
         <tbody>
-          {searchFilterFunction(searchStr)?.length > 0 ? (
-            searchFilterFunction(searchStr)?.map((el: any, i: number) => {
+          {employees?.length > 0 ? (
+            employees?.map((el: any, i: number) => {
               return (
                 <tr key={i} className={`bg-white py-2 border-b border-gray-300 transition-all`}>
-                  <td className='border-r align-text-center text-center'>
+                  <td className='border-r align-text-center text-center w-[100px]'>
                     {i + 1}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>

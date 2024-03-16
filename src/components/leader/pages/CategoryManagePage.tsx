@@ -2,7 +2,7 @@
 import { FC, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { ManageTemplateForm } from '../forms/TemplateForm'
-import { TableWrapper } from '@/utils/TableWrapper'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { deleteLetterTemplates } from '@/redux_store/letter/letterApi'
 import { tryCatch } from '@/config/try-catch'
@@ -46,30 +46,28 @@ export const CategoryManagePage: FC = () => {
 
     return (
         <>
-            <div className='flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'>
-                <ProfileShortcutsBox />
-                <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-                    <TableWrapper
-                        heading='Manage Categories'
-                        addBtnTitle='add category'
-                        addBtnClickFn={openModal}
-                        curDataCount={1}
-                        totalCount={categories?.length}
-                        changeFilterFn={changeFilterCount}
-                        filterDataCount={filterDataCount}
-                        changePageNo={changeCurPageNo}
+            <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start m-5'>
+                <TableWrapper
+                    heading='Manage Categories'
+                    addBtnTitle='add category'
+                    addBtnClickFn={openModal}
+                    curDataCount={1}
+                    totalCount={searchFilterFunction(searchFilter, categories, "category", { curPageNo, filterDataCount })?.mainlist?.length}
+                    changeFilterFn={changeFilterCount}
+                    filterDataCount={filterDataCount}
+                    changePageNo={changeCurPageNo}
+                    curPageNo={curPageNo}
+                    searchFilterFn={changeFilterData}
+                    jsonDataToDownload={null}
+                >
+                    <CategoryTable
+                        handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }}
+                        searchStr={searchFilter}
                         curPageNo={curPageNo}
-                        searchFilterFn={changeFilterData}
-                        jsonDataToDownload={null}
-                    >
-                        <CategoryTable
-                            handleEdit={(value) => { setShowAddTemplateForm(true), setEdit(value) }}
-                            searchStr={searchFilter}
-                            curPageNo={curPageNo}
-                            filterDataCount={filterDataCount}
-                        />
-                    </TableWrapper>
-                </div>
+                        filterDataCount={filterDataCount}
+                        categories={searchFilterFunction(searchFilter, categories, "category", { curPageNo, filterDataCount })?.filterlist}
+                    />
+                </TableWrapper>
             </div>
 
             <AnimatePresence>

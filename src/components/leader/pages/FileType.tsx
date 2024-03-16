@@ -1,6 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { TableWrapper } from '@/utils/TableWrapper'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { ChangeActiveStatus } from '@/redux_store/employee/employeeApi'
 import { FileTypeForm } from '../forms/FileTypeForm'
@@ -46,7 +46,7 @@ export const FileType: FC = () => {
                         setShowAdd(true)
                     }}
                     curDataCount={1}
-                    totalCount={filestype?.length}
+                    totalCount={searchFilterFunction(searchFilter, filestype, "file_name", { curPageNo, filterDataCount })?.mainlist?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
@@ -62,6 +62,7 @@ export const FileType: FC = () => {
                         searchStr={searchFilter}
                         getFiles={() => getFiles()}
                         curPageNo={curPageNo}
+                        filestypes={searchFilterFunction(searchFilter, filestype, "file_name", { curPageNo, filterDataCount })?.filterlist}
                         filterDataCount={filterDataCount}
                     />
                 </TableWrapper>

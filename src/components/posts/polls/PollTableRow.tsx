@@ -11,14 +11,14 @@ import moment from 'moment'
 
 interface PollTableRowProps {
   handleDelete: (id: string) => void
+  polls: any
 }
 
-export const PollTableRow: FC<PollTableRowProps> = (props) => {
+export const PollTableRow: FC<PollTableRowProps> = ({ polls, handleDelete }) => {
   const [showEditPollForm, setShowEditPollForm] = useState(false)
   const [showPollChart, setShowPollChart] = useState(false)
   const [showPollPreview, setShowPollPreview] = useState(false)
   const [polldata, setPolldata] = useState({})
-  const { poll } = cusSelector((state) => state.poll);
   const currentTime = moment();
 
   const SetpollDATA = (pollitem: any) => {
@@ -54,8 +54,8 @@ export const PollTableRow: FC<PollTableRowProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          {poll?.length > 0 ? (
-            poll?.map((el: any, i: any) => {
+          {polls?.length > 0 ? (
+            polls?.map((el: any, i: any) => {
               const targetDateTime = moment(el?.publish_date)
               const hasPassed = !currentTime.isAfter(targetDateTime);
               return (
@@ -79,7 +79,7 @@ export const PollTableRow: FC<PollTableRowProps> = (props) => {
                               className='text-2xl'
                               onClick={() => { SetpollDATA(el); setShowEditPollForm(true) }}
                             />
-                            <MdDelete className='text-2xl' onClick={() => { SetpollDATA(el); props.handleDelete(el.id) }} />
+                            <MdDelete className='text-2xl' onClick={() => { SetpollDATA(el); handleDelete(el.id) }} />
                           </>
                         )}
 

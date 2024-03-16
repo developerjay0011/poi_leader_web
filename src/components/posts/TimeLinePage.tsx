@@ -35,53 +35,50 @@ export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = fal
   }, []);
 
   return (
-    <>
-      {/* CENTER FEED */}
-      <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
-        <StoriesBox is_my_postandstories={is_my_postandstories} />
-        <NewPostBox handleAdd={() => Getpost()} type="post" />
-        {setpost?.map((el: any, index: string) => {
-          var type = el?.type
-          return type === "post" ? (
-            <div key={index}>
-              <Post
-                {...el}
-                index={index}
-                Getpost={Getpost}
-                userdetails={!is_my_postandstories ? el.userdetails : mypostdata as any}
-                post={!is_my_postandstories ? el.post : el as any}
-                type={el.type as any}
-                is_my={is_my_postandstories}
-                allData={{ ...el, mypostdata }}
-              />
-            </div>
-          ) : (type === "agendas" || type === "developments") && !is_my_postandstories ? (
-            <div key={index}>
-              <AgendaPost
-                {...el}
-                index={index}
-                Getpost={Getpost}
-                type={el.type as any}
-                allData={el}
-                userdetails={el.userdetails as any}
-                post={el.post as any}
-              />
-            </div>
-          ) : type === "polls" && !is_my_postandstories ? (
-            <div key={index}>
-              <PollPost
-                {...el}
-                index={index}
-                key={index}
-                Getpost={Getpost}
-                allData={el}
-                userdetails={el.userdetails as any}
-                post={el.post as any}
-              />
-            </div>
-          ) : null
-        })}
-      </div>
-    </>
+    <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
+      <StoriesBox is_my_postandstories={is_my_postandstories} />
+      <NewPostBox handleAdd={() => Getpost()} type="post" />
+      {setpost?.map((el: any, index: string) => {
+        var type = el?.type
+        return type === "post" ? (
+          <div key={index}>
+            <Post
+              {...el}
+              index={index}
+              Getpost={Getpost}
+              userdetails={!is_my_postandstories ? el.userdetails : mypostdata as any}
+              post={!is_my_postandstories ? el.post : el as any}
+              type={el.type as any}
+              is_my={is_my_postandstories}
+              allData={{ ...el, mypostdata }}
+            />
+          </div>
+        ) : (type === "agendas" || type === "developments") && !is_my_postandstories ? (
+          <div key={index}>
+            <AgendaPost
+              {...el}
+              index={index}
+              Getpost={Getpost}
+              type={el.type as any}
+              allData={el}
+              userdetails={el.userdetails as any}
+              post={el.post as any}
+            />
+          </div>
+        ) : type === "polls" && !is_my_postandstories ? (
+          <div key={index}>
+            <PollPost
+              {...el}
+              index={index}
+              key={index}
+              Getpost={Getpost}
+              allData={el}
+              userdetails={el.userdetails as any}
+              post={el.post as any}
+            />
+          </div>
+        ) : null
+      })}
+    </div>
   );
 };

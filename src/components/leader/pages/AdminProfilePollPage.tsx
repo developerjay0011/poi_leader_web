@@ -8,54 +8,41 @@ import { dateTimeConverter } from '@/utils/utility'
 import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 import { FaPlus } from 'react-icons/fa6'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
+import { cusSelector } from '@/redux_store/cusHooks'
 
 export const AdminProfilePollsPage: FC = () => {
   const [showAddPollForm, setShowAddPollForm] = useState(false)
-
+  const { poll } = cusSelector((state) => state.poll);
+  const [searchFilter, setSearchFilter] = useState('');
+  const [curPageNo, setCurPageNo] = useState(1)
+  const [filterDataCount, setFilterAmount] = useState(5)
+  const changeFilterData = (str: string) => setSearchFilter(str)
+  const changeCurPageNo = (page: number) => setCurPageNo(page)
+  const changeFilterCount = (val: number) => {
+    setFilterAmount(val)
+    setCurPageNo(1)
+  }
   return (
     <>
-      <div className='flex gap-5 w-full relative'>
-        {/* <div className='sticky top-0 left-0 self-start max-[1000px]:hidden w-max'>
-          <ShortcutsBox />
-        </div> */}
-        <ProfileShortcutsBox />
-
-        <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
-          {/* <section className='flex flex-col px-5 gap-6 mb-5'>
-            <h2 className='flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-6 py-3 border-b font-semibold text-[20px] capitalize'>
-              polls
-            </h2>
-            <button
-              type='button'
-              onClick={() => setShowAddPollForm(true)}
-              className='rounded-full bg-orange-500 text-orange-50 py-3 self-end px-8 capitalize font-medium flex items-center gap-2'>
-              <BiPlusCircle className='text-2xl' /> create poll
-            </button>
-          </section> */}
-
-          <div className='overflow-hidden flex flex-col flex-1 self-start px-5 border-b py-3 after:h-1/2 after:w-[3px] after:bg-orange-600 
-            after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%]
-             after:left-0 relative w-full' >
-
-            <div className='flex items-center justify-between gap-3'>
-              <h2 className="flex items-center text-[22px] font-semibold capitalize">
-                polls
-              </h2>
-              <div className='flex gap-5'>
-                <button
-                  type='button'
-                  onClick={() => setShowAddPollForm(true)}
-                  className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-                >
-                  create poll
-                </button>
-              </div>
-            </div>
-          </div>
-          <section className='flex flex-col px-5 gap-6 mb-5'>
-            <PollsTable />
-          </section>
-        </div>
+      <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start m-5'>
+        <TableWrapper
+          heading='Manage Polls'
+          addBtnTitle='add Poll'
+          addBtnClickFn={() => setShowAddPollForm(true)}
+          curDataCount={1}
+          totalCount={searchFilterFunction(searchFilter, poll, "title", { curPageNo, filterDataCount })?.mainlist?.length}
+          changeFilterFn={changeFilterCount}
+          filterDataCount={filterDataCount}
+          changePageNo={changeCurPageNo}
+          curPageNo={curPageNo}
+          searchFilterFn={changeFilterData}
+          jsonDataToDownload={null}
+        >
+          <PollsTable
+            polls={searchFilterFunction(searchFilter, poll, "title", { curPageNo, filterDataCount })?.filterlist}
+          />
+        </TableWrapper>
       </div>
 
       <AnimatePresence>

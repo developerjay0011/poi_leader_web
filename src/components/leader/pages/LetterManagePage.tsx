@@ -1,6 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { TableWrapper } from '@/utils/TableWrapper'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { deleteLetter, getLetters } from '@/redux_store/letter/letterApi'
 import { letterActions } from '@/redux_store/letter/letterSlice'
@@ -12,7 +12,7 @@ import { ManageLetterTable } from '../letter/ManageLetterTable'
 export const LetterManagePage: FC = () => {
     const [searchFilter, setSearchFilter] = useState('');
     const changeFilterData = (str: string) => setSearchFilter(str)
-    const { letter_templete } = cusSelector((state) => state.letter);
+    const { letter } = cusSelector((state) => state.letter);
     const { userDetails } = cusSelector((st) => st.auth);
     const { leaderProfile } = cusSelector((state) => state.leader);
     const [filterDataCount, setFilterAmount] = useState(5)
@@ -54,19 +54,20 @@ export const LetterManagePage: FC = () => {
                     addBtnTitle='add Letter'
                     addBtnClickFn={(Savedby().saved_by_type == "leader" ? "/user" : "/employee-access") + "/letter/add-letter"}
                     curDataCount={1}
-                    totalCount={letter_templete?.length}
+                    totalCount={searchFilterFunction(searchFilter, letter, "template_id", { curPageNo, filterDataCount })?.mainlist?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
                     curPageNo={curPageNo}
                     searchFilterFn={changeFilterData}
-                    jsonDataToDownload={letter_templete}
+                    jsonDataToDownload={letter}
                 >
                     <ManageLetterTable
                         handleDelete={(id) => { handleTemplateDelete(id) }}
                         handleEdit={(value) => { }}
                         searchStr={searchFilter}
                         curPageNo={curPageNo}
+                        letters={searchFilterFunction(searchFilter, letter, "template_id", { curPageNo, filterDataCount })?.filterlist}
                         filterDataCount={filterDataCount}
                     />
                 </TableWrapper>

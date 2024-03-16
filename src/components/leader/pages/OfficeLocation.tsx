@@ -1,6 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
-import { TableWrapper } from '@/utils/TableWrapper'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { OfficelocationTable } from '../officelocation/OfficelocationTable'
@@ -9,15 +9,15 @@ import { GetOfficeLocations } from '@/redux_store/location/locationApi'
 import { locationAction } from '@/redux_store/location/locationSlice'
 
 export const OfficeLocation: FC = () => {
-    const [showAdd, setShowAdd] = useState(false)
-    const [searchFilter, setSearchFilter] = useState('');
-    const [isEdit, setEdit] = useState<any>();
     const dispatch = cusDispatch();
+    const [showAdd, setShowAdd] = useState(false)
+    const [isEdit, setEdit] = useState<any>();
+    const [searchFilter, setSearchFilter] = useState('');
+    const [curPageNo, setCurPageNo] = useState(1)
+    const [filterDataCount, setFilterAmount] = useState(5)
+    const changeFilterData = (str: string) => setSearchFilter(str)
     const { location } = cusSelector((state) => state.location);
     const { userDetails } = cusSelector((state) => state.auth);
-    const changeFilterData = (str: string) => setSearchFilter(str)
-    const [filterDataCount, setFilterAmount] = useState(5)
-    const [curPageNo, setCurPageNo] = useState(1)
     const changeCurPageNo = (page: number) => setCurPageNo(page)
     const changeFilterCount = (val: number) => {
         setFilterAmount(val)
@@ -38,18 +38,17 @@ export const OfficeLocation: FC = () => {
         })();
     }, [userDetails?.leaderId, dispatch]);
 
+    // handleFilter(ticket, statusFilter, categoryFilter, locationFilter)?.mainlist?.length
+
     return (
         <>
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                 <TableWrapper
                     heading='Manage Office Location'
                     addBtnTitle='add Location'
-                    addBtnClickFn={() => {
-                        setEdit(null)
-                        setShowAdd(true)
-                    }}
+                    addBtnClickFn={() => { setEdit(null); setShowAdd(true) }}
                     curDataCount={1}
-                    totalCount={location?.length}
+                    totalCount={searchFilterFunction(searchFilter, location, "location", { curPageNo, filterDataCount })?.mainlist?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
@@ -63,6 +62,7 @@ export const OfficeLocation: FC = () => {
                         GetofficeLocations={GetofficeLocations}
                         curPageNo={curPageNo}
                         filterDataCount={filterDataCount}
+                        locations={searchFilterFunction(searchFilter, location, "location", { curPageNo, filterDataCount })?.filterlist}
                     />
                 </TableWrapper>
             </div>

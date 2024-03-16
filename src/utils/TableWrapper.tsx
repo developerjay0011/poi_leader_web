@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 import { DownloadExcelButton } from './ExcelConverter'
 import { FaFileExcel } from 'react-icons/fa'
@@ -8,6 +8,20 @@ import Link from 'next/link'
 export const sliceData = (data: any, page: any, rowsPerPage: any) => {
   return Array.isArray(data) ? data?.slice((page - 1) * rowsPerPage, page * rowsPerPage) : []
 };
+export const searchFilterFunction = (text: string, listdata: any, key: string, { curPageNo, filterDataCount }) => {
+  if (text) {
+    const newData = listdata?.filter(
+      function (item: any) {
+        const itemData = item?.[key] ? item?.[key].toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      }
+    )
+    return { filterlist: sliceData(newData, curPageNo, filterDataCount), mainlist: newData }
+  } else {
+    return { filterlist: sliceData(listdata, curPageNo, filterDataCount), mainlist: listdata }
+  }
+}
 interface TableWrapperProps {
   heading: string
   children: JSX.Element
@@ -49,6 +63,12 @@ export const TableWrapper: FC<TableWrapperProps> = ({ children, heading, addBtnC
       </button>
     )
   }
+  useEffect(() => {
+    if (totalPages < curPageNo) {
+      changePageNo(1)
+    }
+  }, [curPageNo, totalPages])
+
 
   return (
     <>

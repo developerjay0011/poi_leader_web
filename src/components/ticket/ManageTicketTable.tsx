@@ -40,9 +40,12 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const [timeline, setTimeline] = useState<any>([])
   const [addMileStone, setAddMileStone] = useState(false)
   const [ticketdata, setticketdata] = useState<any>()
-  const searchFilterData = ticket?.filter((el: any) => searchStr ? el?.ticketid.includes(searchStr) : el)
   const [showPreview, setShowPreview] = useState(false);
   const dispatch = cusDispatch();
+
+
+
+
   return (
     <>
       <table className='w-full my-8 border'>
@@ -55,14 +58,14 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
               <input type="checkbox"
                 className='text-[20px] cursor-pointer'
                 onClick={(e) => { e.stopPropagation(); }}
-                checked={searchFilterData?.length > 0 && ischecked?.length == searchFilterData?.length}
-                disabled={searchFilterData?.length == 0}
+                checked={ticket?.length > 0 && ischecked?.length == ticket?.length}
+                disabled={ticket?.length == 0}
                 onChange={() => {
-                  if (searchFilterData?.length > 0) {
-                    if (ischecked?.length == searchFilterData?.length) {
+                  if (ticket?.length > 0) {
+                    if (ischecked?.length == ticket?.length) {
                       setIschecked([])
                     } else {
-                      setIschecked(searchFilterData)
+                      setIschecked(ticket)
                     }
                   }
                 }} />
@@ -90,8 +93,8 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
             </th>
           </tr>
         </thead>
-        <tbody>{searchFilterData?.length > 0 ? (
-          sliceData(searchFilterData, curPageNo, filterDataCount)?.map((el: any, i: any) => {
+        <tbody>{ticket?.length > 0 ? (
+          ticket?.map((el: any, i: any) => {
             const formSubmitHandler = async () => {
               tryCatch(
                 async () => {

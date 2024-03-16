@@ -16,14 +16,13 @@ interface EventTableProps {
   searchStr: string;
   isEvent: boolean;
   editEvent: any
+  events: any
 }
 
-export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent }) => {
-  const [showConfirmBox, setShowConfirmBox] = useState<boolean>(false);
-  const { event } = cusSelector((state) => state.event);
+export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent, events }) => {
   const dispatch = cusDispatch();
+  const [showConfirmBox, setShowConfirmBox] = useState<boolean>(false);
   const [deleteValue, setDeleteValue] = useState({ id: "", leaderid: "" });
-  const filterDataOnEvent = event?.filter((el: any) => searchStr ? el?.title.includes(searchStr) : el);
   const onClose = () => { setShowConfirmBox(false) };
   const confirmDelete = (id: string, leaderid: string) => {
     setDeleteValue({
@@ -50,51 +49,46 @@ export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent 
 
   return (
     <>
-      <table className="w-full mt-5">
-        <thead className="text-left">
-          <tr className="bg-orange-500 text-orange-50">
-            <th className="p-2 font-medium">S.No</th>
-            <th className="p-2 font-medium">Title</th>
-            <th className="p-2 font-medium">Description</th>
-            <th className="p-2 font-medium">Notes</th>
-            <th className="p-2 font-medium">Access</th>
-            <th className="p-2 font-medium">Location</th>
-            <th className="p-2 font-medium">Start Time</th>
-            <th className="p-2 font-medium">End Time</th>
-            <th className="p-2 font-medium">Actions</th>
+      <table className='w-full my-8 border'>
+        <thead>
+          <tr className='border-b border-gray-300'>
+            <th className='font-semibold text-left py-2 p-2 border text-center w-[100px]'>S.No</th>
+            <th className='font-semibold capitalize text-center py-2 p-2 border'>Title</th>
+            <th className='font-semibold text-center py-2 px-2 border text-center'>Description</th>
+            <th className='font-semibold text-center py-2 p-2 border'>Access</th>
+            <th className='font-semibold text-center py-2 p-2 border w-[20%]'>Location</th>
+            <th className='font-semibold text-center py-2 p-2 border'>Start Time</th>
+            <th className='font-semibold text-center py-2 p-2 border'>End Time</th>
+            <th className='font-semibold text-center py-2 p-2 border w-[100px]'>Actions</th>
           </tr>
         </thead>
-        <tbody className="text-left">
-          {filterDataOnEvent?.length > 0 ? (
-            filterDataOnEvent?.map((Event: any, index: number) => {
+        <tbody className="text-left border">
+          {events?.length > 0 ? (
+            events?.map((Event: any, index: number) => {
               return (
                 <>
-                  <tr key={index}>
-                    <td className="p-2">{index + 1}</td>
-                    <td className="p-2">{Event.title}</td>
-                    <td className="p-2">{Event.description}</td>
-                    <td className="p-2">{Event.notes}</td>
-                    <td className="p-2">{Event.ispublic ? "Public" : "Private"}</td>
-                    <td className="p-2">{Event.location}</td>
-                    <td className="p-2">{Event.start_datetime}</td>
-                    <td className="p-2">{Event.end_datetime}</td>
-                    <td className="p-2 flex  gap-3">
+                  <tr className='border-b border-gray-300'>
+                    <td className="text-center py-2 p-2 border">{index + 1}</td>
+                    <td className="text-center py-2 p-2 border">{Event.title}</td>
+                    <td className="text-center py-2 p-2 border">{Event.description}</td>
+                    <td className="text-center py-2 p-2 border">{Event.ispublic ? "Public" : "Private"}</td>
+                    <td className="text-center py-2 p-2 border w-[20%]">{Event.location}</td>
+                    <td className="text-center py-2 p-2 border w-[200px]">{Event.start_datetime}</td>
+                    <td className="text-center py-2 p-2 border w-[200px]">{Event.end_datetime}</td>
+                    <td className='text-center py-2 pl-2 border printHide'>
                       <button
-                        className="flex items-center gap-2  capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 transition-all"
+                        className='hover:scale-110 transition-all mr-3 ease-out duration-200 active:scale-100'
                         onClick={() => editEvent(Event)}
                       >
                         <FaEdit className="text-xl" />
                       </button>
-
                       <button
+                        className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
                         onClick={() =>
                           confirmDelete(Event.id, Event.leaderid)
-                        }
-                        className="flex items-center gap-2  capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 transition-all"
-                      >
+                        }>
                         <BsTrash3Fill />
                       </button>
-
                     </td>
                   </tr>
                 </>

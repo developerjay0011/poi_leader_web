@@ -12,26 +12,11 @@ interface FiletypeTableProps {
   getFiles: any
   curPageNo?: any
   filterDataCount?: any
+  filestypes: any
 }
 
-export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, getFiles, curPageNo, filterDataCount }) => {
-  const { filestype } = cusSelector((state) => state.file);
+export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, getFiles, curPageNo, filterDataCount, filestypes }) => {
   const { userDetails }: any = cusSelector((state) => state.auth);
-  const searchFilterFunction = (text: string) => {
-    if (text) {
-      const newData = filestype?.filter(
-        function (item) {
-          const itemData = item?.["file_name"] ? item?.["file_name"].toUpperCase() : ''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        }
-      )
-      return sliceData(newData, curPageNo, filterDataCount)
-    } else {
-      return sliceData(filestype, curPageNo, filterDataCount)
-    };
-  }
-
 
   return (
     <>
@@ -54,8 +39,8 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
           </tr>
         </thead>
         <tbody>
-          {searchFilterFunction(searchStr)?.length > 0 ? (
-            searchFilterFunction(searchStr)?.map((el: any, i: number) => {
+          {filestypes?.length > 0 ? (
+            filestypes?.map((el: any, i: number) => {
               return (
                 <tr key={i} className={`bg-white py-3 border-b border-gray-300 transition-all`}>
                   <td className='border-r align-text-center text-center max-w-[50px]'>

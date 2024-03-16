@@ -48,16 +48,10 @@ export const ShortcutsBox: FC = () => {
       tabname: "Manage Group"
     },
     {
-      link: ' /user/profile/polls',
+      link: ' /user/polls',
       name: 'Polls',
       Icon: HiSpeakerphone,
       tabname: "Manage Polls"
-    },
-    {
-      link: '/user/profile/directory',
-      name: 'Manage Directory',
-      Icon: MdContacts,
-      tabname: "Manage Directory"
     },
     {
       link: '/user/profile/directory',

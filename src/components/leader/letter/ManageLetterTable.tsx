@@ -16,29 +16,15 @@ interface ManageLetterTableProps {
   handleEdit: (value: any) => void
   curPageNo?: any
   filterDataCount?: any
+  letters: any
 }
 
-export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount }) => {
-  const { letter } = cusSelector((state) => state.letter);
+export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount, letters }) => {
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [showLetterPreiew, setshowLetterPreiew] = useState(false)
   const [letterdata, setletterdata] = useState("")
-
   const [id, setid] = useState("")
-  const searchFilterFunction = (text: string) => {
-    if (text) {
-      const newData = letter?.filter(
-        function (item) {
-          const itemData = item?.["template_name"] ? item?.["template_name"].toUpperCase() : ''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        }
-      )
-      return sliceData(newData, curPageNo, filterDataCount)
-    } else {
-      return sliceData(letter, curPageNo, filterDataCount)
-    };
-  }
+
 
   return (
     <>
@@ -73,8 +59,8 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
             </th>
           </tr>
         </thead>
-        <tbody>{searchFilterFunction(searchStr)?.length > 0 ? (
-          searchFilterFunction(searchStr)?.map((el, i) => (
+        <tbody>{letters?.length > 0 ? (
+          letters?.map((el: any, i: any) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
                 {i + 1}
@@ -110,7 +96,7 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
               <td className='text-center py-2 pl-2 border printHide'>
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() => {setletterdata(el?.letter_html),setshowLetterPreiew(true)}}>
+                  onClick={() => { setletterdata(el?.letter_html), setshowLetterPreiew(true) }}>
                   <BsFillEyeFill className='text-2xl' />
                 </button>
                 <button

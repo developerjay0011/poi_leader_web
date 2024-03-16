@@ -1,7 +1,7 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { TableWrapper } from '@/utils/TableWrapper'
+import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { ManageEmployessForm } from '../forms/EmployessForm'
@@ -12,11 +12,11 @@ import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShort
 
 export const EmployeeManagePage: FC = () => {
     const [showAdd, setShowAdd] = useState(false)
-    const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
     const dispatch = cusDispatch();
     const { employees } = cusSelector((state) => state.employee);
     const { userDetails } = cusSelector((state) => state.auth);
+    const [searchFilter, setSearchFilter] = useState('');
     const changeFilterData = (str: string) => setSearchFilter(str)
     const [filterDataCount, setFilterAmount] = useState(5)
     const [curPageNo, setCurPageNo] = useState(1)
@@ -47,7 +47,6 @@ export const EmployeeManagePage: FC = () => {
             await getemployee();
         })();
     }, [userDetails?.leaderId, dispatch]);
-
     return (
         <>
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
@@ -59,7 +58,7 @@ export const EmployeeManagePage: FC = () => {
                         setShowAdd(true)
                     }}
                     curDataCount={1}
-                    totalCount={employees?.length}
+                    totalCount={searchFilterFunction(searchFilter, employees, "fullname", { curPageNo, filterDataCount })?.mainlist?.length}
                     changeFilterFn={changeFilterCount}
                     filterDataCount={filterDataCount}
                     changePageNo={changeCurPageNo}
@@ -73,6 +72,7 @@ export const EmployeeManagePage: FC = () => {
                         changeActiveStatus={(id) => { changeActiveStatus(id) }}
                         curPageNo={curPageNo}
                         filterDataCount={filterDataCount}
+                        employees={searchFilterFunction(searchFilter, employees, "fullname", { curPageNo, filterDataCount })?.filterlist}
                     />
                 </TableWrapper>
             </div>

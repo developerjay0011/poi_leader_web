@@ -1,17 +1,13 @@
 import { CommonBox } from "@/utils/CommonBox";
-import { GenerateId } from "@/utils/utility";
-import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import Modal from "react-modal";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { Story } from "./Story";
 import { deleteStory, getLeaderAddedStories, getStoriesForLeader, } from "@/redux_store/posts/postAPI";
 import { NewPostBox } from "../posts/NewPostBox";
-import { ProtectedRoutes } from "@/constants/routes";
 import { getImageUrl, setusername } from "@/config/get-image-url";
 import { postActions } from "@/redux_store/posts/postSlice";
-import { HiCubeTransparent } from "react-icons/hi";
 
 interface StoriesBoxProps {
   is_my_postandstories: boolean
@@ -57,9 +53,8 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
         // <Link key={id} href={ProtectedRoutes.leader} className="text-sm font-normal hover:underline text-orange-500"    >      see all    </Link>
         <BsPlusCircle className="text-orange-500 text-[25px] aspect-square object-cover object-center cursor-pointer" onClick={() => setOpenPopup(true)} />
       ]}>
-        <div className="w-[660px]">
-          <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
-            {/* <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
+        <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
+          {/* <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
               <label className="flex h-[80px] justify-center items-center rounded-full shadow">
                 <BsPlusCircle
                   className="z-0 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
@@ -67,21 +62,20 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
                 />
               </label>
             </li> */}
-            {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string } | undefined, index: null) => {
-              return (
-                <Story
-                  userImage={getImageUrl(el?.image as string)}
-                  key={index}
-                  stories={el?.media}
-                  handleDelete={handleDelete}
-                  self={is_my_postandstories}
-                  name={el?.name as string}
-                  createddate={el?.createddate as string}
-                />
-              )
-            })}
-          </ul>
-        </div>
+          {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string } | undefined, index: null) => {
+            return (
+              <Story
+                userImage={getImageUrl(el?.image as string)}
+                key={index}
+                stories={el?.media}
+                handleDelete={handleDelete}
+                self={is_my_postandstories}
+                name={el?.name as string}
+                createddate={el?.createddate as string}
+              />
+            )
+          })}
+        </ul>
       </CommonBox>
       <Modal
         isOpen={openPopup}

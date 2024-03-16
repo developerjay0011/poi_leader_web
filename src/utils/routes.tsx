@@ -61,19 +61,19 @@ export const LEFT_NAV_ROUTES = [
   },
   {
     id: GenerateId(),
-    link: '/user/profile/events',
-    link2: '/employee-access/profile/events',
-    name: 'events',
-    Icon: BsFillCalendar3WeekFill,
-    tabname: "Manage Events"
-  },
-  {
-    id: GenerateId(),
     link: '/user/analytics',
     link2: '/employee-access/analytics',
     name: 'account stats',
     Icon: TfiStatsUp,
     tabname: "Leader"
+  },
+  {
+    id: GenerateId(),
+    link: '/user/events',
+    link2: '/employee-access/events',
+    name: 'events',
+    Icon: BsFillCalendar3WeekFill,
+    tabname: "Manage Events"
   },
   {
     id: GenerateId(),
@@ -125,8 +125,8 @@ export const LEFT_NAV_ROUTES = [
   },
   {
     id: GenerateId(),
-    link: '/user/profile/polls',
-    link2: '/employee-access/profile/polls',
+    link: '/user/polls',
+    link2: '/employee-access/polls',
     name: 'Manage Polls',
     Icon: HiSpeakerphone,
     tabname: "Manage Polls"

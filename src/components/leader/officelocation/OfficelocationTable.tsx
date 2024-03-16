@@ -12,52 +12,38 @@ interface OfficelocationTableProps {
   GetofficeLocations: any
   curPageNo?: any
   filterDataCount?: any
+  locations: any
 }
 
-export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, handleEdit, GetofficeLocations, curPageNo, filterDataCount }) => {
-  const { location } = cusSelector((state) => state.location);
+export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, handleEdit, GetofficeLocations, curPageNo, filterDataCount, locations }) => {
   const { userDetails }: any = cusSelector((state) => state.auth);
-  const searchFilterFunction = (text: string) => {
-    if (text) {
-      const newData = location?.filter(
-        function (item) {
-          const itemData = item?.["location"] ? item?.["location"].toUpperCase() : ''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        }
-      )
-      return sliceData(newData, curPageNo, filterDataCount)
-    } else {
-      return sliceData(location, curPageNo, filterDataCount)
-    };
-  }
 
   return (
     <>
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='border-r align-text-center text-center max-w-[50px]'>S.No</th>
+            <th className='font-semibold capitalize text-center py-2 p-2 border w-[100px]'>S.No</th>
             <th className='font-semibold capitalize text-left py-2 pl-2 border'>
               Location
             </th>
-            <th className='font-semibold capitalize text-left py-2 pl-2 border'>
+            <th className='font-semibold  text-center capitalize text-left py-2 pl-2 border max-w-[10px]'>
               Action
             </th>
           </tr>
         </thead>
         <tbody>
-          {searchFilterFunction(searchStr)?.length > 0 ? (
-            searchFilterFunction(searchStr)?.map((el: any, i: number) => {
+          {locations?.length > 0 ? (
+            locations?.map((el: any, i: number) => {
               return (
                 <tr key={i} className={`bg-white py-2 border-b border-gray-300 transition-all`}>
-                  <td className='border-r align-text-center text-center max-w-[50px]'>
+                  <td className='border-r align-text-center text-center max-w-[10px]'>
                     {i + 1}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>
                     {el.location}
                   </td>
-                  <td className='py-2 pl-2 border printHide'>
+                  <td className='py-2 pl-2 border text-center printHide max-w-[10px]'>
                     <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => handleEdit(el)}>
                       <BiEdit className='text-2xl' />
                     </button>

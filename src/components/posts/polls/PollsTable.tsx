@@ -8,8 +8,8 @@ import { pollActions } from '@/redux_store/polls/pollSlice'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 
-interface PollsTableProps { }
-export const PollsTable: FC<PollsTableProps> = () => {
+interface PollsTableProps { polls: any }
+export const PollsTable: FC<PollsTableProps> = ({ polls }) => {
   const { userDetails } = cusSelector((state) => state.auth);
 
   const dispatch = cusDispatch();
@@ -44,6 +44,7 @@ export const PollsTable: FC<PollsTableProps> = () => {
     <>
       <PollTableRow
         handleDelete={handlePollDelete}
+        polls={polls}
       />
     </>
   )
