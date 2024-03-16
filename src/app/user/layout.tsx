@@ -3,35 +3,29 @@ import { FC, ReactNode, useEffect, useLayoutEffect } from 'react'
 import { TopNavbar } from '@/components/leader/TopNavbar'
 import { LeftNavbar } from '@/components/leader/LeftNavbar'
 import { RightNavbar } from '@/components/leader/RightNavbar'
-import { USER_TYPE } from '@/constants/common'
-import { getCookie } from 'cookies-next'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { fetchAccessTabs, fetchEmployeeAccessTabs } from '@/redux_store/accesstab/tabApi'
+import { fetchAccessTabs } from '@/redux_store/accesstab/tabApi'
 import { accessAction } from '@/redux_store/accesstab/tabSlice'
+import { getCookie } from 'cookies-next'
+import { USER_TYPE } from '@/constants/common'
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
-  var user_type = getCookie(USER_TYPE) as string
   const { userDetails }: any = cusSelector((state) => state.auth);
-  const { loader, accesstabs }: any = cusSelector((state) => state.access);
   useLayoutEffect(() => {
     (async () => {
-      if (user_type) {
-        if (accesstabs?.length == 0) {
-          dispatch(accessAction.storeLoader(true))
-        }
-        dispatch(accessAction.storeUsertype(user_type))
-        var tabs = user_type == "leader" ? await fetchAccessTabs(userDetails?.id) : await fetchEmployeeAccessTabs(userDetails?.employeeid)
-        if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
-        dispatch(accessAction.storeLoader(false))
-      }
+      let usertype = getCookie(USER_TYPE)
+      await dispatch(accessAction.storeLoader(true))
+      await dispatch(accessAction.storeUsertype(usertype))
+      var tabs = await fetchAccessTabs(userDetails?.id)
+      if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
+      await dispatch(accessAction.storeLoader(false))
     })()
-  }, [user_type])
-
+  });
   return (
     <>
       <main className='flex flex-col h-[100dvh] overflow-hidden'>
-        <TopNavbar />
+        <TopNavbar user_type={"leader"} />
         <div className='flex flex-grow overflow-y-scroll scroll_hidden'>
           <LeftNavbar />
           <section className='bg-zinc-100 flex-1 overflow-y-scroll main_scrollbar'>

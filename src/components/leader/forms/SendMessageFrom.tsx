@@ -1,7 +1,5 @@
 import { FC } from 'react'
 import { useForm } from 'react-hook-form'
-import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { ErrorMessage } from '@hookform/error-message'
 import { Modal } from '@/components/modal/modal'
 import { Input } from '@/components/Input'
 interface SendMessageProps {
@@ -14,8 +12,6 @@ interface MessageProps {
 }
 export const SendMessage: FC<SendMessageProps> = ({ onClose, heading }) => {
   const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm<MessageProps>({})
-  const { userDetails } = cusSelector((state) => state.auth);
-  const dispatch = cusDispatch();
   const formSubmitHandler = async (data: MessageProps) => {
     const body = {};
     // if (response?.success) {
@@ -44,17 +40,6 @@ export const SendMessage: FC<SendMessageProps> = ({ onClose, heading }) => {
             required: "message is required",
           }}
         />
-
-        {/* <Input
-          errors={errors}
-          id="attachments"
-          placeholder="attachments"
-          register={register}
-          title="Attachments"
-          type="file"
-        /> */}
-
-
         <div className='w-full bg-zinc-200 h-[1px] mt-3' />
         <div className='flex self-end gap-2 max-[580px]:self-stretch max-[580px]:flex-wrap'>
           <button

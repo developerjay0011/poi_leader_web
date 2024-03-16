@@ -1,14 +1,8 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import { motion as m } from 'framer-motion'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiX } from 'react-icons/bi'
-import JoditEditor from 'jodit-react'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { getLetterTemplates, saveLetterTemplate } from '@/redux_store/letter/letterApi'
-import { letterActions } from '@/redux_store/letter/letterSlice'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
-import dynamic from 'next/dynamic';
 import { ErrorMessage } from '@hookform/error-message'
 import { Savedby } from '@/constants/common'
 import { SaveCategory, getCategory } from '@/redux_store/agenda/agendaApi'
@@ -29,35 +23,16 @@ interface TemplateFormFields {
   category: string
   isactive: string
 }
-const Editor = dynamic(() => import('./Editor'), {
-  ssr: false
-})
-export const CategoryFrom: FC<ManageTemplateFormProps> = ({
-  submitting,
-  tempHeader,
-  status,
-  onClose,
-  err,
-  heading,
-  isEdit
-}) => {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-    reset
-  } = useForm<TemplateFormFields>({
-  })
+export const CategoryFrom: FC<ManageTemplateFormProps> = ({ submitting, tempHeader, status, onClose, err, heading, isEdit }) => {
+  const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm<TemplateFormFields>({})
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
-
   const formSubmitHandler = async (data: TemplateFormFields) => {
     const body = {
       id: isEdit ? isEdit.id : null,
       "leaderid": userDetails?.leaderId,
       "category": data?.category,
-      isactive: data.isactive == "1" ? true : false,
+      isactive: data.isactive == "true" ? true : false,
       ...Savedby()
     };
     const response = await SaveCategory(body);
@@ -65,21 +40,22 @@ export const CategoryFrom: FC<ManageTemplateFormProps> = ({
       const data = await getCategory(userDetails?.leaderId as string);
       dispatch(agendaAction.storeCategories(data));
       dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+      onClose()
+      reset();
     } else {
       dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
     }
-    onClose()
-    reset();
-  }
 
+  }
   useEffect(() => {
     if (isEdit) {
       setValue("category", isEdit?.category)
       setValue("isactive", isEdit?.isactive)
     }
   }, [])
+
   return (
-    <Modal heading={heading} onClose={onClose} >
+    <Modal heading={heading} onClose={onClose}  >
       <form
         className='flex flex-col py-5 gap-4 max-[550px]:px-4'
         noValidate

@@ -9,30 +9,19 @@ import { SaveCategory, getCategory } from '@/redux_store/agenda/agendaApi';
 import { commonActions } from '@/redux_store/common/commonSlice';
 import { agendaAction } from '@/redux_store/agenda/agendaSlice';
 import { generateCategoricalChart } from 'recharts/types/chart/generateCategoricalChart';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface AssemblyConstituencyTableProps {
   searchStr: string
   handleEdit: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
+  categories: any
 }
 
-export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit }) => {
-  const { categories } = cusSelector((state) => state.agenda);
+export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit, curPageNo, filterDataCount, categories }) => {
   const { userDetails } = cusSelector((st) => st.auth);
   const dispatch = cusDispatch();
-  const searchFilterFunction = (text: string) => {
-    if (text) {
-      const newData = categories?.filter(
-        function (item) {
-          const itemData = item?.["category"] ? item?.["category"].toUpperCase() : ''.toUpperCase();
-          const textData = text.toUpperCase();
-          return itemData.indexOf(textData) > -1;
-        }
-      )
-      return newData
-    } else {
-      return categories
-    };
-  }
 
 
 
@@ -41,20 +30,20 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, h
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold text-left py-2 pl-2 border text-center'>S.No</th>
-            <th className='font-semibold capitalize text-left py-2 pl-2 border text-center'>category</th>
-            <th className='font-semibold text-left py-2 px-2 border text-center'>Status</th>
-            <th className='font-semibold text-center py-2 pl-2 border printHide'>Actions</th>
+            <th className='font-semibold text-left py-2 pl-2 border text-center w-[100px]'>S.No</th>
+            <th className='font-semibold capitalize text-left py-2 pl-2 border'>category</th>
+            <th className='font-semibold text-left py-2 px-2 border text-center w-[200px]'>Status</th>
+            <th className='font-semibold text-center py-2 pl-2 border printHide w-[200px]'>Actions</th>
           </tr>
         </thead>
-        <tbody>{searchFilterFunction(searchStr)?.length > 0 ? (
-          searchFilterFunction(searchStr)?.map((el: any, i: number) => {
+        <tbody>{categories?.length > 0 ? (
+          categories?.map((el: any, i: number) => {
             return (
               <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
                 <td className='pl-2 border-r align-text-top text-center'>
                   {i + 1}
                 </td>
-                <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left py-2 pl-2 border-r align-text-top'>
                   {el.category}
                 </td>
                 <td className='text-center py-2 pl-2 border printHide'>
@@ -88,7 +77,6 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, h
                   </button>
                 </td>
               </tr>
-
             )
           })
         ) : (

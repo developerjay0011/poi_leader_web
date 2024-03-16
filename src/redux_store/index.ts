@@ -15,6 +15,8 @@ import { letterSlice } from './letter/letterSlice'
 import { employeeSlice } from './employee/employeeApiSlice'
 import { ticketSlice } from './ticket/ticketSlice'
 import { accessSlice } from './accesstab/tabSlice'
+import { fileSlice } from './filetype/filetypeSlice'
+import { locationSlice } from './location/locationSlice'
 
 
 
@@ -36,6 +38,8 @@ export const store = configureStore({
     employee: employeeSlice.reducer,
     ticket: ticketSlice.reducer,
     access: accessSlice.reducer,
+    file: fileSlice.reducer,
+    location: locationSlice.reducer,
   },
 })
 

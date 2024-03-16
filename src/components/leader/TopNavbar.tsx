@@ -34,19 +34,23 @@ import { getDirectory } from "@/redux_store/directory/directoryApi";
 import { directoryAction } from "@/redux_store/directory/directorySlice";
 import { GetDashboardEvents } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
-import { getTickets, } from "@/redux_store/ticket/ticketApi";
+import { GetCategories, getTickets, } from "@/redux_store/ticket/ticketApi";
 import { ticketActions } from "@/redux_store/ticket/ticketSlice";
 import { getGroups } from "@/redux_store/group/groupAPI";
 import { groupActions } from "@/redux_store/group/groupSlice";
-import { GetEmployees } from "@/redux_store/employee/employeeApi";
+import { GetEmployees, GetSingleEmployeeDetail } from "@/redux_store/employee/employeeApi";
 import { employeeAction } from "@/redux_store/employee/employeeApiSlice";
 import { getDevelopment } from "@/redux_store/development/developmentApi";
 import { developmentAction } from "@/redux_store/development/developmentSlice";
 import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
+import { GetFiles } from "@/redux_store/filetype/filetypeApi";
+import { fileAction } from "@/redux_store/filetype/filetypeSlice";
+import { GetOfficeLocations } from "@/redux_store/location/locationApi";
+import { locationAction } from "@/redux_store/location/locationSlice";
 
 
-export const TopNavbar: FC = () => {
+export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   const router = useRouter();
   const curRoute = usePathname();
   const dispatch = cusDispatch();
@@ -57,10 +61,9 @@ export const TopNavbar: FC = () => {
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
-  const { usertype, accesstabs } = cusSelector((state) => state.access);
   let allcookies: any = getCookies()
   let heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
-  heading = heading === "user" || heading === "employeehome" ? "home" : heading;
+  heading = heading === "user" || heading === "employee access" ? "home" : heading;
   const searchFilterFunction = (text: string) => {
     if (text) {
       const newData = trendingLeader?.filter(
@@ -86,13 +89,14 @@ export const TopNavbar: FC = () => {
         setShowNotifications(false);
     });
   }, []);
-
-  useLayoutEffect(() => {
-    if (allcookies?.USER_TYPE == "leader") {
+  useEffect(() => {
+    if (user_type == "leader") {
       (async () => {
+        let allcookies: any = await getCookies()
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
             const leaderRes = await getProfile(userDetails?.leaderId);
+            dispatch(leaderActions.setLeaderProfile(leaderRes));
             if (leaderRes?.request_status === "Rejected") {
               dispatch(authActions.logout())
               return
@@ -103,7 +107,6 @@ export const TopNavbar: FC = () => {
             // Leader
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
 
             // TrendingLeader
             const trendingLeader = await getTrendingLeaderList();
@@ -166,24 +169,75 @@ export const TopNavbar: FC = () => {
             // Agenda
             const Agenda = await getAgenda(userDetails?.leaderId as string);
             dispatch(agendaAction.storeAgendas(Agenda));
+
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
+
+
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+            dispatch(locationAction.storeLocation(OfficeLocations));
           }
         } else {
           router.push(AuthRoutes.login)
         }
       })();
     }
-    if (allcookies?.USER_TYPE != "leader") {
+    if (user_type != "leader") {
       (async () => {
+        let allcookies: any = await getCookies()
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
           if (userDetails?.leaderId) {
+            const employee = await GetSingleEmployeeDetail({
+              "leaderid": userDetails?.leaderId,
+              "employeeid": "string"
+            });
+            dispatch(employeeAction.setemployedetails(employee));
+
             const leaderRes = await getProfile(userDetails?.leaderId);
             dispatch(leaderActions.setLeaderProfile(leaderRes));
+
             const LeadersDropdown = await getLeadersOptions();
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+
             const data = await getLetterTemplates(userDetails?.leaderId as string);
             dispatch(letterActions.storeLetterTemplate(data));
+
             const Data = await getDirectory(userDetails?.leaderId as string);
             dispatch(directoryAction.storedirectory(Data))
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
+            const Letters = await getLetters(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetter(Letters));
+            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
+            const Tickets = await getTickets(userDetails?.leaderId as string);
+            dispatch(ticketActions.storeTicket(Tickets));
+
+            //event
+            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+            dispatch(eventAction.storeDashboardevents(DashboardEvents));
+
+            // Groups
+            const Groups = await getGroups(userDetails?.leaderId as string);
+            dispatch(groupActions.storeGroups(Groups));
+
+            // GetEmployees
+            const Employees = await GetEmployees(userDetails?.leaderId as string);
+            dispatch(employeeAction.storeemployees(Employees));
+
+            // Category
+            const Category = await getCategory(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeCategories(Category));
+
+            // Development
+            const Development = await getDevelopment(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeDevelopments(Development));
+
+            // Agenda
+            const Agenda = await getAgenda(userDetails?.leaderId as string);
+            dispatch(agendaAction.storeAgendas(Agenda));
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+            dispatch(locationAction.storeLocation(OfficeLocations));
           }
         } else {
           router.push(AuthRoutes.login)
@@ -192,7 +246,7 @@ export const TopNavbar: FC = () => {
     }
   }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
   useEffect(() => {
-    if (allcookies?.USER_TYPE == "leader") {
+    if (user_type == "leader") {
       (async () => {
         if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
           var mypostdata = { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId }
@@ -214,7 +268,7 @@ export const TopNavbar: FC = () => {
           className="h-12 w-auto"
           onClick={() => router.push("/user")}
         />
-        {usertype == "leader" ?
+        {user_type == "leader" ?
           <>
             {/* Search Bar */}
 
@@ -271,8 +325,10 @@ export const TopNavbar: FC = () => {
                 </span>
 
                 {showNotifications && (
-                  <div className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
-                    <BriefNotifications />
+                  <div onClick={(e) => e.stopPropagation()} className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
+                    <BriefNotifications
+                      onClick={() => setShowNotifications((lst) => !lst)}
+                    />
                   </div>
                 )}
               </button>
@@ -316,7 +372,7 @@ export const TopNavbar: FC = () => {
             </section>
 
             <section className="flex items-center gap-4 ml-auto relative">
-              <button className="flex items-center gap-2" onClick={() => { dispatch(authActions.logout()) }}>
+              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()); }}>
                 <FaPowerOff />log out
               </button>
             </section>
@@ -324,11 +380,11 @@ export const TopNavbar: FC = () => {
         }
       </nav>
       <nav className="py-3 px-8 bg-sky-950 text-sky-50 flex-col gap-5 hidden max-[1000px]:flex  max-[500px]:px-4">
-        {usertype == "leader" ?
+        {user_type == "leader" ?
           <>
             <div className="flex justify-between items-center w-full">
               <FaHamburger
-                className="text-3xl"
+                className="text-2xl cursor-pointer"
                 onClick={() => setShowMobileNav(true)}
               />
 
@@ -396,9 +452,14 @@ export const TopNavbar: FC = () => {
                 style={{ display: showMobileNav ? "none" : "flex" }}
               />
               <FaHamburger
-                className="text-2xl pointer"
+                className="text-2xl cursor-pointer"
                 onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
+              <section className="flex items-center gap-4 ml-auto relative">
+                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()); }}>
+                  <FaPowerOff />log out
+                </button>
+              </section>
             </div>
           </>
         }

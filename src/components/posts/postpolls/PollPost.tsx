@@ -29,7 +29,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
       <section className="border shadow-sm rounded-md px-5 py-2 bg-white">
         <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
           <CustomImage
-            src={getImageUrl(userDetails?.image)}
+            src={userdetails?.leaderid == "admin" ? userdetails?.image : getImageUrl(userdetails?.image)}
             alt="user pic"
             className="w-12 aspect-square object-cover object-center rounded-full"
             width={100}
@@ -55,15 +55,18 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                 key={i}
                 index={i + 1}
                 pollText={el.text}
+                polltype={post?.polltype}
+                isadmin={userdetails?.leaderid == "admin"}
                 pollImg={post?.polltype !== "text" ? el.image : ""}
                 alldata={el}
                 isselected={post?.votes_by?.filter((item2: any) => item2?.userid == userDetails?.id && el?.id == item2?.optionid)?.length > 0}
                 Onvote={async () => {
                   const vote = await VoteAdd({
                     "pollid": post?.id,
-                    "leaderid": post?.leaderid,
+                    "leaderid": post?.leaderid || "",
                     "userid": userDetails?.id,
                     "usertype": "leader",
+                    "type": userdetails?.leaderid == "admin" ? "admin" : "leader",
                     "optionid": el?.id
                   })
                   if (vote?.success) {
@@ -71,7 +74,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                   }
                 }}
                 isshow={post?.view_access == "public" && isUserExist}
-                calculatePercentage={() => post?.view_access == "public" && isUserExist ? calculatePercentage(el?.votes, post?.poll_options?.reduce((acc: any, cur: any) => acc + cur.votes, 0)) : null}
+                calculatePercentage={() => (post?.view_access == "public" && isUserExist) ? calculatePercentage(el?.votes ? el?.votes : 0, post?.poll_options?.reduce((acc: any, cur: any) => acc + cur.votes, 0)) : null}
               />
             ))}
           </section>

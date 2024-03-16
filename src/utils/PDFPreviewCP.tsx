@@ -1,11 +1,12 @@
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { motion as m } from 'framer-motion'
 import Image from 'next/image'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { dateConverterNumeric } from './utility'
 import ReactToPrint from 'react-to-print'
 import { getImageUrl } from '@/config/get-image-url'
-import { BiX } from 'react-icons/bi'
+import moment from 'moment'
+
 
 interface PDFPreviewCPProps {
   onClose: () => void
@@ -27,10 +28,53 @@ export const PDFPreviewCP: FC<PDFPreviewCPProps> = ({
   signature,
   attachments,
   letterdetails
+  
 }) => {
   const { userDetails }: any = cusSelector((st) => st.auth)
   const { leaderProfile }: any = cusSelector((st) => st.leader)
   const letterDiv = useRef<HTMLDivElement>(null)
+  const [content, setContent] = useState('')
+
+  useEffect(() => {
+    const temp = `<div style=" width:20cm; margin: 20px 20px 20px 20px;height: 29.7cm;   justify-content: 'center';align-items: 'center';">
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">${letterdetails?.category == "request" ? `req-` : 'comp no-' + letterdetails?.ticket_code}&nbsp;</span></strong></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">Date : ${moment(letterdetails?.created_date).format('DD/MM/YYYY')}&nbsp;</span></strong></p>
+    <p><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><br></strong></p>
+    <p><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><span style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><strong>To&nbsp;</strong></span></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><span style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><strong>${userDetails.name}&nbsp;</strong></span></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><span style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><strong>${leaderProfile?.leadertype == "leader" ? leaderProfile?.political_info?.designation : leaderProfile?.political_info?.post_in_party}&nbsp;</strong></span></p>
+    <p><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">Subject: ${subject}&nbsp;</span></strong></p>
+    <p><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: justify;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">Dear Sir/Ma'am,</span></strong></p>
+
+    <p dir="ltr" style="line-height:1.7999999999999998;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">${description}&nbsp;</span></strong></p>
+    <p><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: justify;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><br></p>
+    <p style="text-align: right;"><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">Your Sincerely,</span></strong></p>
+    <p><img src="signature (2).png" alt="" width="300"></p>
+    <p dir="ltr" style="line-height: 1.8; background-color: rgb(255, 255, 255); margin-top: 0pt; margin-bottom: 0pt; padding: 0pt 0pt 3pt; text-align: right;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><img src="${getImageUrl(signature)}" alt="" width="138" style="float: right;" height="92"></strong></p>
+    <p><br></p>
+
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;"><br></span></strong></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;"><br></span></strong></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">${letterdetails?.citizen_detail?.citizen_name}&nbsp;</span></strong></p>
+    <p style="text-align: right;">${letterdetails?.citizen_detail?.citizen_address}&nbsp;</p>
+    <p style="text-align: right;">${letterdetails?.citizen_detail?.citizen_state}&nbsp;</p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><br></strong></p>
+    <p><br></p>
+    <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><br></strong></p>
+
+</div>`
+
+
+      
+
+    setContent(temp)
+  }, [])
   return (
     <>
       <m.div
@@ -51,58 +95,13 @@ export const PDFPreviewCP: FC<PDFPreviewCPProps> = ({
                 <BiX className='text-4xl' />
               </button>
             </div> */}
-
-            {/* PDF Preview */}
-            <div className='letter_preview'>
-              <div ref={letterDiv} className='flex flex-col w-full h-full overflow-hidden gap-[1cm] p-[1cm]'>
-                {/* Date and Req/comp no */}
-                <p className='self-end'>
-                  {letterdetails?.category == "request" ? `req-` : 'comp no-'}{letterdetails?.ticket_code}/{dateConverterNumeric(new Date().toDateString())}
-                </p>
-
-                {/* To */}
-                <div className='flex flex-col capitalize'>
-                  <strong>To</strong>
-                  <>
-                    <strong>{userDetails.name as string}</strong>
-                    <strong>{leaderProfile?.leadertype == "leader" ? leaderProfile?.political_info?.designation : leaderProfile?.political_info?.post_in_party}</strong>
-                  </>
-                </div>
-
-                {/* Subject */}
-                <p className='flex gap-2'>
-                  <strong>Subject:</strong>
-                  <span>{subject}</span>
-                </p>
-
-                {/* Description */}
-                <div className='text-justify'>
-                  <p>
-                    <strong className=''>Dear Sir/{"Ma'am"},</strong>
-                  </p>
-                  <div
-                    className='mt-[.25cm]'
-                    dangerouslySetInnerHTML={{ __html: description }}
-                  />
-                </div>
-
-                {/* Signature */}
-                <div className='self-end'>
-                  <strong className='block'>Your Sincerely,</strong>
-                  {signature.length > 0 && (
-                    <Image
-                      src={getImageUrl(signature)}
-                      width={1000}
-                      priority={true}
-                      height={1000}
-                      alt='signature'
-                      className='w-full h-[2cm] object-contain'
-                    />
-                  )}
-                  <p>{letterdetails?.citizen_detail?.citizen_name}</p>
-                </div>
+            <div  className='flex flex-col w-full h-full overflow-hidden gap-[1cm] p-[1cm]'>
+              <div className='letter_preview bg-white' ref={letterDiv}>
+              <div dangerouslySetInnerHTML={{ __html: content }} />
               </div>
-            </div>
+              </div>
+            {/* PDF Preview */}
+       
 
             {/* CTA's */}
             <div className='flex items-center gap-3 justify-end px-3 border-t py-4'>

@@ -9,7 +9,7 @@ export const ProtectedRoutes = {
 
 
 export const EmployeeProtectedRoutes = {
-  employee: "/user/employeehome",
+  employee: "/employee-access",
 };
 
 export const AuthRoutes = {
@@ -26,6 +26,7 @@ export const APIRoutes = {
   sendOTP: `${API_Prefix}/common/sendOtp`,
   verifyOTP: `${API_Prefix}/common/verifyOtp`,
   getLeadersForDropdown: `${API_Prefix}/common/getAddLeadersDropdown`,
+  GetCategories: `${API_Prefix}/common/GetCategories`,
 
 
   // Leader Endpoints
@@ -51,7 +52,16 @@ export const APIRoutes = {
   AddMember: `${API_Prefix}/leader/AddMember`,
   DeleteMembers: `${API_Prefix}/leader/DeleteMembers`,
   GetBirthdayList: `${API_Prefix}/leader/GetBirthdayList`,
-
+  DeleteLeaderNotification: `${API_Prefix}/leader/DeleteLeaderNotification`,
+  ReadLeaderNotification: `${API_Prefix}/leader/ReadLeaderNotification`,
+  ClearAllLeaderNotification: `${API_Prefix}/leader/ClearAllLeaderNotification/{{leaderId}}`,
+  GetFiles: `${API_Prefix}/leader/GetFiles/{{leaderId}}`,
+  SaveFile: `${API_Prefix}/leader/SaveFile`,
+  DeleteFile: `${API_Prefix}/leader/DeleteFile`,
+  GetOfficeLocations: `${API_Prefix}/leader/GetOfficeLocations/{{leaderId}}`,
+  SaveOfficeLocation: `${API_Prefix}/leader/SaveOfficeLocation`,
+  DeleteOfficeLocation: `${API_Prefix}/leader/DeleteOfficeLocation`,
+  SaveTicketManually: `${API_Prefix}/leader/SaveTicketManually`,
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
   saveGroup: `${API_Prefix}/leader/savegroup`,

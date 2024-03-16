@@ -62,60 +62,62 @@ export const NetworksPage: FC = () => {
 
 
     return (
-        <PeoplesComponentWrapper
-            heading='groups'
-            searchStr={searchString}
-            setSearchStr={changeSearchString}
-            rightButton={
-                <div className="flex items-center justify-end">
-                    <button
-                        className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-                        onClick={() => setShowModal(true)}
-                    >
-                        Create group
-                    </button>
-                </div>
-            }
-        >
-            {searchFilterFunction(searchString)?.length > 0 ?
-                <section className='flex gap-4 flex-col'>
-                    <div className='flex items-center justify-end'>
-                        <button onClick={() => {
-                            if (selectGroup?.length > 0) {
-                                setMessagemodal(true)
-                            } else {
-                                dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Please Select Groups" }))
-                            }
-                        }} className="px-5 py-1 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600">
-                            send message
+        <>
+            <PeoplesComponentWrapper
+                heading='groups'
+                searchStr={searchString}
+                setSearchStr={changeSearchString}
+                rightButton={
+                    <div className="flex items-center justify-end">
+                        <button
+                            className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                            onClick={() => setShowModal(true)}
+                        >
+                            Create group
                         </button>
                     </div>
+                }
+            >
+                {searchFilterFunction(searchString)?.length > 0 ?
+                    <section className='flex gap-4 flex-col'>
+                        <div className='flex items-center justify-end'>
+                            <button onClick={() => {
+                                if (selectGroup?.length > 0) {
+                                    setMessagemodal(true)
+                                } else {
+                                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Please Select Groups" }))
+                                }
+                            }} className="px-5 py-1 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600">
+                                send message
+                            </button>
+                        </div>
 
-                    <ul className="grid grid-cols-3 gap-2 max-[1300px]:grid-cols-3 max-[750px]:grid-cols-2 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
-                        {searchFilterFunction(searchString)?.map((item: any, index: number) => {
-                            return (
-                                <Network
-                                    onMemberClick={() => { getSingleGroupDetails(item.id), setShowMember(true) }}
-                                    item={item}
-                                    DeleteGroups={() => { DeleteGroups({ "leaderid": userDetails?.leaderId, "ids": [item?.id] }); getGroup() }}
-                                    setIsEdit={() => { setIsEdit(item); setShowModal(true) }}
-                                    key={index}
-                                    created_date={item?.created_date}
-                                    member={item.members}
-                                    name={item.name}
-                                    backgroundImg={bgIMG}
-                                    displayImg={userImg}
-                                    setSelectGroup={setSelectGroup}
-                                    selectGroup={selectGroup}
-                                />
-                            )
-                        })}
-                    </ul>
-                </section>
-                :
-                <Datanotfound name={"Group"} />
-            }
+                        <ul className="grid grid-cols-3 gap-2 max-[1300px]:grid-cols-3 max-[750px]:grid-cols-2 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
+                            {searchFilterFunction(searchString)?.map((item: any, index: number) => {
+                                return (
+                                    <Network
+                                        onMemberClick={() => { getSingleGroupDetails(item.id), setShowMember(true) }}
+                                        item={item}
+                                        DeleteGroups={() => { DeleteGroups({ "leaderid": userDetails?.leaderId, "ids": [item?.id] }); getGroup() }}
+                                        setIsEdit={() => { setIsEdit(item); setShowModal(true) }}
+                                        key={index}
+                                        created_date={item?.created_date}
+                                        member={item.members}
+                                        name={item.name}
+                                        backgroundImg={bgIMG}
+                                        displayImg={userImg}
+                                        setSelectGroup={setSelectGroup}
+                                        selectGroup={selectGroup}
+                                    />
+                                )
+                            })}
+                        </ul>
+                    </section>
+                    :
+                    <Datanotfound name={"Group"} />
+                }
 
+            </PeoplesComponentWrapper>
             {showMember && (
                 <MembersTable
                     showMember={showMember}
@@ -139,6 +141,7 @@ export const NetworksPage: FC = () => {
                     onClose={() => { setMessagemodal(false) }}
                 />
             }
-        </PeoplesComponentWrapper >
+        </>
+
     )
 }

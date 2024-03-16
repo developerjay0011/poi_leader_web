@@ -10,6 +10,7 @@ interface CommonState {
     parliamentries: any[];
     politicalparty: any[];
     states: any[];
+    categories: any[];
   }
 }
 
@@ -22,6 +23,7 @@ const initialState: CommonState = {
     parliamentries: [],
     politicalparty: [],
     states: [],
+    categories: []
   }
 };
 

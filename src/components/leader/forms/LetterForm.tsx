@@ -16,6 +16,8 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { LetterFormFields } from '../pages/CreateLetterpage'
+import { Savedby } from '@/constants/common'
+import { watch } from 'fs'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>
@@ -27,33 +29,28 @@ interface LetterFormProps {
   appendField: UseFieldArrayAppend<LetterFormFields>
   removeField: UseFieldArrayRemove
   attachments: FieldArrayWithId<LetterFormFields>[]
+  ticketdata:any
 }
 
-export const LetterForm: FC<LetterFormProps> = ({
-  errors,
-  register,
-  states,
-}) => {
-  const { userDetails } = cusSelector((state) => state.auth);
+export const LetterForm: FC<LetterFormProps> = ({ errors, register, states,setValue,ticketdata,watch }) => {
   const { letter_templete } = cusSelector((state) => state.letter);
   const { ticket } = cusSelector((state) => state.ticket);
-  const dispatch = cusDispatch()
+  const { location } = cusSelector((state) => state.location);
+  const { userDetails }: any = cusSelector((state) => state.auth);
+  const { filestype }: any = cusSelector((state) => state.file);
+
+  
   useEffect(() => {
-    (async () => {
-      const data = await getTickets(userDetails?.leaderId as string);
-      dispatch(ticketActions.storeTicket(data));
-    })();
-  }, [userDetails, dispatch]);
+    setValue("location", userDetails?.employee_detail.location)
+  }, [userDetails])
   return (
     <>
       <LetterSelectField
         error={errors}
         id='ticketId'
         title='Select Ticket'
-        selectOptions={ticket?.map((el) => ({
-          id: el.ticketid,
-          val: el.ticketid,
-        }))}
+        disabled={ticketdata}
+        selectOptions={ticket?.map((el: any) => ({ id: el.ticketid, val: el.ticket_code, }))}
         register={register}
         required
         validations={{ required: 'ticketid is required' }}
@@ -64,10 +61,8 @@ export const LetterForm: FC<LetterFormProps> = ({
         register={register}
         id='location'
         title='location'
-        selectOptions={states.map((el) => ({
-          id: el.id,
-          val: el.state,
-        }))}
+        disabled={Savedby().saved_by_type != "leader"}
+        selectOptions={location?.map((el: any) => ({ id: el.id, val: el.location, })) }
         required
         validations={{ required: 'Location is required' }}
       />
@@ -103,15 +98,19 @@ export const LetterForm: FC<LetterFormProps> = ({
 
       {/* <Line /> */}
 
-      <LetterInputField
-        error={errors}
-        id='date'
-        title='Date'
-        type='date'
-        register={register}
-        required
-        validations={{ required: 'Date is required' }}
-      />
+      {Savedby().saved_by_type &&
+        <LetterInputField
+          error={errors}
+          id='date'
+          title='Date'
+          type='date'
+          register={register}
+          required
+          validations={{ required: 'Date is required' }}
+          disabled={Savedby().saved_by_type != "leader"}
+        />
+      }
+
 
       <Line />
 
@@ -128,16 +127,17 @@ export const LetterForm: FC<LetterFormProps> = ({
 
       <Line />
 
-      <LetterInputField
+      <LetterSelectField
         error={errors}
+        register={register}
         id='fileNo'
         title='File Number'
-        type='text'
-        register={register}
+        selectOptions={filestype?.map((el: any) => ({
+          id: el?.id, val: el?.file_name + "-" + el?.file_number,
+        }))}
         required
         validations={{ required: 'File number is required' }}
       />
-
       <Line />
 
       <LetterTextarea
@@ -153,16 +153,18 @@ export const LetterForm: FC<LetterFormProps> = ({
 
       <Line />
 
-      <LetterTextarea
+      
+      <LetterSelectField
         error={errors}
+        register={register}
         id='to'
         title='To'
-        rows={2}
-        register={register}
+        selectOptions={filestype?.find((el: any) => el.id == watch("fileNo"))?.to?.map((el: any) => ({
+          id: el?.ministryid, val: el?.name + "-" + el?.designation,
+        }))}
         required
-        validations={{ required: 'To is required' }}
+        validations={{ required: 'File number is required' }}
       />
-
       <Line />
 
 

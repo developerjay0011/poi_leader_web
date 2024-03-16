@@ -8,50 +8,44 @@ import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface AssemblyConstituencyTableProps {
   searchStr: string
   handleDelete: (id: string) => void
-  handleEdit:(value:any)=>void
+  handleEdit: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
+  letter_templetes: any
 }
 
-export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
-  searchStr, handleEdit, handleDelete
-}) => {
-  const { letter_templete } = cusSelector((state) => state.letter);
+export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount, letter_templetes }) => {
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
   const [id, setid] = useState("")
 
-  const searchFilterData = letter_templete?.filter((el) =>
-    searchStr?
-      el?.template_name === searchStr
-      : el
-  )
-
-   
   return (
     <>
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold text-left py-2 pl-2 border text-center'>S.No</th>
+            <th className='font-semibold text-left py-2 pl-2 border text-center w-[100px]'>S.No</th>
             <th className='font-semibold capitalize text-left py-2 pl-2 border text-center'>
               Template Header
             </th>
             {/* <th className='font-semibold text-left py-2 px-2 border text-center'>
               Template
             </th> */}
-            <th className='font-semibold text-left py-2 px-2 border text-center'>Status</th>
-            <th className='font-semibold text-center py-2 pl-2 border printHide'>
+            <th className='font-semibold text-left py-2 px-2 border text-center w-[200px]'>Status</th>
+            <th className='font-semibold text-center py-2 pl-2 border printHide  w-[200px]'>
               Actions
             </th>
           </tr>
         </thead>
-        <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el, i) => (
+        <tbody>{letter_templetes?.length > 0 ? (
+          letter_templetes?.map((el: any, i: any) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
-                {i+1}
+                {i + 1}
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el.template_name}
@@ -61,8 +55,8 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
               </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
                 <StatusBtn
-                  status={el.isactive ?'1':'0' }  
-                  clickHandler={()=>{}}
+                  status={el.isactive ? '1' : '0'}
+                  clickHandler={() => { }}
                   inProgress={false}
                 />
               </td>
@@ -74,14 +68,14 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
                 </button>
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() =>{ setid(el?.id),setShowDeleteConfirmPopup(true)}}>
-                <MdDelete
-                  className='text-2xl'
-                 
-                />
-              </button>
+                  onClick={() => { setid(el?.id), setShowDeleteConfirmPopup(true) }}>
+                  <MdDelete
+                    className='text-2xl'
+
+                  />
+                </button>
               </td>
-              </tr>
+            </tr>
 
           ))
         ) : (
@@ -93,7 +87,7 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({
           <ConfirmDialogBox
             onCancel={() => setShowDeleteConfirmPopup(false)}
             noAllowed={false}
-            onOk={() => {handleDelete(id), setShowDeleteConfirmPopup(false)}}
+            onOk={() => { handleDelete(id), setShowDeleteConfirmPopup(false) }}
           />
         )}
       </AnimatePresence>

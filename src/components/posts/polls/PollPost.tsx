@@ -27,7 +27,7 @@ export const PollPost: FC<PollPostProps> = ({
 
   // Calculating votes count
   const votes =
-    pollType === 'image'
+    pollType === 'text + image'
       ? imgOptions.reduce((prev, el) => el.votes + prev, 0)
       : poll_options.reduce((prev, el) => el.votes + prev, 0)
 
@@ -60,7 +60,7 @@ export const PollPost: FC<PollPostProps> = ({
 
           {/* MEDIA */}
           <section className='w-full flex flex-col gap-3'>
-            {pollType === 'image' &&
+            {pollType === 'text + image' &&
               imgOptions.map((el, i) => (
                 <PollOption
                   id={el.id}

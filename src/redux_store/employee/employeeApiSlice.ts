@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface EmployeeState {
   employees: [],
   employeaccess: {}
+  employedetails: any
 }
 
 const init: EmployeeState = {
   employees: [],
-  employeaccess: {}
+  employeaccess: {},
+  employedetails: {}
 }
 
 export const employeeSlice = createSlice({
@@ -19,6 +21,9 @@ export const employeeSlice = createSlice({
     },
     setemployeaccess(state, action: any) {
       state.employeaccess = action.payload
+    },
+    setemployedetails(state, action: any) {
+      state.employedetails = action.payload
     },
   },
 })

@@ -1,3 +1,4 @@
+import { getImageUrl } from '@/config/get-image-url'
 import CustomImage from '@/utils/CustomImage'
 import { FC } from 'react'
 
@@ -17,14 +18,13 @@ export const PollOption: FC<{
         onChange={(e) => { }}
       />
       <span
-        className={`border-2 w-full ${!pollImg ? 'py-3 px-5 capitalize' : ''
-          } rounded-md overflow-hidden flex items-center gap-2`}>
+        className={`border-2 w-full ${!pollImg ? 'py-3 px-5 capitalize' : ''} rounded-md overflow-hidden flex items-center gap-2`}>
         {pollImg && (
           <CustomImage
             alt='poll Img'
             height={1000}
             width={1000}
-            src={pollImg}
+            src={getImageUrl(pollImg)}
             className='w-24 aspect-square object-cover object-center'
           />
         )}

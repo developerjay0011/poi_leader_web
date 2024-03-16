@@ -298,7 +298,7 @@ export interface PincodeDetails {
 
 export type UserType = 'leader' | 'citizen' | 'emerging-leader' | ''
 
-export type PollType = 'text' | 'image'
+export type PollType = 'text' | 'text + image'
 
 export interface PollDetails {
   id: string

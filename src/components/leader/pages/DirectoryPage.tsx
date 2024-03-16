@@ -1,11 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { FiSearch } from "react-icons/fi";
 import { DirectoryTable } from "../directory/DirectoryTable";
-import { AnimatePresence } from "framer-motion";
-import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
-import { motion as m } from "framer-motion";
-import { BsFillPatchExclamationFill } from "react-icons/bs";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/Input";
@@ -15,9 +10,7 @@ import { directoryAction } from "@/redux_store/directory/directorySlice";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
-import { BiX } from "react-icons/bi";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
-import { TableWrapper } from "@/utils/TableWrapper";
 import { SendMessage } from "../forms/SendMessageFrom";
 import { Modal } from "@/components/modal/modal";
 

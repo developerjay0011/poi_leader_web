@@ -6,11 +6,10 @@ import { CusPieChart } from '@/components/charts/CusPieChart'
 
 interface PollInfoChartProps {
   onClose: () => void
-  pollDetails:any
+  pollDetails: any
 }
 
 export const PollInfoChart: FC<PollInfoChartProps> = ({ onClose, pollDetails }) => {
-
   return (
     <m.div
       initial={{ opacity: 0 }}
@@ -29,7 +28,7 @@ export const PollInfoChart: FC<PollInfoChartProps> = ({ onClose, pollDetails }) 
 
           {/* Chart */}
           <div className='h-[25rem] aspect-square'>
-            <CusPieChart options={pollDetails?.poll_options?.map((item: any) => ({ name: item?.text, value: item?.votes }))  } />
+            <CusPieChart options={pollDetails?.poll_options?.map((item: any) => ({ name: item?.text, value: item?.votes }))} />
           </div>
         </m.div>
       </section>

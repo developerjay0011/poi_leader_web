@@ -48,7 +48,7 @@ export const ShortcutsBox: FC = () => {
       tabname: "Manage Group"
     },
     {
-      link: ' /user/profile/polls',
+      link: ' /user/polls',
       name: 'Polls',
       Icon: HiSpeakerphone,
       tabname: "Manage Polls"
@@ -63,12 +63,6 @@ export const ShortcutsBox: FC = () => {
       link: '/user/analytics',
       name: 'account stats',
       Icon: TfiStatsUp,
-      tabname: "Leader"
-    },
-    {
-      link: '/',
-      name: 'Dashboard',
-      Icon: MdSpaceDashboard,
       tabname: "Leader"
     },
   ]

@@ -15,15 +15,18 @@ import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { Modal } from "@/components/modal/modal";
 
 export const AgendaPage: FC = () => {
+    const dispatch = cusDispatch();
     const [categoryFilter, setCategoryFilter] = useState("");
     const [priorityFilter, setPriorityFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
     const [isAgenda, setIsAgenda] = useState(false);
     const [Agenda, setAgenda] = useState({}) as any
-
-    const dispatch = cusDispatch();
     const { userDetails } = cusSelector((st) => st.auth);
     const { categories, agendas } = cusSelector((st) => st.agenda);
+    const filterDataOnPriority = agendas?.filter((el) => priorityFilter ? el.priority === priorityFilter : el);
+    const filterDataOnStatus = filterDataOnPriority?.filter((el) => statusFilter ? el.status === statusFilter : el);
+    const filterData = filterDataOnStatus?.filter((el) => categoryFilter ? el.categoryid === categoryFilter : el);
+    const onCancel = () => { setIsAgenda(false); };
     useEffect(() => {
         (async () => {
             const data = await getAgenda(userDetails?.leaderId as string);
@@ -33,31 +36,19 @@ export const AgendaPage: FC = () => {
         })()
     }, [dispatch, userDetails?.leaderId]);
 
-    const filterDataOnPriority = agendas?.filter((el) =>
-        priorityFilter ? el.priority === priorityFilter : el
-    );
 
-    const filterDataOnStatus = filterDataOnPriority?.filter((el) =>
-        statusFilter ? el.status === statusFilter : el
-    );
-
-    const filterData = filterDataOnStatus?.filter((el) =>
-        categoryFilter ? el.categoryid === categoryFilter : el
-    );
 
     const agendaJSX = filterData?.map((el) => (
-        <AgendaPost userId={el.id}
-            setAgenda={(data: any) => {
-                setAgenda(data);
-                setIsAgenda(true)
-            }}
+        <AgendaPost
+            userId={el.id}
+            setAgenda={(data: any) => { setAgenda(data); setIsAgenda(true) }}
             Agenda={Agenda}
-            {...el} key={el.id} el={el} />
+            {...el}
+            key={el.id}
+            el={el}
+        />
     ));
 
-    const onCancel = () => {
-        setIsAgenda(false);
-    };
 
     return (
         <>
@@ -77,9 +68,9 @@ export const AgendaPage: FC = () => {
                 }
             >
                 <section className="flex flex-col gap-8 max-[450px]:px-3">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 max-[750px]:flex-wrap">
-                            <p className="font-semibold text-lg">Filters</p>
+                    <div className="flex flex-col w-full gap-2">
+                        <p className="font-semibold text-lg">Filters</p>
+                        <div className="flex items-center w-full gap-3 max-[750px]:flex-wrap">
 
                             <label className="flex gap-2 items-center" htmlFor="priority">
                                 <span className="font-medium">Priority</span>
@@ -87,7 +78,7 @@ export const AgendaPage: FC = () => {
                                     id="priority"
                                     value={priorityFilter}
                                     onChange={(e) => setPriorityFilter(e.target.value)}
-                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
                                     <option value="low">low</option>
@@ -102,7 +93,7 @@ export const AgendaPage: FC = () => {
                                     id="category"
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
                                     {categories?.map((el) => (
@@ -118,7 +109,7 @@ export const AgendaPage: FC = () => {
                                     id="status"
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value)}
-                                    className="py-1 px-3 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
                                     {Object.keys(AGENDA_STATUS).map((el) => (

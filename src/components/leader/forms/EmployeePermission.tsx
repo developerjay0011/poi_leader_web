@@ -15,8 +15,6 @@ interface EmployeePermissionFormProps {
   heading: string
 }
 
-
-
 export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClose, submitting, heading, }) => {
   const { employeaccess }: any = cusSelector((state) => state.employee);
   const dispatch = cusDispatch();
@@ -32,11 +30,12 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
         });
         if (response?.success) {
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+          onClose()
+          reset();
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
-        onClose()
-        reset();
+
       })
   }
   const handleGiveAllAccessChange = () => {
@@ -48,9 +47,7 @@ export const EmployeePermissionForm: FC<EmployeePermissionFormProps> = ({ onClos
     }
   };
   useEffect(() => {
-    employeaccess?.accesses?.forEach((item: any) => {
-      setValue(item?.tabid, item?.ischecked ? "yes" : "no");
-    });
+    employeaccess?.accesses?.forEach((item: any) => { setValue(item?.tabid, item?.ischecked ? "yes" : "no"); });
   }, [employeaccess, setValue])
   useEffect(() => {
     const idsWithYesValue = Object.entries(getValues()).filter(([key, value]) => value === "yes").map(([key]) => key)?.filter((item: any) => item != "All")?.length == employeaccess?.accesses?.length

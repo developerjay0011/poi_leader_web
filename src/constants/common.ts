@@ -44,6 +44,16 @@ export const EducationDropdowns: DropdownOptions[] = [
   { id: 'others', value: 'others' }
 ];
 
+export const statusticketOption: DropdownOptions[] = [
+  { id: 'read', value: 'read' },
+  { id: 'under process', value: 'under process' },
+  { id: 'declined', value: 'declined' },
+  { id: 'forwarded', value: 'forwarded' },
+  { id: 'response generated', value: 'response generated' },
+  { id: 'closed', value: 'closed' },
+]
+
+
 export const GenderDropdowns: DropdownOptions[] = [
   { id: 'male', value: 'male' },
   { id: 'female', value: 'female' },
@@ -54,4 +64,10 @@ export const MaritalStatusDropdowns: DropdownOptions[] = [
   { id: 'Married', value: 'married' },
   { id: 'Unmarried', value: 'unmarried' },
   { id: 'Divorced', value: 'divorced' }
+];
+
+export const Tickettype: DropdownOptions[] = [
+  { id: 'suggestion', value: 'suggestion' },
+  { id: 'request', value: 'request' },
+  { id: 'complaint', value: 'complaint' }
 ];

@@ -8,18 +8,21 @@ import { RiTableAltLine } from "react-icons/ri";
 import { EmployeePermissionForm } from '../forms/EmployeePermission';
 import { GetLeaderEmployeeTabAccess } from '@/redux_store/employee/employeeApi';
 import { employeeSlice } from '@/redux_store/employee/employeeApiSlice';
+import { sliceData } from '@/utils/TableWrapper';
 
 interface ManageEmployeeTableProps {
   searchStr: string
   handleEdit: (value: any) => void
   changeActiveStatus: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
+  employees: any
 }
 
-export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus }) => {
+export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus, curPageNo, filterDataCount, employees }) => {
   const [showAdd, setShowAdd] = useState(false)
-  const { employees } = cusSelector((state) => state.employee);
-  const searchFilterData = employees?.filter((el: any) => searchStr ? el?.fullname === searchStr : el)
   const dispatch = cusDispatch();
+
 
 
   return (
@@ -27,7 +30,7 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold text-left py-2 pl-2 border'>S.No</th>
+            <th className='font-semibold text-center py-2 pl-2 border w-[100px]'>S.No</th>
             <th className='font-semibold capitalize text-left py-2 pl-2 border'>
               Name
             </th>
@@ -46,11 +49,11 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
           </tr>
         </thead>
         <tbody>
-          {searchFilterData?.length > 0 ? (
-            searchFilterData?.map((el: any, i: number) => {
+          {employees?.length > 0 ? (
+            employees?.map((el: any, i: number) => {
               return (
                 <tr key={i} className={`bg-white py-2 border-b border-gray-300 transition-all`}>
-                  <td className='border-r align-text-center text-center'>
+                  <td className='border-r align-text-center text-center w-[100px]'>
                     {i + 1}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>

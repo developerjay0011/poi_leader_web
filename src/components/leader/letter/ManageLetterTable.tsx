@@ -2,32 +2,28 @@ import { cusSelector } from '@/redux_store/cusHooks';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
 import { FC, useState } from 'react'
 
-import { StatusBtn } from '@/utils/StatusBtn'
-import { FaEdit } from 'react-icons/fa';
-import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 import moment from 'moment';
+import { sliceData } from '@/utils/TableWrapper';
+import { BsFillEyeFill } from 'react-icons/bs';
+import { PDFPreviewLeader } from '@/utils/PDFPreviewLeader';
 
 interface ManageLetterTableProps {
   searchStr: string
   handleDelete: (id: string) => void
   handleEdit: (value: any) => void
+  curPageNo?: any
+  filterDataCount?: any
+  letters: any
 }
 
-export const ManageLetterTable: FC<ManageLetterTableProps> = ({
-  searchStr, handleEdit, handleDelete
-}) => {
-  const { letter } = cusSelector((state) => state.letter);
+export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount, letters }) => {
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
+  const [showLetterPreiew, setshowLetterPreiew] = useState(false)
+  const [letterdata, setletterdata] = useState("")
   const [id, setid] = useState("")
-
-  const searchFilterData = letter?.filter((el) =>
-    searchStr ?
-      el?.template_name === searchStr
-      : el
-  )
 
 
   return (
@@ -63,8 +59,8 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({
             </th>
           </tr>
         </thead>
-        <tbody>{searchFilterData?.length > 0 ? (
-          searchFilterData?.map((el, i) => (
+        <tbody>{letters?.length > 0 ? (
+          letters?.map((el: any, i: any) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
                 {i + 1}
@@ -98,11 +94,11 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({
                 />
               </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
-                {/* <button
+                <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() => handleEdit(el)}>
-                  <BiEdit className='text-2xl' />
-                </button> */}
+                  onClick={() => { setletterdata(el?.letter_html), setshowLetterPreiew(true) }}>
+                  <BsFillEyeFill className='text-2xl' />
+                </button>
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
                   onClick={() => { setid(el?.id), setShowDeleteConfirmPopup(true) }}>
@@ -125,6 +121,14 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({
             onCancel={() => setShowDeleteConfirmPopup(false)}
             noAllowed={false}
             onOk={() => { handleDelete(id), setShowDeleteConfirmPopup(false) }}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showLetterPreiew && (
+          <PDFPreviewLeader
+            onClose={() => setshowLetterPreiew(false)}
+            letter_html={letterdata}
           />
         )}
       </AnimatePresence>
