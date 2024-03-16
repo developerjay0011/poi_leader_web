@@ -16,7 +16,7 @@ export const CommonBox: FC<CommonBoxProps> = ({ title, children, width, cusJSX, 
           <span className='block ml-auto'>{cusJSX}</span>
         </h2>
 
-        <div className='px-6 w-full overflow-auto main_scrollbar'>{children}</div>
+        <div className='px-5 w-full overflow-auto main_scrollbar'>{children}</div>
       </section>
     </>
   )

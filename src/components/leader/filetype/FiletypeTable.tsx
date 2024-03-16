@@ -17,7 +17,7 @@ interface FiletypeTableProps {
 
 export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, getFiles, curPageNo, filterDataCount, filestypes }) => {
   const { userDetails }: any = cusSelector((state) => state.auth);
-
+  const { location } = cusSelector((state) => state.location);
   return (
     <>
       <table className='w-full my-8 border'>
@@ -53,7 +53,7 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
                     {el.file_number}
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>
-                    {el.file_location}
+                    {location?.map((el: any) => ({ id: el?.id, value: el?.location }))?.find((item) => item?.id == el?.file_location) && location?.map((el: any) => ({ id: el?.id, value: el?.location }))?.find((item) => item?.id == el?.file_location)?.value}
                   </td>
                   <td className='py-2 pl-2 border printHide'>
                     <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => handleEdit(el)}>

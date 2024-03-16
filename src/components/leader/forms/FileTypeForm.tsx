@@ -132,7 +132,7 @@ export const FileTypeForm: FC<FileTypeFormProps> = ({ onClose, submitting, headi
             validations={{ required: "file location is required", }}
             selectField={{
               title: "select location",
-              options: location.map((el: any) => ({ id: el?.location, value: el?.location })),
+              options: location.map((el: any) => ({ id: el?.id, value: el?.location })),
             }}
           />
           <ImageMultiSelectIP

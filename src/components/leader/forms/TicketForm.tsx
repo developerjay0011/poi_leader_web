@@ -76,7 +76,14 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
         formData.append("subject", data?.subject || "");
         formData.append("description", data?.description || "");
         formData.append("leaderid", userDetails?.leaderId || "");
-        formData.append("attachments", data?.attachments || [] as any)
+        if (attachmentsDoc?.length > 0) {
+          for (let i = 0; i < attachmentsDoc?.length; i++) {
+            const element = attachmentsDoc?.[i]?.file
+            formData.append("attachments", element as any)
+          }
+        } else {
+          formData.append("attachments", data?.attachments || [] as any)
+        }
         formData.append("signature", data?.signature || [] as any)
         const response = await SaveTicketManually(formData);
         if (response?.success) {
@@ -177,7 +184,7 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
 
           <Input
             errors={errors}
-            id={"category" as any}
+            id={"categoryid" as any}
             selectField={{
               title: "Select Category",
               options: leaderOptions?.categories?.map((el: any) => ({ id: el?.id, value: el.category })),
