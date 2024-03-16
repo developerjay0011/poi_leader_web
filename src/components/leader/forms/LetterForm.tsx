@@ -29,19 +29,21 @@ interface LetterFormProps {
   appendField: UseFieldArrayAppend<LetterFormFields>
   removeField: UseFieldArrayRemove
   attachments: FieldArrayWithId<LetterFormFields>[]
-  ticketdata:any
+  ticketdata: any
 }
 
-export const LetterForm: FC<LetterFormProps> = ({ errors, register, states,setValue,ticketdata,watch }) => {
+export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, setValue, ticketdata, watch }) => {
   const { letter_templete } = cusSelector((state) => state.letter);
   const { ticket } = cusSelector((state) => state.ticket);
   const { location } = cusSelector((state) => state.location);
   const { userDetails }: any = cusSelector((state) => state.auth);
   const { filestype }: any = cusSelector((state) => state.file);
 
-  
+
   useEffect(() => {
-    setValue("location", userDetails?.employee_detail.location)
+    if (Savedby().saved_by_type == "employee") {
+      setValue("location", userDetails?.employee_detail?.location)
+    }
   }, [userDetails])
   return (
     <>
@@ -62,7 +64,7 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states,setVa
         id='location'
         title='location'
         disabled={Savedby().saved_by_type != "leader"}
-        selectOptions={location?.map((el: any) => ({ id: el.id, val: el.location, })) }
+        selectOptions={location?.map((el: any) => ({ id: el.id, val: el.location, }))}
         required
         validations={{ required: 'Location is required' }}
       />
@@ -153,7 +155,7 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states,setVa
 
       <Line />
 
-      
+
       <LetterSelectField
         error={errors}
         register={register}

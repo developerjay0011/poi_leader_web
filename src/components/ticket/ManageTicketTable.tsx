@@ -44,8 +44,6 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const dispatch = cusDispatch();
 
 
-
-
   return (
     <>
       <table className='w-full my-8 border'>
