@@ -15,7 +15,8 @@ export const PollOption: FC<{
   isUserExist: boolean,
   isselected: boolean
   polltype?: string
-}> = ({ id, index, pollText, pollImg, Onvote, isUserExist, isselected, calculatePercentage, isshow, polltype }) => {
+  isadmin?: boolean
+}> = ({ id, index, pollText, pollImg, Onvote, isUserExist, isselected, calculatePercentage, isshow, isadmin }) => {
 
 
   return (
@@ -35,7 +36,7 @@ export const PollOption: FC<{
               alt='poll Img'
               height={1000}
               width={1000}
-              src={getImageUrl(pollImg)}
+              src={isadmin ? pollImg : getImageUrl(pollImg)}
               className='w-24 aspect-square object-cover object-center'
             />
           )}

@@ -35,7 +35,7 @@ const FORM_HEADINGS = {
 };
 export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handleEdit, handleDelete, ticket, ischecked, setIschecked, curPageNo, filterDataCount }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
-  const { userDetails } :any= cusSelector((state) => state.auth);
+  const { userDetails }: any = cusSelector((state) => state.auth);
   const [showStatus, setShowStatus] = useState(false)
   const [timeline, setTimeline] = useState<any>([])
   const [addMileStone, setAddMileStone] = useState(false)
@@ -43,7 +43,6 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const searchFilterData = ticket?.filter((el: any) => searchStr ? el?.ticketid.includes(searchStr) : el)
   const [showPreview, setShowPreview] = useState(false);
   const dispatch = cusDispatch();
-
   return (
     <>
       <table className='w-full my-8 border'>

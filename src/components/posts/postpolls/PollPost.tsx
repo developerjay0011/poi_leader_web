@@ -56,6 +56,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                 index={i + 1}
                 pollText={el.text}
                 polltype={post?.polltype}
+                isadmin={userdetails?.leaderid == "admin"}
                 pollImg={post?.polltype !== "text" ? el.image : ""}
                 alldata={el}
                 isselected={post?.votes_by?.filter((item2: any) => item2?.userid == userDetails?.id && el?.id == item2?.optionid)?.length > 0}
@@ -72,7 +73,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
                     Getpost()
                   }
                 }}
-                isshow={post?.view_access == "public" && isUserExist}
+                isshow={post?.view_access == "public" && isUserExist && el?.votes}
                 calculatePercentage={() => post?.view_access == "public" && isUserExist ? calculatePercentage(el?.votes, post?.poll_options?.reduce((acc: any, cur: any) => acc + cur.votes, 0)) : null}
               />
             ))}
