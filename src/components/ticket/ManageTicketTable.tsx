@@ -120,11 +120,11 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                   <input type="checkbox"
                     className='text-[20px] cursor-pointer'
                     onClick={(e) => { e.stopPropagation(); }}
-                    checked={ischecked?.map((item: any) => item?.id)?.includes(el?.id)}
+                    checked={ischecked?.map((item: any) => item?.ticketid)?.includes(el?.ticketid)}
                     onChange={() => {
                       var selected = [...ischecked]
-                      if (selected?.filter((items: any) => items?.id == el?.id)?.length > 0) {
-                        selected = selected?.filter((items: any) => items?.id != el?.id)
+                      if (selected?.filter((items: any) => items?.ticketid == el?.ticketid)?.length > 0) {
+                        selected = selected?.filter((items: any) => items?.ticketid != el?.ticketid)
                         setIschecked(selected)
                       } else {
                         selected.push(el)

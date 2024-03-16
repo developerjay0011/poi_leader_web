@@ -47,7 +47,7 @@ export const CreateLetterpage: FC = () => {
 
     const [letterData, setLeaderData] = useState<any>();
     const [letterFormat, setLetterFormat] = useState("");
-    const { userDetails, }:any = cusSelector((state) => state.auth);
+    const { userDetails, }: any = cusSelector((state) => state.auth);
     const { usertype, } = cusSelector((state) => state.access);
     const { ticket } = cusSelector((state) => state.ticket);
     const searchParams = useSearchParams();
@@ -114,7 +114,7 @@ export const CreateLetterpage: FC = () => {
     }, [ticket_id, ticket?.length]);
 
 
-        const temp = `<div style=" width:20cm; margin: 20px 20px 20px 20px;height: 29.7cm;   justify-content: 'center';align-items: 'center';">
+    const temp = `<div style=" width:20cm; margin: 20px 20px 20px 20px;height: 29.7cm;   justify-content: 'center';align-items: 'center';">
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">${ticket_data?.category == "request" ? `req-` : 'comp no-' + ticket_data?.ticket_code}&nbsp;</span></strong></p>
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">Date : ${moment(ticket_data?.created_date).format('DD/MM/YYYY')}&nbsp;</span></strong></p>
     <p><br></p>
@@ -230,6 +230,13 @@ export const CreateLetterpage: FC = () => {
 
                     </div>
                     <div className='flex flex-row'>
+                       
+
+                        <div className='min-h-[1122px] border border-cyan-600 shadow-inner flex   '>
+                            <div className='letter_template w-[50%] p-10' >
+                                <div dangerouslySetInnerHTML={{ __html: temp }} />
+                            </div>
+                        </div>
                         {
                             letterFormat &&
                             <div className='min-h-[1122px] border border-cyan-600 shadow-inner flex justify-center items-center w-[50%]  '>
@@ -238,14 +245,8 @@ export const CreateLetterpage: FC = () => {
                                 </div>
                             </div>
                         }
-                    
-                    <div className='min-h-[1122px] border border-cyan-600 shadow-inner flex   '>
-                        <div className='letter_template w-[50%] p-10' >
-                                <div dangerouslySetInnerHTML={{ __html: temp }} />
-                        </div>
-                        </div>
                     </div>
-                    
+
                 </form>
             </m.section>
         </>

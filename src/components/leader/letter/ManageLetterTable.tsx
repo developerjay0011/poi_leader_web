@@ -7,6 +7,8 @@ import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 import moment from 'moment';
 import { sliceData } from '@/utils/TableWrapper';
+import { BsFillEyeFill } from 'react-icons/bs';
+import { PDFPreviewLeader } from '@/utils/PDFPreviewLeader';
 
 interface ManageLetterTableProps {
   searchStr: string
@@ -19,6 +21,9 @@ interface ManageLetterTableProps {
 export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handleEdit, handleDelete, curPageNo, filterDataCount }) => {
   const { letter } = cusSelector((state) => state.letter);
   const [showDeleteConfirmPopup, setShowDeleteConfirmPopup] = useState(false)
+  const [showLetterPreiew, setshowLetterPreiew] = useState(false)
+  const [letterdata, setletterdata] = useState("")
+
   const [id, setid] = useState("")
   const searchFilterFunction = (text: string) => {
     if (text) {
@@ -103,11 +108,11 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
                 />
               </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
-                {/* <button
+                <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
-                  onClick={() => handleEdit(el)}>
-                  <BiEdit className='text-2xl' />
-                </button> */}
+                  onClick={() => {setletterdata(el?.letter_html),setshowLetterPreiew(true)}}>
+                  <BsFillEyeFill className='text-2xl' />
+                </button>
                 <button
                   className='hover:scale-110 transition-all ease-out duration-200 active:scale-100'
                   onClick={() => { setid(el?.id), setShowDeleteConfirmPopup(true) }}>
@@ -130,6 +135,14 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
             onCancel={() => setShowDeleteConfirmPopup(false)}
             noAllowed={false}
             onOk={() => { handleDelete(id), setShowDeleteConfirmPopup(false) }}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showLetterPreiew && (
+          <PDFPreviewLeader
+            onClose={() => setshowLetterPreiew(false)}
+            letter_html={letterdata}
           />
         )}
       </AnimatePresence>
