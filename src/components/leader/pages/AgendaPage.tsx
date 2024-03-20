@@ -122,7 +122,7 @@ export const AgendaPage: FC = () => {
                         </div>
                     </div>
                     {filterData?.length > 0 ?
-                        <ul className='max-[1160px]:grid-cols-2 max-[670px]:grid-cols-1 gap-5'>
+                        <ul className='grid min-[1160px]:grid-cols-2 max-[670px]:grid-cols-1 gap-5'>
                             {agendaJSX}
                         </ul>
                         :

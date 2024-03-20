@@ -81,8 +81,9 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
   return (
     <section key={index} className="border rounded-md bg-white px-5">
       {/* User */}
-      <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}
+      <div 
         className="flex items-center gap-3 py-4 text-sky-950 border-b">
+        
         <CustomImage
           src={getImageUrl(userdetails?.image)}
           alt="user pic"
@@ -90,6 +91,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
           width={100}
           height={100}
         />
+        <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}>
         <div>
           <h4 className="font-[600] text-lg text-orange-500">
             {userdetails?.name}
@@ -100,6 +102,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             </span>
           </p>
         </div>
+        </Link>
         <div className="ml-auto relative" id="moreOptions" style={{ display: is_my ? "flex" : "none" }}>
           <button onClick={() => { setShowMorePostOptions(!showMorePostOptions) }}>
             <BsThreeDots className="text-2xl" />
@@ -112,7 +115,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             />
           )}
         </div>
-      </Link>
+      </div>
 
       {/* Post */}
       <div className="flex flex-col gap-5 mt-5">
