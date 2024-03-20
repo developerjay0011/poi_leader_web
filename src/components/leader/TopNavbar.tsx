@@ -99,6 +99,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             dispatch(leaderActions.setLeaderProfile(leaderRes));
             if (leaderRes?.request_status === "Rejected") {
               dispatch(authActions.logout())
+              window.location.href = '/' 
               return
             }
             const Data = await getDirectory(userDetails?.leaderId as string);
@@ -373,7 +374,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             </section>
 
             <section className="flex items-center gap-4 ml-auto relative">
-              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()); }}>
+              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()), window.location.href = '/' }}>
                 <FaPowerOff />log out
               </button>
             </section>
@@ -458,7 +459,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
               <section className="flex items-center gap-4 ml-auto relative">
-                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()); }}>
+                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()), window.location.href = '/' }}>
                   <FaPowerOff />log out
                 </button>
               </section>
