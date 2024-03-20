@@ -31,6 +31,7 @@ export const APIRoutes = {
 
   // Leader Endpoints
   login: `${API_Prefix}/leader/login`,
+  getSingleLeader: `${API_Prefix}/leader/getLeaderProfileAllInfo/{{leaderId}}`,
   DeleteGroups: `${API_Prefix}/leader/DeleteGroups`,
   register: `${API_Prefix}/leader/registration`,
   upsertLeaders: `${API_Prefix}/leader/addEditLeader`,

@@ -290,6 +290,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                       userPic={getImageUrl(item?.image)}
                       name={item?.name}
                       id={item?.id}
+                      setSearchUserStr={() => setSearchUserStr("")}
                       isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
                     />
                   )}
@@ -428,6 +429,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                       designation={item?.username?.political_party}
                       userPic={getImageUrl(item?.image)}
                       name={item?.name}
+                      setSearchUserStr={() => setSearchUserStr("")}
                       id={item?.id}
                       isFollowing={following?.find((i: any) => i.leaderid == item.id) ? true : false}
                     />
@@ -480,7 +482,8 @@ const BriefUserInfo: FC<{
   designation: string;
   id: string;
   isFollowing: boolean
-}> = ({ designation, name, userPic, id, isFollowing }) => {
+  setSearchUserStr: any
+}> = ({ designation, name, userPic, id, isFollowing, setSearchUserStr }) => {
   const { userDetails } = cusSelector((state: RootState) => state.auth);
   const dispatch = cusDispatch();
   const handleClick = async (id: string, isFollowing: boolean) => {
@@ -507,7 +510,7 @@ const BriefUserInfo: FC<{
 
   return (
     <>
-      <Link href={"#"}>
+      <Link href={window.location?.origin + `/user/leader/about?id=${id}`} >
         <li className="flex items-center p-4 last_noti gap-2 hover:bg-gray-100">
           <CustomImage
             src={userPic}

@@ -5,13 +5,15 @@ import { TOKEN_KEY, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common
 
 interface AuthState {
   userDetails: UserDetails | null;
+  leaderData: any
 }
 
 let userDetails: any = getCookie(USER_INFO);
 userDetails = userDetails && JSON.parse(userDetails);
 
 const initialState: AuthState = {
-  userDetails
+  userDetails,
+  leaderData: {}
 };
 
 export const authSlice = createSlice({
@@ -33,6 +35,9 @@ export const authSlice = createSlice({
         ...state.userDetails,
         ...action.payload
       };
+    },
+    setLeaderData(state, action: PayloadAction<any | null>) {
+      state.leaderData = action.payload;
     },
   },
 });

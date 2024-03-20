@@ -9,6 +9,7 @@ import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { getImageUrl } from "@/config/get-image-url";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
+import Link from "next/link";
 interface Leader {
   image: string;
   designation: string;
@@ -94,10 +95,12 @@ const TrendingUser: FC<TrendingUserProps> = ({
         className="rounded-full w-12 aspect-square object-cover object-center"
       />
 
-      <div className="flex flex-col">
-        <h3 className="text-[14px] font-semibold capitalize">{username}</h3>
-        <p className="text-[12px] capitalize">{designation}</p>
-      </div>
+      <Link href={window.location?.origin + `/user/leader/about?id=${id}`}>
+        <div className="flex flex-col">
+          <h3 className="text-[14px] font-semibold capitalize">{username}</h3>
+          <p className="text-[12px] capitalize">{designation}</p>
+        </div>
+      </Link>
 
       <button
         type="button"

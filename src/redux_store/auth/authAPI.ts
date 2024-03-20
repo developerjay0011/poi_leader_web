@@ -1,4 +1,5 @@
 import Axios from '@/config/axios'
+import { insertVariables } from '@/config/insert-variables'
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { LoginData, RegisterData } from '@/utils/typesUtils'
@@ -38,6 +39,15 @@ export const verifyOtp = async (body: {
   return tryCatch(
     async () => {
       const res = await Axios.post(APIRoutes.verifyOTP, body);
+      return res.data;
+    }
+  );
+};
+
+export const getSingleLeader = async (leaderid: string) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(insertVariables(APIRoutes.getSingleLeader, { leaderid }));
       return res.data;
     }
   );

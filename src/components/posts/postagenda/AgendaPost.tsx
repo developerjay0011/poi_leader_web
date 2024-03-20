@@ -12,6 +12,7 @@ import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
 import { AnimatePresence } from "framer-motion";
 import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
+import Link from "next/link";
 
 interface AgendaPostProps {
   userdetails: any;
@@ -37,7 +38,8 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
         </h3>
 
         <section className="flex flex-col w-full">
-          <div className="flex items-center pr-5 gap-3 py-4 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
+          <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}
+            className="flex items-center pr-5 gap-3 py-4 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
             <CustomImage
               src={getImageUrl(userdetails?.image)}
               alt="user pic"
@@ -79,7 +81,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
                 )}
               </button> */}
             </div>
-          </div>
+          </Link>
 
           {/* Agenda */}
           <div className="py-5 flex flex-col gap-4 pr-5 px-5">
