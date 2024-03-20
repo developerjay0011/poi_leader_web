@@ -8,6 +8,7 @@ import { RootState } from "@/redux_store";
 import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import { VoteAdd } from "@/redux_store/posts/postAPI";
+import Link from "next/link";
 
 interface PollPostProps extends PollDetails {
   Getpost: any,
@@ -24,26 +25,41 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
     const percentage = (votes / totalVotes) * 100;
     return percentage.toFixed(0);
   };
+
+  const Profile = () => (
+    <>
+      <CustomImage
+        src={userdetails?.leaderid == "admin" ? userdetails?.image : getImageUrl(userdetails?.image)}
+        alt="user pic"
+        className="w-12 aspect-square object-cover object-center rounded-full"
+        width={100}
+        height={100}
+      />
+
+      {/* Info and date of publish */}
+      <div>
+        <h4 className="font-[600] text-lg text-orange-500">{userdetails?.name}</h4>
+        <p className="flex items-center capitalize gap-2 text-sm font-[500]">
+          <span>created a poll at {dateConverter(post?.createddate)}</span>
+        </p>
+      </div>
+    </>
+  )
+
   return (
     <>
       <section className="border shadow-sm rounded-md px-5 py-2 bg-white">
-        <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
-          <CustomImage
-            src={userdetails?.leaderid == "admin" ? userdetails?.image : getImageUrl(userdetails?.image)}
-            alt="user pic"
-            className="w-12 aspect-square object-cover object-center rounded-full"
-            width={100}
-            height={100}
-          />
-
-          {/* Info and date of publish */}
-          <div>
-            <h4 className="font-[600] text-lg text-orange-500">{userdetails?.name}</h4>
-            <p className="flex items-center capitalize gap-2 text-sm font-[500]">
-              <span>created a poll at {dateConverter(post?.createddate)}</span>
-            </p>
+        {userdetails?.leaderid == "admin" ?
+          <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
+            {Profile()}
           </div>
-        </div>
+          :
+          <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}
+            className="flex items-center gap-3 py-4 text-sky-950 border-b">
+            {Profile()}
+          </Link>
+        }
+
 
         <div className="flex flex-col gap-5 my-5">
           <p className="text-[16px]">{post?.title}</p>

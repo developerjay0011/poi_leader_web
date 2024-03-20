@@ -16,6 +16,7 @@ import PostGrid from "../PostGrid";
 import { Shortlistbytime, islike } from "./utils";
 import { DeletePost, LikePost, UnlikePostorStory } from "@/redux_store/posts/postAPI";
 import { PostOptions } from "./PostOptions";
+import Link from "next/link";
 
 
 interface PostProps extends PostDetails {
@@ -80,7 +81,8 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
   return (
     <section key={index} className="border rounded-md bg-white px-5">
       {/* User */}
-      <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
+      <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}
+        className="flex items-center gap-3 py-4 text-sky-950 border-b">
         <CustomImage
           src={getImageUrl(userdetails?.image)}
           alt="user pic"
@@ -110,7 +112,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             />
           )}
         </div>
-      </div>
+      </Link>
 
       {/* Post */}
       <div className="flex flex-col gap-5 mt-5">

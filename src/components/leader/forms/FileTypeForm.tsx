@@ -34,8 +34,8 @@ export const FileTypeForm: FC<FileTypeFormProps> = ({ onClose, submitting, headi
   const { userDetails } = cusSelector((state) => state.auth);
   const { location } = cusSelector((state) => state.location);
   const { leaderOptions } = cusSelector((state) => state.common);
-  const [officer, setofficer] = useState([])
   const { register, handleSubmit, reset, formState: { errors, isValid }, setValue } = useForm<FormFields>({})
+  const [officer, setofficer] = useState([])
   const officers = () => {
     var list = []
     if (leaderOptions?.ministries) {
