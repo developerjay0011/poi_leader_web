@@ -52,7 +52,7 @@ const ConvertCommonpost = (list = []): any => {
       if (userData?.posts) {
         userData?.posts.forEach((post: any) => {
           combinedData.push({
-            post: { ...post, createddate: moment(post?.createddate).format("YYYY-MM-DD hh:mm:ss") },
+            post: { ...post, createddate: post?.createddate },
             type: "post",
             userdetails: userdetails,
           });
@@ -61,17 +61,8 @@ const ConvertCommonpost = (list = []): any => {
       if (userData?.agendas) {
         userData?.agendas.forEach((post: any) => {
           combinedData.push({
-            post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD hh:mm:ss") },
+            post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD HH:mm:ss") },
             type: "agendas",
-            userdetails: userdetails,
-          });
-        });
-      }
-      if (userData?.polls) {
-        userData?.polls.forEach((post: any) => {
-          combinedData.push({
-            type: "polls",
-            post: { ...post, createddate: moment(post?.publish_date).format("YYYY-MM-DD hh:mm:ss") },
             userdetails: userdetails,
           });
         });
@@ -80,7 +71,16 @@ const ConvertCommonpost = (list = []): any => {
         userData?.developments.forEach((post: any) => {
           combinedData.push({
             type: "developments",
-            post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD hh:mm:ss") },
+            post: { ...post, createddate: moment(post?.created_date).format("YYYY-MM-DD HH:mm:ss") },
+            userdetails: userdetails,
+          });
+        });
+      }
+      if (userData?.polls) {
+        userData?.polls.forEach((post: any) => {
+          combinedData.push({
+            type: "polls",
+            post: { ...post, createddate: moment(post?.publish_date, "YYYY-MM-DD hh:mm:ss").format("YYYY-MM-DD HH:mm:ss") },
             userdetails: userdetails,
           });
         });
@@ -89,7 +89,7 @@ const ConvertCommonpost = (list = []): any => {
         userData?.admin_polls.forEach((post: any) => {
           combinedData.push({
             type: "polls",
-            post: { ...post, createddate: moment(post?.publish_date).format("YYYY-MM-DD hh:mm:ss") },
+            post: { ...post, createddate: post?.publish_date },
             userdetails: userdetails,
           });
         });
