@@ -45,7 +45,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
       userid: userDetails?.id,
       usertype: "leader",
       username: setusername(leaderProfile),
-      userimg: userDetails?.image,
+      userimg: leaderProfile?.image,
     };
     const UnlikeBody = {
       postid: post?.id,
@@ -77,13 +77,12 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
 
 
 
-
   return (
     <section key={index} className="border rounded-md bg-white px-5">
       {/* User */}
-      <div 
+      <div
         className="flex items-center gap-3 py-4 text-sky-950 border-b">
-        
+
         <CustomImage
           src={getImageUrl(userdetails?.image)}
           alt="user pic"
@@ -92,16 +91,16 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
           height={100}
         />
         <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}>
-        <div>
-          <h4 className="font-[600] text-lg text-orange-500">
-            {userdetails?.name}
-          </h4>
-          <p className="flex items-center capitalize gap-2 text-sm font-[500]">
-            <span>
-              Published on:{" "}{dateConverter(post?.createddate)}
-            </span>
-          </p>
-        </div>
+          <div>
+            <h4 className="font-[600] text-lg text-orange-500">
+              {userdetails?.name}
+            </h4>
+            <p className="flex items-center capitalize gap-2 text-sm font-[500]">
+              <span>
+                Published on:{" "}{dateConverter(post?.createddate)}
+              </span>
+            </p>
+          </div>
         </Link>
         <div className="ml-auto relative" id="moreOptions" style={{ display: is_my ? "flex" : "none" }}>
           <button onClick={() => { setShowMorePostOptions(!showMorePostOptions) }}>

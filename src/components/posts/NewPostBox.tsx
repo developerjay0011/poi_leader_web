@@ -44,7 +44,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (previewImages.length === 0 || accessType?.length === 0 || apimedia?.length === 0) {
+    if (previewImages.length === 0 || accessType?.length === 0 || (apimedia?.length === 0 && type !== "post")) {
       return setPostErr({ errTxt: "Post can't be empty", isErr: true });
     }
     const formData = new FormData();
@@ -159,7 +159,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
       <CommonBox title={`create ${type}`} key={`form-${type}`}>
         <form
           id={`form-${type}`}
-          className="flex flex-col gap-4 py-4"
+          className="flex flex-col gap-4 py-4 "
           onSubmit={formSubmitHandler}
         >
           <div className="flex items-start gap-3">
@@ -194,20 +194,16 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                 <BsImageFill className="text-sky-950 text-xl text-opacity-70" />
               </label>
             </div>
-            <div className="ml-auto relative " id="moreOptions">
-              <div
-                className="cursor-pointer"
-                onClick={() => setShowMorePostOptions(!showMorePostOptions)}
-              >
-                <span className="capitalize">{`Post Type ${(accessType && ": " + accessType) || ""
-                  }`}</span>
-              </div>
+            <div className="ml-auto relative" id="moreOptions">
               {showMorePostOptions && (
                 <PostTypes
                   onClose={() => setShowMorePostOptions(false)}
                   accessTypeOptions={(e: any) => setAccessType(e)}
                 />
               )}
+              <div className="cursor-pointer" onClick={() => setShowMorePostOptions(!showMorePostOptions)}>
+                <span className="capitalize">{`Post Type ${(accessType && ": " + accessType) || ""}`}</span>
+              </div>
             </div>
           </div>
 
@@ -258,6 +254,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
           <button type="submit" disabled={loader} className="bg-sky-400 text-sky-50 py-1 rounded-md capitalize font-[500]">
             {loader ? "creating.." : type}
           </button>
+
         </form>
       </CommonBox>
     </>

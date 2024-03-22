@@ -61,7 +61,6 @@ export const CreateLetterpage: FC = () => {
         let lettertype = filestype?.find((el: any) => el.id == data?.fileNo)
         let fileno = lettertype?.file_name + "-" + lettertype?.file_number + "(" + data?.idNo + ")"
         let todata = lettertype?.to?.find((el: any) => el.ministryid == data?.to)
-        console.log(lettertype?.to)
         let to = `${todata?.name}\n${todata?.ministry_name}(${todata?.designation})`
         var letter_format = (letter_templete.find((item) => item?.id == data?.letterType)?.template_html || "")
         var letter_formats = letter_format?.replaceAll("${FILENUMBER}", fileno)?.replaceAll("${DATE}", data?.date)?.replaceAll("${LOCATION}", data?.location)?.replaceAll("${TO}", to)?.replaceAll("${FROM}", data?.from)?.replaceAll("${PHONE}", data?.contactNo)?.replaceAll("${IDNO}", data?.idNo)?.replaceAll("${IMAGE}", "https://www.fillhq.com/wp-content/uploads/2021/08/autodraw-11_2_2022.png")
@@ -134,14 +133,14 @@ export const CreateLetterpage: FC = () => {
     <p style="text-align: right;"><br></p>
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">Your Sincerely,</span></strong></p>
     <p><img src="signature (2).png" alt="" width="300"></p>
-    <p dir="ltr" style="line-height: 1.8; background-color: rgb(255, 255, 255); margin-top: 0pt; margin-bottom: 0pt; padding: 0pt 0pt 3pt; text-align: right;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><img src="${getImageUrl(ticket_data?.signature)}" alt="" width="138" style="float: right;" height="92"></strong></p>
-    <p><br></p>
+    ${ticket_data?.signature ? `<p dir="ltr" style="line-height: 1.8; background-color: rgb(255, 255, 255); margin-top: 0pt; margin-bottom: 0pt; padding: 0pt 0pt 3pt; text-align: right;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><img src="${getImageUrl(ticket_data?.signature)}" alt="" width="138" style="float: right;" height="92"></strong></p>` : ""} 
+   <p><br></p>
 
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;"><br></span></strong></p>
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;"><br></span></strong></p>
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:0pt;padding:0pt 0pt 3pt 0pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><span style="font-family: Merriweather, serif; color: rgb(0, 0, 0); background-color: transparent; font-weight: 400; font-style: normal; font-variant: normal; text-decoration: none; vertical-align: baseline; white-space: pre-wrap; font-size: 12pt;">${ticket_data?.citizen_detail?.citizen_name}&nbsp;</span></strong></p>
     <p style="text-align: right;">${ticket_data?.citizen_detail?.citizen_address}&nbsp;</p>
-    <p style="text-align: right;">${ticket_data?.citizen_detail?.citizen_state}&nbsp;</p>
+    ${ticket_data?.citizen_detail?.citizen_state ? `<p style="text-align: right;">${ticket_data?.citizen_detail?.citizen_state}&nbsp;</p>` : ""}
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><br></strong></p>
     <p><br></p>
     <p dir="ltr" style="line-height:1.7999999999999998;text-align: right;background-color:#ffffff;margin-top:0pt;margin-bottom:3pt;"><strong style="font-weight:normal;" id="docs-internal-guid-bb773bb7-7fff-688e-1d9a-986638bf1984"><br></strong></p>
@@ -230,7 +229,7 @@ export const CreateLetterpage: FC = () => {
 
                     </div>
                     <div className='flex flex-row'>
-                       
+
 
                         <div className='min-h-[1122px] border border-cyan-600 shadow-inner flex   '>
                             <div className='letter_template w-[50%] p-10' >

@@ -105,7 +105,7 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/location/manage-location',
     name: 'Manage Office Location',
     Icon: FaMapLocationDot,
-    tabname: "Leader"
+    tabname: "Manage Office Locations",
   },
   {
     id: GenerateId(),
@@ -113,7 +113,7 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/filetype/manage-files',
     name: 'Manage file type',
     Icon: FaFileInvoice,
-    tabname: "Leader"
+    tabname: "Manage File",
   },
   {
     id: GenerateId(),

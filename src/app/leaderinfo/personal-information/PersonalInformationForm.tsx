@@ -106,6 +106,11 @@ export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setP
           required
           validations={{
             required: 'Email is required',
+            pattern: {
+              value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+              message:
+                "Please enter a valid email EX: something@example.com",
+            },
           }}
         />
         <Input
@@ -113,7 +118,7 @@ export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setP
           id="mobile"
           register={register2 as any}
           title='Mobile No.'
-          type='text'
+          type='number'
           required
           validations={{
             required: 'Mobile no is required',

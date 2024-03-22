@@ -28,7 +28,7 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allDat
       "userid": userDetails?.id,
       "usertype": "leader",
       "username": setusername(leaderProfile),
-      "userimg": userDetails?.image ? userDetails?.image : '',
+      "userimg": leaderProfile?.image ? leaderProfile?.image : '',
       'comment_text': commentText,
     };
     try {
@@ -40,11 +40,12 @@ export const NewCommentForm: FC<NewCommentFormProps> = ({ CommentHandler, allDat
     setCommentText("");
   };
 
+
   return (
     <form className="flex items-start py-4 gap-5 mt-2 mb-1 relative max-[400px]:gap-3" onSubmit={addNewCommentHandler}>
       <CustomImage
         alt="user dp"
-        src={getImageUrl(userDetails?.image)}
+        src={getImageUrl(leaderProfile?.image)}
         width={1000}
         height={1000}
         className="w-10 aspect-square rounded-full object-center object-cover"

@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { Savedby } from '@/constants/common';
 import { getImageUrl, setusername } from '@/config/get-image-url';
 import { sliceData } from '@/utils/TableWrapper';
+import { FaFileAlt } from 'react-icons/fa';
 
 interface ManageTicketTableProps {
   searchStr: string
@@ -87,6 +88,9 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
               Status
             </th>
             <th className='font-semibold capitalize text-center p-2 border'>
+              Attachment
+            </th>
+            <th className='font-semibold capitalize text-center p-2 border'>
               action
             </th>
           </tr>
@@ -114,10 +118,10 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
             };
             return (
               <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   {i + 1}.
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   <input type="checkbox"
                     className='text-[20px] cursor-pointer'
                     onClick={(e) => { e.stopPropagation(); }}
@@ -133,19 +137,19 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                       }
                     }} />
                 </td>
-                <td className='capitalize text-left  border-r text-center align-text-top max-w-[100px]'>
+                <td className='capitalize text-left  border-r text-center align-text-center max-w-[100px] min-w-[100px]'>
                   {moment(el?.created_date).format("DD-MM-YYYY hh:mm a")}
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   {el?.category}
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   {el?.ticket_code}
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   {el?.subject}
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-top max-w-[300px]'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center max-w-[300px]'>
                   <p className='text-ellipsis overflow-hidden truncate max-h-[100px]'>{el?.description}</p>
                 </td>
                 <td className='text-center p-2 border items-center justify-center '>
@@ -153,6 +157,15 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                     <button className='hover:underline text-orange-500  text-[15px] capitalize flex items-center gap-1 justify-center self-center transition-all' onClick={() => { setticketdata(el), setShowStatus(true), setTimeline(el?.status) }}>
                       <strong>{el?.status?.slice(-1).pop()?.status}</strong>
                     </button>
+                  </div>
+                </td>
+                <td className='text-center p-2 border items-center justify-center '>
+                  <div className='gap-2 flex justify-center flex flex-wrap'>
+                    {el?.attachments?.map((els: any) => (
+                      <a key={els} href={getImageUrl(els)} target="_blank" rel="noopener noreferrer" download>
+                        <FaFileAlt />
+                      </a>
+                    ))}
                   </div>
                 </td>
                 <td className='text-center p-2 border items-center justify-center'>
