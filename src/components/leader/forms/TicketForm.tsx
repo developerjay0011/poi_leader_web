@@ -66,6 +66,10 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
     tryCatch(
       async () => {
         setLoader(true)
+        if (attachmentsDoc?.length == 0) {
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: "Add attachment" }))
+          return
+        }
         const formData = new FormData();
         formData.append("name", data?.name || "");
         formData.append("email", data?.email || "");
@@ -84,7 +88,9 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
         } else {
           formData.append("attachments", data?.attachments || [] as any)
         }
-        formData.append("signature", data?.signature || [] as any)
+        if (data?.signature) {
+          formData.append("signature", data?.signature || null as any)
+        }
         const response = await SaveTicketManually(formData);
         if (response?.success) {
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
@@ -136,7 +142,7 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
             id={"mobile" as any}
             register={register as any}
             title="Mobile No."
-            type="tel"
+            type="number"
             required
             validations={{
               required: 'phone number is required',
@@ -226,7 +232,8 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
             htmlFor="attachment"
             className={`flex flex-col gap-2 w-max`}
           >
-            <span className="capitalize font-[500]">Attachment</span>
+            <span className="capitalize font-[500]">Attachment <strong className='text-red-500'>*</strong></span>
+
             <input
               type="file"
               id="attachment"

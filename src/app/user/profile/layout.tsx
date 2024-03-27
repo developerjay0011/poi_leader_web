@@ -46,7 +46,6 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
       }))
     }
   }
-
   return (
     <>
       <section className={`${usertype == "leader" && 'm-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-5 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'}${usertype != "leader" && 'flex gap-5 w-full relative px-5 gap-6 mb-5 mt-5'}`}>

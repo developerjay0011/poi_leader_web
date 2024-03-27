@@ -136,7 +136,7 @@ export const ManageEmployessForm: FC<ManageEmployessFormProps> = ({ onClose, sub
             register={register}
             errors={errors}
             title="Phone no."
-            type="tel"
+            type="number"
             id={"phoneno"}
             required
             validations={{

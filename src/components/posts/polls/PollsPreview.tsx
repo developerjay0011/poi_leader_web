@@ -21,7 +21,7 @@ export const PollsPreview: FC<PollsPreviewProps> = ({ onClose, pollDetails, }) =
       <section className='border shadow-sm rounded-md px-5 py-2 bg-white w-full max-[650px]:w-[80%] self-center'>
         <div className='flex items-center gap-3 py-4 text-sky-950 border-b'>
           <CustomImage
-            src={getImageUrl(userDetails?.image)}
+            src={getImageUrl(leaderProfile?.image)}
             alt='user pic'
             className='w-12 aspect-square object-cover object-center rounded-full'
             width={100}

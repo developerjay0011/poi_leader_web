@@ -166,10 +166,10 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               placeholder="Phone"
               register={register}
               title="Phone"
-              type="text"
+              type="number"
               required
               validations={{
-                required: "First name is required",
+                required: "Phone is required",
               }}
             />
             <Input
@@ -182,6 +182,11 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               required
               validations={{
                 required: "First name is required",
+                pattern: {
+                  value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+                  message:
+                    "Please enter a valid email EX: something@example.com",
+                },
               }}
             />
 

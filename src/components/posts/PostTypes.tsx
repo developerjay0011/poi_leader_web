@@ -22,8 +22,7 @@ export const PostTypes: FC<PostOptionsProps> = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="flex flex-col items-center z-50 bg-white w-36 rounded-sm shadow-lg absolute top-full right-0"
-      >
+        className="flex flex-col items-center z-50 bg-white w-36  rounded-sm shadow-lg absolute bottom-8 right-0"   >
         <button
           className="flex items-center gap-2 last_noti capitalize px-6 py-3 hover:bg-orange-500 hover:text-orange-50 hover:underline transition-all"
           onClick={() => {

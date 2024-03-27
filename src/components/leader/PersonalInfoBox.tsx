@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fa6'
 import { MdBloodtype } from 'react-icons/md'
 
-interface PersonalInfoBoxProps {}
+interface PersonalInfoBoxProps { }
 export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
 
@@ -98,9 +98,8 @@ const PersonalBriefInfo: FC<{
           <span className='font-[500] capitalize text-[15px]'>{heading}</span>
         </p>
         <p
-          className={`text-[14px] pl-7 ${
-            heading?.toLowerCase().includes('about') && 'text-justify'
-          }`}>
+          className={`text-[14px] pl-7 ${heading?.toLowerCase().includes('about') && 'text-justify'
+            }`}>
           {data || 'N/A'}
         </p>
       </article>

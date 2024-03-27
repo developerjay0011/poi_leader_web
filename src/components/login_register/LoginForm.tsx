@@ -18,11 +18,12 @@ import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { LOGIN_BODY, TOKEN_KEY, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
+import { LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
 import { AuthRoutes, EmployeeProtectedRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
+import { commonActions } from "@/redux_store/common/commonSlice";
 
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -56,9 +57,10 @@ export const LoginForm: FC<LoginFormProps> = () => {
       const { success, message, data } = loginResponse;
       if (success) {
         if (data?.user_detail?.usertype == "leader employee") {
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: message }))
           await SetCookieAndRedux(data, loginResponse, "leader employee", data?.employee_detail)
         } else {
-          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype,null)
+          await SetCookieAndRedux(data, loginResponse, data?.user_detail?.usertype, null)
         }
       } else {
         setCookie(USER_VERIFY, 'false');
@@ -80,7 +82,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
   };
 
 
-  const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string,employee_detail:any) => {
+  const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string, employee_detail: any) => {
     setCookie(TOKEN_KEY, loginResponse.token);
     if (usertype == "leader employee") {
       setCookie(USER_VERIFY, 'true');
@@ -194,7 +196,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
             disabled={!isValid || loggingIn}
             className="py-2 px-6 font-semibold bg-sky-800 text-sky-50 rounded-full mt-8 max-[500px]:ml-3 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400"
           >
-            {loggingIn ? "Logging.." : "Login"}
+            {loggingIn ? "Logging..." : "Login"}
           </button>
 
           <p className="mt-5 max-[500px]:ml-3">

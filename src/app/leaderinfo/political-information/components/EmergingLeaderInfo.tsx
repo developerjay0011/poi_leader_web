@@ -498,7 +498,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
               id={`referencies.${i}.mobile` as keyof UserDetails}
               key={`referencies.${i}.mobile` as keyof UserDetails}
               title='Mobile No'
-              type='text'
+              type='number'
               required
               placeholder='XXXXXXXXXX'
               validations={{

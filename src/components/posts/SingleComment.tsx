@@ -44,7 +44,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
       userid: userDetails?.id,
       usertype: "leader",
       username: setusername(leaderProfile),
-      userimg: userDetails?.image,
+      userimg: leaderProfile?.image,
     };
     const UnlikeBody = {
       commentid: id,
@@ -81,7 +81,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
       userid: userDetails?.id,
       usertype: "leader",
       username: setusername(leaderProfile),
-      userimg: userDetails?.image,
+      userimg: leaderProfile?.image,
       comment_text: commentReply,
     };
     const data = await ReplyToComment(commentBody)
@@ -186,7 +186,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
               {/* Add a new comment */}
               <form className="flex items-end bg-white gap-3 pt-3" onSubmit={addNewNestedComment}>
                 <CustomImage
-                  src={getImageUrl(userDetails?.image)}
+                  src={getImageUrl(leaderProfile?.image)}
                   priority={true}
                   alt="user dp"
                   width={1000}
