@@ -86,31 +86,19 @@ export const MembersToGroup: FC<MemberstogroupFormProp> = ({ setShowMember, show
               dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Enter all the Email" }))
               return
             }
-            if (datas?.filter((item: any) => item?.dob == "")?.length > 0) {
-              dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Enter all the dob" }))
-              return
-            }
-            if (datas?.filter((item: any) => item?.gender == "")?.length > 0) {
-              dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Enter all the gender" }))
-              return
-            }
-            if (datas?.filter((item: any) => item?.address == "")?.length > 0) {
-              dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Enter all the address" }))
-              return
-            }
             var directories = [] as any
             for (let i = 0; i < datas.length; i++) {
               const element = datas[i] as any
               directories.push({
-                "name": element?.name,
+                "name": element?.name ? element?.name : "",
                 "mobile": typeof element?.mobile === "number" ? String(element?.mobile) : element?.mobile,
-                "email": element?.email,
+                "email": element?.email ? element?.email : "",
                 "dob": element?.dob ? moment(new Date(Math.round((element?.dob - 25569) * 86400 * 1000))).format("YYYY-MM-DD") : "",
-                "gender": element?.gender,
-                "occupation": element?.occupation,
-                "qualification": element?.qualification,
+                "gender": element?.gender ? element?.gender : "",
+                "occupation": element?.occupation ? element?.occupation : "",
+                "qualification": element?.qualification ? element?.qualification : "",
                 "whatsapp_no": typeof element?.whatsapp_no === "number" ? String(element?.mobile) : element?.whatsapp_no,
-                "address": element?.address,
+                "address": element?.address ? element?.address : "",
               })
             }
             const body = {

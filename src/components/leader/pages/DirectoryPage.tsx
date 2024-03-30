@@ -231,7 +231,6 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               title="Select Group"
               type="date"
               id={"dob" as any}
-              required
               validations={{
                 required: "group is required",
               }}
@@ -242,7 +241,6 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               title="Select Gender"
               type="select"
               id={"gender" as any}
-              required
               validations={{
                 required: "gender is required",
               }}
@@ -267,9 +265,6 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               title="Select Oualification"
               type="select"
               id={"qualification" as any}
-              validations={{
-                required: "qualification is required",
-              }}
               selectField={{
                 options: [
                   { id: "below 10th", value: "below 10th" },
@@ -292,7 +287,6 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               title="Whatsapp no"
               type="number"
               validations={{
-                required: "whatsapp no is required",
                 validate: {
                   notAValidNo(val) {
                     return (
@@ -310,11 +304,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               register={register}
               title="Address"
               type="textarea"
-              required
               fullWidth
-              validations={{
-                required: "address is required",
-              }}
             />
             <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
             <div className="flex justify-end col-span-full gap-2">
