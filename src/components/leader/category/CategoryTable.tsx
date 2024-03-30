@@ -41,7 +41,7 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, h
             return (
               <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
                 <td className='pl-2 border-r align-text-top text-center'>
-                  {i + 1}
+                  {el.sr}.
                 </td>
                 <td className='capitalize text-left py-2 pl-2 border-r align-text-top'>
                   {el.category}
@@ -80,7 +80,7 @@ export const CategoryTable: FC<AssemblyConstituencyTableProps> = ({ searchStr, h
             )
           })
         ) : (
-          <ErrorTableRow colNo={4} />
+          <ErrorTableRow colNo={10} />
         )}</tbody>
       </table>
     </>

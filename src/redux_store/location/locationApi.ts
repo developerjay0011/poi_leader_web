@@ -16,7 +16,6 @@ export const GetOfficeLocations = async (leaderId: string) => {
 export const SaveOfficeLocation = async (body: any) => {
   return tryCatch(
     async () => {
-      console.log(body)
       const res = await Axios.post(APIRoutes.SaveOfficeLocation, body);
       return res.data;
     }

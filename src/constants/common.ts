@@ -7,6 +7,9 @@ export const USER_TYPE = "USER_TYPE";
 export const USER_INFO = "USER_INFO";
 export const LOGIN_BODY = "LOGIN_BODY";
 export const DEFAULT_CONTENT_TYPE = 'application/json';
+export const EMPLOYEE_ID = "EMPLOYEE_ID";
+export const LEADER_ID = "LEADER_ID";
+export const TAB_ACCESS = "TAB_ACCESS";
 
 
 

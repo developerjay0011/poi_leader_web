@@ -6,7 +6,13 @@ import { GenerateId } from './utility'
 import { FaPlus } from "react-icons/fa";
 import Link from 'next/link'
 export const sliceData = (data: any, page: any, rowsPerPage: any) => {
-  return Array.isArray(data) ? data?.slice((page - 1) * rowsPerPage, page * rowsPerPage) : []
+  var setdata = data as any
+  var setindexdata = [] as any
+  for (let i = 0; i < setdata?.length; i++) {
+    var set = setdata[i]
+    setindexdata.push({ ...set, sr: i + 1 })
+  }
+  return Array.isArray(setindexdata) ? setindexdata?.slice((page - 1) * rowsPerPage, page * rowsPerPage) : []
 };
 export const searchFilterFunction = (text: string, listdata: any, key: string, { curPageNo, filterDataCount }) => {
   if (text) {

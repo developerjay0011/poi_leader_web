@@ -119,7 +119,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
             return (
               <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
                 <td className='capitalize text-left p-2 border-r text-center align-text-center'>
-                  {i + 1}.
+                  {el?.sr}.
                 </td>
                 <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   <input type="checkbox"

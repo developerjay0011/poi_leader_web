@@ -36,8 +36,6 @@ export const AgendaPage: FC = () => {
         })()
     }, [dispatch, userDetails?.leaderId]);
 
-
-
     const agendaJSX = filterData?.map((el) => (
         <AgendaPost
             userId={el.id}
@@ -113,7 +111,7 @@ export const AgendaPage: FC = () => {
                                 >
                                     <option value="">All</option>
                                     {Object.keys(AGENDA_STATUS).map((el) => (
-                                        <option value={el} key={el}>
+                                        <option value={AGENDA_STATUS[el as AGENDA_VAL]?.name} key={AGENDA_STATUS[el as AGENDA_VAL]?.name}>
                                             {AGENDA_STATUS[el as AGENDA_VAL].name}
                                         </option>
                                     ))}

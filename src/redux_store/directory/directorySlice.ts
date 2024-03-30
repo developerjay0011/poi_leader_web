@@ -23,9 +23,9 @@ export const directorySlice = createSlice({
   initialState: init,
   reducers: {
     storedirectory(state, action: PayloadAction<DirectoryDetails[]>) {
-      state.directory = action.payload
+      state.directory = Array.isArray(action.payload) ? action.payload : []
     },
-   
+
   },
 })
 

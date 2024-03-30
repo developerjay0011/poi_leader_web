@@ -13,6 +13,8 @@ import { Datanotfound } from '@/utils/Datanotfound'
 import { SendMessage } from '../forms/SendMessageFrom'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
+import { getDirectory } from '@/redux_store/directory/directoryApi'
+import { directoryAction } from '@/redux_store/directory/directorySlice'
 
 export const NetworksPage: FC = () => {
     const [searchString, setSearchString] = useState('')
@@ -32,6 +34,8 @@ export const NetworksPage: FC = () => {
             async () => {
                 const response = await getGroups(userDetails?.leaderId as string);
                 if (Array.isArray(response)) dispatch(groupActions.storeGroups(response));
+                const Data = await getDirectory(userDetails?.leaderid as string);
+                dispatch(directoryAction.storedirectory(Data))
             })
     }
     const getSingleGroupDetails = (groupid: string) => {
@@ -98,7 +102,10 @@ export const NetworksPage: FC = () => {
                                     <Network
                                         onMemberClick={() => { getSingleGroupDetails(item.id), setShowMember(true) }}
                                         item={item}
-                                        DeleteGroups={() => { DeleteGroups({ "leaderid": userDetails?.leaderId, "ids": [item?.id] }); getGroup() }}
+                                        DeleteGroups={() => {
+                                            DeleteGroups({ "leaderid": userDetails?.leaderId, "ids": [item?.id] });
+                                            getGroup()
+                                        }}
                                         setIsEdit={() => { setIsEdit(item); setShowModal(true) }}
                                         key={index}
                                         created_date={item?.created_date}

@@ -22,6 +22,7 @@ import { BiX } from "react-icons/bi";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { Modal } from "@/components/modal/modal";
 import { TableWrapper, searchFilterFunction } from "@/utils/TableWrapper";
+import { getImageUrl } from "@/config/get-image-url";
 
 interface EventPageProps { }
 
@@ -55,6 +56,7 @@ export const EventPage: FC<EventPageProps> = () => {
   const { userDetails } = cusSelector((state) => state.auth);
   const { event } = cusSelector((state) => state.event);
   const { register, setValue, watch, formState: { errors }, handleSubmit, reset, } = useForm<UserDetails>();
+  const [attachments, setattachments] = useState([]) as any
 
   useEffect(() => {
     (async () => {
@@ -85,8 +87,8 @@ export const EventPage: FC<EventPageProps> = () => {
         formData.append("event_type", data?.event_type || "");
         formData.append("location", data?.location || "");
         formData.append("notes", data?.notes || "");
-        formData.append("start_datetime", moment(data?.start_datetime).format("YYYY-MM-DD hh:mm:ss") || "");
-        formData.append("end_datetime", moment(data?.end_datetime).format("YYYY-MM-DD hh:mm:ss") || "");
+        formData.append("start_datetime", moment(data?.start_datetime).format("YYYY-MM-DD HH:mm:ss") || "");
+        formData.append("end_datetime", moment(data?.end_datetime).format("YYYY-MM-DD HH:mm:ss") || "");
         formData.append("ispublic", (data?.access == "Open To All" ? true : false) as any);
         if (data?.attachments?.length != 0) {
           for (let i = 0; i < data?.attachments?.length; i++) {
@@ -125,6 +127,7 @@ export const EventPage: FC<EventPageProps> = () => {
     setValue("start_datetime", data?.start_datetime);
     setValue("end_datetime", data?.end_datetime);
     setValue("access", data?.access == true ? "Open To All" : "Followers");
+    setattachments(data?.attachments);
   };
 
 
@@ -243,6 +246,7 @@ export const EventPage: FC<EventPageProps> = () => {
               register={register}
               title="Attachments"
               type="file"
+              multiple={true}
             />
             {watch("event_type") === "event" && (
               <div className="flex items-center justify-center gap-5">
@@ -288,7 +292,8 @@ export const EventPage: FC<EventPageProps> = () => {
                   validations={{
                     required: 'Date of Birth is required',
                   }}
-                /> <Input
+                />
+                <Input
                   errors={errors}
                   id='end_datetime'
                   register={register}
@@ -298,10 +303,15 @@ export const EventPage: FC<EventPageProps> = () => {
                   validations={{
                     required: 'Date of Birth is required',
                   }}
+                  min={watch("start_datetime")}
                 />
 
               </div>)}
-
+            {attachments?.map((el: any) => (
+              <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
+                {el.match(/[^/]+$/)[0]}
+              </a>
+            ))}
             <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
             <div className="flex justify-end col-span-full gap-2">
               <a

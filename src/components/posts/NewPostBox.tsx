@@ -39,12 +39,10 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
   const [loader, setLoading] = useState(false);
 
 
-
-
   const formSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (previewImages.length === 0 || accessType?.length === 0 || (apimedia?.length === 0 && type !== "post")) {
+    if (accessType?.length === 0 || (apimedia?.length === 0 && type === "story")) {
       return setPostErr({ errTxt: "Post can't be empty", isErr: true });
     }
     const formData = new FormData();

@@ -42,11 +42,26 @@ export const PollTableRow: FC<PollTableRowProps> = ({ polls, handleDelete }) => 
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold capitalize text-center p-2 border max-w-[5px]'>
+            <th className='font-semibold capitalize text-center  border max-w-[20px]'>
               S.No
             </th>
             <th className='font-semibold capitalize border p-2 text-left'>
               Poll Title
+            </th>
+            <th className='font-semibold capitalize border p-2 text-left'>
+              publish date
+            </th>
+            <th className='font-semibold capitalize border p-2 text-left'>
+              close date
+            </th>
+            <th className='font-semibold capitalize border p-2 text-left max-w-[30px]'>
+              Poll Type
+            </th>
+            <th className='font-semibold capitalize border p-2 text-left max-w-[30px]'>
+              View Access
+            </th>
+            <th className='font-semibold capitalize border p-2 text-left max-w-[30px]'>
+              Result Access
             </th>
             <th className='font-semibold capitalize text-center p-2 border max-w-[50px]'>
               action
@@ -61,12 +76,27 @@ export const PollTableRow: FC<PollTableRowProps> = ({ polls, handleDelete }) => 
               return (
                 <>
                   <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
-                    <td className='capitalize text-left p-2 border-r text-center align-text-top max-w-[5px]'>
-                      {i + 1}.
+                    <td className='capitalize text-left border-r text-center align-text-top max-w-[20px]'>
+                      {el.sr}.
                     </td>
                     <td className='capitalize text-left p-2 border-r align-text-top'>
                       {el.title}
                     </td>
+                    <td className='capitalize text-left p-2 border-r align-text-top w-[180px]'>
+                      {moment(el.publish_date, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD hh:mm a")}
+                    </td>
+                    <td className='capitalize text-left p-2 border-r align-text-top w-[180px]'>
+                      {moment(el.close_date, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD hh:mm a")}
+                    </td>
+                    <th className='font-semibold capitalize border-r border p-2 text-left max-w-[30px]'>
+                      {el.polltype}
+                    </th>
+                    <th className='font-semibold capitalize border-r border p-2 text-left max-w-[30px]'>
+                      {el.view_access}
+                    </th>
+                    <th className='font-semibold capitalize border-r border p-2 text-left max-w-[30px]'>
+                      {el.access}
+                    </th>
                     <td className='text-center p-2 border items-center justify-center max-w-[50px]'>
                       <div className='flex w-max items-center gap-2 m-auto cursor-pointer'>
                         <MdPreview

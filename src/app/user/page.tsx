@@ -6,9 +6,15 @@ import { TimeLinePage } from "@/components/posts/TimeLinePage";
 import { BriefEventsBox } from "@/components/timlineComponents/BriefEventsBox";
 import { BirthdayNotifications } from "@/components/timlineComponents/BirthdayNotifications";
 import { FollowedLeader } from "@/components/timlineComponents/FollowedLeader";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { cusSelector } from "@/redux_store/cusHooks";
+import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { usePathname } from "next/navigation";
+import { accessAction } from "@/redux_store/accesstab/tabSlice";
+import { USER_TYPE } from "@/constants/common";
+import { getCookie } from "cookies-next";
+import { fetchAccessTabs, tabfilter } from "@/redux_store/accesstab/tabApi";
+import { EXTRA_TABS, LEFT_NAV_ROUTES } from "@/utils/routes";
 
 const AdminHomePage = () => {
   const [followers, setFollowers] = useState<any>({});
@@ -16,6 +22,8 @@ const AdminHomePage = () => {
   const handleFollowers = (data: any) => {
     setFollowers(data);
   };
+
+
 
   return (
     <section className='m-auto my-10 w-[80%] overflow-y-scroll main_scrollbar flex flex-col gap-8 max-[1850px]:w-[85%] max-[1650px]:w-[90%] max-[1570px]:w-[95%] max-[1470px]:w-[97%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'>

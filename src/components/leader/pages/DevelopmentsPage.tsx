@@ -62,57 +62,58 @@ export const DevelopmentPage: FC = () => {
                 }
             >
                 <section className="flex flex-col gap-8 max-[450px]:px-3">
-                    <div className="flex items-center gap-3 max-[750px]:flex-wrap">
+                    <div className="flex flex-col w-full gap-2">
                         <p className="font-semibold text-lg">Filters</p>
+                        <div className="flex items-center gap-3 max-[750px]:flex-wrap">
+                            <label className="flex gap-2 items-center" htmlFor="priority">
+                                <span className="font-medium">Priority</span>
+                                <select
+                                    id="priority"
+                                    value={priorityFilter}
+                                    onChange={(e) => setPriorityFilter(e.target.value)}
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                >
+                                    <option value="">All</option>
+                                    <option value="low">low</option>
+                                    <option value="moderate">moderate</option>
+                                    <option value="high">high</option>
+                                </select>
+                            </label>
 
-                        <label className="flex gap-2 items-center" htmlFor="priority">
-                            <span className="font-medium">Priority</span>
-                            <select
-                                id="priority"
-                                value={priorityFilter}
-                                onChange={(e) => setPriorityFilter(e.target.value)}
-                                className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-                            >
-                                <option value="">All</option>
-                                <option value="low">low</option>
-                                <option value="moderate">moderate</option>
-                                <option value="high">high</option>
-                            </select>
-                        </label>
+                            <label className="flex gap-2 items-center" htmlFor="category">
+                                <span className="font-medium">Category</span>
+                                <select
+                                    id="category"
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                >
+                                    <option value="">All</option>
+                                    {categories?.map((el) => (
+                                        <option key={el.id} value={el.id}>
+                                            {el.category}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
 
-                        <label className="flex gap-2 items-center" htmlFor="category">
-                            <span className="font-medium">Category</span>
-                            <select
-                                id="category"
-                                value={categoryFilter}
-                                onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-                            >
-                                <option value="">All</option>
-                                {categories?.map((el) => (
-                                    <option key={el.id} value={el.id}>
-                                        {el.category}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-
-                        <label className="flex gap-2 items-center" htmlFor="status">
-                            <span className="font-medium">Status</span>
-                            <select
-                                id="status"
-                                value={statusFilter}
-                                onChange={(e) => setStatusFilter(e.target.value)}
-                                className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
-                            >
-                                <option value="">All</option>
-                                {Object.keys(AGENDA_STATUS).map((el) => (
-                                    <option value={el} key={el}>
-                                        {AGENDA_STATUS[el as AGENDA_VAL].name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+                            <label className="flex gap-2 items-center" htmlFor="status">
+                                <span className="font-medium">Status</span>
+                                <select
+                                    id="status"
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value)}
+                                    className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
+                                >
+                                    <option value="">All</option>
+                                    {Object.keys(AGENDA_STATUS).map((el) => (
+                                        <option value={AGENDA_STATUS[el as AGENDA_VAL]?.name} key={AGENDA_STATUS[el as AGENDA_VAL]?.name}>
+                                            {AGENDA_STATUS[el as AGENDA_VAL].name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                        </div>
                     </div>
                     {filterData?.length > 0 ?
                         <ul className='grid min-[1160px]:grid-cols-2 max-[670px]:grid-cols-1 gap-5'>

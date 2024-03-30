@@ -72,8 +72,8 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
           access: data?.access,
           view_access: data?.view_access,
           poll_options: data?.pollType == "text + image" ? data?.imgOptions : data?.poll_options,
-          publish_date: moment(data?.publishDate).format("YYYY-MM-DD hh:mm:ss"),
-          close_date: moment(data?.expiresAt).format("YYYY-MM-DD hh:mm:ss"),
+          publish_date: moment(data?.publishDate).format("YYYY-MM-DD HH:mm:ss"),
+          close_date: moment(data?.expiresAt).format("YYYY-MM-DD HH:mm:ss"),
           ...Savedby()
         };
         const response = await savePolls(body);
@@ -225,11 +225,11 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
               <input
                 type='datetime-local'
                 id='expiresDate'
-                min={minDateLimit}
                 className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
                 {...register('expiresAt', {
                   required: 'Poll close date is required',
                 })}
+                min={watch("publishDate")}
               />
               <ErrorMessage
                 name={'publishDate'}

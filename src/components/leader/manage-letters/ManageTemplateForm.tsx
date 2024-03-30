@@ -39,7 +39,6 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
     },
   })
   const formSubmitHandler = (data: TemplateFormFields) => {
-    console.log(data)
   }
 
   const editor = useRef(null)
@@ -94,8 +93,8 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
                 <input
                   id='status'
                   className={`w-full border border-gray-400 text-l px-3 py-2 rounded-md focus:bg-gray-100 outline-none transition-all ${errors.tempHeader
-                      ? 'bg-red-100 border-red-400 focus:bg-red-100'
-                      : ''
+                    ? 'bg-red-100 border-red-400 focus:bg-red-100'
+                    : ''
                     }`}
                   {...register('tempHeader', {
                     // VALIDATIONS
@@ -119,8 +118,8 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
                 <select
                   id='status'
                   className={`w-full border border-gray-400 text-l px-3 py-2 rounded-md focus:bg-gray-100 outline-none transition-all ${errors.status
-                      ? 'bg-red-100 border-red-400 focus:bg-red-100'
-                      : ''
+                    ? 'bg-red-100 border-red-400 focus:bg-red-100'
+                    : ''
                     }`}
                   {...register('status', {
                     // VALIDATIONS

@@ -19,9 +19,9 @@ const AdminProfileFeedsPage = () => {
             <ShortcutsBox />
           </div>
           <TimeLinePage is_my_postandstories={true} />
-          <div className="flex flex-col self-start gap-5 max-[1200px]:hidden">
+          {/* <div className="flex flex-col self-start gap-5 max-[1200px]:hidden">
             <BriefProfileInfoBox />
-          </div>
+          </div> */}
         </div>
       </section>
     </>

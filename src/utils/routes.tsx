@@ -140,3 +140,29 @@ export const LEFT_NAV_ROUTES = [
     tabname: "Manage Categories"
   },
 ]
+export const EXTRA_TABS = [{
+  link: '/user/letter/add-letter',
+  link2: '/employee-access/letter/add-letter',
+  tabname: "Manage Letters",
+},
+{
+  link: '/user/profile/feed',
+  name: 'feed',
+  tabname: "Leader"
+},
+{
+  link: '/user/profile/gallery',
+  name: 'gallery',
+  tabname: "Leader"
+},
+{
+  link: '/user/profile/agenda',
+  name: 'agenda',
+  tabname: "Manage Agenda",
+},
+{
+  link: '/user/profile/developments',
+  name: 'developments',
+  tabname: "Manage Developments",
+},
+]

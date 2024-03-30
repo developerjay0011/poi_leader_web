@@ -44,7 +44,7 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
               return (
                 <tr key={i} className={`bg-white py-3 border-b border-gray-300 transition-all`}>
                   <td className='border-r align-text-center text-center max-w-[50px]'>
-                    {i + 1}.
+                    {el.sr}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>
                     {el.file_name}
@@ -73,7 +73,7 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
               )
             })
           ) : (
-            <ErrorTableRow colNo={6} />
+            <ErrorTableRow colNo={10} />
           )}
         </tbody>
       </table>

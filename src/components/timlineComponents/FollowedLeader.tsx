@@ -106,6 +106,7 @@ const TrendingUser: FC<TrendingUserProps> = ({
         type="button"
         className="text-orange-500 hover:underline ml-auto text-[15px]"
         onClick={() => handleFollowers(id)}
+        style={{ display: userDetails?.leaderId == id ? "none" : "flex" }}
       >
         UnFollow
       </button>
