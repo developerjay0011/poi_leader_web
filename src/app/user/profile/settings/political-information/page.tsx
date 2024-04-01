@@ -41,17 +41,23 @@ const PoliticalInformationPage: FC = () => {
 
     tryCatch(
       async () => {
-        const response = await submitLeaderForm({ ...leaderProfile, political_info: { ...resBody, } });
+
+        const response = await submitLeaderForm({
+          ...leaderProfile,
+          request_status: 'Re-submitted',
+          political_info: { ...resBody, }
+        });
         if (response?.success) {
-          dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
+          await dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
+          await dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: "Your profile is under approval" }))
           dispatch(authActions.logout());
-          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
       }
     );
   }
+
 
   return (
     <form
