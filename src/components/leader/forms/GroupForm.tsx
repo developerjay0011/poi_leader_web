@@ -6,8 +6,7 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 import { tryCatch } from '@/config/try-catch'
-import { getGroups, saveGroup } from '@/redux_store/group/groupAPI'
-import { groupActions } from '@/redux_store/group/groupSlice'
+import { saveGroup } from '@/redux_store/group/groupAPI'
 import { Input } from '@/components/Input'
 
 interface GroupFormProps {
@@ -56,6 +55,8 @@ export const GroupForm: FC<GroupFormProps> = ({ setShowModal, setIsEdit, isEdit,
     if (isEdit?.id) {
       setValue("Name", isEdit.name)
       setValue("status", isEdit.isactive ? 'Active' : "Deactive")
+    } else {
+      setValue("status", 'Active')
     }
   }, [isEdit])
 

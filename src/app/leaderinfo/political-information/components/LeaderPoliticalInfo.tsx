@@ -88,8 +88,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
     if (hasMinistry == 'yes' && fields?.length == 0 && ((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID))) {
       append({ ministryid: '', ministrytype: '' })
     }
-  }, [hasMinistry])
-
+  }, [hasMinistry, designation_id])
 
   return (
     <div className='grid grid-cols-2 gap-4 col-span-full w-full'>

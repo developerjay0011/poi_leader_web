@@ -89,10 +89,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
   return (
     <>
       <article className="border bg-white rounded-md relative flex items-start max-[450px]:flex-col">
-        <h3
-          className={`self-stretch uppercase border flex flex-col-reverse justify-evenly items-center px-[10px] text-[18px] max-[700px]:flex-row max-[700px]:justify-around max-[700px]:py-1 min-[700px]:py-3 ${PRIORITIES[priority as PRIORITY]?.classes
-            } `}
-        >
+        <h3 className={`self-stretch uppercase border flex flex-col-reverse justify-evenly items-center px-[10px] text-[18px] max-[700px]:flex-row max-[700px]:justify-around max-[700px]:py-1 min-[700px]:py-3 ${PRIORITIES[priority as PRIORITY]?.classes} `}>
           {PRIORITIES[priority as PRIORITY]?.name?.split("")?.map((el, i) => (
             <span className="min-[700px]:-rotate-90" key={i}>
               {el}
@@ -101,12 +98,12 @@ export const AgendaPost: FC<AgendaPostProps> = ({
           ))}
         </h3>
 
-        <section className="flex flex-col gap-8 max-[450px]:px-3">
+        <section className="flex flex-col gap-8 max-[450px]:px-3 w-[100%]">
           <div className="flex items-center gap-3 py-3 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
             <div>
               <h4 className="font-[600] text-lg text-orange-500">Created by : {created_by_type}</h4>
               <p className="flex items-center capitalize gap-2 text-sm font-[500]">
-                <span>created an agenda: {moment(creation_date).format("YYYY-MM-DD")}</span>
+                <span>created Date: {moment(creation_date).format("YYYY-MM-DD")}</span>
               </p>
             </div>
 

@@ -47,12 +47,14 @@ export const FileTypeForm: FC<FileTypeFormProps> = ({ onClose, submitting, headi
           ministry_name: item.name
         }))
       }))
-      list = modifiedData.reduce((acc, curr) => {
+      list = modifiedData?.length > 0 ? modifiedData.reduce((acc, curr) => {
         return acc.concat(curr.officers);
-      }, []);
+      }, []) : []
     }
     setofficer(list)
   }
+
+
   const setToFieldValue = (val: any) => { setValue("to", val) };
   const dispatch = cusDispatch();
   const formSubmitHandler = (data: FormFields) => {

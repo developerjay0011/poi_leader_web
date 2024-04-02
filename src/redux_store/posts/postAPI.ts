@@ -80,7 +80,7 @@ const ConvertCommonpost = (list = []): any => {
         userData?.polls.forEach((post: any) => {
           combinedData.push({
             type: "polls",
-            post: { ...post, createddate: moment(post?.publish_date, "YYYY-MM-DD hh:mm:ss").format("YYYY-MM-DD HH:mm:ss") },
+            post: { ...post, createddate: post?.publish_date },
             userdetails: userdetails,
           });
         });

@@ -18,12 +18,14 @@ import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
+import { EMPLOYEE_ID, LEADER_ID, LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
 import { AuthRoutes, EmployeeProtectedRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
+import { fetchAccessTabs, fetchEmployeeAccessTabs } from "@/redux_store/accesstab/tabApi";
+import { accessAction } from "@/redux_store/accesstab/tabSlice";
 
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -85,27 +87,32 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string, employee_detail: any) => {
     setCookie(TOKEN_KEY, loginResponse.token);
     if (usertype == "leader employee") {
-      setCookie(USER_VERIFY, 'true');
+      await setCookie(USER_VERIFY, 'true');
       const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid, employee_detail };
       const serializedData = JSON.stringify(userData);
-      setCookie(USER_INFO, serializedData);
-      dispatch(leaderActions.setLeaderProfile(data.leader_detail));
-      dispatch(authActions.setUserData(userData));
-      setCookie(USER_TYPE, 'employee');
-      router.push(EmployeeProtectedRoutes.employee);
-      setLoggingIn(false);
+      await setCookie(USER_INFO, serializedData);
+      await dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+      await dispatch(authActions.setUserData(userData));
+      await setCookie(USER_TYPE, 'employee');
+      await setCookie(EMPLOYEE_ID, data?.user_detail.employeeid);
+      await router.push(EmployeeProtectedRoutes.employee);
+      var tabs = await fetchEmployeeAccessTabs(data?.user_detail.employeeid, { nav: true, router: router, setLoggingIn: setLoggingIn })
+      if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
       return
     }
     if (usertype != "leader employee") {
       const userData = { ...data.user_detail, leaderId: data?.leader_detail.id };
-      dispatch(leaderActions.setLeaderProfile(data.leader_detail));
-      dispatch(authActions.setUserData(userData));
+      await dispatch(leaderActions.setLeaderProfile(data.leader_detail));
+      await dispatch(authActions.setUserData(userData));
       const serializedData = JSON.stringify(userData);
-      setCookie(USER_INFO, serializedData);
+      await setCookie(USER_INFO, serializedData);
       if (data?.leader_detail?.is_profile_complete && data?.leader_detail?.request_status === "Approved") {
-        setCookie(USER_TYPE, 'leader');
-        setCookie(USER_VERIFY, 'true');
-        router.push(ProtectedRoutes.user);
+        await setCookie(USER_TYPE, 'leader');
+        await setCookie(USER_VERIFY, 'true');
+        var tabs = await fetchAccessTabs(data.user_detail?.id, { nav: true, router: router, setLoggingIn: setLoggingIn })
+        if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
+        await router.push(ProtectedRoutes.user);
+        return
       }
       setLoggingIn(false);
     }

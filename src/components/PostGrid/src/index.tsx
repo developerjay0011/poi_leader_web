@@ -102,9 +102,8 @@ const ReactLikePostsFB = ({ imagesOrVideos }: ReactLikePostsFBProps) => {
   const renderimagesOrVideos = (src: string, index: number) => {
     return (
       <div
-        className={`col-${
-          imagesOrVideos.length > 5 ? 5 : imagesOrVideos.length
-        } ${imagesOrVideos.length > 5 && index === 5 ? "bigger-5" : ""}`}
+        className={`col-${imagesOrVideos.length > 5 ? 5 : imagesOrVideos.length
+          } ${imagesOrVideos.length > 5 && index === 5 ? "bigger-5" : ""}`}
         data-count={imagesOrVideos.length - 5}
         onClick={(e) => handleClickItem(e, index)}
         onTouchStart={(e) => handleClickItem(e, index)}

@@ -455,7 +455,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
               id={`referencies.${i}.age` as keyof UserDetails}
               key={`referencies.${i}.age` as keyof UserDetails}
               title='Age'
-              type='text'
+              type='number'
               required
               placeholder='XX'
               validations={{ required: 'Reference Age is required' }}

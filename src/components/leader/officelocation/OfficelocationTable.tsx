@@ -38,7 +38,7 @@ export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, h
               return (
                 <tr key={i} className={`bg-white py-2 border-b border-gray-300 transition-all`}>
                   <td className='border-r align-text-center text-center max-w-[10px]'>
-                    {i + 1}.
+                    {el.sr}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>
                     {el.location}
@@ -61,7 +61,7 @@ export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, h
               )
             })
           ) : (
-            <ErrorTableRow colNo={6} />
+            <ErrorTableRow colNo={10} />
           )}
         </tbody>
       </table>

@@ -473,7 +473,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
               register={register}
               id={`references.${i}.age` as keyof LeaderFormFields}
               title="Age"
-              type="text"
+              type="number"
               required
               placeholder="XX"
               validations={{ required: "Reference Age is required" }}
@@ -546,8 +546,8 @@ const Activity: FC<{
           placeholder="description about the picture uploaded"
           id={`activities.${index}.description`}
           className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${errors.activities?.[index]?.description
-              ? "bg-red-100 text-red-500 border-red-400"
-              : "focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50"
+            ? "bg-red-100 text-red-500 border-red-400"
+            : "focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50"
             }`}
           rows={3}
         ></textarea>

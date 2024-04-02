@@ -39,7 +39,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
       priority: data?.priority,
       development_title: data?.title,
       ...Savedby(),
-      creation_date: moment(data.creation_date).format('YYYY-MM-DD hh:mm:ss'),
+      creation_date: moment(data.creation_date).format('YYYY-MM-DD HH:mm:ss'),
     }
     try {
       const response = await saveDevelopment(body);
@@ -88,20 +88,19 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
               required: "title is required",
             }}
           />
-          <Input
-            errors={errors}
-            id="description"
-            placeholder="description"
-            register={register as any}
-            title="description"
-            type="text"
-            required
-            validations={{
-              required: "description is required",
-            }}
-          />
         </div>
-
+        <Input
+          errors={errors}
+          id="description"
+          placeholder="description"
+          register={register as any}
+          title="description"
+          type="textarea"
+          required
+          validations={{
+            required: "description is required",
+          }}
+        />
         <div className="flex items-center justify-center gap-5">
           <Input
             errors={errors}
@@ -114,6 +113,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
             validations={{
               required: "attachments is required",
             }}
+            multiple={true}
           />
           <Input
             errors={errors}
@@ -187,9 +187,12 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
         </div>
 
         {development?.attachments?.map((el: any) => (
-          <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
-            {el.split('/').pop()}
-          </a>
+          <div className="flex col-span-full gap-2" >
+            <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
+              {el.split('/').pop()}
+            </a>
+
+          </div>
         ))}
 
         <div className='w-full bg-zinc-200 h-[1px]' />

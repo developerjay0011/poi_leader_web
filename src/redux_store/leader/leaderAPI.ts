@@ -130,3 +130,14 @@ export const ReadLeaderNotification = async (body: any) => {
   );
 };
 
+
+
+
+export const GetLeaderList = async () => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.get(APIRoutes.GetLeaderList);
+      return res.data;
+    }
+  );
+};

@@ -96,12 +96,13 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, developmentid, is
           id="attachments"
           placeholder="attachments"
           register={register}
-          title="Attachments"
+          title="Attachment"
           type="file"
           required={!isedit}
           validations={{
             required: "attachments is required",
           }}
+          multiple={true}
         />
 
         <Input

@@ -13,6 +13,10 @@ import { ToastType } from "@/constants/common";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { SendMessage } from "../forms/SendMessageFrom";
 import { Modal } from "@/components/modal/modal";
+import { MembersToGroup } from "../forms/Memberstogroup";
+import { MultiSelect } from "@/utils/MultiSelect";
+import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns } from '@/constants/common'
+import moment from "moment";
 
 interface DirectoryPageProps { }
 
@@ -29,13 +33,17 @@ interface Edit {
 export const DirectoryPage: FC<DirectoryPageProps> = () => {
   const [searchString, setSearchString] = useState("");
   const [isDirectory, setIsDirectory] = useState(false);
+  const { groups } = cusSelector((state) => state.group);
   const [selectGroup, setSelectGroup] = useState([])
+  const [showMember, setShowMember] = useState('')
   const [messagemodal, setMessagemodal] = useState(false) as any
   const [isEdit, setIsEdit] = useState(false);
   const [editDirectoryData, setEditDirectoryData] = useState<Edit | null>();
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((state) => state.auth);
-  const { register, setValue, watch, formState: { errors }, handleSubmit, reset, } = useForm<UserDetails>();
+  const { register, setValue, watch, formState: { errors }, handleSubmit, reset, } = useForm<UserDetails | any>();
+  const setToFieldValue = (val: any) => { setValue("groups", val) };
+  var selectedgroups = watch("groups")
 
   useEffect(() => {
     (async () => {
@@ -48,19 +56,19 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
     })();
   }, [dispatch, userDetails?.leaderId, isDirectory]);
 
-  const formSubmitHandler = async (data: UserDetails) => {
+  const formSubmitHandler = async (data: any) => {
     tryCatch(
       async () => {
         const currentDate = new Date().toISOString();
 
         const body = {
-          id: isEdit ? editDirectoryData?.id : null,
           leaderid: userDetails?.leaderId || "",
-          name: data?.Name,
-          mobile: data?.Phone,
-          email: data?.Email,
+          mobile: data?.mobile,
           isactive: true,
           createddate: currentDate,
+          ...data,
+          id: isEdit ? editDirectoryData?.id : null,
+          groups: data?.groups?.map((item: any) => item?.id)
         };
 
         const response = await saveDirectory(body);
@@ -79,9 +87,16 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
     setEditDirectoryData(data);
     setIsDirectory(true);
     setIsEdit(true);
-    setValue("Name", data.name);
-    setValue("Phone", data.mobile);
-    setValue("Email", data.email);
+    setValue("name", data.name);
+    setValue("mobile", data.mobile);
+    setValue("email", data.email);
+    setValue("groups", data?.groups);
+    setValue("dob", moment(data?.dob).format("YYYY-MM-DD"));
+    setValue("gender", data?.gender);
+    setValue("occupation", data?.occupation);
+    setValue("qualification", data?.qualification);
+    setValue("whatsapp_no", data?.whatsapp_no);
+    setValue("address", data?.address);
   };
 
   return (
@@ -92,10 +107,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
         setSearchStr={setSearchString}
         rightButton={
           <div className="flex items-center justify-end">
-            <button
-              className={`self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-              onClick={() => setIsDirectory(true)}
-            >
+            <button className={`self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`} onClick={() => { reset(); setIsDirectory(true) }}>
               Add Directory
             </button>
           </div>
@@ -120,9 +132,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             </section>
 
             <section className="flex flex-col gap-5 max-[550px]:ml-auto max-[460px]:mt-4">
-              {/* CTA'S */}
               <div className="flex items-center justify-end gap-3">
-                {/* ADD OR EDIT Button */}
                 <button onClick={() => {
                   if (selectGroup?.length > 0) {
                     setMessagemodal(true)
@@ -131,6 +141,18 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
                   }
                 }} className="px-5 py-1 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600">
                   send message
+                </button>
+                <button onClick={() => {
+                  if (selectGroup?.length > 0) {
+                    setShowMember("Add To Group")
+                  } else {
+                    dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Please Select Directory" }))
+                  }
+                }} className="px-5 py-1 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600">
+                  Add To Group
+                </button>
+                <button onClick={() => { setShowMember("Upload Directory") }} className="px-5 py-1 bg-orange-500 text-orange-50 rounded-md text-sm capitalize transition-all hover:bg-orange-600">
+                  Upload Directory
                 </button>
               </div>
             </section>
@@ -144,16 +166,15 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
           />
         </section>
       </PeoplesComponentWrapper>
-      {/* Add Directory From  */}
       {isDirectory &&
         <Modal heading={isEdit ? "Edit Directory" : "Add Directory"} onClose={() => { setIsDirectory(false), setIsEdit(false); }}>
-          <form className="grid grid-cols-1 gap-x-4 gap-y-5 px-7 py-5" onSubmit={handleSubmit(formSubmitHandler)}>
+          <form className="grid gap-5 grid-cols-2 gap-x-4 gap-y-5 px-7 py-5" onSubmit={handleSubmit(formSubmitHandler)}>
             <Input
               errors={errors}
-              id="Name"
-              placeholder="Name"
+              id="name"
+              placeholder="name"
               register={register}
-              title="Name"
+              title="name"
               type="text"
               required
               validations={{
@@ -162,22 +183,30 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             />
             <Input
               errors={errors}
-              id="Phone"
-              placeholder="Phone"
+              id="mobile"
+              placeholder="mobile"
               register={register}
-              title="Phone"
+              title="mobile"
               type="number"
               required
               validations={{
-                required: "Phone is required",
+                required: "mobile is required",
+                validate: {
+                  notAValidNo(val) {
+                    return (
+                      val.toString().length === 10 ||
+                      "please enter a valid phone no"
+                    );
+                  },
+                },
               }}
             />
             <Input
               errors={errors}
-              id="Email"
-              placeholder="Email"
+              id="email"
+              placeholder="email"
               register={register}
-              title="Email"
+              title="email"
               type="text"
               required
               validations={{
@@ -189,7 +218,94 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
                 },
               }}
             />
-
+            <MultiSelect
+              title={"Group"}
+              svalue={Array.isArray(selectedgroups) ? groups?.filter((item) => selectedgroups?.includes(item?.id))?.map((item) => ({ id: item?.id, value: item?.name })) : []}
+              placeholder="select Group"
+              options={groups?.map((item) => ({ id: item?.id, value: item?.name }))}
+              setValue={(value: any) => { setToFieldValue(value) }}
+            />
+            <Input
+              register={register as any}
+              errors={errors}
+              title="Select Group"
+              type="date"
+              id={"dob" as any}
+              validations={{
+                required: "group is required",
+              }}
+            />
+            <Input
+              register={register as any}
+              errors={errors}
+              title="Select Gender"
+              type="select"
+              id={"gender" as any}
+              validations={{
+                required: "gender is required",
+              }}
+              selectField={{
+                options: GenderDropdowns,
+                title: "select gender"
+              }}
+            />
+            <Input
+              register={register as any}
+              errors={errors}
+              title="Select Occupation"
+              type="text"
+              id={"occupation" as any}
+              validations={{
+                required: "occupation is required",
+              }}
+            />
+            <Input
+              register={register as any}
+              errors={errors}
+              title="Select Oualification"
+              type="select"
+              id={"qualification" as any}
+              selectField={{
+                options: [
+                  { id: "below 10th", value: "below 10th" },
+                  { id: "10th pass", value: "10th pass" },
+                  { id: "12th pass", value: "12th pass" },
+                  { id: "under graduate", value: "under graduate" },
+                  { id: "post graduate", value: "post graduate" },
+                  { id: "p.h.d", value: "p.h.d" },
+                  { id: "certificate", value: "certificate" },
+                  { id: "others", value: "others" },
+                ],
+                title: "select qualification"
+              }}
+            />
+            <Input
+              errors={errors}
+              id="whatsapp_no"
+              placeholder="Whatsapp no."
+              register={register}
+              title="Whatsapp no"
+              type="number"
+              validations={{
+                validate: {
+                  notAValidNo(val) {
+                    return (
+                      val.toString().length === 10 ||
+                      "please enter a valid whatsapp no"
+                    );
+                  },
+                },
+              }}
+            />
+            <Input
+              errors={errors}
+              id="address"
+              placeholder="Address."
+              register={register}
+              title="Address"
+              type="textarea"
+              fullWidth
+            />
             <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
             <div className="flex justify-end col-span-full gap-2">
               <a
@@ -216,6 +332,16 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
           onClose={() => { setMessagemodal(false) }}
         />
       }
+      {showMember && (
+        <Modal heading={showMember} onClose={() => { setShowMember('') }}>
+          <MembersToGroup
+            showMember={showMember}
+            setShowMember={setShowMember}
+            selectGroup={selectGroup}
+            setSelectGroup={setSelectGroup}
+          />
+        </Modal>
+      )}
     </>
   );
 };

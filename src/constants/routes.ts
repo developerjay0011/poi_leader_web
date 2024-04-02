@@ -63,11 +63,12 @@ export const APIRoutes = {
   SaveOfficeLocation: `${API_Prefix}/leader/SaveOfficeLocation`,
   DeleteOfficeLocation: `${API_Prefix}/leader/DeleteOfficeLocation`,
   SaveTicketManually: `${API_Prefix}/leader/SaveTicketManually`,
+  GetLeaderList: `${API_Prefix}/leader/GetLeaderList`,
   //Group Endpoints
   getGroups: `${API_Prefix}/leader/getgroups/{{leaderId}}`,
   saveGroup: `${API_Prefix}/leader/savegroup`,
   getSingleGroup: `${API_Prefix}/leader/getsinglegroupdetail`,
-
+  ImportDirectories: `${API_Prefix}/leader/ImportDirectories`,
   // Follow Following Endpoints
   getFollowers: `${API_Prefix}/leader/followerList/{{leaderId}}`,
   getFollowering: `${API_Prefix}/leader/followingList/{{leaderId}}`,

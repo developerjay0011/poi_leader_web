@@ -16,7 +16,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl, setusername } from "@/config/get-image-url";
-import { GetBirthdayList, followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { GetBirthdayList, GetLeaderList, followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
@@ -57,7 +57,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const { userDetails } = cusSelector((state: RootState) => state.auth);
-  const { leaderProfile, trendingLeader, following } = cusSelector((state: RootState) => state.leader);
+  const { leaderProfile, leaderlist, following } = cusSelector((state: RootState) => state.leader);
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
@@ -66,7 +66,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   heading = heading === "user" || heading === "employee access" ? "home" : heading;
   const searchFilterFunction = (text: string) => {
     if (text) {
-      const newData = trendingLeader?.filter(
+      const newData = leaderlist?.filter(
         function (item) {
           const itemData = item?.["name"] ? item?.["name"].toUpperCase() : ''.toUpperCase();
           const textData = text.toUpperCase();
@@ -75,7 +75,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
       )
       return newData
     } else {
-      return trendingLeader
+      return leaderlist
     };
   }
   useEffect(() => {
@@ -89,6 +89,8 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
         setShowNotifications(false);
     });
   }, []);
+
+
   useEffect(() => {
     if (user_type == "leader") {
       (async () => {
@@ -99,7 +101,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             dispatch(leaderActions.setLeaderProfile(leaderRes));
             if (leaderRes?.request_status === "Rejected") {
               dispatch(authActions.logout())
-              window.location.href = '/' 
               return
             }
             const Data = await getDirectory(userDetails?.leaderId as string);
@@ -110,6 +111,9 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             dispatch(commonActions.setLeaderOptions(LeadersDropdown));
 
             // TrendingLeader
+
+            const leaderList = await GetLeaderList();
+            dispatch(leaderActions.setLeaderlist(leaderList))
             const trendingLeader = await getTrendingLeaderList();
             dispatch(leaderActions.setTrendingLeader(trendingLeader))
 
@@ -178,8 +182,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
             dispatch(locationAction.storeLocation(OfficeLocations));
           }
-        } else {
-          router.push(AuthRoutes.login)
         }
       })();
     }
@@ -190,7 +192,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
           if (userDetails?.leaderId) {
             const employee = await GetSingleEmployeeDetail({
               "leaderid": userDetails?.leaderId,
-              "employeeid": "string"
+              "employeeid": userDetails?.employeeId
             });
             dispatch(employeeAction.setemployedetails(employee));
 
@@ -240,8 +242,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
             dispatch(locationAction.storeLocation(OfficeLocations));
           }
-        } else {
-          router.push(AuthRoutes.login)
         }
       })();
     }
@@ -342,6 +342,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
 
             {/* USER Profile */}
             <section className="flex items-center gap-4 ml-auto relative">
+              {setusername(leaderProfile) && <p className="capitalize">{setusername(leaderProfile)}</p>}
               <button
                 id="userDisplayPic"
                 onClick={() => setShowAdminMenu((lst) => !lst)}
@@ -374,7 +375,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             </section>
 
             <section className="flex items-center gap-4 ml-auto relative">
-              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()), window.location.href = '/' }}>
+              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()) }}>
                 <FaPowerOff />log out
               </button>
             </section>
@@ -459,7 +460,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
               <section className="flex items-center gap-4 ml-auto relative">
-                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()), window.location.href = '/' }}>
+                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()) }}>
                   <FaPowerOff />log out
                 </button>
               </section>
@@ -524,7 +525,7 @@ const BriefUserInfo: FC<{
             {name}
             <span className="font-medium text-[14px]">{designation}</span>
           </p>
-          <button onClick={() => { handleClick(id, isFollowing) }} type="button" className="ml-auto">
+          <button onClick={() => { handleClick(id, isFollowing) }} style={{ display: userDetails?.leaderId == id ? "none" : "flex" }} type="button" className="ml-auto">
             {!isFollowing ? <RiUserAddFill className="text-sky-950 text-2xl hover:text-orange-500" /> :
               <FaUserTimes className="text-sky-950 text-2xl hover:text-orange-500" />
             }

@@ -54,12 +54,10 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
     };
     try {
       if (!is_like) {
-        const data = await LikePost(likeBody);
-        toast.success(data.message);
+        await LikePost(likeBody);
         Getpost();
       } else {
-        const data = await UnlikePostorStory(UnlikeBody);
-        toast.success(data.message);
+        await UnlikePostorStory(UnlikeBody);
         Getpost();
       }
     } catch (error) {

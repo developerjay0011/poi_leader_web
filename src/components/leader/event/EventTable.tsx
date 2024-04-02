@@ -68,7 +68,7 @@ export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent,
               return (
                 <>
                   <tr className='border-b border-gray-300'>
-                    <td className="text-center py-2 p-2 border">{index + 1}</td>
+                    <td className="text-center py-2 p-2 border">{Event.sr}.</td>
                     <td className="text-center py-2 p-2 border">{Event.title}</td>
                     <td className="text-center py-2 p-2 border">{Event.description}</td>
                     <td className="text-center py-2 p-2 border">{Event.ispublic ? "Public" : "Private"}</td>

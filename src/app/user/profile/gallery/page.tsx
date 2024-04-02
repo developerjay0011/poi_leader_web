@@ -17,6 +17,8 @@ import { ToastType } from "@/constants/common";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 import { Datanotfound } from "@/utils/Datanotfound";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
+import PostGrid from "../../../../components/PostGrid";
+import { getImageUrl } from "@/config/get-image-url";
 
 const AdminProfileGalleryPage = () => {
   const [searchStr, setSearchStr] = useState("");
@@ -25,107 +27,111 @@ const AdminProfileGalleryPage = () => {
   const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
   const [media, setMedia] = useState<NewPostFields[]>([]);
   const dispatch = cusDispatch();
+  const [type, setType] = useState("");
   const { userDetails } = cusSelector((st) => st.auth);
   const { gallery } = cusSelector((state) => state.gallery);
+  const mypostData: any = cusSelector((state) => state.posts.posts);
+  const mediaArray = Array.isArray(mypostData) ? mypostData.flatMap((post: any) => post.media || []) : [];
+  const filterDataOnPriority = mediaArray?.filter((el: any) => type ? el?.type?.includes(type) : el);
+  // useEffect(() => {
+  //   (async () => {
+  //     tryCatch(
+  //       async () => {
+  //         const data = await getGalleryData(userDetails?.leaderId as string);
+  //         dispatch(galleryActions.storeGallery(data))
+  //       })
+  //   })();
+  // }, [userDetails?.leaderId, dispatch, updateGallery]);
+
+  // const deletedata = (data: any) => {
+  //   setUpdateGallery(data);
+  // };
+
+  // const onCancel = () => {
+  //   setIsGallery(false);
+  // };
+
+  // const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+  //   const data = e.target.files as FileList;
+
+  //   if (!data) return;
+
+  //   for (let i = 0; i < data.length; i++) {
+  //     const uploadData = data[i];
+
+  //     // checking for media type
+  //     if (
+  //       !(
+  //         uploadData.type.includes("image") || uploadData.type.includes("video")
+  //       )
+  //     )
+  //       return;
+
+  //     // converting data into base 64
+  //     const convertedData = await convertFileToBase64(uploadData);
+
+  //     setApiMedia((lst) => {
+  //       const oldData = [...lst];
+
+  //       oldData.push({
+  //         type: uploadData.type.split("/")[0] as PostType,
+  //         media: uploadData as any,
+  //         id: GenerateId(),
+  //       });
+
+  //       return oldData;
+  //     });
+  //     setMedia((lst) => {
+  //       const oldData = [...lst];
+  //       oldData.push({
+  //         type: uploadData.type.split("/")[0] as PostType,
+  //         media: convertedData as string,
+  //         id: GenerateId(),
+  //       });
+
+  //       return oldData;
+  //     });
+  //   }
+  // };
+
+  // const removeImageHandler = (id: string) => {
+  //   setMedia((lst) => {
+  //     const newData = [...lst];
+
+  //     newData.splice(
+  //       newData.findIndex((dt) => dt.id === id),
+  //       1
+  //     );
+
+  //     return newData;
+  //   });
+  // };
+
+  // const handleSave = async () => {
+  //   tryCatch(
+  //     async () => {
+  //       const formData = new FormData();
+  //       formData.append("leaderid", userDetails?.leaderId || "");
+  //       for (let i = 0; i < apimedia.length; i++) {
+  //         const item: any = apimedia[i];
+  //         formData.append("media", item?.media);
+  //       }
+
+  //       const response = await saveGallery(formData);
+  //       if (response?.success) {
+  //         onCancel();
+  //         setApiMedia([])
+  //         setMedia([])
+  //         setUpdateGallery(response);
+  //         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
+  //       } else {
+  //         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
+  //       }
+  //     })
+  // };
 
 
 
-  useEffect(() => {
-    (async () => {
-      tryCatch(
-        async () => {
-          const data = await getGalleryData(userDetails?.leaderId as string);
-          dispatch(galleryActions.storeGallery(data))
-        })
-    })();
-  }, [userDetails?.leaderId, dispatch, updateGallery]);
-
-  const deletedata = (data: any) => {
-    setUpdateGallery(data);
-  };
-
-  const onCancel = () => {
-    setIsGallery(false);
-  };
-
-  const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-    const data = e.target.files as FileList;
-
-    if (!data) return;
-
-    for (let i = 0; i < data.length; i++) {
-      const uploadData = data[i];
-
-      // checking for media type
-      if (
-        !(
-          uploadData.type.includes("image") || uploadData.type.includes("video")
-        )
-      )
-        return;
-
-      // converting data into base 64
-      const convertedData = await convertFileToBase64(uploadData);
-
-      setApiMedia((lst) => {
-        const oldData = [...lst];
-
-        oldData.push({
-          type: uploadData.type.split("/")[0] as PostType,
-          media: uploadData as any,
-          id: GenerateId(),
-        });
-
-        return oldData;
-      });
-      setMedia((lst) => {
-        const oldData = [...lst];
-        oldData.push({
-          type: uploadData.type.split("/")[0] as PostType,
-          media: convertedData as string,
-          id: GenerateId(),
-        });
-
-        return oldData;
-      });
-    }
-  };
-
-  const removeImageHandler = (id: string) => {
-    setMedia((lst) => {
-      const newData = [...lst];
-
-      newData.splice(
-        newData.findIndex((dt) => dt.id === id),
-        1
-      );
-
-      return newData;
-    });
-  };
-
-  const handleSave = async () => {
-    tryCatch(
-      async () => {
-        const formData = new FormData();
-        formData.append("leaderid", userDetails?.leaderId || "");
-        for (let i = 0; i < apimedia.length; i++) {
-          const item: any = apimedia[i];
-          formData.append("media", item?.media);
-        }
-
-        const response = await saveGallery(formData);
-        if (response?.success) {
-          onCancel();
-          setApiMedia([])
-          setMedia([])
-          setUpdateGallery(response);
-          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-        } else {
-          dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-        }
-      })
-  };
 
   return (
     <>
@@ -137,15 +143,15 @@ const AdminProfileGalleryPage = () => {
             heading='Gallery'
             searchStr={''}
             setSearchStr={''}
-            rightButton={
-              <div className="flex items-center justify-end">
-                <button
-                  className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
-                  onClick={() => setIsGallery(true)}
-                >
-                  Add Media
-                </button>
-              </div>
+            rightButton={""
+              // <div className="flex items-center justify-end">
+              //   <button
+              //     className={`flex items-center gap-2 self-right text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+              //     onClick={() => setIsGallery(true)}
+              //   >
+              //     Add Media
+              //   </button>
+              // </div>
             }
           >
             <div className="py-7 pt-3 flex items-center justify-between">
@@ -154,6 +160,8 @@ const AdminProfileGalleryPage = () => {
                 <select
                   id="filter"
                   className="py-1 px-3 text-md border border-gray-300 outline-none text-gray-900 bg-white rounded-md cursor-pointer capitalize"
+                  onChange={(e) => setType(e.target.value)}
+                  value={type}
                 >
                   <option value="">All</option>
                   <option value="video">video</option>
@@ -162,19 +170,20 @@ const AdminProfileGalleryPage = () => {
               </label>
             </div>
 
-            {gallery.length > 0 ?
+            {filterDataOnPriority && filterDataOnPriority?.length > 0 ?
               <section className="pb-8">
-                <ul className="grid grid-cols-5 gap-2 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
-                  {gallery &&
-                    gallery.map((userMedia, index) => {
-                      return (
-                        <BriefPost
-                          key={index}
-                          userMedia={userMedia}
-                          deletedata={deletedata}
-                        />
-                      );
-                    })}
+                <ul className="grid grid-cols-5 gap-3 max-[1300px]:grid-cols-4 max-[750px]:grid-cols-3 max-[750px]:gap-1 max-[550px]:grid-cols-2 max-[450px]:grid-cols-1">
+                  {filterDataOnPriority?.map((userMedia, index) => {
+                    return (
+                      <BriefPost
+                        key={index}
+                        index={index}
+                        userMedia={userMedia}
+                        images={mediaArray?.filter((el: any) => el?.type?.includes('image'))?.map((item: any) => getImageUrl(item.media))}
+                      // deletedata={deletedata}
+                      />
+                    )
+                  })}
                 </ul>
               </section>
               :
@@ -182,7 +191,7 @@ const AdminProfileGalleryPage = () => {
             }
           </PeoplesComponentWrapper>
         </section>
-        <AnimatePresence mode="wait">
+        {/* <AnimatePresence mode="wait">
           {isGallery && (
             <m.div
               initial={{ opacity: 0 }}
@@ -204,7 +213,6 @@ const AdminProfileGalleryPage = () => {
                 <h2 className="mt-4 mb-8 text-xl">Add media</h2>
                 <div className="flex items-center gap-3">
                   <label htmlFor="liveMedia">
-                    {/* <FaCamera className="text-sky-950 text-xl text-opacity-70" /> */}
                     Select File
                   </label>
 
@@ -221,7 +229,6 @@ const AdminProfileGalleryPage = () => {
                 </div>
 
                 <div className=" w-full ">
-                  {/* Preview Line */}
                   <div className="preview">
                     <p>preview</p>
                     <span className="line" />
@@ -279,7 +286,7 @@ const AdminProfileGalleryPage = () => {
               </m.div>
             </m.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </div>
     </>
   );

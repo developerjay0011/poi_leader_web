@@ -45,7 +45,7 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ search
           letter_templetes?.map((el: any, i: any) => (
             <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
               <td className='py-2 pl-2 border-r align-text-top text-center'>
-                {i + 1}
+                {el.sr}.
               </td>
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el.template_name}
@@ -79,7 +79,7 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ search
 
           ))
         ) : (
-          <ErrorTableRow colNo={4} />
+          <ErrorTableRow colNo={10} />
         )}</tbody>
       </table>
       <AnimatePresence>

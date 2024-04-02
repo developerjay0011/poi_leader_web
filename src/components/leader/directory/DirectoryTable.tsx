@@ -24,9 +24,7 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({ searchStr, isDirectory
   const { directory } = cusSelector((state) => state.directory);
   const dispatch = cusDispatch();
   const [deleteValue, setDeleteValue] = useState({ id: "", leaderid: "" });
-  const filterDataOnDirectory = directory?.filter((el) =>
-    searchStr ? el.name.includes(searchStr) : el
-  );
+  const filterDataOnDirectory = Array.isArray(directory) ? directory?.filter((el) => searchStr ? el.name.includes(searchStr) : el) : []
   const confirmDelete = (id: string, leaderid: string) => {
     setDeleteValue({
       id: id,
@@ -60,7 +58,20 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({ searchStr, isDirectory
       <table className="w-full mt-5">
         <thead className="text-left">
           <tr className='border-b border-gray-300'>
-            <th className='font-semibold text-left p-2 border text-center'></th>
+            <th className='font-semibold text-left p-2 border text-center'>
+              <input type="checkbox"
+                className='text-[20px] cursor-pointer'
+                onClick={(e) => { e.stopPropagation(); }}
+                checked={selectGroup?.length == filterDataOnDirectory?.length && filterDataOnDirectory?.length > 0}
+                disabled={filterDataOnDirectory?.length == 0}
+                onChange={() => {
+                  if (selectGroup?.length == filterDataOnDirectory?.length) {
+                    setSelectGroup([])
+                  } else {
+                    setSelectGroup(filterDataOnDirectory)
+                  }
+                }} />
+            </th>
             <th className='font-semibold text-left p-2 border text-center'>S.No</th>
             <th className='font-semibold text-left p-2 border text-center'>Name</th>
             <th className='font-semibold text-left p-2 border text-center'>Phone No</th>
@@ -69,8 +80,8 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({ searchStr, isDirectory
           </tr>
         </thead>
         <tbody className="text-left">
-          {filterDataOnDirectory.length > 0 ? (
-            filterDataOnDirectory.map((directory: any, index: number) => {
+          {filterDataOnDirectory?.length > 0 ? (
+            filterDataOnDirectory?.map((directory: any, index: number) => {
               var ischecked = selectGroup?.filter((items: any) => items?.id == directory?.id)?.length > 0
               return (
                 <>
@@ -118,7 +129,7 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({ searchStr, isDirectory
               );
             })
           ) : (
-            <ErrorTableRow colNo={5} />
+            <ErrorTableRow colNo={10} />
           )}
         </tbody>
       </table>

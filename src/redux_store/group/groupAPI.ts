@@ -13,9 +13,18 @@ export const getGroups = async (leaderId: string) => {
   );
 };
 
+export const ImportDirectories = async (body: any) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.ImportDirectories, body);
+      return res.data
+    }
+  );
+};
+
+
 export const getSingleGroup = async (body: any) => {
   return tryCatch(
-
     async () => {
       const res = await Axios.post(APIRoutes.getSingleGroup, body);
       return res.data;
