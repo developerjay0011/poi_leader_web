@@ -3,6 +3,8 @@ import { v4 } from 'uuid'
 import { store } from '@/redux_store'
 import { uiActions } from '@/redux_store/UI/uiSlice'
 import { AES, mode, pad, enc } from 'crypto-js'
+import moment from 'moment'
+import toast from 'react-hot-toast'
 
 export interface UserData {
   id: string;
@@ -252,3 +254,13 @@ export const localStorageKeys = {
 }
 
 // Function to encrypt and store public key
+export const CheckTime = (start: any, end: any) => {
+  var startdate = moment(start, "YYYY-MM-DD HH:mm:ss")
+  var enddate = moment(end, "YYYY-MM-DD HH:mm:ss")
+  if (startdate.isBefore(enddate)) {
+    return true
+  } else {
+    toast.error("Please Enter Proper Date & Time Range")
+    return false
+  }
+}

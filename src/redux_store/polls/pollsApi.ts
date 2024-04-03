@@ -2,6 +2,7 @@ import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
+import { Shortanylistbytime } from '@/utils/CusLink';
 
 
 
@@ -11,7 +12,8 @@ export const getPolls = async (leaderId: string) => {
 
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getPolls, { leaderId }));
-      return res.data;
+      var setdata = Array.isArray(res.data) ? Shortanylistbytime(res?.data as any, "publish_date") : [] as any
+      return setdata
     }
   );
 };

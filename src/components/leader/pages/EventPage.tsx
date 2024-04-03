@@ -23,6 +23,7 @@ import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { Modal } from "@/components/modal/modal";
 import { TableWrapper, searchFilterFunction } from "@/utils/TableWrapper";
 import { getImageUrl } from "@/config/get-image-url";
+import { CheckTime } from "@/utils/utility";
 
 interface EventPageProps { }
 
@@ -79,6 +80,9 @@ export const EventPage: FC<EventPageProps> = () => {
   const formSubmitHandler = async (data: UserDetails) => {
     tryCatch(
       async () => {
+        if (data?.start_datetime && data?.end_datetime) {
+          if (CheckTime(data?.start_datetime, data?.end_datetime) == false) { return }
+        }
         const formData = new FormData();
         formData.append("id", isEdit ? editEventData?.id : "");
         formData.append("leaderid", userDetails?.leaderId || "");
@@ -292,6 +296,7 @@ export const EventPage: FC<EventPageProps> = () => {
                   validations={{
                     required: 'Date of Birth is required',
                   }}
+                  min={watch("start_datetime") ? watch("start_datetime") : moment().format("YYYY-MM-DD HH:mm:ss")}
                 />
                 <Input
                   errors={errors}

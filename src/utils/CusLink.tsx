@@ -33,3 +33,12 @@ export const CusLink: FC<CusLinkProps> = ({
     </>
   )
 }
+export const Shortanylistbytime = (list = [], key = "") => {
+  const combinedData = [...list];
+  combinedData.sort((a, b) => {
+    const dateA = new Date(a?.[key]);
+    const dateB = new Date(b?.[key]);
+    return dateB.getTime() - dateA.getTime()
+  });
+  return Array.isArray(combinedData) && combinedData
+}
