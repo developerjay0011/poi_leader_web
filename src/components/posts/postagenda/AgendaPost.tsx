@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   AGENDA_STATUS,
   AGENDA_VAL,
@@ -12,6 +12,8 @@ import { AnimatePresence } from "framer-motion";
 import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ProtectedRoutes } from "@/constants/routes";
 
 interface AgendaPostProps {
   userdetails: any;
@@ -24,7 +26,16 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
   const [showTimeline, setShowTimeline] = useState(false);
   var status = post?.status === 'not started yet' ? '2' : post?.status === 'in progress' ? '1' : '0'
   var title = type == "developments" ? post?.development_title : post?.title
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const types = searchParams.get('type');
+  const referenceid = searchParams.get('referenceid');
 
+  useEffect(() => {
+    if (types == "post_timeline" && referenceid == post?.id && referenceid && showTimeline == false) {
+      router.replace(ProtectedRoutes.user);
+    }
+  }, [types == "post_timeline" && referenceid == post?.id, showTimeline])
 
   return (
     <>

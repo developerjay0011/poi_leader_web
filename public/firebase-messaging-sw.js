@@ -40,6 +40,7 @@
 
 
 // self.addEventListener('notificationclick', (event) => {
+//     event.notification.close();
 //     const notification = event.notification;
 //     const data = notification.data;
 //     const type = data?.type;
