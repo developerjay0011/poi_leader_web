@@ -29,7 +29,7 @@ export const AdminControls: FC = () => {
           title='account settings'
           route={ProtectedRoutes.accountSetting}
         />
-        <button onClick={() => { dispatch(authActions.logout()) }}>
+        <button onClick={() => { dispatch(authActions.logout(true as any)) }}>
           <ShortcutBtn Icon={FaPowerOff} title='log out' route='/' />
         </button>
       </aside>

@@ -1,8 +1,4 @@
-import { getReduxStoreValues } from '@/redux_store'
 import { v4 } from 'uuid'
-import { store } from '@/redux_store'
-import { uiActions } from '@/redux_store/UI/uiSlice'
-import { AES, mode, pad, enc } from 'crypto-js'
 import moment from 'moment'
 import toast from 'react-hot-toast'
 
@@ -18,77 +14,6 @@ export interface UserData {
   userId: string;
 }
 
-// UTILITY FUNCTION to Connect to API
-export const ConnectToAPI = async (
-  enpointORurl: string,
-  body: string,
-  jwt?: string
-) => {
-  const guid = '454545'
-  const userType = getReduxStoreValues().UI.userType
-  const Authorization = jwt
-    ? jwt
-    : (getReduxStoreValues().UI.jsonWebToken as string)
-
-  // if we are getting a proper url then we perform API call on that URL otherwise we will use URL defined above followed by endpoint provied
-  // const url = enpointORurl.includes('/')
-  //   ? enpointORurl
-  //   : API_URL + '/' + enpointORurl
-
-  // FOR DEV
-  // console.log('URL: ', url)
-
-  let response
-
-  // Calling Dotnet API
-  if (enpointORurl.includes('/'))
-    response = await fetch(enpointORurl, {
-      method: 'POST',
-      body,
-      headers: {
-        'Access-Control-Allow-Headers': 'Content-Type,*',
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST,GET,OPTIONS,PUT,DELETE',
-        'Content-Type': 'application/json',
-        Authorization,
-        guid,
-      },
-    })
-  // Calling my custom Next.JS API (build using API routes)
-  else
-    response = await fetch('/api', {
-      method: 'POST',
-      body: JSON.stringify({
-        token: Authorization,
-        guid,
-        endpoint: enpointORurl,
-        body: JSON.parse(body),
-        userType,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-  // to handle expired JWT error
-  if (response.status === 401) store.dispatch(uiActions.setLogin(false))
-
-  // RESPONSE
-  const data = await response.json()
-
-  // FOR DEV
-  console.log('RESPONSE: ', data)
-
-  // Handling Error
-  if (data.rStatus !== 0) throw new Error(data.rData.rMessage)
-
-  console.log('EVENT_ID: ' + data.eventID)
-
-  // returning data if no error occured
-  return data.rData
-}
-
 
 
 
@@ -96,9 +21,7 @@ export const ConnectToAPI = async (
 export const dateConverter = (date: string) => date ? new Intl.DateTimeFormat('en-IN', { month: 'short', day: '2-digit', year: 'numeric', }).format(new Date(date)) : ""
 
 // Convert file to base64
-export const convertFileToBase64: (u: File) => Promise<string> = (
-  userInpFile: File
-) =>
+export const convertFileToBase64: (u: File) => Promise<string> = (userInpFile: File) =>
   new Promise((resolve) => {
     const reader = new FileReader()
 
@@ -110,20 +33,18 @@ export const convertFileToBase64: (u: File) => Promise<string> = (
   })
 
 // Function to convert files in base64
-export const convertFileToBase64Emergin: (
-  file: File
-) => Promise<{ base64: string }> = (userInpFile: File) =>
-    new Promise((resolve) => {
-      const reader = new FileReader()
+export const convertFileToBase64Emergin: (file: File) => Promise<{ base64: string }> = (userInpFile: File) =>
+  new Promise((resolve) => {
+    const reader = new FileReader()
 
-      reader.readAsDataURL(userInpFile)
+    reader.readAsDataURL(userInpFile)
 
-      reader.onload = () => {
-        resolve({
-          base64: reader.result as string,
-        })
-      }
-    })
+    reader.onload = () => {
+      resolve({
+        base64: reader.result as string,
+      })
+    }
+  })
 
 // FUNCTION TO CALCULATE CURRENT DATE
 export const calCurrentDate = (userInpDate: string) => {
@@ -225,21 +146,6 @@ export const friendImg = ''
 
 export const user2Img = ''
 
-// AES Encrypt
-export const AESEncrypt = (addInfoString: string, encryptionKey: string) => {
-  const options = {
-    mode: mode.CBC,
-    padding: pad.Pkcs7,
-    iv: enc.Utf8.parse(encryptionKey.substring(0, 16)),
-  }
-
-  const encryptedData = AES.encrypt(
-    encryptionKey.substring(0, 16) + addInfoString,
-    enc.Utf8.parse(encryptionKey.substring(0, 16)),
-    options
-  ).toString()
-  return encryptedData
-}
 
 export const USER_TYPE = {
   leader: 'leader',

@@ -15,9 +15,10 @@ interface TimeLineFormProps {
   agendaid: string// Define the type of onCancel prop
   isedit: boolean
   data: any
+  agenda?: any
 }
 
-const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit, data }) => {
+const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit, data, agenda }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails } = cusSelector((state) => state.auth);
   const statusOption = [
@@ -25,6 +26,7 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit,
     { id: 'in progress', value: 'in progress' },
   ]
   const id = data?.id
+  const make_post = agenda?.make_post as any
   const dispatch = cusDispatch();
   const {
     register,
@@ -41,7 +43,7 @@ const TimeLineForm: React.FC<TimeLineFormProps> = ({ onCancel, agendaid, isedit,
     }
     tryCatch(
       async () => {
-        const response = await saveTimeLine(body);
+        const response = await saveTimeLine(body, make_post);
         if (response?.success) {
           const agendaData = await getAgenda(userDetails?.leaderId as string);
           dispatch(agendaAction.storeAgendas(agendaData))

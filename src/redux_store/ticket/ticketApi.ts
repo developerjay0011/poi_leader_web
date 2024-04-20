@@ -2,6 +2,7 @@ import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
+import { MapFcm, Sendnoti } from '../notification/notification';
 
 // Add Letter API
 export const getTickets = async (leaderid: string) => {
@@ -15,7 +16,7 @@ export const getTickets = async (leaderid: string) => {
 };
 
 export const saveTicketStatus =
-  async (formData: any) => {
+  async (formData: any, ticket_category?: any) => {
     return tryCatch(
       async () => {
         const res = await Axios.post(APIRoutes.saveTicketStatus, formData, {
@@ -23,6 +24,18 @@ export const saveTicketStatus =
             "Content-Type": "multipart/form-data"
           }
         });
+        if (res?.data?.success) {
+          Sendnoti({
+            tokens: MapFcm(res?.data?.data?.tokens, true),
+            description: res?.data?.data?.notification?.description,
+            date: res?.data?.data?.notification?.createddate,
+            title: res?.data?.data?.notification?.title,
+            userimg: res?.data?.data?.notification?.userimg,
+            referenceid: res?.data?.data?.notification?.referenceid,
+            notificationid: res?.data?.data?.notification?.id,
+            type: ticket_category + "_status",
+          })
+        }
         return res.data;
       }
     );

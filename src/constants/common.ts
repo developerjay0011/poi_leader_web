@@ -5,12 +5,12 @@ export const TOKEN_KEY = "TOKEN_KEY";
 export const USER_VERIFY = "USER_VERIFY";
 export const USER_TYPE = "USER_TYPE";
 export const USER_INFO = "USER_INFO";
+export const LEADER_ID = "LEADER_ID";
 export const LOGIN_BODY = "LOGIN_BODY";
 export const DEFAULT_CONTENT_TYPE = 'application/json';
-export const EMPLOYEE_ID = "EMPLOYEE_ID";
-export const LEADER_ID = "LEADER_ID";
 export const TAB_ACCESS = "TAB_ACCESS";
-
+export const LEADER_FCM_TOKEN_KEY = "LEADER_FCM_TOKEN_KEY";
+export const LEADER_IP = "LEADER_IP";
 
 
 export const Savedby = () => {

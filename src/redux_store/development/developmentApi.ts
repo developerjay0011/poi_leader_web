@@ -4,6 +4,7 @@ import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { DevelopmentDetails, TimeLineFormField } from './developmentSlice';
 import { Savedby } from '@/constants/common';
+import { MapFcm, Sendnoti } from '../notification/notification';
 
 // Get Development API
 export const getDevelopment = async (userId: string) => {
@@ -29,6 +30,18 @@ export const makeDevelopmentPost = async (id: string, leaderid: string) => {
   return tryCatch(
     async () => {
       const res = await Axios.post(APIRoutes.makeDevelopmentPost, { id, leaderid });
+      if (res?.data?.success) {
+        Sendnoti({
+          tokens: MapFcm(res?.data?.data?.tokens, true),
+          description: res?.data?.data?.notification?.description,
+          date: res?.data?.data?.notification?.createddate,
+          title: res?.data?.data?.notification?.title,
+          userimg: res?.data?.data?.notification?.userimg,
+          referenceid: res?.data?.data?.notification?.referenceid,
+          notificationid: res?.data?.data?.notification?.id,
+          type: "development"
+        })
+      }
       return res.data;
     }
   );

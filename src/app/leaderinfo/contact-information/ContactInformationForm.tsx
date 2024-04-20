@@ -39,7 +39,7 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
     tryCatch(
       async () => {
         setRegistering(true)
-        const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, });
+        const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, }, true);
         setRegistering(false)
         if (response?.success) {
           moveLogin()

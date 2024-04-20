@@ -7,7 +7,6 @@ import {
   PRIORITY,
   dateConverter,
 } from "@/utils/utility";
-import Image from "next/image";
 import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
 import { AnimatePresence } from "framer-motion";
 import { getImageUrl } from "@/config/get-image-url";
@@ -25,6 +24,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
   const [showTimeline, setShowTimeline] = useState(false);
   var status = post?.status === 'not started yet' ? '2' : post?.status === 'in progress' ? '1' : '0'
   var title = type == "developments" ? post?.development_title : post?.title
+
 
   return (
     <>
@@ -65,21 +65,6 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
               <label className={`ml-auto border text-[13px] rounded-full px-5 py-[2px] uppercase ${AGENDA_STATUS[status as AGENDA_VAL].classes}`}>
                 {AGENDA_STATUS[status as AGENDA_VAL].name}
               </label>
-              {/* <button
-                className="relative"
-                id="moreOptions"
-                onClick={() => setShowMorePostOptions((lst) => !lst)}
-              >
-                <BsThreeDots className="text-2xl" />
-
-                {showMorePostOptions && (
-                  <PostOptions
-                    deletePostHandler={() => {}}
-                    onClose={() => setShowMorePostOptions(false)}
-                    userId={userId}
-                  />
-                )}
-              </button> */}
             </div>
           </Link>
 

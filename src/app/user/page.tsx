@@ -6,15 +6,8 @@ import { TimeLinePage } from "@/components/posts/TimeLinePage";
 import { BriefEventsBox } from "@/components/timlineComponents/BriefEventsBox";
 import { BirthdayNotifications } from "@/components/timlineComponents/BirthdayNotifications";
 import { FollowedLeader } from "@/components/timlineComponents/FollowedLeader";
-import { useLayoutEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { usePathname } from "next/navigation";
-import { accessAction } from "@/redux_store/accesstab/tabSlice";
-import { USER_TYPE } from "@/constants/common";
-import { getCookie } from "cookies-next";
-import { fetchAccessTabs, tabfilter } from "@/redux_store/accesstab/tabApi";
-import { EXTRA_TABS, LEFT_NAV_ROUTES } from "@/utils/routes";
+import { useState } from "react";
+import { cusSelector } from "@/redux_store/cusHooks";
 
 const AdminHomePage = () => {
   const [followers, setFollowers] = useState<any>({});

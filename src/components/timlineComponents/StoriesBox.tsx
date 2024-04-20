@@ -33,7 +33,6 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
       dispatch(postActions.storeStories(data as any[]));
     }
   };
-  // console.log(mystories)
   const handleDelete = async (id: string) => {
     const postBody = { id: id, leaderid: userDetails?.leaderId, };
     try {
@@ -43,7 +42,7 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
         fetchMyStories();
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);;
     }
   };
 

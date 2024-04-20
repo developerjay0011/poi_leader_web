@@ -7,9 +7,10 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { fetchAccessTabs, tabfilter } from '@/redux_store/accesstab/tabApi'
 import { accessAction } from '@/redux_store/accesstab/tabSlice'
 import { getCookie } from 'cookies-next'
-import { TAB_ACCESS, USER_TYPE } from '@/constants/common'
+import { USER_TYPE } from '@/constants/common'
 import { usePathname } from 'next/navigation'
 import { EXTRA_TABS, LEFT_NAV_ROUTES } from '@/utils/routes'
+import Notificationpage from '@/utils/firebase/notification'
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
@@ -20,11 +21,9 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
       let usertype = getCookie(USER_TYPE)
       await dispatch(accessAction.storeLoader(true))
       await dispatch(accessAction.storeUsertype(usertype))
-      var tabs = await fetchAccessTabs(userDetails?.id)
-      if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
-      var tab_layout = tabfilter(tabs, "leader", [...LEFT_NAV_ROUTES, ...EXTRA_TABS] as any)?.map((item: any) => item?.link)
-      tab_layout = [...LEFT_NAV_ROUTES, ...EXTRA_TABS]?.filter((item: any) => !tab_layout?.includes(item?.link) && item?.link)?.map((item: any) => item?.link)
-      if (tab_layout?.filter((item: any) => item == pathname)?.length > 0 && pathname != "/user") {
+      var tabs = await fetchAccessTabs(userDetails?.id) as any
+      if (Array.isArray(tabs?.tab_data)) { await dispatch(accessAction.storeAccesstabs(tabs?.tab_data as any)) }
+      if (tabs?.notoroute?.filter((item: any) => item == pathname)?.length > 0 && pathname != "/user") {
         window.location.href = '/'
       }
       await dispatch(accessAction.storeLoader(false))
@@ -41,6 +40,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
           </section>
           <RightNavbar />
         </div>
+        <Notificationpage />
       </main>
     </>
   )

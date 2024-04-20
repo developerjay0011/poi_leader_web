@@ -53,7 +53,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);;
 
     }
   };

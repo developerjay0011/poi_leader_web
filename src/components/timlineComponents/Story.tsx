@@ -73,46 +73,6 @@ export const Story: FC<StoryProps> = ({
               stories={stories as any}
               storyContainerStyles={{ borderRadius: 8, overflow: "hidden" }}
               defaultInterval={1500}
-              // header={(item: any) => {
-              //   return (
-              //     <div onClick={() => { alert() }} className="flex gap-[10px] item-start bg-red-200">
-              //       <div className="flex gap-[10px]">
-              //         <div className="h-[60px] w-[60px]">
-              //           <CustomImage
-              //             src={item?.profileImage}
-              //             width={100}
-              //             height={100}
-              //             alt="user display pic"
-              //             className="border-[1px] border-blue aspect-square rounded-full object-cover"
-              //           />
-              //         </div>
-              //         <div className="gap-[10px]">
-              //           <figcaption className='text-[14px] mt-[1px]' style={{ color: "white" }}>{item?.heading}</figcaption>
-              //           <figcaption className='text-[11px]' style={{ color: "white" }}>{item?.subheading}</figcaption>
-              //         </div>
-              //       </div>
-              //       <div id="moreOptions" onClick={(e) => {
-              //         setPause(true); setShowMorePostOptions(!showMorePostOptions)
-              //         alert()
-              //         console.log(e)
-              //       }} className="flex" style={{ display: self ? "flex" : "none" }}>
-              //         <button onClick={() => {
-              //           setPause(true);
-              //           setShowMorePostOptions(!showMorePostOptions)
-              //         }} className="flex flex-col self-end" >
-              //           <BsThreeDots className="text-2xl" style={{ color: "white" }} />
-              //         </button>
-              //         {showMorePostOptions && (
-              //           <PostOptions
-              //             deletePostHandler={() => deletePostHandler()}
-              //             userId={''}
-              //             onClose={() => { }}
-              //           />
-              //         )}
-              //       </div>
-              //     </div>
-              //   )
-              // }}
               width={432}
               height={768}
               storyStyles={storyContent}

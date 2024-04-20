@@ -14,7 +14,7 @@ import {
 import { MdBloodtype } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import moment from "moment";
-interface LeaderPersonalInfoProps {}
+interface LeaderPersonalInfoProps { }
 
 
 
@@ -61,13 +61,11 @@ export const LeaderPersonalInfo: FC<LeaderPersonalInfoProps> = () => {
 
             <PersonalBriefInfo
               Icon={FaHandshake}
-              data={
-                moment(leaderData?.created_date).format("YYYY-MM-DD") as string
-              }
+              data={moment(leaderData?.created_date).format("YYYY-MM-DD") as string}
               heading="Joined: "
             />
 
-            <PersonalBriefInfo Icon={FaGlobe} data="India" heading="Country" />
+            {/* <PersonalBriefInfo Icon={FaGlobe} data="India" heading="Country" /> */}
 
             <PersonalBriefInfo
               Icon={BiLogoGmail}
@@ -95,9 +93,8 @@ const PersonalBriefInfo: FC<{
           <span className="font-[500] capitalize text-[15px]">{heading}</span>
         </p>
         <p
-          className={`text-[14px] pl-7 ${
-            heading.toLowerCase().includes("about") && "text-justify"
-          }`}
+          className={`text-[14px] pl-7 ${heading.toLowerCase().includes("about") && "text-justify"
+            }`}
         >
           {data}
         </p>

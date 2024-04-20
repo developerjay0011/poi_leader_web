@@ -18,6 +18,7 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
     (async () => {
       if (id) {
         const res = await getSingleLeader(id);
+        console.log(res)
         dispatch(authActions.setLeaderData(res));
       }
     })();

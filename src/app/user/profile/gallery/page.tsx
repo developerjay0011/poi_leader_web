@@ -1,23 +1,11 @@
 "use client";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useState } from "react";
 import { BriefPost } from "@/components/posts/BriefPost";
-import { GenerateId, convertFileToBase64 } from "@/utils/utility";
-import { AnimatePresence } from "framer-motion";
-import { motion as m } from "framer-motion";
-import { BsImageFill } from "react-icons/bs";
-import { NewPostFields, PostType } from "@/utils/typesUtils";
-import { BiX } from "react-icons/bi";
-import CustomImage from "@/utils/CustomImage";
-import { getGalleryData, saveGallery } from "@/redux_store/gallery/galleryAPI";
-import { tryCatch } from "@/config/try-catch";
+import { NewPostFields } from "@/utils/typesUtils";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { galleryActions } from "@/redux_store/gallery/gallerySlice";
-import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 import { Datanotfound } from "@/utils/Datanotfound";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
-import PostGrid from "../../../../components/PostGrid";
 import { getImageUrl } from "@/config/get-image-url";
 
 const AdminProfileGalleryPage = () => {

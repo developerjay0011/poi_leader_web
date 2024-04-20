@@ -4,6 +4,7 @@ import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { AgendaDetails, TimeLineFormField } from './agendaSlice';
 import { Savedby } from '@/constants/common';
+import { MapFcm, Sendnoti } from '../notification/notification';
 
 // Get Agenda API
 export const getAgenda = async (userId: string) => {
@@ -37,6 +38,18 @@ export const makeAgendaPost = async (id: string, leaderid: string) => {
   return tryCatch(
     async () => {
       const res = await Axios.post(APIRoutes.makeAgendaPost, { id, leaderid });
+      if (res?.data?.success) {
+        Sendnoti({
+          tokens: MapFcm(res?.data?.data?.tokens, true),
+          description: res?.data?.data?.notification?.description,
+          date: res?.data?.data?.notification?.createddate,
+          title: res?.data?.data?.notification?.title,
+          userimg: res?.data?.data?.notification?.userimg,
+          referenceid: res?.data?.data?.notification?.referenceid,
+          notificationid: res?.data?.data?.notification?.id,
+          type: "agenda"
+        })
+      }
       return res.data;
     }
   );
@@ -111,7 +124,7 @@ export const editAgenda =
   }
 // Create / Update TimeLine API
 export const saveTimeLine =
-  async (body: TimeLineFormField) => {
+  async (body: TimeLineFormField, ispost?: any) => {
     return tryCatch(
       async () => {
         const formData = new FormData();
@@ -135,6 +148,18 @@ export const saveTimeLine =
             "Content-Type": "multipart/form-data"
           }
         });
+        if (body?.status == "completed" && ispost == true) {
+          Sendnoti({
+            tokens: MapFcm(res?.data?.data?.tokens, true),
+            description: res?.data?.data?.notification?.description,
+            date: res?.data?.data?.notification?.createddate,
+            title: res?.data?.data?.notification?.title,
+            userimg: res?.data?.data?.notification?.userimg,
+            referenceid: res?.data?.data?.notification?.referenceid,
+            notificationid: res?.data?.data?.notification?.id,
+            type: "post_timeline"
+          })
+        }
         return res.data;
       }
     );

@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { PeoplesComponentWrapper } from '@/utils/PeoplesComponentWrapper'
-import { user2Img } from '@/utils/utility'
 import { Follower } from '@/components/peoples/Follower'
 import { cusSelector } from '@/redux_store/cusHooks'
 

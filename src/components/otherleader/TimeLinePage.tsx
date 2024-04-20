@@ -2,12 +2,6 @@
 import { FC, useEffect } from "react";
 import { Post } from "../posts/Post";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-// import { StoriesBox } from "../timlineComponents/StoriesBox";
-// import { RootState } from "@/redux_store";
-// import { GetPostsForCitizen } from "@/redux_store/post/postApi";
-// import { postActions } from "@/redux_store/post/postSlice";
-// import { AgendaPost } from "../posts/AgendaPost";
-// import { PollPost } from "../posts/polls/PollPost";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { getSingleLeader } from "@/redux_store/auth/authAPI";
 interface LeaderTimeLinePageProps { }

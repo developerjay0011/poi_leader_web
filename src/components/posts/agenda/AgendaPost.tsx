@@ -166,6 +166,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
             agendaid={id}
             title={title}
             status={status}
+            agenda={el}
           />
         )}
       </AnimatePresence >
@@ -194,7 +195,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
                   Add Milestone
                 </h3>
                 <div className="py-5 px-5">
-                  <TimeLineForm isedit={false} agendaid={id} data={null} onCancel={() => setAddMileStone(false)} />
+                  <TimeLineForm isedit={false} agendaid={id} agenda={el} data={null} onCancel={() => setAddMileStone(false)} />
                 </div>
               </m.div>
             </div>

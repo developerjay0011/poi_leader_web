@@ -28,7 +28,7 @@ const AdminGeneralSettingPage: FC = () => {
       async () => {
         const response = await (isDelete ? closeAccount(userDetails?.id as string) : deActiveAccount(userDetails?.id as string));
         if (response?.success) {
-          dispatch(authActions.logout())
+          dispatch(authActions.logout(true as any))
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))

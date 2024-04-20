@@ -4,8 +4,6 @@ import { FC } from 'react'
 interface BriefEventsBoxProps { }
 export const BriefEventsBox: FC<BriefEventsBoxProps> = () => {
   const { dashboardevents } = cusSelector((state) => state.event);
-
-  // console.log(dashboardevents)
   return dashboardevents?.length > 0 && (
     <>
       <section className={`border rounded-md w-full bg-white text-sky-950 max-h-[25rem] overflow-hidden flex flex-col`}>

@@ -339,7 +339,7 @@ export const AddLeaderPage: FC = () => {
         activity_pictures: data?.activity_pictures,
         referencies: data?.references?.map((el) => ({
           name: el?.name,
-          age: +el?.age,
+          age: el?.age,
           mobile: el?.mobileNo,
         })),
       },
@@ -353,7 +353,7 @@ export const AddLeaderPage: FC = () => {
     try {
       await submitLeaderForm(bodyData);
     } catch (error) {
-      console.log(error);
+      console.error(error);;
     }
   };
 

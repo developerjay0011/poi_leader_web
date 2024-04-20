@@ -2,14 +2,13 @@
 import { Comment, Like, PostDetails } from "@/utils/typesUtils";
 import { dateConverter } from "@/utils/utility";
 import { FC, useState } from "react";
-import { BiShareAlt, BiSolidMessageAltDetail } from "react-icons/bi";
+import { BiSolidMessageAltDetail } from "react-icons/bi";
 import { BsFillHeartFill, BsHeart, BsThreeDots } from "react-icons/bs";
 import { AnimatePresence } from "framer-motion";
 import { motion as m } from "framer-motion";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { NewCommentForm } from "../common-forms/NewCommentForm";
 import { SingleComment } from "./SingleComment";
-import toast from "react-hot-toast";
 import { getImageUrl, setusername } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import PostGrid from "../PostGrid";
@@ -61,7 +60,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
         Getpost();
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

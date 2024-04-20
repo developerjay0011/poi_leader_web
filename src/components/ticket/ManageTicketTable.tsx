@@ -18,6 +18,7 @@ import { Savedby } from '@/constants/common';
 import { getImageUrl, setusername } from '@/config/get-image-url';
 import { sliceData } from '@/utils/TableWrapper';
 import { FaFileAlt } from 'react-icons/fa';
+import { useSearchParams } from 'next/navigation';
 
 interface ManageTicketTableProps {
   searchStr: string
@@ -28,13 +29,14 @@ interface ManageTicketTableProps {
   setIschecked: any
   curPageNo?: any
   filterDataCount?: any
+  alldata?: any
 }
 const FORM_HEADINGS = {
   request: "Raise a Request",
   complaint: "Raise a Complaint",
   suggestion: "Create a Suggestion",
 };
-export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handleEdit, handleDelete, ticket, ischecked, setIschecked, curPageNo, filterDataCount }) => {
+export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, alldata, handleEdit, handleDelete, ticket, ischecked, setIschecked, curPageNo, filterDataCount }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { userDetails }: any = cusSelector((state) => state.auth);
   const [showStatus, setShowStatus] = useState(false)
@@ -43,6 +45,36 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
   const [ticketdata, setticketdata] = useState<any>()
   const [showPreview, setShowPreview] = useState(false);
   const dispatch = cusDispatch();
+  const searchParams = useSearchParams();
+  const types = searchParams.get('type');
+  const referenceid = searchParams.get('referenceid');
+  const formSubmitHandler = async (el: any) => {
+    tryCatch(
+      async () => {
+        const formData = new FormData();
+        formData.append("id", "");
+        formData.append("leaderid", userDetails?.leaderId || "");
+        formData.append("ticketid", el?.ticketid || "");
+        formData.append("category", el?.ticket_category || "");
+        formData.append("status", 'read');
+        formData.append("description", "");
+        formData.append("created_by", userDetails?.id || '');
+        formData.append("created_by_name", Savedby()?.saved_by_type == "leader" ? setusername(leaderProfile) : userDetails?.username);
+        const response = await saveTicketStatus(formData, el?.ticket_category);
+        if (response?.success) {
+          const ticketData = await getTickets(userDetails?.leaderId as string);
+          dispatch(ticketActions.storeTicket(ticketData))
+        }
+      })
+  };
+  useEffect(() => {
+    if (types == "new_letter" || types == "thumbs_down" || types == "thumbs_up" || types == "letter_reminder" || types == "unopen_letter") {
+      var getel = alldata?.find((item: any) => item?.ticketid === referenceid)
+      if (getel?.status?.filter((item: any) => item?.status == 'read')?.length == 0) { formSubmitHandler(getel) }
+      setticketdata(getel)
+      setShowPreview(true)
+    }
+  }, [(types == "new_letter" || types == "letter_reminder" || types == "unopen_letter") && referenceid + alldata?.length])
 
 
   return (
@@ -97,25 +129,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
         </thead>
         <tbody>{ticket?.length > 0 ? (
           ticket?.map((el: any, i: any) => {
-            const formSubmitHandler = async () => {
-              tryCatch(
-                async () => {
-                  const formData = new FormData();
-                  formData.append("id", "");
-                  formData.append("leaderid", userDetails?.leaderId || "");
-                  formData.append("ticketid", el?.ticketid || "");
-                  formData.append("category", el?.ticket_category || "");
-                  formData.append("status", 'read');
-                  formData.append("description", "");
-                  formData.append("created_by", userDetails?.id || '');
-                  formData.append("created_by_name", Savedby()?.saved_by_type == "leader" ? setusername(leaderProfile) : userDetails?.username);
-                  const response = await saveTicketStatus(formData);
-                  if (response?.success) {
-                    const ticketData = await getTickets(userDetails?.leaderId as string);
-                    dispatch(ticketActions.storeTicket(ticketData))
-                  }
-                })
-            };
+
             return (
               <tr key={i} className={`bg-white border-b border-gray-300 transition-all`}>
                 <td className='capitalize text-left p-2 border-r text-center align-text-center'>
@@ -171,9 +185,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
                 <td className='text-center p-2 border items-center justify-center'>
                   <div className='gap-2 flex justify-center'>
                     <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => {
-                      if (el?.status?.filter((item: any) => item?.status == 'read')?.length == 0) {
-                        formSubmitHandler()
-                      }
+                      if (el?.status?.filter((item: any) => item?.status == 'read')?.length == 0) { formSubmitHandler(el) }
                       setticketdata(el), setShowPreview(true)
                     }}>
                       <IoMdEye className='text-2xl' />
@@ -189,7 +201,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, handl
             )
           })
         ) : (
-          <ErrorTableRow colNo={8} />
+          <ErrorTableRow colNo={12} />
         )}
         </tbody>
       </table>

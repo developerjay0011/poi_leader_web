@@ -7,9 +7,14 @@ import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { ManageTicketTable } from '@/components/ticket/ManageTicketTable'
 import { TicketForm } from '../forms/TicketForm'
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/router'
 
 export const TicketTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
+    const searchParams = useSearchParams();
+    const types = searchParams.get('type');
+    const referenceid = searchParams.get('referenceid');
     const [showTicket, setShowTicket] = useState(false)
     const [ischecked, setIschecked] = useState<any>([])
     const [searchFilter, setSearchFilter] = useState('');
@@ -53,9 +58,6 @@ export const TicketTemplateManagePage: FC = () => {
 
         return Array.isArray(ticket) ? searchFilterFunction(searchFilter, filteredResult, "ticket_code", { curPageNo, filterDataCount }) : { mainlist: [], filterlist: [] }
     };
-
-
-
 
 
 
@@ -129,6 +131,7 @@ export const TicketTemplateManagePage: FC = () => {
                         searchStr={searchFilter}
                         ticket={handleFilter(ticket, statusFilter, categoryFilter, locationFilter)?.filterlist || []}
                         ischecked={ischecked}
+                        alldata={ticket}
                         setIschecked={setIschecked}
                         curPageNo={curPageNo}
                         filterDataCount={filterDataCount}

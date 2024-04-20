@@ -43,7 +43,7 @@ const TicketTineLineForm: React.FC<TicketTineLineFormProps> = ({ onCancel, ticke
 
           }
         }
-        const response = await saveTicketStatus(formData);
+        const response = await saveTicketStatus(formData, ticketdata?.ticket_category);
         if (response?.success) {
           const ticketData = await getTickets(userDetails?.leaderId as string);
           dispatch(ticketActions.storeTicket(ticketData))
