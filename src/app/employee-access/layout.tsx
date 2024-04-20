@@ -9,7 +9,7 @@ import { accessAction } from '@/redux_store/accesstab/tabSlice'
 import { getCookie } from 'cookies-next'
 import { usePathname } from 'next/navigation'
 import { USER_TYPE } from '@/constants/common'
-import Notificationpage from '@/utils/firebase/notification'
+// import Notificationpage from '@/utils/firebase/notification'
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
   const { userDetails }: any = cusSelector((state) => state.auth);
@@ -41,7 +41,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
           </section>
           <RightNavbar />
         </div>
-        <Notificationpage />
+        {/* <Notificationpage /> */}
       </main>
     </>
   )
