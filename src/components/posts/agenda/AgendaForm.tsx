@@ -122,7 +122,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
           type='date'
           required
           validations={{
-            required: 'Date of Birth is required',
+            required: 'Creation Dateth is required',
           }}
         />
       </div>

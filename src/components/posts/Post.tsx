@@ -66,8 +66,9 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
 
   const handleDelete = async () => {
     const Body = { "id": post?.id, "leaderid": userDetails?.leaderId }
-    const deletes = await DeletePost(Body)
+    await DeletePost(Body)
     Getpost()
+    setShowMorePostOptions(!showMorePostOptions)
   };
 
 
@@ -99,7 +100,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             </p>
           </div>
         </Link>
-        <div className="ml-auto relative" id="moreOptions" style={{ display: is_my ? "flex" : "none" }}>
+        <div className="ml-auto relative" id="moreOptions" style={{ display: userDetails?.leaderId == post?.leaderid ? "flex" : "none" }}>
           <button onClick={() => { setShowMorePostOptions(!showMorePostOptions) }}>
             <BsThreeDots className="text-2xl" />
           </button>

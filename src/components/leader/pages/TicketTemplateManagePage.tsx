@@ -9,6 +9,7 @@ import { ManageTicketTable } from '@/components/ticket/ManageTicketTable'
 import { TicketForm } from '../forms/TicketForm'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/router'
+import { Shortarray } from '@/components/Input'
 
 export const TicketTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
@@ -88,7 +89,7 @@ export const TicketTemplateManagePage: FC = () => {
                                     className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
-                                    {leaderOptions?.categories?.map((item: any) =>
+                                    {Shortarray(leaderOptions?.categories, "category")?.map((item: any) =>
                                         <option value={item?.category}>{item?.category}</option>
                                     )}
                                 </select>
@@ -102,7 +103,7 @@ export const TicketTemplateManagePage: FC = () => {
                                     className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
-                                    {statusticketOption?.map((item: any) =>
+                                    {Shortarray(statusticketOption)?.map((item: any) =>
                                         <option value={item?.id}>{item?.value}</option>
                                     )}
                                 </select>
@@ -117,7 +118,7 @@ export const TicketTemplateManagePage: FC = () => {
                                 >
                                     <option value="">All</option>
                                     {leaderOptions?.states?.length > 0 &&
-                                        leaderOptions?.states?.map((item: any) =>
+                                        Shortarray(leaderOptions?.states, "state")?.map((item: any) =>
                                             <option value={item?.id}>{item?.state}</option>
                                         )}
                                 </select>

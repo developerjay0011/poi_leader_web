@@ -68,7 +68,7 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
                 key={index}
                 stories={el?.media}
                 handleDelete={handleDelete}
-                self={is_my_postandstories}
+                self={userDetails?.leaderId == el?.leaderid}
                 name={el?.name as string}
                 createddate={el?.createddate as string}
               />

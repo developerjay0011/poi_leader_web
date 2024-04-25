@@ -157,6 +157,7 @@ export const PersonalInformationForm: FC = () => {
           register={register}
           title='Date of Birth'
           type='date'
+          max={moment().format("YYYY-MM-DD")}
           required
           validations={{
             required: 'Date of Birth is required',

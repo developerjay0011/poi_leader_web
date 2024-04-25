@@ -182,3 +182,19 @@ export const SaveCategory = async (body: any) => {
     }
   );
 };
+
+
+
+export const deleteAgendapost = async (id: string, leaderid: string, type: string) => {
+  return tryCatch(
+    async () => {
+      if (type === "agendas") {
+        const res = await Axios.post(APIRoutes.DeleteAgendaPost, { id, leaderid });
+        return res.data;
+      } else {
+        const res = await Axios.post(APIRoutes.DeleteDevelopmentPost, { id, leaderid });
+        return res.data;
+      }
+    }
+  );
+};

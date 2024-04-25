@@ -136,7 +136,17 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
           register={register}
           title='Pincode'
           id='permanent_pincode'
-          type='text'
+          type='number'
+          validations={{
+            validate: {
+              notAValidNo(val) {
+                return (
+                  val.toString().length == 6 ||
+                  "please enter a valid pincode"
+                );
+              },
+            },
+          }}
         />
 
         <YesNoField
@@ -237,7 +247,17 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
               register={register}
               title='Pincode'
               id='present_pincode'
-              type='text'
+              type='number'
+              validations={{
+                validate: {
+                  notAValidNo(val) {
+                    return (
+                      val.toString().length == 6 ||
+                      "please enter a valid pincode"
+                    );
+                  },
+                },
+              }}
             />
           </>
         )}

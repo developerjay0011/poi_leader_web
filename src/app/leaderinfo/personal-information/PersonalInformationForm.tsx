@@ -241,6 +241,7 @@ export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setP
           title='Date of Birth'
           type='date'
           required
+          max={moment().format("YYYY-MM-DD")}
           validations={{
             required: 'Date of Birth is required',
           }}

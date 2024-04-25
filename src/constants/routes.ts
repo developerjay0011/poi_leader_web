@@ -102,6 +102,8 @@ export const APIRoutes = {
   saveTimeLine: `${API_Prefix}/leader/savetimeline`,
   deleteTimeLine: `${API_Prefix}/leader/deletetimeline`,
   makeAgendaPost: `${API_Prefix}/leader/makeagendapost`,
+  DeleteDevelopmentPost: `${API_Prefix}/leader/DeleteDevelopmentPost`,
+  DeleteAgendaPost: `${API_Prefix}/leader/DeleteAgendaPost`,
 
   // Development Endpoint
   getDevelopment: `${API_Prefix}/leader/getdevelopments/{{leaderId}}`,

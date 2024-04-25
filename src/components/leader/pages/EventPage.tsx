@@ -294,7 +294,7 @@ export const EventPage: FC<EventPageProps> = () => {
                   type='datetime-local'
                   required
                   validations={{
-                    required: 'Date of Birth is required',
+                    required: 'Start Date & Time is required',
                   }}
                   min={watch("start_datetime") ? watch("start_datetime") : moment().format("YYYY-MM-DD HH:mm:ss")}
                 />
@@ -306,7 +306,7 @@ export const EventPage: FC<EventPageProps> = () => {
                   type='datetime-local'
                   required
                   validations={{
-                    required: 'Date of Birth is required',
+                    required: 'End Date & Time is required',
                   }}
                   min={watch("start_datetime")}
                 />
