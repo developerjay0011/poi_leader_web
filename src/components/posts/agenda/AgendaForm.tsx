@@ -51,7 +51,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);;
     }
   };
 
@@ -99,6 +99,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
         }}
       />
 
+
       <div className="flex items-center justify-center gap-5">
         <Input
           errors={errors}
@@ -111,6 +112,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
           validations={{
             required: "attachments is required",
           }}
+          multiple={true}
         />
         <Input
           errors={errors}
@@ -120,7 +122,7 @@ const AgendaForm: React.FC<AgendaFormProps> = ({ onCancel, Agenda }) => {
           type='date'
           required
           validations={{
-            required: 'Date of Birth is required',
+            required: 'Creation Dateth is required',
           }}
         />
       </div>

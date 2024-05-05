@@ -15,9 +15,9 @@ import { AuthRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { cusDispatch } from "@/redux_store/cusHooks";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_VERIFY } from "@/constants/common";
+import { LEADER_FCM_TOKEN_KEY, LEADER_IP, LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_VERIFY } from "@/constants/common";
 import { CheckLeaderUserRegExists, registerUser, sendOtp, userLogin, verifyOtp } from "@/redux_store/auth/authAPI";
-import { setCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { authActions } from "@/redux_store/auth/authSlice";
 
@@ -96,6 +96,8 @@ export const RegisterForm: FC = () => {
       };
       setRegistering(true);
       const res = await verifyOtp(payload);
+      var fcm = getCookie(LEADER_FCM_TOKEN_KEY) || ""
+      var ip = getCookie(LEADER_IP) || ""
       if (res?.success) {
         setVerifying(false);
         const resBody = {
@@ -104,6 +106,10 @@ export const RegisterForm: FC = () => {
           mobile: registerdata2?.mobile,
           password: registerdata2?.password,
           leadertype: registerdata2?.leadertype,
+          fcm_token: {
+            deviceid: ip,
+            token: fcm ? JSON.parse(fcm) : "",
+          },
         };
         const response = await registerUser(resBody as any);
         if (response?.success) {
@@ -111,8 +117,8 @@ export const RegisterForm: FC = () => {
             email: registerdata2?.email,
             password: registerdata2?.password,
             fcm_token: {
-              deviceid: "",
-              token: "",
+              deviceid: ip,
+              token: fcm ? JSON.parse(fcm) : "",
             },
           };
           const userlogin = await userLogin(resBody);

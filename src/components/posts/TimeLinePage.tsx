@@ -9,6 +9,7 @@ import { postActions } from "@/redux_store/posts/postSlice";
 import { AgendaPost } from "./postagenda/AgendaPost";
 import { PollPost } from "./postpolls/PollPost";
 import { setusername } from "@/config/get-image-url";
+import { useRouter } from "next/navigation";
 
 interface TimeLinePageProps {
   is_my_postandstories: boolean

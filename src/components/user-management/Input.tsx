@@ -20,6 +20,8 @@ interface InputProps {
   }
   rows?: number
   fullWidth?: boolean
+  min?: any
+  max?: any
 }
 
 export const Input: FC<InputProps> = ({
@@ -35,8 +37,13 @@ export const Input: FC<InputProps> = ({
   disabled,
   rows,
   fullWidth,
+  min,
+  max
 }) => {
   const [isPassword, setIsPassword] = useState(type === 'password')
+  const mins = min ? { min: min } : {}
+  const maxs = max ? { max: max } : {}
+  let listdata = type === 'select' && Array.isArray(selectField?.options) ? selectField?.options.sort((a, b) => a.value.localeCompare(b.value)) : []
 
   const InputFieldType =
     type === 'select' || type === 'textarea' ? type : 'normal'
@@ -51,19 +58,19 @@ export const Input: FC<InputProps> = ({
           type={type === 'password' ? (isPassword ? 'password' : 'text') : type} // conditionaly setting type of input field and then also consitionally setting type in case of password.
           {...register(id, validations)}
           placeholder={placeholder}
-          className={`w-full num_inp text-base py-2 px-3 rounded-md outline-none border ${
-            errors[id]
-              ? 'bg-red-100 text-red-500 border-red-400'
-              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-          }`}
+          className={`w-full num_inp text-base py-2 px-3 rounded-md outline-none border ${errors[id]
+            ? 'bg-red-100 text-red-500 border-red-400'
+            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+            }`}
+          {...mins}
+          {...maxs}
         />
 
         {type === 'password' && (
           <span
             onClick={() => setIsPassword((lst) => !lst)}
-            className={`cursor-pointer absolute top-1/2 translate-y-[-50%] right-3 ${
-              errors[id] ? 'text-red-500' : ''
-            }`}>
+            className={`cursor-pointer absolute top-1/2 translate-y-[-50%] right-3 ${errors[id] ? 'text-red-500' : ''
+              }`}>
             {isPassword ? <HiEyeOff /> : <HiEye />}
           </span>
         )}
@@ -76,17 +83,16 @@ export const Input: FC<InputProps> = ({
           aria-disabled={disabled}
           id={id}
           {...register(id, validations)}
-          className={`w-full capitalize text-base py-2 px-3 rounded-md outline-none border ${
-            errors[id]
-              ? 'bg-red-100 text-red-500 border-red-400'
-              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-          }`}>
+          className={`w-full capitalize text-base py-2 px-3 rounded-md outline-none border ${errors[id]
+            ? 'bg-red-100 text-red-500 border-red-400'
+            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+            }`}>
           <option value=''>
-            {selectField?.options?.length > 0
+            {listdata?.length > 0
               ? selectField.title
               : `No ${selectField.title.split(' ').at(-1)} Found !!`}
           </option>
-          {selectField?.options?.map((el) => (
+          {listdata?.map((el) => (
             <option value={el.id} key={el.id}>
               {el.value}
             </option>
@@ -102,11 +108,10 @@ export const Input: FC<InputProps> = ({
         {...register(id, validations)}
         id={id}
         placeholder={placeholder || ''}
-        className={`resize-none w-full text-base py-2 px-3 rounded-md outline-none border ${
-          errors[id]
-            ? 'bg-red-100 text-red-500 border-red-400'
-            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-        }`}
+        className={`resize-none w-full text-base py-2 px-3 rounded-md outline-none border ${errors[id]
+          ? 'bg-red-100 text-red-500 border-red-400'
+          : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+          }`}
         rows={rows || 3}></textarea>
     ),
   }

@@ -7,6 +7,7 @@ import { ClearAllLeaderNotification, getNotification } from '@/redux_store/leade
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
 import { NODATA } from 'dns'
 import { Datanotfound } from '@/utils/Datanotfound'
+import { Savedby } from '@/constants/common'
 
 export const NotificationPage: FC = () => {
     const { notification } = cusSelector((state) => state.leader);
@@ -19,11 +20,11 @@ export const NotificationPage: FC = () => {
                     <h2 className='flex items-center h-[30px] after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-3  font-[500] text-[16px] capitalize'>
                         all notifications
                     </h2>
-                    {notification.length > 0 &&
+                    {(notification.length > 0 && Savedby()?.saved_by_type == "leader") &&
                         <h2
                             onClick={async () => {
                                 await ClearAllLeaderNotification(userDetails.leaderId)
-                                const response = await getNotification(userDetails?.leaderId as string);
+                                const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": userDetails?.employeeId });
                                 dispatch(leaderActions.setNotification(response));
                             }}
                             className='cursor-pointer flex items-center font-[500] text-[13px] capitalize px-3 hover:underline hover:text-orange-500 '>
@@ -36,7 +37,7 @@ export const NotificationPage: FC = () => {
                         {notification.length > 0 ?
                             notification.map((noti: any, index: number) => {
                                 return (
-                                    <Notification noti={noti} key={index} title={noti.title} description={noti.description} userimg={noti.userimg} />
+                                    <Notification noti={noti} key={index} title={noti.title} description={noti.description} userimg={""} />
                                 )
                             })
                             :

@@ -45,6 +45,9 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
     if (accessType?.length === 0 || (apimedia?.length === 0 && type === "story")) {
       return setPostErr({ errTxt: "Post can't be empty", isErr: true });
     }
+    if ((apimedia?.length === 0 && textPost?.length == 0) && type === "post") {
+      return setPostErr({ errTxt: "Post can't be empty", isErr: true });
+    }
     const formData = new FormData();
     formData.append("leaderid", userDetails?.leaderId || "");
     formData.append("written_text", textPost || "");

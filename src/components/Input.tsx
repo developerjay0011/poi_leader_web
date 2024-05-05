@@ -22,7 +22,8 @@ interface InputProps {
   readOnly?: boolean
   fullWidth?: boolean
   multiple?: boolean
-  min?: {}
+  min?: any
+  max?: any
 }
 
 export const Input: FC<InputProps> = ({
@@ -40,12 +41,17 @@ export const Input: FC<InputProps> = ({
   fullWidth,
   disabled,
   multiple = false,
-  min
+  min,
+  max
 }) => {
   const [isPassword, setIsPassword] = useState(type === 'password')
   const mins = min ? { min: min } : {}
+  const maxs = max ? { max: max } : {}
   const InputFieldType =
     type === 'select' || type === 'textarea' || type === 'file' ? type : 'normal'
+  let listdata = type === 'select' && Array.isArray(selectField?.options) ? selectField?.options.sort((a, b) => a.value.localeCompare(b.value)) : []
+
+
 
   const INPUT = {
     textarea: (
@@ -74,6 +80,7 @@ export const Input: FC<InputProps> = ({
           disabled={disabled}
           readOnly={readOnly || false}
           {...mins}
+          {...maxs}
           id={id}
           type={type === 'password' ? (isPassword ? 'password' : 'text') : type} // conditionaly setting type of input field and then also consitionally setting type in case of password.
           {...register(id, {
@@ -151,11 +158,11 @@ export const Input: FC<InputProps> = ({
             : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
             }`}>
           <option value=''>
-            {selectField.options.length > 0
+            {listdata?.length > 0
               ? selectField.title
               : `No ${selectField.title.split(' ').at(-1)} Found !!`}
           </option>
-          {selectField.options.map((el) => (
+          {listdata?.map((el) => (
             <option value={el.id} key={el.id}>
               {el.value}
             </option>
@@ -184,4 +191,10 @@ export const Input: FC<InputProps> = ({
       />
     </label>
   )
+}
+
+export const Shortarray = (selectOptions: any, key = "value") => {
+  const clonedOptions = [...selectOptions];
+  const listdata = Array.isArray(clonedOptions) && clonedOptions?.length > 0 ? clonedOptions?.sort((a, b) => a?.[key].localeCompare(b?.[key])) : [];
+  return listdata;
 }

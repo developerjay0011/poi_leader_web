@@ -4,6 +4,7 @@ import { insertVariables } from "@/config/insert-variables";
 import { tryCatch } from "@/config/try-catch";
 import { APIRoutes } from "@/constants/routes";
 import moment from "moment";
+import { MapFcm, RemoveOwnFcm, Sendnoti } from "../notification/notification";
 
 
 export const GetPostsForLeader = async (leaderid: any) => {
@@ -18,6 +19,18 @@ export const GetPostsForLeader = async (leaderid: any) => {
 export const LikePost = async (likeBody: any) => {
   return tryCatch(async () => {
     const res = await Axios.post(APIRoutes.LikePost, likeBody);
+    if (res?.data.success) {
+      Sendnoti({
+        tokens: RemoveOwnFcm(res?.data?.data?.tokens),
+        description: res?.data?.data?.notification?.description,
+        date: res?.data?.data?.notification?.createddate,
+        title: res?.data?.data?.notification?.title,
+        userimg: res?.data?.data?.notification?.userimg,
+        referenceid: res?.data?.data?.notification?.referenceid,
+        notificationid: res?.data?.data?.notification?.id,
+        type: "like_post"
+      })
+    }
     return res.data;
   });
 };
@@ -40,6 +53,18 @@ export const DeletePost = async (body: any) => {
 export const CommentPost = async (resBody: any) => {
   return tryCatch(async () => {
     const res = await Axios.post(APIRoutes.CommentPost, resBody);
+    if (res?.data.success) {
+      Sendnoti({
+        tokens: RemoveOwnFcm(res?.data?.data?.tokens),
+        description: res?.data?.data?.notification?.description,
+        date: res?.data?.data?.notification?.createddate,
+        title: res?.data?.data?.notification?.title,
+        userimg: res?.data?.data?.notification?.userimg,
+        referenceid: res?.data?.data?.notification?.referenceid,
+        notificationid: res?.data?.data?.notification?.id,
+        type: "comment_post"
+      })
+    }
     return res.data;
   });
 };
@@ -101,7 +126,7 @@ const ConvertCommonpost = (list = []): any => {
       return dateB.getTime() - dateA.getTime();
     });
   } catch (error) {
-    console.log(error)
+    console.error(error);
   }
   return Array.isArray(combinedData) && combinedData;
 };
@@ -294,6 +319,18 @@ export const addPost = async (formData: any) => {
           "Content-Type": "multipart/form-data"
         }
       });
+      if (res?.data.success) {
+        Sendnoti({
+          tokens: MapFcm(res?.data?.data?.tokens, true),
+          description: res?.data?.data?.notification?.description,
+          date: res?.data?.data?.notification?.createddate,
+          title: res?.data?.data?.notification?.title,
+          userimg: res?.data?.data?.notification?.userimg,
+          referenceid: res?.data?.data?.notification?.referenceid,
+          notificationid: res?.data?.data?.notification?.id,
+          type: "new_post"
+        })
+      }
       return res.data;
     }
   );

@@ -4,7 +4,7 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { PollType } from '@/utils/typesUtils'
 import { BiMinusCircle, BiPlusCircle, BiX } from 'react-icons/bi'
-import { GenerateId, dateTimeConverter } from '@/utils/utility'
+import { CheckTime, GenerateId, dateTimeConverter } from '@/utils/utility'
 import { ImagePlusTextInput } from './ImagePlusTextInput'
 import { PollsPreview } from '@/components/posts/polls/PollsPreview'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
@@ -56,6 +56,9 @@ export const ManagePollsForm: FC<ManagePollsFormProps> = ({ onClose, submitting,
   const formSubmitHandler = (data: NewPollsFormFields) => {
     tryCatch(
       async () => {
+        if (data?.publishDate && data?.expiresAt) {
+          if (CheckTime(data?.publishDate, data?.expiresAt) == false) { return }
+        }
         if ((data?.pollType != "text + image" && data?.poll_options?.length < 2) || (data?.pollType == "text + image" && data?.imgOptions?.length < 2)) {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Add minimum 2 poll" }))
           return

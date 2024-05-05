@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import POILogo from "@/assets/poi_logo_1.png";
 import { StaticImageData } from "next/image";
 import { FaSearch, FaBell, FaHamburger, FaUserTimes } from "react-icons/fa";
@@ -26,7 +26,6 @@ import { getLetterTemplates, getLetters } from "@/redux_store/letter/letterApi";
 import { letterActions } from "@/redux_store/letter/letterSlice";
 import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { AuthRoutes } from "@/constants/routes";
 import { FaPowerOff } from 'react-icons/fa6'
 import { GetLeaderAddedPosts, GetPostsForLeader, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import { postActions } from "@/redux_store/posts/postSlice";
@@ -34,7 +33,7 @@ import { getDirectory } from "@/redux_store/directory/directoryApi";
 import { directoryAction } from "@/redux_store/directory/directorySlice";
 import { GetDashboardEvents } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
-import { GetCategories, getTickets, } from "@/redux_store/ticket/ticketApi";
+import { getTickets, } from "@/redux_store/ticket/ticketApi";
 import { ticketActions } from "@/redux_store/ticket/ticketSlice";
 import { getGroups } from "@/redux_store/group/groupAPI";
 import { groupActions } from "@/redux_store/group/groupSlice";
@@ -61,6 +60,8 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   const [searchUserStr, setSearchUserStr] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { notification } = cusSelector((state) => state.leader);
+  const notification_isread = notification?.filter((e) => e?.isread == false)
+
   let allcookies: any = getCookies()
   let heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
   heading = heading === "user" || heading === "employee access" ? "home" : heading;
@@ -92,158 +93,165 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
 
 
   useEffect(() => {
-    if (user_type == "leader") {
-      (async () => {
-        let allcookies: any = await getCookies()
-        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
-          if (userDetails?.leaderId) {
-            const leaderRes = await getProfile(userDetails?.leaderId);
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
-            if (leaderRes?.request_status === "Rejected") {
-              dispatch(authActions.logout())
-              return
+    try {
+      if (user_type == "leader") {
+        (async () => {
+          let allcookies: any = await getCookies()
+          if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
+            if (userDetails?.leaderId) {
+              const leaderRes = await getProfile(userDetails?.leaderId);
+              dispatch(leaderActions.setLeaderProfile(leaderRes));
+              if (leaderRes?.request_status !== "Approved") {
+                dispatch(authActions.logout(false as any))
+                return
+              }
+              const Data = await getDirectory(userDetails?.leaderId as string);
+              dispatch(directoryAction.storedirectory(Data))
+
+              // Leader
+              const LeadersDropdown = await getLeadersOptions();
+              dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+
+              // TrendingLeader
+
+              const leaderList = await GetLeaderList();
+              dispatch(leaderActions.setLeaderlist(leaderList))
+              const trendingLeader = await getTrendingLeaderList();
+              dispatch(leaderActions.setTrendingLeader(trendingLeader))
+
+              // Follower
+              const followingRes = await getFollowers(userDetails?.leaderId as string);
+              dispatch(leaderActions.setFollowers(followingRes));
+              const followering = await getFollowering(userDetails?.leaderId as string)
+              dispatch(leaderActions.setFollowing(followering))
+
+              // Stories
+              const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
+              dispatch(postActions.storeStories(storiesForLeader as any[]));
+
+
+              // GetBirthdayList
+              const BirthdayList = await GetBirthdayList();
+              dispatch(leaderActions.setBirthdayList(BirthdayList));
+
+              //event
+              const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+              dispatch(eventAction.storeDashboardevents(DashboardEvents));
+
+              // Posts
+              const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+              dispatch(postActions.setPost(postsForLeader));
+              const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
+              dispatch(postActions.listPosts(leaderpost as any));
+
+
+              // Notification
+              const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": 0 });
+              dispatch(leaderActions.setNotification(response));
+
+              // Letter
+              const Letters = await getLetters(userDetails?.leaderId as string);
+              dispatch(letterActions.storeLetter(Letters));
+              const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+              dispatch(letterActions.storeLetterTemplate(LetterTemplates));
+              const Tickets = await getTickets(userDetails?.leaderId as string);
+              dispatch(ticketActions.storeTicket(Tickets));
+
+              // Groups
+              const Groups = await getGroups(userDetails?.leaderId as string);
+              dispatch(groupActions.storeGroups(Groups));
+
+              // GetEmployees
+              const Employees = await GetEmployees(userDetails?.leaderId as string);
+              dispatch(employeeAction.storeemployees(Employees));
+
+              // Category
+              const Category = await getCategory(userDetails?.leaderId as string);
+              dispatch(developmentAction.storeCategories(Category));
+
+              // Development
+              const Development = await getDevelopment(userDetails?.leaderId as string);
+              dispatch(developmentAction.storeDevelopments(Development));
+
+              // Agenda
+              const Agenda = await getAgenda(userDetails?.leaderId as string);
+              dispatch(agendaAction.storeAgendas(Agenda));
+
+              const Files = await GetFiles(userDetails?.leaderId as string);
+              dispatch(fileAction.storeFiles(Files));
+
+              const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+              dispatch(locationAction.storeLocation(OfficeLocations));
             }
-            const Data = await getDirectory(userDetails?.leaderId as string);
-            dispatch(directoryAction.storedirectory(Data))
-
-            // Leader
-            const LeadersDropdown = await getLeadersOptions();
-            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-
-            // TrendingLeader
-
-            const leaderList = await GetLeaderList();
-            dispatch(leaderActions.setLeaderlist(leaderList))
-            const trendingLeader = await getTrendingLeaderList();
-            dispatch(leaderActions.setTrendingLeader(trendingLeader))
-
-            // Follower
-            const followingRes = await getFollowers(userDetails?.leaderId as string);
-            dispatch(leaderActions.setFollowers(followingRes));
-            const followering = await getFollowering(userDetails?.leaderId as string)
-            dispatch(leaderActions.setFollowing(followering))
-
-            // Stories
-            const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
-            dispatch(postActions.storeStories(storiesForLeader as any[]));
-
-
-            // GetBirthdayList
-            const BirthdayList = await GetBirthdayList();
-            dispatch(leaderActions.setBirthdayList(BirthdayList));
-
-            //event
-            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
-            dispatch(eventAction.storeDashboardevents(DashboardEvents));
-
-            // Posts
-            const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
-            dispatch(postActions.setPost(postsForLeader));
-            const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
-            dispatch(postActions.listPosts(leaderpost as any));
-
-
-            // Notification
-            const response = await getNotification(userDetails?.leaderId as string);
-            dispatch(leaderActions.setNotification(response));
-
-            // Letter
-            const Letters = await getLetters(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetter(Letters));
-            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
-            const Tickets = await getTickets(userDetails?.leaderId as string);
-            dispatch(ticketActions.storeTicket(Tickets));
-
-            // Groups
-            const Groups = await getGroups(userDetails?.leaderId as string);
-            dispatch(groupActions.storeGroups(Groups));
-
-            // GetEmployees
-            const Employees = await GetEmployees(userDetails?.leaderId as string);
-            dispatch(employeeAction.storeemployees(Employees));
-
-            // Category
-            const Category = await getCategory(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeCategories(Category));
-
-            // Development
-            const Development = await getDevelopment(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeDevelopments(Development));
-
-            // Agenda
-            const Agenda = await getAgenda(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeAgendas(Agenda));
-
-            const Files = await GetFiles(userDetails?.leaderId as string);
-            dispatch(fileAction.storeFiles(Files));
-
-
-            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
-            dispatch(locationAction.storeLocation(OfficeLocations));
           }
-        }
-      })();
-    }
-    if (user_type != "leader") {
-      (async () => {
-        let allcookies: any = await getCookies()
-        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
-          if (userDetails?.leaderId) {
-            const employee = await GetSingleEmployeeDetail({
-              "leaderid": userDetails?.leaderId,
-              "employeeid": userDetails?.employeeId
-            });
-            dispatch(employeeAction.setemployedetails(employee));
+        })();
+      }
+      if (user_type != "leader") {
+        (async () => {
+          let allcookies: any = await getCookies()
+          if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
+            if (userDetails?.leaderId) {
+              const employee = await GetSingleEmployeeDetail({
+                "leaderid": userDetails?.leaderId,
+                "employeeid": userDetails?.employeeId
+              });
+              dispatch(employeeAction.setemployedetails(employee));
 
-            const leaderRes = await getProfile(userDetails?.leaderId);
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
+              const leaderRes = await getProfile(userDetails?.leaderId);
+              dispatch(leaderActions.setLeaderProfile(leaderRes));
 
-            const LeadersDropdown = await getLeadersOptions();
-            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+              // Notification
+              const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": userDetails?.employeeId });
+              dispatch(leaderActions.setNotification(response));
 
-            const data = await getLetterTemplates(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetterTemplate(data));
+              const LeadersDropdown = await getLeadersOptions();
+              dispatch(commonActions.setLeaderOptions(LeadersDropdown));
 
-            const Data = await getDirectory(userDetails?.leaderId as string);
-            dispatch(directoryAction.storedirectory(Data))
-            const Files = await GetFiles(userDetails?.leaderId as string);
-            dispatch(fileAction.storeFiles(Files));
-            const Letters = await getLetters(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetter(Letters));
-            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
-            const Tickets = await getTickets(userDetails?.leaderId as string);
-            dispatch(ticketActions.storeTicket(Tickets));
+              const data = await getLetterTemplates(userDetails?.leaderId as string);
+              dispatch(letterActions.storeLetterTemplate(data));
 
-            //event
-            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
-            dispatch(eventAction.storeDashboardevents(DashboardEvents));
+              const Data = await getDirectory(userDetails?.leaderId as string);
+              dispatch(directoryAction.storedirectory(Data))
+              const Files = await GetFiles(userDetails?.leaderId as string);
+              dispatch(fileAction.storeFiles(Files));
+              const Letters = await getLetters(userDetails?.leaderId as string);
+              dispatch(letterActions.storeLetter(Letters));
+              const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+              dispatch(letterActions.storeLetterTemplate(LetterTemplates));
+              const Tickets = await getTickets(userDetails?.leaderId as string);
+              dispatch(ticketActions.storeTicket(Tickets));
 
-            // Groups
-            const Groups = await getGroups(userDetails?.leaderId as string);
-            dispatch(groupActions.storeGroups(Groups));
+              //event
+              const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+              dispatch(eventAction.storeDashboardevents(DashboardEvents));
 
-            // GetEmployees
-            const Employees = await GetEmployees(userDetails?.leaderId as string);
-            dispatch(employeeAction.storeemployees(Employees));
+              // Groups
+              const Groups = await getGroups(userDetails?.leaderId as string);
+              dispatch(groupActions.storeGroups(Groups));
 
-            // Category
-            const Category = await getCategory(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeCategories(Category));
+              // GetEmployees
+              const Employees = await GetEmployees(userDetails?.leaderId as string);
+              dispatch(employeeAction.storeemployees(Employees));
 
-            // Development
-            const Development = await getDevelopment(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeDevelopments(Development));
+              // Category
+              const Category = await getCategory(userDetails?.leaderId as string);
+              dispatch(developmentAction.storeCategories(Category));
 
-            // Agenda
-            const Agenda = await getAgenda(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeAgendas(Agenda));
-            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
-            dispatch(locationAction.storeLocation(OfficeLocations));
+              // Development
+              const Development = await getDevelopment(userDetails?.leaderId as string);
+              dispatch(developmentAction.storeDevelopments(Development));
+
+              // Agenda
+              const Agenda = await getAgenda(userDetails?.leaderId as string);
+              dispatch(agendaAction.storeAgendas(Agenda));
+              const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+              dispatch(locationAction.storeLocation(OfficeLocations));
+            }
           }
-        }
-      })();
+        })();
+      }
+    } catch (error) {
+      console.error(error)
     }
   }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
   useEffect(() => {
@@ -322,8 +330,8 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
               >
                 <FaBell className="text-sky-50 text-2xl" />
 
-                <span className="absolute -top-3 -right-2 p-[2px] bg-orange-500 text-orange-50 text-[11px] aspect-square flex items-center justify-center rounded-full">
-                  {notification?.length}
+                <span style={{ display: notification_isread?.length > 0 ? "flex" : "none" }} className="absolute -top-3 -right-2 p-[2px] bg-orange-500 text-orange-50 text-[11px] aspect-square flex items-center justify-center rounded-full">
+                  {notification_isread?.length}
                 </span>
 
                 {showNotifications && (
@@ -372,10 +380,30 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
               <button type="button" onClick={() => router.push(`/user/employeehome`)}>
                 <BsHouseFill className="text-sky-50 text-2xl" />
               </button>
+              <button
+                type="button"
+                className="relative"
+                onClick={() => setShowNotifications((lst) => !lst)}
+                id="briefNotiBox"
+              >
+                <FaBell className="text-sky-50 text-2xl" />
+                <span style={{ display: notification_isread?.length > 0 ? "flex" : "none" }} className="absolute -top-3 -right-2 p-[2px] bg-orange-500 text-orange-50 text-[11px] aspect-square flex items-center justify-center rounded-full">
+                  {notification_isread?.length}
+                </span>
+
+
+                {showNotifications && (
+                  <div onClick={(e) => e.stopPropagation()} className="absolute top-[210%] left-1/2 translate-x-[-50%] z-50">
+                    <BriefNotifications
+                      onClick={() => setShowNotifications((lst) => !lst)}
+                    />
+                  </div>
+                )}
+              </button>
             </section>
 
             <section className="flex items-center gap-4 ml-auto relative">
-              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()) }}>
+              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout(true as any)) }}>
                 <FaPowerOff />log out
               </button>
             </section>
@@ -460,7 +488,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
               <section className="flex items-center gap-4 ml-auto relative">
-                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout()) }}>
+                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout(true as any)) }}>
                   <FaPowerOff />log out
                 </button>
               </section>

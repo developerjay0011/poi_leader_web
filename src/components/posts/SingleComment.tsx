@@ -63,7 +63,7 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
         likeChangeHandler()
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
   useEffect(() => {

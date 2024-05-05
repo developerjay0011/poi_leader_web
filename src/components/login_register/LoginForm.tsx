@@ -5,7 +5,7 @@ import { LuLock } from "react-icons/lu";
 import { AiOutlineKey } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { deleteCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import Logo from "@/assets/favicon.png";
 import { useForm } from "react-hook-form";
 import {
@@ -18,7 +18,7 @@ import { cusDispatch } from "@/redux_store/cusHooks";
 import { ForgetPassword } from "../common-forms/ForgetPasswordForm";
 import { AnimatePresence } from "framer-motion";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { EMPLOYEE_ID, LEADER_ID, LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
+import { LEADER_FCM_TOKEN_KEY, LEADER_ID, LEADER_IP, LOGIN_BODY, TOKEN_KEY, ToastType, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
 import { AuthRoutes, EmployeeProtectedRoutes, ProtectedRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
@@ -26,6 +26,7 @@ import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { fetchAccessTabs, fetchEmployeeAccessTabs } from "@/redux_store/accesstab/tabApi";
 import { accessAction } from "@/redux_store/accesstab/tabSlice";
+// import Notificationpage from "@/utils/firebase/notification";
 
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -42,13 +43,14 @@ export const LoginForm: FC<LoginFormProps> = () => {
     data: LoginFormFields | RegisterFormFields
   ) => {
     setErr({ errTxt: "", isErr: false });
-
+    var fcm = getCookie(LEADER_FCM_TOKEN_KEY) || ""
+    var ip = getCookie(LEADER_IP) || ""
     const resBody = {
       email: data?.userId,
       password: data?.password,
       fcm_token: {
-        deviceid: "123",
-        token: "",
+        deviceid: ip,
+        token: fcm ? JSON.parse(fcm) : "",
       },
     };
 
@@ -88,29 +90,30 @@ export const LoginForm: FC<LoginFormProps> = () => {
     setCookie(TOKEN_KEY, loginResponse.token);
     if (usertype == "leader employee") {
       await setCookie(USER_VERIFY, 'true');
-      const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid, employee_detail };
+      const userData = { ...data.user_detail, leaderId: data?.user_detail.leaderid, employeeId: data?.user_detail.employeeid, employee_detail, fcm_tokens: [] };
       const serializedData = JSON.stringify(userData);
+      setCookie(LEADER_ID, data?.user_detail.leaderid);
       await setCookie(USER_INFO, serializedData);
       await dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       await dispatch(authActions.setUserData(userData));
       await setCookie(USER_TYPE, 'employee');
-      await setCookie(EMPLOYEE_ID, data?.user_detail.employeeid);
       await router.push(EmployeeProtectedRoutes.employee);
       var tabs = await fetchEmployeeAccessTabs(data?.user_detail.employeeid, { nav: true, router: router, setLoggingIn: setLoggingIn })
-      if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
+      if (Array.isArray(tabs?.tab_data)) { await dispatch(accessAction.storeAccesstabs(tabs?.tab_data as any)) }
       return
     }
     if (usertype != "leader employee") {
-      const userData = { ...data.user_detail, leaderId: data?.leader_detail.id };
+      const userData = { ...data.user_detail, leaderId: data?.leader_detail.id, fcm_tokens: [] };
       await dispatch(leaderActions.setLeaderProfile(data.leader_detail));
       await dispatch(authActions.setUserData(userData));
       const serializedData = JSON.stringify(userData);
       await setCookie(USER_INFO, serializedData);
       if (data?.leader_detail?.is_profile_complete && data?.leader_detail?.request_status === "Approved") {
+        setCookie(LEADER_ID, data?.leader_detail.id);
         await setCookie(USER_TYPE, 'leader');
         await setCookie(USER_VERIFY, 'true');
         var tabs = await fetchAccessTabs(data.user_detail?.id, { nav: true, router: router, setLoggingIn: setLoggingIn })
-        if (Array.isArray(tabs)) { await dispatch(accessAction.storeAccesstabs(tabs as any)) }
+        if (Array.isArray(tabs?.tab_data)) { await dispatch(accessAction.storeAccesstabs(tabs?.tab_data as any)) }
         await router.push(ProtectedRoutes.user);
         return
       }
@@ -218,6 +221,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       <AnimatePresence mode="wait">
         {showForgetPassForm && <ForgetPassword onClose={closeModal} />}
       </AnimatePresence>
+      {/* <Notificationpage /> */}
     </>
   );
 };

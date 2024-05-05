@@ -53,7 +53,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
       }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);;
 
     }
   };
@@ -123,7 +123,7 @@ const DevelopmentForm: React.FC<DevelopmentFormProps> = ({ onCancel, development
             type='date'
             required
             validations={{
-              required: 'Date of Birth is required',
+              required: 'Creation Date is required',
             }}
           />
         </div>

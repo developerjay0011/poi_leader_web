@@ -49,8 +49,7 @@ const PoliticalInformationPage: FC = () => {
         });
         if (response?.success) {
           await dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
-          await dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: "Your profile is under approval" }))
-          dispatch(authActions.logout());
+          dispatch(authActions.logout(false as any))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }

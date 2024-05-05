@@ -7,9 +7,15 @@ import { getTickets } from '@/redux_store/ticket/ticketApi'
 import { ticketActions } from '@/redux_store/ticket/ticketSlice'
 import { ManageTicketTable } from '@/components/ticket/ManageTicketTable'
 import { TicketForm } from '../forms/TicketForm'
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/router'
+import { Shortarray } from '@/components/Input'
 
 export const TicketTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
+    const searchParams = useSearchParams();
+    const types = searchParams.get('type');
+    const referenceid = searchParams.get('referenceid');
     const [showTicket, setShowTicket] = useState(false)
     const [ischecked, setIschecked] = useState<any>([])
     const [searchFilter, setSearchFilter] = useState('');
@@ -57,9 +63,6 @@ export const TicketTemplateManagePage: FC = () => {
 
 
 
-
-
-
     return (
         <>
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
@@ -86,7 +89,7 @@ export const TicketTemplateManagePage: FC = () => {
                                     className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
-                                    {leaderOptions?.categories?.map((item: any) =>
+                                    {Shortarray(leaderOptions?.categories, "category")?.map((item: any) =>
                                         <option value={item?.category}>{item?.category}</option>
                                     )}
                                 </select>
@@ -100,7 +103,7 @@ export const TicketTemplateManagePage: FC = () => {
                                     className="py-1 px-1 text-md border border-gray-300 text-gray-900 bg-white rounded-md capitalize cursor-pointer"
                                 >
                                     <option value="">All</option>
-                                    {statusticketOption?.map((item: any) =>
+                                    {Shortarray(statusticketOption)?.map((item: any) =>
                                         <option value={item?.id}>{item?.value}</option>
                                     )}
                                 </select>
@@ -115,7 +118,7 @@ export const TicketTemplateManagePage: FC = () => {
                                 >
                                     <option value="">All</option>
                                     {leaderOptions?.states?.length > 0 &&
-                                        leaderOptions?.states?.map((item: any) =>
+                                        Shortarray(leaderOptions?.states, "state")?.map((item: any) =>
                                             <option value={item?.id}>{item?.state}</option>
                                         )}
                                 </select>
@@ -129,6 +132,7 @@ export const TicketTemplateManagePage: FC = () => {
                         searchStr={searchFilter}
                         ticket={handleFilter(ticket, statusFilter, categoryFilter, locationFilter)?.filterlist || []}
                         ischecked={ischecked}
+                        alldata={ticket}
                         setIschecked={setIschecked}
                         curPageNo={curPageNo}
                         filterDataCount={filterDataCount}

@@ -39,7 +39,7 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
     tryCatch(
       async () => {
         setRegistering(true)
-        const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, });
+        const response = await submitLeaderForm({ ...leaderProfile, 'contact_info': resBody, }, true);
         setRegistering(false)
         if (response?.success) {
           moveLogin()
@@ -136,7 +136,17 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
           register={register}
           title='Pincode'
           id='permanent_pincode'
-          type='text'
+          type='number'
+          validations={{
+            validate: {
+              notAValidNo(val) {
+                return (
+                  val.toString().length == 6 ||
+                  "please enter a valid pincode"
+                );
+              },
+            },
+          }}
         />
 
         <YesNoField
@@ -237,7 +247,17 @@ export const ContactForm: FC<ContactFormProps> = ({ setPage, moveLogin }) => {
               register={register}
               title='Pincode'
               id='present_pincode'
-              type='text'
+              type='number'
+              validations={{
+                validate: {
+                  notAValidNo(val) {
+                    return (
+                      val.toString().length == 6 ||
+                      "please enter a valid pincode"
+                    );
+                  },
+                },
+              }}
             />
           </>
         )}

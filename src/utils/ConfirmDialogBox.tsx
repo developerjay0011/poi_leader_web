@@ -4,7 +4,7 @@ import { BsFillPatchExclamationFill } from 'react-icons/bs'
 import { motion as m } from 'framer-motion'
 
 interface ConfirmDialogBoxProps {
-  onOk: () => void
+  onOk?: () => void
   onCancel: () => void
   noAllowed: boolean
 }
@@ -45,7 +45,7 @@ export const ConfirmDialogBox: FC<ConfirmDialogBoxProps> = ({
             <button
               className={`py-2 px-5 text-md uppercase bg-teal-700 text-white rounded-md ${noAllowed ? 'cursor-not-allowed' : ''
                 }`}
-              onClick={() => onOk()}>
+              onClick={() => onOk && onOk()}>
               {noAllowed ? 'processing..' : 'ok'}
             </button>
           </div>

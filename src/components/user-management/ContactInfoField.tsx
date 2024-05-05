@@ -53,11 +53,10 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
           })}
           placeholder=''
           id={`pAddress`}
-          className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-            errors.pAddress
-              ? 'bg-red-100 text-red-500 border-red-400'
-              : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-          }`}
+          className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${errors.pAddress
+            ? 'bg-red-100 text-red-500 border-red-400'
+            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+            }`}
           rows={4}></textarea>
         <ErrorMessage
           as={'span'}
@@ -107,9 +106,17 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
         register={register}
         title='Pincode'
         id='pPincode'
-        type='text'
+        type='number'
         validations={{
           required: 'Pincode is required',
+          validate: {
+            notAValidNo(val) {
+              return (
+                val.toString().length == 6 ||
+                "please enter a valid pincode"
+              );
+            },
+          },
         }}
       />
 
@@ -158,11 +165,10 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
               })}
               placeholder=''
               id={`cAddress`}
-              className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${
-                errors.cAddress
-                  ? 'bg-red-100 text-red-500 border-red-400'
-                  : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-              }`}
+              className={`resize-none w-full h-full text-base py-2 px-3 rounded-md outline-none border ${errors.cAddress
+                ? 'bg-red-100 text-red-500 border-red-400'
+                : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
+                }`}
               rows={4}></textarea>
             <ErrorMessage
               as={'span'}
@@ -212,9 +218,17 @@ export const ContactInfoField: FC<ContactInfoFieldProps> = ({
             register={register}
             title='Pincode'
             id='cPincode'
-            type='text'
+            type='number'
             validations={{
               required: 'Pincode is required',
+              validate: {
+                notAValidNo(val) {
+                  return (
+                    val.toString().length == 6 ||
+                    "please enter a valid pincode"
+                  );
+                },
+              },
             }}
           />
         </>

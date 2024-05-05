@@ -26,6 +26,7 @@ interface AgendaTimelineProps {
   timeline: TimeLineDetails[]
   agendaid: string
   status: string
+  agenda?: any
 }
 
 export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
@@ -34,7 +35,8 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
   title,
   timeline,
   agendaid,
-  status
+  status,
+  agenda
 }) => {
   const [editTimeLine, setEditTimeLine] = useState(false);
   const [editData, setEditData] = useState<TimeLineDetails>();
@@ -112,14 +114,14 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({
                           Edit Milestone
                         </h3>
                         <div className="py-5 px-5">
-                          <TimeLineForm data={editData} isedit={true} agendaid={agendaid} onCancel={() => setEditTimeLine(false)} />
+                          <TimeLineForm data={editData} agenda={agenda} isedit={true} agendaid={agendaid} onCancel={() => setEditTimeLine(false)} />
                         </div>
                       </m.div>
                     </div>
                   </m.div>
                 )}
-
-              </AnimatePresence>}
+              </AnimatePresence>
+              }
             </ul>
 
           </m.div>

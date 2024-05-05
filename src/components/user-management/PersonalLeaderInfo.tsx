@@ -11,6 +11,7 @@ import { LeaderFormFields, ProfessionDetails } from "./AddLeaderPage";
 import { MultiSelectInputPersonalLeaderInfo } from "./MultiSelectInputPersonalLeaderInfo";
 import { BLOOG_GROUPS } from "@/utils/utility";
 import { MaritalStatusDropdowns } from "@/constants/common";
+import moment from "moment";
 
 interface PersonalLeaderInfoProps {
   errors: FieldErrors<LeaderFormFields>;
@@ -139,6 +140,7 @@ export const PersonalLeaderInfo: FC<PersonalLeaderInfoProps> = ({
         validations={{
           required: "Date of Birth is required",
         }}
+        max={moment().format("YYYY-MM-DD")}
       />
       <Input
         errors={errors}

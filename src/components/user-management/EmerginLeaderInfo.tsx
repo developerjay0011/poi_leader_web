@@ -22,10 +22,7 @@ import {
   StateDetails,
 } from "./AddLeaderPage";
 import { LEADER_IDS } from "@/utils/typesUtils";
-import {
-  convertFileToBase64,
-  convertFileToBase64Emergin,
-} from "@/utils/utility";
+import { convertFileToBase64Emergin, } from "@/utils/utility";
 
 interface EmerginLeaderInfoProps {
   watch: UseFormWatch<LeaderFormFields>;

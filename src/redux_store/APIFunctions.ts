@@ -2,9 +2,10 @@ import Axios from "@/config/axios";
 import { tryCatch } from "@/config/try-catch";
 import { APIRoutes } from "@/constants/routes";
 import moment from "moment";
+import { Sendnoti } from "./notification/notification";
 
 // Create / Update Leader API
-export const submitLeaderForm = async (body: any) => {
+export const submitLeaderForm = async (body: any, islogin?: any) => {
   return tryCatch(
     async () => {
       var personal_info = body?.personal_info
@@ -95,6 +96,20 @@ export const submitLeaderForm = async (body: any) => {
         "general_setting": { ...general_setting }
       }
       const res = await Axios.post(APIRoutes.upsertLeaders, params);
+      if (res?.data?.success) {
+        if (body?.request_status == "Re-submitted" || islogin == true) {
+          Sendnoti({
+            tokens: res?.data?.data?.tokens,
+            description: res?.data?.data?.notification?.description,
+            date: res?.data?.data?.notification?.createddate,
+            title: res?.data?.data?.notification?.title,
+            userimg: res?.data?.data?.notification?.userimg,
+            referenceid: res?.data?.data?.notification?.referenceid,
+            notificationid: res?.data?.data?.notification?.id,
+            type: body?.request_status == "Re-submitted" ? "profile_approval" : "approval"
+          })
+        }
+      }
       return res.data;
     }
   );

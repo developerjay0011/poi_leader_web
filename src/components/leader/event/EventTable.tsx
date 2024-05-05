@@ -8,6 +8,7 @@ import { eventAction } from "@/redux_store/event/eventSlice";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { ErrorTableRow } from "@/utils/ErrorTableRow";
 import { AnimatePresence } from "framer-motion";
+import moment from "moment";
 import { FC, useState } from "react";
 import { BsTrash3Fill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
@@ -73,8 +74,8 @@ export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent,
                     <td className="text-center py-2 p-2 border">{Event.description}</td>
                     <td className="text-center py-2 p-2 border">{Event.ispublic ? "Public" : "Private"}</td>
                     <td className="text-center py-2 p-2 border w-[20%]">{Event.location}</td>
-                    <td className="text-center py-2 p-2 border w-[200px]">{Event.start_datetime}</td>
-                    <td className="text-center py-2 p-2 border w-[200px]">{Event.end_datetime}</td>
+                    <td className="text-center py-2 p-2 border w-[200px]">{moment(Event.start_datetime).format("DD-M-YYYY hh:mm a")}</td>
+                    <td className="text-center py-2 p-2 border w-[200px]">{moment(Event.end_datetime).format("DD-M-YYYY hh:mm a")}</td>
                     <td className='text-center py-2 pl-2 border printHide'>
                       <button
                         className='hover:scale-110 transition-all mr-3 ease-out duration-200 active:scale-100'

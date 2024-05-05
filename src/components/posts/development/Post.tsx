@@ -136,7 +136,6 @@ export const DevelopmentPost: FC<DevelopmentPostProps> = ({
                     }
                     onClose={() => setShowMorePostOptions(false)}
                     postAgendaHandler={() => posthandler()}
-                    userId={userId}
                     ispost={el?.make_post}
                   />
                 )}

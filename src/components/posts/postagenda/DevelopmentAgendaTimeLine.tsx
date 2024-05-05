@@ -4,6 +4,7 @@ import { motion as m } from 'framer-motion'
 import Image from 'next/image'
 import { FaFileAlt } from 'react-icons/fa'
 import { getImageUrl } from '@/config/get-image-url'
+import { dateConverter } from '@/utils/utility'
 
 export type PRIORITY = 0 | 1 | 2
 interface AgendaTimelineProps {
@@ -44,6 +45,7 @@ export const DevelopmentAgendaTimeLine: FC<AgendaTimelineProps> = ({ onClose, ti
                   details={item?.description}
                   title={item?.milestone}
                   attachments={item?.attachments}
+                  created_date={item?.created_date}
                 />
               )}
             </ul>
@@ -59,7 +61,8 @@ interface TimeLineDataProps {
   title: string
   status: 0 | 1 | 2,
   attachments: any
-  key: string
+  key: string,
+  created_date: any
 }
 
 const colors = {
@@ -77,7 +80,7 @@ const colors = {
   },
 }
 
-const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, attachments, key }) => {
+const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, attachments, key, created_date }) => {
   return (
     <>
       <li key={key} className={`last_timeline ${colors[status].line}`}>
@@ -91,6 +94,7 @@ const TimeLineData: FC<TimeLineDataProps> = ({ details, title, status, attachmen
             <a key={inedx} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download><FaFileAlt /></a>))}
           <div className='flex flex-col w-full'>
             <h4 className='font-medium capitalize'>{title}</h4>
+            {created_date && <p className='text-[15px] text-gray-600'>{dateConverter(created_date)}</p>}
             <p className='text-[15px] text-gray-600'>{details}</p>
           </div>
         </div>

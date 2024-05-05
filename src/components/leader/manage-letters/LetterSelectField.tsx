@@ -10,10 +10,12 @@ interface LetterSelectFieldProps {
   validations?: RegisterOptions<LetterFormFields, keyof LetterFormFields>
   title: string
   required?: boolean
-  disabled?:boolean
+  disabled?: boolean
   selectOptions: { id: string; val: string }[]
 }
 export const LetterSelectField: FC<LetterSelectFieldProps> = ({ error, id, register, title, selectOptions, required, validations, disabled }) => {
+  const listdata = Array.isArray(selectOptions) ? selectOptions?.sort((a, b) => a.val.localeCompare(b.val)) : []
+
   return (
     <>
       <label htmlFor={id} className='w-full flex gap-3 items-center'>
@@ -31,7 +33,7 @@ export const LetterSelectField: FC<LetterSelectFieldProps> = ({ error, id, regis
             {...register(id, validations)}
           >
             <option value=''>{title}</option>
-            {selectOptions?.map((el) => (
+            {listdata?.map((el) => (
               <option key={el.id} value={el.id}>
                 {el.val}
               </option>

@@ -42,6 +42,7 @@ export const MultiSelectInputPersonalLeaderInfo: FC<MultiSelectInputProps> = ({
   const filteredOptions = options.filter((el) =>
     el.val.toLowerCase().includes(multiSelectSearchStr)
   )
+  let listdata = Array.isArray(filteredOptions) ? filteredOptions.sort((a, b) => a.val.localeCompare(b.val)) : []
 
   useEffect(() => {
     selectedFields.length > 0 ? setValue(selectedFields) : setValue([])
@@ -55,11 +56,10 @@ export const MultiSelectInputPersonalLeaderInfo: FC<MultiSelectInputProps> = ({
           {required && <strong className='text-rose-500'>*</strong>}
         </span>
         <div
-          className={`relative overflow-hidden w-full border py-[.7rem] outline-none rounded-md text-base transition-all border-slate-300 bg-slate-100 flex items-center flex-wrap ${
-            selectedFields.length > 0
-              ? 'bg-white pr-4 pl-2'
-              : 'bg-slate-100 px-4'
-          }`}>
+          className={`relative overflow-hidden w-full border py-[.7rem] outline-none rounded-md text-base transition-all border-slate-300 bg-slate-100 flex items-center flex-wrap ${selectedFields.length > 0
+            ? 'bg-white pr-4 pl-2'
+            : 'bg-slate-100 px-4'
+            }`}>
           {/* Displaying Selected values */}
           {selectedFields.length > 0 && (
             <div className='flex items-center gap-2 mr-1 flex-wrap'>
@@ -172,8 +172,8 @@ export const MultiSelectInputPersonalLeaderInfo: FC<MultiSelectInputProps> = ({
               }
             }}
             className='absolute top-full left-0 w-full outline-none rounded-md shadow-md border z-[100]'>
-            {filteredOptions.length > 0 &&
-              filteredOptions.map((el) => (
+            {listdata?.length > 0 &&
+              listdata?.map((el) => (
                 <option
                   value={el.id}
                   className='py-1 px-3 hover:bg-zinc-300'
@@ -182,7 +182,7 @@ export const MultiSelectInputPersonalLeaderInfo: FC<MultiSelectInputProps> = ({
                 </option>
               ))}
 
-            {filteredOptions.length === 0 && (
+            {listdata?.length === 0 && (
               <option className='text-center' value=''>
                 No Data found
               </option>

@@ -68,7 +68,6 @@ export const MembersToGroup: FC<MemberstogroupFormProp> = ({ setShowMember, show
       async () => {
         if (showMember == "Upload Directory") {
           if (hasMissingKeys(datas) == false) {
-            console.log("All keys exist in the object.");
           } else {
             dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: "Some filed are missing in the excel ,Please refer to excel example." }))
             return

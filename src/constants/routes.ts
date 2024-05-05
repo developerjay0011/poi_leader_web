@@ -5,6 +5,8 @@ export const ProtectedRoutes = {
   editUserProfile: "/user/profile/settings/personal-information",
   accountSetting: "/user/profile/settings/general",
   followers: "/user/profile/followers",
+  ticket: "/user/ticket",
+  feed: "/user/profile/feed",
 };
 
 
@@ -14,6 +16,7 @@ export const EmployeeProtectedRoutes = {
 
 export const AuthRoutes = {
   login: "/",
+  mlogin: "/login",
   register: "/register",
   leaderinfo: "/leaderinfo",
 }
@@ -40,7 +43,7 @@ export const APIRoutes = {
   uploadProfile: `${API_Prefix}/leader/uploadLeaderProfileImge`,
   uploadActivityPictures: `${API_Prefix}/leader/uploadActivityPictures`,
   getTrendingLeaderList: `${API_Prefix}/leader/trendingleaderlist`,
-  getNotification: `${API_Prefix}/leader/getleadernotification/{{leaderId}}`,
+  getNotification: `${API_Prefix}/leader/getleadernotification/{{leaderId}}/{{employeeId}}`,
   CheckLeaderUserRegExists: `${API_Prefix}/leader/CheckLeaderUserRegExists`,
   ForgotPassword: `${API_Prefix}/leader/ForgotPassword`,
   GetEmployees: `${API_Prefix}/leader/GetEmployees/{{leaderId}}`,
@@ -99,6 +102,8 @@ export const APIRoutes = {
   saveTimeLine: `${API_Prefix}/leader/savetimeline`,
   deleteTimeLine: `${API_Prefix}/leader/deletetimeline`,
   makeAgendaPost: `${API_Prefix}/leader/makeagendapost`,
+  DeleteDevelopmentPost: `${API_Prefix}/leader/DeleteDevelopmentPost`,
+  DeleteAgendaPost: `${API_Prefix}/leader/DeleteAgendaPost`,
 
   // Development Endpoint
   getDevelopment: `${API_Prefix}/leader/getdevelopments/{{leaderId}}`,

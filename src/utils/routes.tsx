@@ -165,4 +165,9 @@ export const EXTRA_TABS = [{
   name: 'developments',
   tabname: "Manage Developments",
 },
+{
+  link: '/employee-access/profile/notifications',
+  name: 'notifications',
+  tabname: "employee",
+},
 ]

@@ -1,7 +1,9 @@
 import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
-import { APIRoutes } from '@/constants/routes'
+import { APIRoutes, API_Prefix } from '@/constants/routes'
+import { Sendnoti } from '../notification/notification';
+import { Savedby } from '@/constants/common';
 
 export const getProfile = async (leaderId: string) => {
   return tryCatch(
@@ -11,10 +13,11 @@ export const getProfile = async (leaderId: string) => {
     }
   );
 };
-export const getNotification = async (leaderId: string) => {
+export const getNotification = async (data: any) => {
   return tryCatch(
     async () => {
-      const res = await Axios.get(insertVariables(APIRoutes.getNotification, { leaderId }));
+      var api = `${API_Prefix}/leader/getleadernotification/${data?.leaderId}/${Savedby()?.saved_by_type == "employee" ? data?.employeeId : 0}`
+      const res = await Axios.get(api);
       return res.data;
     }
   );
@@ -78,6 +81,18 @@ export const followLeader = async (body: any) => {
   return tryCatch(
     async () => {
       const res = await Axios.post(APIRoutes.followLeader, body);
+      if (res?.data?.success) {
+        Sendnoti({
+          tokens: res?.data?.data?.tokens,
+          description: res?.data?.data?.notification?.description,
+          date: res?.data?.data?.notification?.createddate,
+          title: res?.data?.data?.notification?.title,
+          userimg: res?.data?.data?.notification?.userimg,
+          referenceid: res?.data?.data?.notification?.referenceid,
+          notificationid: res?.data?.data?.notification?.id,
+          type: "follow_leader"
+        })
+      }
       return res.data;
     }
   );
@@ -87,6 +102,18 @@ export const unFollowLeader = async (body: any) => {
   return tryCatch(
     async () => {
       const res = await Axios.post(APIRoutes.unFollowLeader, body);
+      if (res?.data?.success) {
+        Sendnoti({
+          tokens: res?.data?.data?.tokens,
+          description: res?.data?.data?.notification?.description,
+          date: res?.data?.data?.notification?.createddate,
+          title: res?.data?.data?.notification?.title,
+          userimg: res?.data?.data?.notification?.userimg,
+          referenceid: res?.data?.data?.notification?.referenceid,
+          notificationid: res?.data?.data?.notification?.id,
+          type: "unfollow_leader"
+        })
+      }
       return res.data;
     }
   );
