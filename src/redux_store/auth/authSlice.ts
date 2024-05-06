@@ -2,8 +2,8 @@ import { deleteCookie, getCookie } from "cookies-next";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserDetails } from '@/utils/typesUtils'; // Import UserDetails type
 import { LEADER_ID, TAB_ACCESS, TOKEN_KEY, USER_INFO, USER_TYPE, USER_VERIFY } from "@/constants/common";
-// import { deleteToken, getMessaging } from "@firebase/messaging";
-// import firebaseApp from "@/utils/firebase/firebase";
+import { deleteToken, getMessaging } from "@firebase/messaging";
+import firebaseApp from "@/utils/firebase/firebase";
 import { sendlocalnoti } from "../notification/notification";
 
 interface AuthState {
@@ -21,8 +21,8 @@ const initialState: AuthState = {
 
 async function clearFCMToken() {
   try {
-    // const messaging = getMessaging(firebaseApp);
-    // await deleteToken(messaging);
+    const messaging = getMessaging(firebaseApp);
+    await deleteToken(messaging);
   } catch (error) {
     console.error('Error clearing FCM token:', error);
   }

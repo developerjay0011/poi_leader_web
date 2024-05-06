@@ -2,6 +2,7 @@
 import Image, { StaticImageData } from 'next/image'
 import { FC, useState, useRef } from 'react'
 import { BiSolidDownArrow, BiX } from 'react-icons/bi'
+import { Shortarray } from '../Input'
 
 interface MultiSelectInputProps {
   options: {
@@ -27,7 +28,7 @@ export const MultiSelectInput: FC<MultiSelectInputProps> = ({
   const [multiSelectSearchStr, setMultiSelectSearchStr] = useState('') // To enable search functionality
   const [selectedFields, setSelectedFields] = useState<string[]>([]) // Store all the values user selected from Multi-Select field
   const filteredOptions = options.filter((el) => el.value.toLowerCase().includes(multiSelectSearchStr))
-  const listdata = Array.isArray(filteredOptions) ? filteredOptions?.sort((a, b) => a.value.localeCompare(b.value)) : []
+  let listdata = Shortarray(filteredOptions) as any[]
 
   // Filtering options when user starting writing in search input field
 

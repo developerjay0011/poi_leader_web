@@ -3,6 +3,7 @@ import { FieldErrors, RegisterOptions, UseFormRegister } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 import { LeaderFormFields } from './AddLeaderPage'
+import { Shortarray } from '../Input'
 
 interface InputProps {
   errors: FieldErrors<LeaderFormFields>
@@ -43,7 +44,7 @@ export const Input: FC<InputProps> = ({
   const [isPassword, setIsPassword] = useState(type === 'password')
   const mins = min ? { min: min } : {}
   const maxs = max ? { max: max } : {}
-  let listdata = type === 'select' && Array.isArray(selectField?.options) ? selectField?.options.sort((a, b) => a.value.localeCompare(b.value)) : []
+  let listdata = Shortarray(selectField?.options) as any[]
 
   const InputFieldType =
     type === 'select' || type === 'textarea' ? type : 'normal'
@@ -92,7 +93,7 @@ export const Input: FC<InputProps> = ({
               ? selectField.title
               : `No ${selectField.title.split(' ').at(-1)} Found !!`}
           </option>
-          {listdata?.map((el) => (
+          {listdata && listdata?.map((el) => (
             <option value={el.id} key={el.id}>
               {el.value}
             </option>

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useState, useRef, useEffect } from 'react'
 import { BiSolidDownArrow, BiX } from 'react-icons/bi'
+import { Shortarray } from '../Input'
 
 interface MultiSelectInputProps {
   id: string
@@ -42,7 +43,7 @@ export const MultiSelectInputPersonalLeaderInfo: FC<MultiSelectInputProps> = ({
   const filteredOptions = options.filter((el) =>
     el.val.toLowerCase().includes(multiSelectSearchStr)
   )
-  let listdata = Array.isArray(filteredOptions) ? filteredOptions.sort((a, b) => a.val.localeCompare(b.val)) : []
+  let listdata = Shortarray(filteredOptions, "val") as any[]
 
   useEffect(() => {
     selectedFields.length > 0 ? setValue(selectedFields) : setValue([])
@@ -173,7 +174,7 @@ export const MultiSelectInputPersonalLeaderInfo: FC<MultiSelectInputProps> = ({
             }}
             className='absolute top-full left-0 w-full outline-none rounded-md shadow-md border z-[100]'>
             {listdata?.length > 0 &&
-              listdata?.map((el) => (
+              listdata?.map((el: any) => (
                 <option
                   value={el.id}
                   className='py-1 px-3 hover:bg-zinc-300'
