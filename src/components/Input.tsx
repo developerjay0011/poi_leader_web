@@ -47,9 +47,8 @@ export const Input: FC<InputProps> = ({
   const [isPassword, setIsPassword] = useState(type === 'password')
   const mins = min ? { min: min } : {}
   const maxs = max ? { max: max } : {}
-  const InputFieldType =
-    type === 'select' || type === 'textarea' || type === 'file' ? type : 'normal'
-  let listdata = type === 'select' && Array.isArray(selectField?.options) ? selectField?.options.sort((a, b) => a.value.localeCompare(b.value)) : []
+  const InputFieldType = type === 'select' || type === 'textarea' || type === 'file' ? type : 'normal'
+  let listdata = Shortarray(selectField?.options) as any[]
 
 
 
@@ -158,9 +157,7 @@ export const Input: FC<InputProps> = ({
             : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
             }`}>
           <option value=''>
-            {listdata?.length > 0
-              ? selectField.title
-              : `No ${selectField.title.split(' ').at(-1)} Found !!`}
+            {listdata?.length > 0 ? selectField.title : `No ${selectField.title.split(' ').at(-1)} Found !!`}
           </option>
           {listdata?.map((el) => (
             <option value={el.id} key={el.id}>
@@ -194,7 +191,7 @@ export const Input: FC<InputProps> = ({
 }
 
 export const Shortarray = (selectOptions: any, key = "value") => {
-  const clonedOptions = [...selectOptions];
+  const clonedOptions = Array.isArray(selectOptions) ? [...selectOptions] : [] as any[]
   const listdata = Array.isArray(clonedOptions) && clonedOptions?.length > 0 ? clonedOptions?.sort((a, b) => a?.[key].localeCompare(b?.[key])) : [];
-  return listdata;
+  return Array.isArray(listdata) ? listdata : []
 }

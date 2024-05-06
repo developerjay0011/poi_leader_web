@@ -10,7 +10,7 @@ import { getCookie } from 'cookies-next'
 import { USER_TYPE } from '@/constants/common'
 import { usePathname } from 'next/navigation'
 import { EXTRA_TABS, LEFT_NAV_ROUTES } from '@/utils/routes'
-// import Notificationpage from '@/utils/firebase/notification'
+import Notificationpage from '@/utils/firebase/notification'
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
@@ -40,7 +40,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
           </section>
           <RightNavbar />
         </div>
-        {/* <Notificationpage /> */}
+        <Notificationpage />
       </main>
     </>
   )

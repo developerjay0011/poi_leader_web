@@ -26,7 +26,7 @@ import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { fetchAccessTabs, fetchEmployeeAccessTabs } from "@/redux_store/accesstab/tabApi";
 import { accessAction } from "@/redux_store/accesstab/tabSlice";
-// import Notificationpage from "@/utils/firebase/notification";
+import Notificationpage from "@/utils/firebase/notification";
 
 interface LoginFormProps { }
 export const LoginForm: FC<LoginFormProps> = () => {
@@ -221,7 +221,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       <AnimatePresence mode="wait">
         {showForgetPassForm && <ForgetPassword onClose={closeModal} />}
       </AnimatePresence>
-      {/* <Notificationpage /> */}
+      <Notificationpage />
     </>
   );
 };
