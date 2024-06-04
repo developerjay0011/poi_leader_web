@@ -13,6 +13,7 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
       var political_info = body?.political_info
       var general_setting = body?.general_setting
       var activity_pictures = Array(political_info?.activity_pictures) ? political_info?.activity_pictures : []
+      var ministries = Array.isArray(political_info?.ministries) ? political_info?.ministries?.filter((item: any) => item?.ministryid != null && item?.ministryid != "") : []
       var params = {
         "id": body?.id,
         "username": body?.username,
@@ -69,7 +70,7 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
           "assemblyid": political_info?.assemblyid ? political_info?.assemblyid : "",
           "parliamentaryid": political_info?.parliamentaryid ? political_info?.parliamentaryid : "",
           "is_hold_ministry": typeof political_info?.is_hold_ministry == "boolean" ? political_info?.is_hold_ministry : null,
-          "ministries": political_info?.ministries?.length > 0 ? political_info?.ministries : [],
+          "ministries": ministries,
           "is_nominated": typeof political_info?.is_nominated == "boolean" ? political_info?.is_nominated : null,
           "joined_date": political_info?.joined_date ? moment(political_info?.joined_date) : null,
           "post_in_party": political_info?.post_in_party ? political_info?.post_in_party : "",

@@ -69,18 +69,9 @@ export const PersonalLeaderInfo: FC<PersonalLeaderInfoProps> = ({
         selectField={{
           title: "select gender",
           options: [
-            {
-              id: "male",
-              value: "male",
-            },
-            {
-              id: "female",
-              value: "female",
-            },
-            {
-              id: "others",
-              value: "others",
-            },
+            { id: 'Male', value: 'Male' },
+            { id: 'Female', value: 'Female' },
+            { id: 'Others', value: 'Others' },
           ],
         }}
         register={register}
@@ -223,14 +214,14 @@ export const PersonalLeaderInfo: FC<PersonalLeaderInfoProps> = ({
         selectField={{
           title: "Select Higher Education",
           options: [
-            { id: "below 10th", value: "below 10th" },
-            { id: "10th pass", value: "10th pass" },
-            { id: "12th pass", value: "12th pass" },
-            { id: "under graduate", value: "under graduate" },
-            { id: "post graduate", value: "post graduate" },
-            { id: "p.h.d", value: "p.h.d" },
-            { id: "certificate", value: "certificate" },
-            { id: "others", value: "others" },
+            { id: 'Below 10th', value: 'Below 10th' },
+            { id: '10th Pass', value: '10th Pass' },
+            { id: '12th paPassss', value: '12th Pass' },
+            { id: 'Under Graduate', value: 'Under Graduate' },
+            { id: 'Post Graduate', value: 'Post Graduate' },
+            { id: 'P.H.D', value: 'P.H.D' },
+            { id: 'Certificate', value: 'Certificate' },
+            { id: 'Others', value: 'Others' }
           ],
         }}
       />
