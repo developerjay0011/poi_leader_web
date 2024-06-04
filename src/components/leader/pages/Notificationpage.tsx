@@ -5,7 +5,6 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { Notification } from '../Notification'
 import { ClearAllLeaderNotification, getNotification } from '@/redux_store/leader/leaderAPI'
 import { leaderActions } from '@/redux_store/leader/leaderSlice'
-import { NODATA } from 'dns'
 import { Datanotfound } from '@/utils/Datanotfound'
 import { Savedby } from '@/constants/common'
 
@@ -15,7 +14,7 @@ export const NotificationPage: FC = () => {
     const dispatch = cusDispatch();
     return (
         <>
-            <div className='flex flex-col gap-5 border rounded-md w-full bg-white text-sky-950'>
+            <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>
                 <div className='flex items-center justify-between border-b py-3'>
                     <h2 className='flex items-center h-[30px] after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-3  font-[500] text-[16px] capitalize'>
                         all notifications

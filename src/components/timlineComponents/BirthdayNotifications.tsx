@@ -69,7 +69,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
         <button
           type='button'
           onClick={() =>
-            setIndex((lst) => (lst > 0 ? lst - 1 : birthdaylist.length - 1))
+            setIndex((lst) => (lst > 0 ? lst - 1 : birthdaylist?.length - 1))
           }
           className='flex items-center justify-center w-10 aspect-square text-orange-500 bg-orange-100 rounded-full absolute top-1/2 left-2  translate-y-[-50%] hover:bg-orange-500 hover:text-orange-50 transition-all'>
           <BiSolidLeftArrow />
@@ -77,7 +77,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
         <button
           type='button'
           onClick={() =>
-            setIndex((lst) => (lst < birthdaylist.length - 1 ? lst + 1 : 0))
+            setIndex((lst) => (lst < birthdaylist?.length - 1 ? lst + 1 : 0))
           }
           className='flex items-center justify-center w-10 aspect-square text-orange-500 bg-orange-100 rounded-full absolute top-1/2 right-2  translate-y-[-50%] hover:bg-orange-500 hover:text-orange-50 transition-all'>
           <BiSolidRightArrow />

@@ -36,7 +36,7 @@ export const ShortcutsBox: FC = () => {
       tabname: "Leader"
     },
     {
-      link: '/user/profile/notifications',
+      link: '/user/notifications',
       name: 'notifications',
       Icon: FaBell,
       tabname: "Leader"

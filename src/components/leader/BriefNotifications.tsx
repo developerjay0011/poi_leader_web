@@ -67,7 +67,7 @@ export const BriefNotifications: FC<BriefNotificationsProps> = ({ onClick }) => 
 
         <div className='w-full py-2 flex justify-center'>
           <Link
-            href={Savedby()?.saved_by_type == "employee" ? '/employee-access/profile/notifications' : '/user/profile/notifications'}
+            href={Savedby()?.saved_by_type == "employee" ? '/employee-access/profile/notifications' : '/user/notifications'}
             onClick={() => onClick()}
             className='hover:underline text-orange-500 font-normal capitalize'>
             see all
