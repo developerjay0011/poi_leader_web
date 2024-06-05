@@ -78,7 +78,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({ children, heading, addBtnC
 
   return (
     <>
-      <div className='flex justify-between flex-col w-full relative min-h-[410px] overflow-auto main_scrollbar '>
+      <div className='flex justify-between flex-col w-full relative min-h-[410px]   overflow-auto main_scrollbar '>
 
         <div className='gap-5 w-full'>
 
@@ -239,9 +239,7 @@ export const TableWrapper: FC<TableWrapperProps> = ({ children, heading, addBtnC
             </>
           )}
         </section>
-
       </div>
-
     </>
   )
 }

@@ -27,7 +27,7 @@ export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, h
             <th className='font-semibold capitalize text-left py-2 pl-2 border'>
               Location
             </th>
-            <th className='font-semibold  text-center capitalize text-left py-2 pl-2 border max-w-[10px]'>
+            <th className='font-semibold  text-center capitalize text-left py-2 pl-2 border w-[100px]'>
               Action
             </th>
           </tr>
@@ -36,14 +36,14 @@ export const OfficelocationTable: FC<OfficelocationTableProps> = ({ searchStr, h
           {locations?.length > 0 ? (
             locations?.map((el: any, i: number) => {
               return (
-                <tr key={i} className={`bg-white py-2 border-b border-gray-300 transition-all`}>
-                  <td className='border-r align-text-center text-center max-w-[10px]'>
+                <tr key={i} className={`bg-white py-3 border-b border-gray-300 transition-all`}>
+                  <td className='border-r align-text-center text-center w-[100px]'>
                     {el.sr}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>
                     {el.location}
                   </td>
-                  <td className='py-2 pl-2 border text-center printHide max-w-[10px]'>
+                  <td className='py-2 pl-2 border text-center printHide w-[100px]'>
                     <button className='hover:scale-110 transition-all ease-out duration-200 active:scale-100' onClick={() => handleEdit(el)}>
                       <BiEdit className='text-2xl' />
                     </button>

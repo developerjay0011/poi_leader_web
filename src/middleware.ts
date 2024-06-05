@@ -22,9 +22,7 @@ export async function middleware(request: NextRequest) {
   }
   if (isnotification && user_type) {
     const leaderid = request.cookies.get(LEADER_ID)?.value || ''
-    if (leaderid && isnotification == "unread" && notificationid) {
-      ReadLeaderNotification(token, notificationid, leaderid)
-    }
+    if (leaderid && isnotification == "unread" && notificationid) { ReadLeaderNotification(token, notificationid, leaderid) }
     pathname = user_type === "leader" ? pathname : setRoute(pathname, isnotification, user_type);
     const newUrl = new URL(request.url);
     newUrl.pathname = pathname; // Update pathname only
@@ -32,7 +30,7 @@ export async function middleware(request: NextRequest) {
     newUrl.searchParams.delete('isnotification');
     return NextResponse.redirect(newUrl);
   }
-  if (isuserverify == "true" && token && (authRouteList.includes(pathname) || pathname.includes('/employee-access') || (tabs.includes(pathname) && pathname != '/user')) && user_type == "leader") {
+  if (isuserverify == "true" && token && (authRouteList.includes(pathname) || pathname.includes('/employee-access') || (tabs.includes(pathname) && pathname != '/user' && pathname != '/user/profile')) && user_type == "leader") {
     const response = NextResponse.redirect(new URL(ProtectedRoutes.user, request.url));
     return response;
   }

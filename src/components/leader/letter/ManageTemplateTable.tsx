@@ -50,9 +50,6 @@ export const ManageTemplateTable: FC<AssemblyConstituencyTableProps> = ({ search
               <td className='capitalize text-left py-2 pl-2 border-r text-center align-text-top'>
                 {el.template_name}
               </td>
-              {/* <td className='capitalize max-w-96 text-left py-2 pl-2 border-r text-center align-text-top'>
-                {el.template_html}
-              </td> */}
               <td className='text-center py-2 pl-2 border printHide'>
                 <StatusBtn
                   status={el.isactive ? '1' : '0'}

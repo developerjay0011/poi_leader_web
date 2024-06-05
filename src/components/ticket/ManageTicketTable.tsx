@@ -79,7 +79,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, allda
 
   return (
     <>
-      <table className='w-full my-8 border'>
+      <table className='w-full my-8 border min-w-[1000px]'>
         <thead>
           <tr className='border-b border-gray-300'>
             <th className='font-semibold capitalize text-center p-2 border'>
@@ -101,7 +101,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, allda
                   }
                 }} />
             </td>
-            <th className='font-semibold capitalize text-center border max-w-[100px]'>
+            <th className='font-semibold capitalize text-center border w-[200px]'>
               Date
             </th>
             <th className='font-semibold capitalize text-center p-2 border'>
@@ -151,7 +151,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, allda
                       }
                     }} />
                 </td>
-                <td className='capitalize text-left  border-r text-center align-text-center max-w-[100px] min-w-[100px]'>
+                <td className='capitalize text-left  border-r text-center align-text-center w-[200px]'>
                   {moment(el?.created_date).format("DD-MM-YYYY hh:mm a")}
                 </td>
                 <td className='capitalize text-left p-2 border-r text-center align-text-center'>
@@ -163,7 +163,7 @@ export const ManageTicketTable: FC<ManageTicketTableProps> = ({ searchStr, allda
                 <td className='capitalize text-left p-2 border-r text-center align-text-center'>
                   {el?.subject}
                 </td>
-                <td className='capitalize text-left p-2 border-r text-center align-text-center max-w-[300px]'>
+                <td className='capitalize text-left p-2 border-r text-center align-text-center w-[300px]'>
                   <p className='text-ellipsis overflow-hidden truncate max-h-[100px]'>{el?.description}</p>
                 </td>
                 <td className='text-center p-2 border items-center justify-center '>

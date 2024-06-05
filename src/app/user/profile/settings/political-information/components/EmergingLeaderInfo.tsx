@@ -74,9 +74,10 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
       doneAnyPoliticalActivity: leaderProfile.political_info?.done_any_political_activity ? 'yes' : 'no',
       isprepareforelections: leaderProfile.political_info?.is_prepare_for_elections ? 'yes' : 'no',
       familySupportedForPolitics: leaderProfile.political_info?.does_family_supports ? 'yes' : 'no',
-      position: leaderProfile.political_info?.position
-    });
-  }, [political_info, reset]);
+      position: leaderProfile.political_info?.position,
+      political_party_id: leaderProfile.political_info?.political_party_id
+    })
+  }, [political_info?.political_party_id, parties?.length, reset]);
 
 
   return (

@@ -18,9 +18,11 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
         show_agendas: typeof body?.general_setting?.show_agendas == "boolean" ? body?.general_setting?.show_agendas : true
       }
 
-
-      var activity_pictures = Array(political_info?.activity_pictures) ? political_info?.activity_pictures : []
+      var activity_pictures = Array.isArray(political_info?.activity_pictures) ? political_info?.activity_pictures : []
       var ministries = Array.isArray(political_info?.ministries) ? political_info?.ministries?.filter((item: any) => item?.ministryid != null && item?.ministryid != "") : []
+      var referencies = Array.isArray(political_info?.referencies) ? political_info?.referencies?.filter((item: any) => item?.age && item?.mobile && item?.name) : []
+
+
       var params = {
         "id": body?.id,
         "username": body?.username,
@@ -88,7 +90,7 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
           "done_any_political_activity": typeof political_info?.done_any_political_activity == "boolean" ? political_info?.done_any_political_activity : null,
           "does_family_supports": typeof political_info?.does_family_supports == "boolean" ? political_info?.does_family_supports : null,
           "people_in_team": political_info?.people_in_team ? political_info?.people_in_team : "",
-          "referencies": political_info?.referencies?.length > 0 ? political_info?.referencies : [],
+          "referencies": Array.isArray(referencies) ? referencies : [],
           "elections": political_info?.elections ? political_info?.elections : "",
           "election_year": political_info?.election_year ? String(political_info?.election_year) : "",
           "election_stateid": political_info?.election_stateid ? political_info?.election_stateid : "",
@@ -103,7 +105,7 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
         },
         "general_setting": { ...general_setting }
       }
-      const res = await Axios.post(APIRoutes.upsertLeaders, params);
+      const res = await Axios.post(APIRoutes.upsertLeaders, params)
       if (res?.data?.success) {
         if (body?.request_status == "Re-submitted" || islogin == true) {
           Sendnoti({
@@ -118,7 +120,7 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
           })
         }
       }
-      return res.data;
+      return res?.data
     }
   );
 };

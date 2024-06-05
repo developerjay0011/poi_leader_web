@@ -23,7 +23,7 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
       <table className='w-full my-8 border'>
         <thead>
           <tr className='border-b py-3 border-gray-300'>
-            <th className='border-r align-text-center text-center max-w-[50px]'>S.No</th>
+            <th className='border-r align-text-center text-center w-[80px]'>S.No</th>
             <th className='font-semibold capitalize text-left py-2 pl-2 border'>
               file name
             </th>
@@ -43,7 +43,7 @@ export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, g
             filestypes?.map((el: any, i: number) => {
               return (
                 <tr key={i} className={`bg-white py-3 border-b border-gray-300 transition-all`}>
-                  <td className='border-r align-text-center text-center max-w-[50px]'>
+                  <td className='border-r align-text-center text-center w-[80px]'>
                     {el.sr}.
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>

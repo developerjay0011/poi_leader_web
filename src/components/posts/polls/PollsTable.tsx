@@ -41,11 +41,9 @@ export const PollsTable: FC<PollsTableProps> = ({ polls }) => {
       })
   }
   return (
-    <>
-      <PollTableRow
-        handleDelete={handlePollDelete}
-        polls={polls}
-      />
-    </>
+    <PollTableRow
+      handleDelete={handlePollDelete}
+      polls={polls}
+    />
   )
 }
