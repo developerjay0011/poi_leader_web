@@ -12,6 +12,13 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
       var contact_info = body?.contact_info
       var political_info = body?.political_info
       var general_setting = body?.general_setting
+      general_setting = {
+        enable_follow_me: typeof body?.general_setting?.enable_follow_me == "boolean" ? body?.general_setting?.enable_follow_me : true,
+        send_me_notifications: typeof body?.general_setting?.send_me_notifications == "boolean" ? body?.general_setting?.send_me_notifications : true,
+        show_agendas: typeof body?.general_setting?.show_agendas == "boolean" ? body?.general_setting?.show_agendas : true
+      }
+
+
       var activity_pictures = Array(political_info?.activity_pictures) ? political_info?.activity_pictures : []
       var ministries = Array.isArray(political_info?.ministries) ? political_info?.ministries?.filter((item: any) => item?.ministryid != null && item?.ministryid != "") : []
       var params = {
