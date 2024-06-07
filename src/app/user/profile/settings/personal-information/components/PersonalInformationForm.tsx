@@ -122,7 +122,6 @@ export const PersonalInformationForm: FC = () => {
           register={register}
           title='Blood Group'
           type='select'
-          required
           validations={{
             required: 'Blood Group is required',
           }}

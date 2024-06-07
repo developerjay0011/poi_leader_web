@@ -99,7 +99,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
           let allcookies: any = await getCookies()
           if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
             if (userDetails?.leaderId) {
-              const leaderRes = await getProfile(userDetails?.leaderId);
+              const leaderRes = await getProfile(userDetails?.leaderId, dispatch);
               dispatch(leaderActions.setLeaderProfile(leaderRes));
               if (leaderRes?.request_status !== "Approved") {
                 dispatch(authActions.logout(false as any))

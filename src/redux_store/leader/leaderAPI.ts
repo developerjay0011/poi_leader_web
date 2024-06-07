@@ -4,11 +4,14 @@ import { tryCatch } from '@/config/try-catch'
 import { APIRoutes, API_Prefix } from '@/constants/routes'
 import { Sendnoti } from '../notification/notification';
 import { Savedby } from '@/constants/common';
+import { leaderActions } from './leaderSlice';
+import { authActions } from '../auth/authSlice';
 
-export const getProfile = async (leaderId: string) => {
+export const getProfile = async (leaderId: string, dispatch?: any) => {
   return tryCatch(
     async () => {
       const res = await Axios.get(insertVariables(APIRoutes.getProfile, { leaderId }));
+      if (res?.data) { } else { dispatch(authActions.logout(true as any)) }
       return res.data;
     }
   );

@@ -92,7 +92,6 @@ export const PersonalLeaderInfo: FC<PersonalLeaderInfoProps> = ({
         register={register}
         title="Blood Group"
         type="select"
-        required
         validations={{
           required: "Blood Group is required",
         }}

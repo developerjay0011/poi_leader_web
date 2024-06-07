@@ -10,7 +10,7 @@ import CustomImage from "@/utils/CustomImage";
 import { useSearchParams } from 'next/navigation'
 
 const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { userDetails, leaderData } = cusSelector((st) => st.auth);
+  const { leaderData } = cusSelector((st) => st.auth);
   const dispatch = cusDispatch();
   const searchParams = useSearchParams()
   const id = searchParams.get('id')
@@ -18,7 +18,6 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
     (async () => {
       if (id) {
         const res = await getSingleLeader(id);
-        console.log(res)
         dispatch(authActions.setLeaderData(res));
       }
     })();

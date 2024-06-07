@@ -21,9 +21,15 @@ interface OfficeLocationFormProps {
 
 export interface FormFields {
   id: string,
-  leaderid: string,
+  leaderid: string
   location: string
   isactive: string
+  address_line_1: string
+  address_line_2: string
+  address_line_3: string
+  city: string
+  state: string
+  pincode: string
 }
 
 export const OfficeLocationForm: FC<OfficeLocationFormProps> = ({ onClose, submitting, heading, edit, details, GetofficeLocations }) => {
@@ -33,9 +39,28 @@ export const OfficeLocationForm: FC<OfficeLocationFormProps> = ({ onClose, submi
   const formSubmitHandler = (data: FormFields) => {
     tryCatch(
       async () => {
+        const getFullAddress = () => {
+          const addressComponents = [
+            data.address_line_1,
+            data.address_line_2,
+            data.address_line_3,
+            data.city,
+            data.state,
+            data.pincode,
+            "India"
+          ];
+          const filteredComponents = addressComponents.filter(component => component);
+          return filteredComponents.join(', ');
+        };
         var body: any = {
-          leaderid: userDetails?.leaderId,
-          location: data?.location,
+          "leaderid": userDetails?.leaderId,
+          "location": getFullAddress(),
+          "address_line_1": data?.address_line_1,
+          "address_line_2": data?.address_line_2,
+          "address_line_3": data?.address_line_3,
+          "pincode": data?.pincode,
+          "city": data?.city,
+          "state": data?.state,
         };
         if (details?.id) {
           body.id = details?.id as string
@@ -57,6 +82,12 @@ export const OfficeLocationForm: FC<OfficeLocationFormProps> = ({ onClose, submi
       reset({
         id: details?.id,
         location: details?.location,
+        "address_line_1": details?.address_line_1,
+        "address_line_2": details?.address_line_2,
+        "address_line_3": details?.address_line_3,
+        "pincode": details?.pincode,
+        "city": details?.city,
+        "state": details?.state,
       })
     }
   }, [reset])
@@ -68,24 +99,111 @@ export const OfficeLocationForm: FC<OfficeLocationFormProps> = ({ onClose, submi
         noValidate
         onSubmit={handleSubmit(formSubmitHandler)}>
         <section className='grid px-7 gap-5 grid-cols-1 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
-          <label htmlFor='location' className={`flex flex-col gap-2`}>
+          <label htmlFor='address_line_1' className={`flex flex-col gap-2`}>
             <span className='capitalize font-[500]'>
-              Location
+              Address line1
               {<strong className='text-rose-500'>*</strong>}
             </span>
             <input
-              id='location'
+              id='address_line_1'
               type='text'
               className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
-              {...register('location', { required: 'location is required' })}
+              {...register('address_line_1', { required: 'Address line1 is required' })}
             />
             <ErrorMessage
-              name={'location'}
+              name={'address_line_1'}
               errors={errors}
               as={'span'}
               className='text-red-500 text-sm first-letter:capitalize lowercase'
             />
           </label>
+          <label htmlFor='address_line_2' className={`flex flex-col gap-2`}>
+            <span className='capitalize font-[500]'>
+              Address line2
+            </span>
+            <input
+              id='address_line_2'
+              type='text'
+              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+              {...register('address_line_2')}
+            />
+          </label>
+          <label htmlFor='address_line_3' className={`flex flex-col gap-2`}>
+            <span className='capitalize font-[500]'>
+              Address line3
+            </span>
+            <input
+              id='address_line_3'
+              type='text'
+              className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+              {...register('address_line_3')}
+            />
+          </label>
+          <section className='grid gap-5 grid-cols-3 gap-y-5 max-[650px]:grid-cols-1 max-[650px]:gap-y-4'>
+            <label htmlFor='city' className={`flex flex-col gap-2`}>
+              <span className='capitalize font-[500]'>
+                City
+                {<strong className='text-rose-500'>*</strong>}
+              </span>
+              <input
+                id='city'
+                type='text'
+                className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+                {...register('city', { required: 'City is required' })}
+              />
+              <ErrorMessage
+                name={'city'}
+                errors={errors}
+                as={'span'}
+                className='text-red-500 text-sm first-letter:capitalize lowercase'
+              />
+            </label>
+            <label htmlFor='state' className={`flex flex-col gap-2`}>
+              <span className='capitalize font-[500]'>
+                State
+                {<strong className='text-rose-500'>*</strong>}
+              </span>
+              <input
+                id='state'
+                type='text'
+                className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+                {...register('state', { required: 'State is required' })}
+              />
+              <ErrorMessage
+                name={'state'}
+                errors={errors}
+                as={'span'}
+                className='text-red-500 text-sm first-letter:capitalize lowercase'
+              />
+            </label>
+            <label htmlFor='pincode' className={`flex flex-col gap-2`}>
+              <span className='capitalize font-[500]'>
+                Pincode
+                {<strong className='text-rose-500'>*</strong>}
+              </span>
+              <input
+                id='pincode'
+                type='number'
+                className='border border-slate-300 bg-slate-100 py-[.7rem] px-4 outline-none rounded-md text-base transition-all focus:bg-slate-200 focus:border-slate-400'
+                {...register('pincode', {
+                  validate: {
+                    notAValidNo(val) {
+                      return (
+                        val.toString().length == 6 ||
+                        "please enter a valid pincode"
+                      );
+                    },
+                  },
+                })}
+              />
+              <ErrorMessage
+                name={'pincode'}
+                errors={errors}
+                as={'span'}
+                className='text-red-500 text-sm first-letter:capitalize lowercase'
+              />
+            </label>
+          </section>
           {/* <label htmlFor='allowAccess' className={`flex flex-col gap-2`}>
             <span className='capitalize font-[500]'>
               Status

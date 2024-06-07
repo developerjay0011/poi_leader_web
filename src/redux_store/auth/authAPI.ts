@@ -4,21 +4,20 @@ import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { LoginData, RegisterData } from '@/utils/typesUtils'
 import { MapFcm, Sendnoti, sendlocalnoti } from '../notification/notification'
-export const registerUser =
-  async (body: RegisterData) => {
-    return tryCatch(
-      async () => {
-        const res = await Axios.post(APIRoutes.register, body);
-        if (res?.data?.success) {
-          sendlocalnoti({
-            message: "Congratulations on registering! Begin by completing your profile to get started.",
-            title: "Registration confirmation"
-          })
-        }
-        return res.data;
+export const registerUser = async (body: RegisterData) => {
+  return tryCatch(
+    async () => {
+      const res = await Axios.post(APIRoutes.register, body);
+      if (res?.data?.success) {
+        sendlocalnoti({
+          message: "Congratulations on registering! Begin by completing your profile to get started.",
+          title: "Registration confirmation"
+        })
       }
-    );
-  }
+      return res.data;
+    }
+  );
+}
 
 // Log user in
 export const userLogin = async (body: LoginData) => {
