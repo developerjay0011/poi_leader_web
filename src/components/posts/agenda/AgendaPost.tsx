@@ -98,7 +98,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
           ))}
         </h3>
 
-        <section className="flex flex-col gap-8 max-[450px]:px-3 w-[100%]">
+        <section className="flex flex-col max-[450px]:px-3 w-[100%]">
           <div className="flex items-center gap-3 py-3 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
             <div>
               <h4 className="font-[600] text-lg text-orange-500">Created by : {created_by_type}</h4>

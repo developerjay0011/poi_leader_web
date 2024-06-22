@@ -9,15 +9,17 @@ import CustomImage from '@/utils/CustomImage'
 import Link from 'next/link';
 import { FC } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
+import { Nave } from '../posts/utils';
 
 interface FollowerProps {
   displayImg: string;
   name: string;
   count?: number;
   item?: any
+  other?: boolean
 }
 
-export const Following: FC<FollowerProps> = ({ displayImg, name, count = 0, item }) => {
+export const Following: FC<FollowerProps> = ({ displayImg, name, count = 0, item, other = false }) => {
   const dispatch = cusDispatch();
   const { userDetails } = cusSelector((state) => state.auth);
   const handleFollowers = async () => {
@@ -53,7 +55,7 @@ export const Following: FC<FollowerProps> = ({ displayImg, name, count = 0, item
         className='rounded-full w-20 aspect-square object-cover object-center bg-rose-100'
       />
 
-      <Link href={window.location?.origin + `/user/leader/about?id=${item?.leaderid}`} className='flex flex-col flex-grow'>
+      <Link href={Nave({ id: item?.leaderid, leader: userDetails?.leaderId })} className='flex flex-col flex-grow'>
         <div className='flex flex-col flex-grow'>
           <h3 className='flex flex-col font-semibold text-lg capitalize'>
             {name}
@@ -65,12 +67,14 @@ export const Following: FC<FollowerProps> = ({ displayImg, name, count = 0, item
           {item?.leaderid &&
             <p className='text-[14px] flex justify-between'>
               {item?.followers} followers
-              <button
-                type='button'
-                onClick={() => { handleFollowers() }}
-                className='border border-orange-500 text-orange-500 font-medium text-sm bg-orange-50 px-2 py-[2px] rounded hover:bg-orange-500 hover:text-orange-50 transition-all'>
-                Unfollow
-              </button>
+              {other == false &&
+                <button
+                  type='button'
+                  onClick={() => { handleFollowers() }}
+                  className='border border-orange-500 text-orange-500 font-medium text-sm bg-orange-50 px-2 py-[2px] rounded hover:bg-orange-500 hover:text-orange-50 transition-all'>
+                  Unfollow
+                </button>
+              }
             </p>
           }
         </div>

@@ -8,7 +8,7 @@ import {
   UserPostType,
 } from "@/utils/typesUtils";
 import { GenerateId, convertFileToBase64 } from "@/utils/utility";
-import { FC, FormEvent, useState, ChangeEvent } from "react";
+import { FC, FormEvent, useState, ChangeEvent, useEffect } from "react";
 import { BiX } from "react-icons/bi";
 import { BsImageFill } from "react-icons/bs";
 import { PostTypes } from "./PostTypes";
@@ -104,7 +104,12 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
 
 
 
-
+  useEffect(() => {
+    document.addEventListener("click", (e) => {
+      if (!(e.target as HTMLElement).closest("#moreOptions"))
+        setShowMorePostOptions(false)
+    });
+  }, []);
 
   const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     setPostErr({
@@ -185,14 +190,14 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
 
           <div className="flex items-center justify-between px-3">
             <div className="flex items-center gap-3">
-              <label htmlFor={`medias-${type}`}>
+              <label htmlFor={`medias-${type} cursor-pointer`}>
                 <input
                   type="file"
                   className="hidden"
                   id={`medias-${type}`}
                   onChange={mediaChangeHandler}
                 />
-                <BsImageFill className="text-sky-950 text-xl text-opacity-70" />
+                <BsImageFill className="text-sky-950 text-xl text-opacity-70 cursor-pointer" />
               </label>
             </div>
             <div className="ml-auto relative" id="moreOptions">
@@ -202,8 +207,8 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                   accessTypeOptions={(e: any) => setAccessType(e)}
                 />
               )}
-              <div className="cursor-pointer" onClick={() => setShowMorePostOptions(!showMorePostOptions)}>
-                <span className="capitalize">{`Post Type ${(accessType && ": " + accessType) || ""}`}</span>
+              <div className="" id={"moreOptions"} onClick={() => setShowMorePostOptions(!showMorePostOptions)}>
+                <span className="capitalize">{`Post Type `} <span className="capitalize text-orange-500 font-medium cursor-pointer">{(accessType && ": " + accessType)}</span></span>
               </div>
             </div>
           </div>

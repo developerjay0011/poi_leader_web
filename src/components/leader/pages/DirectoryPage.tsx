@@ -172,9 +172,9 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             <Input
               errors={errors}
               id="name"
-              placeholder="name"
+              placeholder="First name"
               register={register}
-              title="name"
+              title="First name"
               type="text"
               required
               validations={{
@@ -184,9 +184,9 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             <Input
               errors={errors}
               id="mobile"
-              placeholder="mobile"
+              placeholder="Mobile no."
               register={register}
-              title="mobile"
+              title="Mobile no."
               type="number"
               required
               validations={{
@@ -204,9 +204,9 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             <Input
               errors={errors}
               id="email"
-              placeholder="email"
+              placeholder="Email"
               register={register}
-              title="email"
+              title="Email"
               type="text"
               required
               validations={{
@@ -228,7 +228,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             <Input
               register={register as any}
               errors={errors}
-              title="Select Group"
+              title="Select Birthdate"
               type="date"
               id={"dob" as any}
               validations={{
@@ -253,6 +253,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               register={register as any}
               errors={errors}
               title="Select Occupation"
+              placeholder="Select Occupation"
               type="text"
               id={"occupation" as any}
               validations={{
@@ -284,7 +285,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               id="whatsapp_no"
               placeholder="Whatsapp no."
               register={register}
-              title="Whatsapp no"
+              title="Whatsapp no."
               type="number"
               validations={{
                 validate: {
@@ -308,14 +309,14 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
             />
             <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
             <div className="flex justify-end col-span-full gap-2">
-              <a
-                className="rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
+              <button
+                className="rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
                 onClick={() => {
                   setIsDirectory(false), setIsEdit(false);
                 }}
               >
                 close
-              </a>
+              </button>
               <button
                 className="rounded-full px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
                 type="submit"

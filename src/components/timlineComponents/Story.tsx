@@ -6,6 +6,7 @@ import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
 import { BsTrash3Fill } from "react-icons/bs";
 import moment from "moment";
+import { usePathname } from "next/navigation";
 export const Story: FC<StoryProps> = ({
   handleDelete,
   userImage,
@@ -21,7 +22,7 @@ export const Story: FC<StoryProps> = ({
     setIsOpen(false)
   };
   const storyContent = { width: 'auto', maxWidth: '100%', maxHeight: '100%', margin: 'auto', }
-
+  const curRoute = usePathname() != "/user" && self == true
 
 
 
@@ -38,7 +39,7 @@ export const Story: FC<StoryProps> = ({
           alt="user display pic"
           className="border-4 border-blue w-20 aspect-square rounded-full object-cover object-center shadow"
         />
-        <figcaption className='text-[14px] mt-[1px]'>{self ? moment(createddate).format("DD-MM-YYYY") : name} </figcaption>
+        <figcaption className='text-[14px] mt-[1px]'>{curRoute ? moment(createddate).format("DD-MM-YYYY") : name} </figcaption>
       </li>
       {stories && stories.length > 0 && (
         <Modal

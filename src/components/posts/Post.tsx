@@ -12,7 +12,7 @@ import { SingleComment } from "./SingleComment";
 import { getImageUrl, setusername } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import PostGrid from "../PostGrid";
-import { Shortlistbytime, islike } from "./utils";
+import { Nave, Shortlistbytime, islike } from "./utils";
 import { DeletePost, LikePost, UnlikePostorStory } from "@/redux_store/posts/postAPI";
 import { PostOptions } from "./PostOptions";
 import Link from "next/link";
@@ -74,12 +74,10 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
 
 
 
-
   return (
     <section key={index} className="border rounded-md bg-white px-5">
       {/* User */}
-      <div
-        className="flex items-center gap-3 py-4 text-sky-950 border-b">
+      <div className="flex items-center gap-3 py-4 text-sky-950 border-b">
 
         <CustomImage
           src={getImageUrl(userdetails?.image)}
@@ -88,7 +86,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
           width={100}
           height={100}
         />
-        <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}>
+        <Link href={Nave({ id: post?.leaderid, leader: userDetails?.leaderId })}>
           <div>
             <h4 className="font-[600] text-lg text-orange-500">
               {userdetails?.name}

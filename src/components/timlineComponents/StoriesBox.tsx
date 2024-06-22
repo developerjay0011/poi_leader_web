@@ -10,15 +10,17 @@ import { getImageUrl, setusername } from "@/config/get-image-url";
 import { postActions } from "@/redux_store/posts/postSlice";
 
 interface StoriesBoxProps {
-  is_my_postandstories: boolean
+  is_my_postandstories?: boolean
+  other?: boolean
+  user_stories?: any
 }
-export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }) => {
+export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false, other = false, user_stories = [] }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const { userDetails } = cusSelector((state) => state.auth);
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { stories, mystories } = cusSelector((state) => state.posts);
   const leaderid = userDetails?.leaderId;
-  var setstories = is_my_postandstories ? mystories : stories
+  var setstories = other ? user_stories : is_my_postandstories ? mystories : stories
   const dispatch = cusDispatch();
   const fetchMyStories = async () => {
     if (leaderid && is_my_postandstories) {
@@ -48,20 +50,9 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
 
   return (
     <>
-      <CommonBox title="Stories" cusJSX={[
-        // <Link key={id} href={ProtectedRoutes.leader} className="text-sm font-normal hover:underline text-orange-500"    >      see all    </Link>
-        <BsPlusCircle className="text-orange-500 text-[25px] aspect-square object-cover object-center cursor-pointer" onClick={() => setOpenPopup(true)} />
-      ]}>
+      <CommonBox title="Stories" cusJSX={other == false ? [<BsPlusCircle className="text-orange-500 text-[25px] aspect-square object-cover object-center cursor-pointer" onClick={() => setOpenPopup(true)} />] : []}>
         <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
-          {/* <li className=" w-[80px] h-[100px] aspect-[9/16] rounded-lg relative  ">
-              <label className="flex h-[80px] justify-center items-center rounded-full shadow">
-                <BsPlusCircle
-                  className="z-0 text-orange-500 text-[38px] w-20 aspect-square object-cover object-center"
-                  onClick={() => setOpenPopup(true)}
-                />
-              </label>
-            </li> */}
-          {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string } | undefined, index: null) => {
+          {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string, create_ddate: string } | undefined, index: null) => {
             return (
               <Story
                 userImage={getImageUrl(el?.image as string)}
@@ -69,8 +60,9 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false }
                 stories={el?.media}
                 handleDelete={handleDelete}
                 self={userDetails?.leaderId == el?.leaderid}
+                other={other}
                 name={el?.name as string}
-                createddate={el?.createddate as string}
+                createddate={el?.createddate || el?.create_ddate as string}
               />
             )
           })}

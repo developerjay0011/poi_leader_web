@@ -31,9 +31,8 @@ export const LPInputField: FC<LoginFormFieldsProps> = ({
   return (
     <label
       htmlFor={id}
-      className={`w-full relative flex flex-col last_noti border-blue-200 ${
-        errors[id] ? 'border-red-200' : 'border-sky-200'
-      }`}>
+      className={`w-full relative flex flex-col last_noti border-blue-200 ${errors[id] ? 'border-red-200' : 'border-sky-200'
+        }`}>
       <ErrorMessage
         name={id}
         errors={errors}
@@ -43,16 +42,14 @@ export const LPInputField: FC<LoginFormFieldsProps> = ({
       <input
         type={type === 'password' ? inpType : type}
         placeholder=' '
-        className={`w-full pt-10 pb-5 pl-16  outline-none transition-all num_inp ${
-          errors[id] ? 'errInp' : 'bg-transparent focusEvent'
-        }`}
+        className={`w-full pt-10 pb-5 pl-16  outline-none transition-all  ${errors[id] ? 'errInp' : 'bg-transparent focusEvent'
+          }`}
         id={id}
         {...register(id, validations)}
       />
       <Icon
-        className={`${iconSize} absolute top-1/2 left-5 translate-y-[-50%] ${
-          errors[id] ? 'text-red-500' : 'text-sky-800'
-        }`}
+        className={`${iconSize} absolute top-1/2 left-5 translate-y-[-50%] ${errors[id] ? 'text-red-500' : 'text-sky-800'
+          }`}
       />
       {type === 'password' && (
         <button
@@ -67,9 +64,8 @@ export const LPInputField: FC<LoginFormFieldsProps> = ({
         </button>
       )}
       <span
-        className={`ml-16  absolute transition-all top-7 translate-y-[-50%] font-semibold text-[14px] capitalize ${
-          errors[id] ? 'text-red-500' : 'text-sky-800'
-        }`}>
+        className={`ml-16  absolute transition-all top-7 translate-y-[-50%] font-semibold text-[14px] capitalize ${errors[id] ? 'text-red-500' : 'text-sky-800'
+          }`}>
         {title}
       </span>
     </label>

@@ -6,8 +6,8 @@ import { Following } from '@/components/peoples/Following'
 
 const AdminFollowingPage = () => {
   const [searchString, setSearchString] = useState('')
-  const { following } = cusSelector((state) => state.leader);
   const changeSearchString = (val: string) => setSearchString(val)
+  const { following } = cusSelector((state) => state.leader);
 
   return (
     <>

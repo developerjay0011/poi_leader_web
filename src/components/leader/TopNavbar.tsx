@@ -47,6 +47,7 @@ import { GetFiles } from "@/redux_store/filetype/filetypeApi";
 import { fileAction } from "@/redux_store/filetype/filetypeSlice";
 import { GetOfficeLocations } from "@/redux_store/location/locationApi";
 import { locationAction } from "@/redux_store/location/locationSlice";
+import { Nave } from "../posts/utils";
 
 
 export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
@@ -88,6 +89,9 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
       // hiding notification box when clicked anywhere except usericon
       if (!(e.target as HTMLElement).closest("#briefNotiBox"))
         setShowNotifications(false);
+
+      if (!(e.target as HTMLElement).closest("#searchBox") && searchUserStr != "")
+        setSearchUserStr('');
     });
   }, []);
 
@@ -101,7 +105,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             if (userDetails?.leaderId) {
               const leaderRes = await getProfile(userDetails?.leaderId, dispatch);
               dispatch(leaderActions.setLeaderProfile(leaderRes));
-              if (leaderRes?.request_status !== "Approved") {
+              if (leaderRes?.request_status !== "Approved" && leaderRes?.request_status != "Re-submitted") {
                 dispatch(authActions.logout(false as any))
                 return
               }
@@ -287,10 +291,14 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 type="search"
                 className="rounded-full bg-sky-50 bg-opacity-20 py-3 px-5 text-md text-sky-50 outline-none w-full capitalize placeholder:text-sky-50 placeholder:text-opacity-70"
                 placeholder="search politicians"
+                id="searchBox"
+                value={searchUserStr}
               />
-              <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
-              {/* Search box */}
+              {searchUserStr.length == 0 && (
+                <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
+              )}              {/* Search box */}
               {searchUserStr.length > 0 && (
+                // <ul className="absolute overflow-hidden bg-red w-full">
                 <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
                   {searchFilterFunction(searchUserStr)?.map((item: any) =>
                     <BriefUserInfo
@@ -309,6 +317,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                     </p>
                   }
                 </ul>
+                // </ul>
               )}
             </label>
 
@@ -449,10 +458,14 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 type="search"
                 className="rounded-full bg-sky-50 bg-opacity-20 py-3 px-5 text-md text-sky-50 outline-none w-full capitalize placeholder:text-sky-50 placeholder:text-opacity-70"
                 placeholder="search politicians"
+                value={searchUserStr}
+                id="searchBox"
               />
-              <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
+              {searchUserStr.length == 0 && (
+                <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
+              )}
               {searchUserStr.length > 0 && (
-                <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
+                <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100] bg-">
                   {searchFilterFunction(searchUserStr)?.map((item: any) =>
                     <BriefUserInfo
                       key={item?.id}
@@ -540,7 +553,7 @@ const BriefUserInfo: FC<{
 
   return (
     <>
-      <Link href={window.location?.origin + `/user/leader/about?id=${id}`} >
+      <Link href={Nave({ id: id, leader: userDetails?.leaderId })} >
         <li className="flex items-center p-4 last_noti gap-2 hover:bg-gray-100">
           <CustomImage
             src={userPic}

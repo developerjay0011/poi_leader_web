@@ -15,11 +15,13 @@ export const Modal: FC<ManageTemplateFormProps> = ({ onClose, children, heading 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                onClick={onClose}
                 className='fixed top-0 left-0 w-full h-[100dvh] z-10 '>
-                <div className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center main_scrollbar`}>
+                <div onClick={onClose} className={`w-full h-full backdrop-blur-[3px] bg-sky-950 bg-opacity-40 z-20 overflow-y-scroll flex justify-center main_scrollbar`}>
                     <m.section
                         initial={{ y: -100 }}
                         animate={{ y: 0 }}
+                        onClick={(e) => e.stopPropagation()}
                         exit={{ y: -100 }}
                         className='z-30  border self-start bg-white relative w-1/2 rounded-md shadow-md max-[1450px]:w-[65%] max-[950px]:w-[80%] max-[700px]:w-[90%] max-[600px]:w-[95%] max-[650px]:mt-5'>
                         {heading &&

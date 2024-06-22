@@ -16,3 +16,6 @@ export const Shortlistbytime = (list = []) => {
     });
     return Array.isArray(combinedData) && combinedData
 }
+export const Nave = ({ id, leader }) => {
+    return id == leader ? window.location?.origin + "/user/profile" : window.location?.origin + `/user/leader/about?id=${id}`
+}

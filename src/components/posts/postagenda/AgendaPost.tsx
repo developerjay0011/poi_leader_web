@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import { cusSelector } from "@/redux_store/cusHooks";
+import { Nave } from "../utils";
 
 interface AgendaPostProps {
   userdetails: any;
@@ -80,7 +81,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({ userdetails, post, type, index
 
         <section className="flex flex-col w-full">
           <div className="flex items-center pr-5 gap-3 py-4 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
-            <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`} className="flex items-center gap-3">
+            <Link href={Nave({ id: post?.leaderid, leader: userDetails?.leaderId })} className="flex items-center gap-3">
               <CustomImage
                 src={getImageUrl(userdetails?.image)}
                 alt="user pic"

@@ -91,8 +91,8 @@ export const EventPage: FC<EventPageProps> = () => {
         formData.append("event_type", data?.event_type || "");
         formData.append("location", data?.location || "");
         formData.append("notes", data?.notes || "");
-        formData.append("start_datetime", moment(data?.start_datetime).format("YYYY-MM-DD HH:mm:ss") || "");
-        formData.append("end_datetime", moment(data?.end_datetime).format("YYYY-MM-DD HH:mm:ss") || "");
+        formData.append("start_datetime", data?.start_datetime ? moment(data?.start_datetime, "YYYY-MM-DDTHH:mm").format("YYYY-MM-DD HH:mm:ss") : "");
+        formData.append("end_datetime", data?.end_datetime ? moment(data?.end_datetime, "YYYY-MM-DDTHH:mm").format("YYYY-MM-DD HH:mm:ss") : "");
         formData.append("ispublic", (data?.access == "Open To All" ? true : false) as any);
         if (data?.attachments?.length != 0) {
           for (let i = 0; i < data?.attachments?.length; i++) {
@@ -149,6 +149,7 @@ export const EventPage: FC<EventPageProps> = () => {
 
 
 
+  console.log(watch("start_datetime"))
   return (
     <>
       <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start m-5'>
@@ -156,7 +157,8 @@ export const EventPage: FC<EventPageProps> = () => {
           heading='Manage events/Task'
           addBtnTitle='add Event/task'
           addBtnClickFn={() => {
-            setIsEvent(true), setIsEdit(false), reset()
+            reset()
+            setIsEvent(true), setIsEdit(false)
           }}
           curDataCount={1}
           totalCount={handleFilter(event, statusFilter)?.mainlist?.length}
@@ -252,25 +254,25 @@ export const EventPage: FC<EventPageProps> = () => {
               type="file"
               multiple={true}
             />
+
+            <Input
+              errors={errors}
+              id='access'
+              selectField={{
+                title: 'Allow Access',
+                options: [{ id: 'Open To All', value: 'Open To All' }, { id: 'Followers', value: 'Followers' }],
+              }}
+              register={register}
+              title='Access'
+              type='select'
+              required
+              validations={{
+                required: 'Type is required',
+              }}
+            />
+
             {watch("event_type") === "event" && (
               <div className="flex items-center justify-center gap-5">
-                <Input
-                  errors={errors}
-                  id='access'
-                  selectField={{
-                    title: 'Allow Access',
-                    options: [{ id: 'Open To All', value: 'Open To All' }, { id: 'Followers', value: 'Followers' }],
-                  }}
-                  register={register}
-                  title='Access'
-                  type='select'
-                  required
-                  validations={{
-                    required: 'Type is required',
-                  }}
-                />
-
-
                 <Input
                   errors={errors}
                   id="location"
@@ -284,7 +286,7 @@ export const EventPage: FC<EventPageProps> = () => {
                   }}
                 />
               </div>)}
-            {watch("event_type") === "event" && (
+            {watch("event_type") === "event" ? (
               <div className="flex items-center justify-center gap-5">
                 <Input
                   errors={errors}
@@ -296,7 +298,7 @@ export const EventPage: FC<EventPageProps> = () => {
                   validations={{
                     required: 'Start Date & Time is required',
                   }}
-                  min={watch("start_datetime") ? watch("start_datetime") : moment().format("YYYY-MM-DD HH:mm:ss")}
+                  min={watch("start_datetime") ? moment(watch("start_datetime")).format("YYYY-MM-DDTHH:mm") : moment().format("YYYY-MM-DDTHH:mm")}
                 />
                 <Input
                   errors={errors}
@@ -308,10 +310,24 @@ export const EventPage: FC<EventPageProps> = () => {
                   validations={{
                     required: 'End Date & Time is required',
                   }}
-                  min={watch("start_datetime")}
+                  min={watch("start_datetime") ? moment(watch("start_datetime")).format("YYYY-MM-DDTHH:mm") : undefined}
                 />
 
-              </div>)}
+              </div>)
+              :
+              <Input
+                errors={errors}
+                id='start_datetime'
+                register={register}
+                title='Start Date & Time'
+                type='datetime-local'
+                required
+                validations={{
+                  required: 'Start Date & Time is required',
+                }}
+                min={moment().format("YYYY-MM-DDTHH:mm")}
+              />
+            }
             {attachments?.map((el: any) => (
               <a key={el} href={getImageUrl(el)} target="_blank" rel="noopener noreferrer" download>
                 {el.match(/[^/]+$/)[0]}
@@ -319,14 +335,14 @@ export const EventPage: FC<EventPageProps> = () => {
             ))}
             <div className='w-full bg-zinc-200 h-[1px] d col-span-full ' />
             <div className="flex justify-end col-span-full gap-2">
-              <a
-                className="rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50"
+              <button
+                className="rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
                 onClick={() => {
                   setIsEvent(false), setIsEdit(false);
                 }}
               >
                 close
-              </a>
+              </button>
               <button
                 className="rounded-full px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize"
                 type="submit"

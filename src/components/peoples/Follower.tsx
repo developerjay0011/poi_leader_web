@@ -1,8 +1,10 @@
 import { getImageUrl } from '@/config/get-image-url';
+import { cusSelector } from '@/redux_store/cusHooks';
 import CustomImage from '@/utils/CustomImage'
 import Link from 'next/link';
 import { FC } from 'react'
 import { BsThreeDots } from 'react-icons/bs'
+import { Nave } from '../posts/utils';
 
 interface FollowerProps {
   displayImg: string;
@@ -12,6 +14,7 @@ interface FollowerProps {
 }
 
 export const Follower: FC<FollowerProps> = ({ displayImg, name, count = 0, item }) => {
+  const { userDetails } = cusSelector((state) => state.auth);
   const LeaderName = () => (
     <div className='flex flex-col flex-grow'>
       <h3 className='flex flex-col font-semibold text-lg capitalize'>
@@ -48,7 +51,7 @@ export const Follower: FC<FollowerProps> = ({ displayImg, name, count = 0, item 
         className='rounded-full w-20 aspect-square object-cover object-center bg-rose-100'
       />
       {item?.leaderid ?
-        <Link href={window.location?.origin + `/user/leader/about?id=${item?.leaderid}`} className='flex flex-col flex-grow'>
+        <Link href={Nave({ id: item?.leaderid, leader: userDetails?.leaderId })} className='flex flex-col flex-grow'>
           {LeaderName()}
         </Link>
         :

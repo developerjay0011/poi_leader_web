@@ -6,8 +6,9 @@ interface CommonBoxProps {
   width?: string
   cusJSX?: JSX.Element[]
   style?: any
+  className?: any
 }
-export const CommonBox: FC<CommonBoxProps> = ({ title, children, width, cusJSX, style = {} }) => {
+export const CommonBox: FC<CommonBoxProps> = ({ title, children, width, cusJSX, style = {}, className = "" }) => {
   return (
     <>
       <section className={`border rounded-md ${width} bg-white text-sky-950`} style={style}>
@@ -16,7 +17,7 @@ export const CommonBox: FC<CommonBoxProps> = ({ title, children, width, cusJSX, 
           <span className='block ml-auto'>{cusJSX}</span>
         </h2>
 
-        <div className='px-5 w-full overflow-auto main_scrollbar'>{children}</div>
+        <div className={`px-5 w-full overflow-auto main_scrollbar ${className}`}>{children}</div>
       </section>
     </>
   )

@@ -15,7 +15,7 @@ const LeftNavLink: FC<{ children: ReactNode; link: string; info: string; target?
     >
       <div
         className="h-full w-full flex items-center justify-center"
-        onMouseOver={(e) => handleLinkMouseEnter(e, info)} onMouseLeave={() => setIsTooltipVisible('')}>
+        onMouseOver={(e) => handleLinkMouseEnter(e, info)} onMouseLeave={() => setIsTooltipVisible(false)}>
         {children}
       </div>
     </CusLink>
@@ -41,7 +41,7 @@ export const LeftNavbar: FC = () => {
       <section className={`py-8 px-3 bg-white shadow_left min-h-full max-[1000px]:hidden overflow-y-auto main_scrollbar relative`}>
         <section className="flex flex-col gap-5 ">
           {loader ? LEFT_NAV_ROUTES.map((El: any, index: number) => (
-            <LeftNavLink key={index} info={''} link={''} setIsTooltipVisible={() => { }}
+            <LeftNavLink key={index} info={''} link={''} setIsTooltipVisible={setIsTooltipVisible}
               handleLinkMouseEnter={() => { }}
             ><></></LeftNavLink>
           )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any, index: number) => (
@@ -57,7 +57,7 @@ export const LeftNavbar: FC = () => {
           ))}
         </section>
       </section>
-      {(isTooltipVisible && tooltipPosition) && (
+      {(isTooltipVisible != false && tooltipPosition) && (
         <div className="hover_text text-[14px]  pt-[4px] pb-[5px] capitalize w-max inline z-[120]" style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
           <span className="triangle" />
           {isTooltipVisible}

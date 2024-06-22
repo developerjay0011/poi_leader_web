@@ -49,7 +49,7 @@ const PoliticalInformationPage: FC = () => {
         });
         if (response?.success) {
           await dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
-          dispatch(authActions.logout(false as any))
+          // dispatch(authActions.logout(false as any))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }
@@ -102,7 +102,7 @@ const PoliticalInformationPage: FC = () => {
       <div className='flex justify-end col-span-full gap-2 mt-5'>
         <Link
           href={ProtectedRoutes.userProfile}
-          className='rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize hover:bg-orange-500 hover:text-orange-50'>
+          className='rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize '>
           close
         </Link>
         <button

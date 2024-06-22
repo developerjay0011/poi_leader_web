@@ -1,6 +1,5 @@
 'use client'
 
-import { BriefProfileInfoBox } from "@/components/timlineComponents/BriefProfileInfoBox";
 import { ShortcutsBox } from "@/components/timlineComponents/ShortcutsBox";
 import { TrendingUsers } from "@/components/timlineComponents/TrendingUsers";
 import { TimeLinePage } from "@/components/posts/TimeLinePage";

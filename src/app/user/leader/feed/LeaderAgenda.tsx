@@ -3,7 +3,6 @@ import { FC, useState } from "react";
 import { AGENDA_STATUS, AGENDA_VAL, PRIORITIES, PRIORITY, dateConverter, } from "@/utils/utility";
 import { AgendaDetails } from "@/redux_store/agenda/agendaSlice";
 import { AnimatePresence } from "framer-motion";
-import moment from 'moment'
 import { TimeLineDetails } from "@/utils/typesUtils";
 import { DevelopmentAgendaTimeLine } from "@/components/posts/postagenda/DevelopmentAgendaTimeLine";
 import { getImageUrl } from "@/config/get-image-url";
@@ -17,15 +16,13 @@ interface AgendaPostProps extends AgendaDetails {
   userdetails: any
 }
 
-export const AgendaPost: FC<AgendaPostProps> = ({
+export const AgendaDevelopmentsPost: FC<AgendaPostProps> = ({
   description,
   priority,
   title,
   status,
   creation_date,
-  created_by_type,
   timeline,
-  el,
   userdetails
 }) => {
   const [showTimeline, setShowTimeline] = useState(false);
@@ -40,11 +37,10 @@ export const AgendaPost: FC<AgendaPostProps> = ({
             <span className="min-[700px]:-rotate-90" key={i}>
               {el}
             </span>
-
           ))}
         </h3>
 
-        <section className="flex flex-col gap-8 max-[450px]:px-3 w-[100%]">
+        <section className="flex flex-col max-[450px]:px-3 w-[100%]">
           <div className="flex items-center gap-3 py-3 px-5 text-sky-950 border-b max-[650px]:flex-wrap">
             <CustomImage
               src={getImageUrl(userdetails?.image)}

@@ -116,7 +116,8 @@ export const submitLeaderForm = async (body: any, islogin?: any) => {
             userimg: res?.data?.data?.notification?.userimg,
             referenceid: res?.data?.data?.notification?.referenceid,
             notificationid: res?.data?.data?.notification?.id,
-            type: body?.request_status == "Re-submitted" ? "profile_approval" : "approval"
+            // type: body?.request_status == "Re-submitted" ? "profile_approval" : "approval"
+            type: "approval"
           })
         }
       }

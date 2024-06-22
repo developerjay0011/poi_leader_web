@@ -50,6 +50,9 @@ export const Input: FC<InputProps> = ({
   const InputFieldType = type === 'select' || type === 'textarea' || type === 'file' ? type : 'normal'
   let listdata = Shortarray(selectField?.options) as any[]
 
+  const commonStyles = `w-full text-base h-[40px] px-3 rounded-md outline-none border 
+                        ${errors[id] ? 'bg-red-100 text-red-500 border-red-400'
+      : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'}`;
 
 
   const INPUT = {
@@ -90,10 +93,7 @@ export const Input: FC<InputProps> = ({
             },
           })}
           placeholder={placeholder}
-          className={`w-full num_inp py-2 text-base px-3 rounded-md outline-none border ${errors[id]
-            ? 'bg-red-100 text-red-500 border-red-400'
-            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-            }`}
+          className={commonStyles}
         />
 
         {type === 'password' && (
@@ -121,10 +121,7 @@ export const Input: FC<InputProps> = ({
             },
           })}
           placeholder={placeholder}
-          className={`w-full num_inp py-2 text-base px-3 rounded-md outline-none border ${errors[id]
-            ? 'bg-red-100 text-red-500 border-red-400'
-            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-            }`}
+          className={commonStyles}
           multiple={multiple}
         />
 
@@ -152,10 +149,7 @@ export const Input: FC<InputProps> = ({
               message: 'Field is required',
             },
           })}
-          className={`w-full capitalize num_inp text-base py-2 px-2 rounded-md outline-none border ${errors[id]
-            ? 'bg-red-100 text-red-500 border-red-400'
-            : 'focus:border-gray-300 focus:bg-gray-100 border-gray-200 text-gray-700 bg-gray-50'
-            }`}>
+          className={`${commonStyles}`}>
           <option value=''>
             {listdata?.length > 0 ? selectField.title : `No ${selectField.title.split(' ').at(-1)} Found !!`}
           </option>
@@ -174,7 +168,7 @@ export const Input: FC<InputProps> = ({
     <label
       htmlFor={id}
       className={`flex flex-col gap-1 w-full ${fullWidth && 'col-span-full'}`}>
-      <span className='font-semibold'>
+      <span className='font-semibold capitalize'>
         {title} {required && <strong className='text-red-500'>*</strong>}
       </span>
 

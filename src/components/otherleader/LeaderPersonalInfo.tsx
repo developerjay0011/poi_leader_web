@@ -19,12 +19,10 @@ interface LeaderPersonalInfoProps { }
 
 
 export const LeaderPersonalInfo: FC<LeaderPersonalInfoProps> = () => {
-  const leaderData: any = cusSelector(
-    (state: RootState) => state.auth.leaderData
-  );
+  const leaderData: any = cusSelector((state: RootState) => state.auth.leaderData);
   return (
     <>
-      <CommonBox title="Personal info">
+      <CommonBox title="Personal info" className="overflow-hidden" >
         <section className="py-6">
           {/* ABOUT */}
           <PersonalBriefInfo
@@ -34,7 +32,7 @@ export const LeaderPersonalInfo: FC<LeaderPersonalInfoProps> = () => {
           />
 
           {/* MORE INFO */}
-          <div className="grid grid-cols-2 mt-8 gap-y-8 max-[400px]:grid-cols-1">
+          <div className="grid grid-cols-2 mt-8 gap-y-8 max-[300px]:grid-cols-1">
             <PersonalBriefInfo
               Icon={FaCakeCandles}
               data={moment(leaderData?.personal_info?.dob).format("YYYY-MM-DD") as string}
@@ -85,20 +83,14 @@ const PersonalBriefInfo: FC<{
   data: string;
 }> = ({ Icon, data, heading }) => {
   return (
-    <>
-      <article className="flex flex-col gap-1">
-        <p className="flex items-end gap-3">
-          <Icon className="text-[1rem]" />
-
-          <span className="font-[500] capitalize text-[15px]">{heading}</span>
-        </p>
-        <p
-          className={`text-[14px] pl-7 ${heading.toLowerCase().includes("about") && "text-justify"
-            }`}
-        >
-          {data}
-        </p>
-      </article>
-    </>
+    <article className="flex flex-col gap-1 w-full">
+      <p className="flex items-end gap-3">
+        <Icon className="text-[1rem]" />
+        <span className="font-[500] capitalize text-[15px]">{heading}</span>
+      </p>
+      <p className={`text-[14px] pl-7 ${heading.toLowerCase().includes("about") && "text-justify"}`}>
+        {data}
+      </p>
+    </article>
   );
 };

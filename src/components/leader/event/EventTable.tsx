@@ -56,7 +56,7 @@ export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent,
             <th className='font-semibold text-left py-2 p-2 border text-center w-[100px]'>S.No</th>
             <th className='font-semibold capitalize text-center py-2 p-2 border'>Title</th>
             <th className='font-semibold text-center py-2 px-2 border text-center'>Description</th>
-            <th className='font-semibold text-center py-2 p-2 border'>Access</th>
+            <th className='font-semibold text-center py-2 p-2 border'>Type</th>
             <th className='font-semibold text-center py-2 p-2 border w-[20%]'>Location</th>
             <th className='font-semibold text-center py-2 p-2 border'>Start Time</th>
             <th className='font-semibold text-center py-2 p-2 border'>End Time</th>
@@ -72,10 +72,10 @@ export const EventTable: FC<EventTableProps> = ({ searchStr, isEvent, editEvent,
                     <td className="text-center py-2 p-2 border">{Event.sr}.</td>
                     <td className="text-center py-2 p-2 border">{Event.title}</td>
                     <td className="text-center py-2 p-2 border">{Event.description}</td>
-                    <td className="text-center py-2 p-2 border">{Event.ispublic ? "Public" : "Private"}</td>
+                    <td className="text-center py-2 p-2 border capitalize">{Event.event_type}</td>
                     <td className="text-center py-2 p-2 border w-[20%]">{Event.location}</td>
                     <td className="text-center py-2 p-2 border w-[200px]">{moment(Event.start_datetime).format("DD-M-YYYY hh:mm a")}</td>
-                    <td className="text-center py-2 p-2 border w-[200px]">{moment(Event.end_datetime).format("DD-M-YYYY hh:mm a")}</td>
+                    <td className="text-center py-2 p-2 border w-[200px]">{Event?.event_type != "task" && moment(Event.end_datetime).format("DD-M-YYYY hh:mm a")}</td>
                     <td className='text-center py-2 pl-2 border printHide'>
                       <button
                         className='hover:scale-110 transition-all mr-3 ease-out duration-200 active:scale-100'

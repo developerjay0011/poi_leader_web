@@ -13,6 +13,7 @@ import { GrClose } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
 import { AgendaOptions } from "../AgendaOptions";
 import { tryCatch } from "@/config/try-catch";
+import { Nave } from "../utils";
 
 interface PollPostProps extends PollDetails {
   Getpost: any,
@@ -58,7 +59,7 @@ export const PollPost: FC<PollPostProps> = ({ userdetails, post, Getpost }) => {
             {Profile()}
           </div>
           :
-          <Link href={window.location?.origin + `/user/leader/about?id=${post?.leaderid}`}
+          <Link href={Nave({ id: post?.leaderid, leader: userDetails?.leaderId })}
             className="flex items-center gap-3 py-4 text-sky-950 border-b">
             {Profile()}
           </Link>

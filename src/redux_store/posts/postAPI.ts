@@ -69,7 +69,7 @@ export const CommentPost = async (resBody: any) => {
   });
 };
 
-const ConvertCommonpost = (list = []): any => {
+export const ConvertCommonpost = (list = []): any => {
   var combinedData = [] as any;
   try {
     list?.forEach((userData: any) => {

@@ -108,7 +108,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       await dispatch(authActions.setUserData(userData));
       const serializedData = JSON.stringify(userData);
       await setCookie(USER_INFO, serializedData);
-      if (data?.leader_detail?.is_profile_complete && data?.leader_detail?.request_status === "Approved") {
+      if (data?.leader_detail?.is_profile_complete && (data?.leader_detail?.request_status === "Approved" || data?.leader_detail?.request_status === "Re-submitted")) {
         setCookie(LEADER_ID, data?.leader_detail.id);
         await setCookie(USER_TYPE, 'leader');
         await setCookie(USER_VERIFY, 'true');

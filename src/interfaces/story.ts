@@ -5,6 +5,7 @@ export interface StoryProps {
   stories?: Array<any>;
   name: string;
   createddate: string
+  other?: boolean
 }
 
 export interface Media {

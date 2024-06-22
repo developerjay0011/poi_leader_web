@@ -14,9 +14,8 @@ import { authActions } from '@/redux_store/auth/authSlice'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers, following } = cusSelector((state) => state.leader);
-  const { posts, mystories } = cusSelector((state) => state.posts);
+  const { posts } = cusSelector((state) => state.posts);
   const { userDetails } = cusSelector((st) => st.auth);
-  const { usertype } = cusSelector((state) => state.access);
   const dispatch = cusDispatch();
 
 
@@ -98,7 +97,7 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                     <MdVerified className='text-2xl text-orange-500' />
                   </span>
                   <span className='text-[14px] font-normal'>
-                    {leaderProfile.political_info?.designation}
+                    {leaderProfile?.political_info?.political_party && leaderProfile?.political_info?.political_party + " ( " + (leaderProfile?.political_info?.designation || leaderProfile?.political_info?.post_in_party) + " )"}
                   </span>
                 </h5>
               </Link>

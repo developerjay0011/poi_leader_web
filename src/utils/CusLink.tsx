@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 interface CusLinkProps {
-  href: string
+  href?: string
   activeLinkClasses: string
   className: string
   children: ReactNode
@@ -25,7 +25,7 @@ export const CusLink: FC<CusLinkProps> = ({
   return (
     <>
       <Link
-        href={href}
+        href={href ? href : ""}
         className={`${className} ${classes}`}
         target={target ? '_parent' : '_self'}>
         {children}
