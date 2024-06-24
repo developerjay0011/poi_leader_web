@@ -6,7 +6,6 @@ import { MdDelete } from 'react-icons/md';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 import moment from 'moment';
-import { sliceData } from '@/utils/TableWrapper';
 import { BsFillEyeFill } from 'react-icons/bs';
 import { PDFPreviewLeader } from '@/utils/PDFPreviewLeader';
 

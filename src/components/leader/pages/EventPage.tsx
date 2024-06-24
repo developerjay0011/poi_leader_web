@@ -1,11 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { FiSearch } from "react-icons/fi";
-import { DirectoryTable } from "../directory/DirectoryTable";
-import { AnimatePresence } from "framer-motion";
-import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
-import { motion as m } from "framer-motion";
-import { BsFillPatchExclamationFill } from "react-icons/bs";
 import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/Input";
@@ -17,9 +11,6 @@ import { GetDashboardEvents, getEvents, saveEvent } from "@/redux_store/event/ev
 import { eventAction } from "@/redux_store/event/eventSlice";
 import { EventTable } from "../event/EventTable";
 import moment from "moment";
-import { LoadingComponent } from "@/utils/LoadingComponent";
-import { BiX } from "react-icons/bi";
-import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { Modal } from "@/components/modal/modal";
 import { TableWrapper, searchFilterFunction } from "@/utils/TableWrapper";
 import { getImageUrl } from "@/config/get-image-url";

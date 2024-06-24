@@ -19,7 +19,10 @@ let userDetails: any = getCookie(USER_INFO);
 userDetails = userDetails && JSON.parse(userDetails);
 
 const initialState: LeaderState = {
-  leaderProfile: { id: userDetails?.leaderId },
+  leaderProfile: {
+    id: userDetails?.leaderId,
+    is_get: false,
+  },
   followers: [],
   trendingLeader: [],
   leaderlist: [],
@@ -35,7 +38,10 @@ export const leaderSlice = createSlice({
   reducers: {
     setLeaderProfile(state, action: PayloadAction<LeaderProfile>) {
       state.leaderProfile = {
-        ...state.leaderProfile,
+        ...{
+          ...state.leaderProfile,
+          is_get: true
+        },
         ...action.payload
       };
     },

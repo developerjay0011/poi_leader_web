@@ -18,6 +18,7 @@ export interface LeaderProfile {
   contact_info?: ContactInfo
   political_info?: PoliticalInfo
   general_setting?: GeneralSetting
+  is_get?: boolean
 }
 
 export interface ProfileInfo {

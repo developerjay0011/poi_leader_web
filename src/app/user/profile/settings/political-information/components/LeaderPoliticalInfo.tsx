@@ -53,6 +53,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   ministries
 }) => {
   const { leaderProfile } = cusSelector((state) => state.leader);
+  const { leaderOptions } = cusSelector((state) => state.common);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'ministries',
@@ -64,13 +65,13 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   const { political_info } = leaderProfile;
   const hasMinistry = watch('hasMinistry')
   useEffect(() => {
-    reset({
-      ...political_info,
-      hasMinistry: political_info?.is_hold_ministry ? 'yes' : null,
-      rajyaSabhaNominated: political_info?.is_nominated ? 'yes' : null,
-    })
-  }, [political_info, reset]);
-  useEffect(() => {
+    if (political_info) {
+      reset({
+        ...political_info,
+        hasMinistry: political_info?.is_hold_ministry ? 'yes' : null,
+        rajyaSabhaNominated: political_info?.is_nominated ? 'yes' : null,
+      })
+    }
     if (designation_id) {
       if (((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID)) && hasMinistry == "yes") {
       } else {
@@ -82,9 +83,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
     if (hasMinistry == 'yes' && fields?.length == 0 && ((designation_id === LEADER_IDS.mpID) || (designation_id === LEADER_IDS.mlaID))) {
       append({ ministryid: '', ministrytype: '' })
     }
-  }, [political_info])
-
-
+  }, [political_info, leaderOptions?.is_get, reset]);
 
   return (
     <div className='grid grid-cols-2 gap-4 col-span-full w-full'>

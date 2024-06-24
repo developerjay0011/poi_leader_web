@@ -1,4 +1,3 @@
-import { AccessField } from './../components/Access';
 import moment from 'moment'
 import { StaticImageData } from 'next/image'
 
@@ -47,10 +46,6 @@ export interface Basicinfo {
   about_me?: string
 }
 
-export interface ErrObj {
-  isErr: boolean
-  errTxt: string
-}
 
 export interface UserDetails {
   id: string
@@ -255,20 +250,6 @@ export interface PartyDetails {
   id: string
   party_name: string
 }
-export interface AccessFieldDetails {
-  id: string
-  tabs: AccessFieldprops[]
-  userid: string
-}
-
-
-export interface AccessFieldprops {
-  tabid: string
-  tabname: string
-  ischecked: string
-  parentid: string
-  id: string
-}
 
 export interface TimeLineDetails {
   id: string
@@ -278,13 +259,7 @@ export interface TimeLineDetails {
   created_date: string
   attachments: string[]
 }
-export interface TicketTimeLineDetails {
-  id: string
-  status: string
-  remark: string
-  created_date: string
-  attachments: string[]
-}
+
 export interface DistrictDetails {
   districtId: string
   districtName: string
@@ -372,11 +347,6 @@ export interface NewPostFields {
   media: any
 }
 
-export interface NewPostData {
-  writtenText: string
-  type: UserPostType
-  media: NewPostFields[]
-}
 
 export type RQ_VAL = '0' | '1' | '2' | '3'
 

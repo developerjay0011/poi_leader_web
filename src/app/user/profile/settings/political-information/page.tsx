@@ -41,7 +41,6 @@ const PoliticalInformationPage: FC = () => {
 
     tryCatch(
       async () => {
-
         const response = await submitLeaderForm({
           ...leaderProfile,
           request_status: 'Re-submitted',
@@ -49,6 +48,7 @@ const PoliticalInformationPage: FC = () => {
         });
         if (response?.success) {
           await dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
+          dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
           // dispatch(authActions.logout(false as any))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
@@ -61,6 +61,7 @@ const PoliticalInformationPage: FC = () => {
   return (
     <form
       className='grid grid-cols-2 gap-x-4 gap-y-5'
+      style={{ display: leaderOptions?.is_get ? "block" : "none" }}
       onSubmit={handleSubmit(formSubmitHandler)}
     >
       <h2 className='text-4xl font-semibold col-span-full mb-5'>

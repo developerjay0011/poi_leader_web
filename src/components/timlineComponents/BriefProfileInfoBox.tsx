@@ -1,22 +1,11 @@
 'use client'
 import { FC, useState } from 'react'
 import { CommonBox } from '@/utils/CommonBox'
-import { CountBubble } from '@/utils/CountBubble'
-import {
-  FaMessage,
-  FaBell,
-  FaCamera,
-  FaVideo,
-  FaUserGear,
-  FaHeart,
-  FaEye,
-} from 'react-icons/fa6'
+import { FaBell, } from 'react-icons/fa6'
 import Link from 'next/link'
-import { FaEdit } from 'react-icons/fa'
 import { cusSelector } from '@/redux_store/cusHooks'
 import CustomImage from '@/utils/CustomImage'
 import { getImageUrl, setusername } from '@/config/get-image-url'
-import { useRouter } from 'next/router'
 
 interface BriefProfileInfoBoxProps {
 
@@ -49,25 +38,11 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = ({ }) => {
               className='text-lg font-[600] max-[1300px]:text-[1.05rem] hover:text-orange-500 transition-all capitalize'>
               {setusername(leaderProfile)}
             </Link>
-
-            {/* Messages */}
-            {/* <div className='flex items-center gap-1 text-[13px] font-[500]'>
-              <FaMessage /> <p className='capitalize'>messages</p>
-              <CountBubble
-                bgColor='bg-red-500'
-                textColor='text-white'
-                count={2}
-              />
-            </div> */}
-
-            {/* Notifications */}
             <div className='flex items-center gap-1 text-[13px] font-[500]'>
               <FaBell /> <p className='capitalize'>notifications</p>
-              <CountBubble
-                bgColor='bg-blue-500'
-                textColor='text-white'
-                count={notification?.length}
-              />
+              <p className={`w-[17px] aspect-square rounded-full flex items-center justify-center text-[10px] text-white bg-blue-500 `}>
+                <span>{notification?.length}</span>
+              </p>
             </div>
           </div>
         </section>

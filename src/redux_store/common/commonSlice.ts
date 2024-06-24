@@ -11,6 +11,7 @@ interface CommonState {
     politicalparty: any[];
     states: any[];
     categories: any[];
+    is_get?: boolean
   }
 }
 
@@ -23,7 +24,8 @@ const initialState: CommonState = {
     parliamentries: [],
     politicalparty: [],
     states: [],
-    categories: []
+    categories: [],
+    is_get: false
   }
 };
 
@@ -32,7 +34,7 @@ export const commonSlice = createSlice({
   initialState,
   reducers: {
     setLeaderOptions(state, action: PayloadAction<any>) {
-      state.leaderOptions = action.payload;
+      state.leaderOptions = { ...action.payload, is_get: true }
     },
     showNotification(state, action: PayloadAction<{ message: string, type: 'success' | 'error' }>) {
       toast[action.payload.type](action.payload.message);

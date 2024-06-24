@@ -63,6 +63,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
   const targetElection = watch('target_elections')
   const doneAnyPoliticalActivity = watch('doneAnyPoliticalActivity')
   const { leaderProfile } = cusSelector((state) => state.leader);
+  const { leaderOptions } = cusSelector((state) => state.common);
   const { fields, append, remove } = useFieldArray({ name: 'activity_pictures', control, });
   const { fields: references, append: newRef, remove: removeRef, } = useFieldArray({ name: 'referencies', control, })
   const { political_info } = leaderProfile;
@@ -77,7 +78,7 @@ export const EmerginLeaderInfo: FC<EmerginLeaderInfoProps> = ({
       position: leaderProfile.political_info?.position,
       political_party_id: leaderProfile.political_info?.political_party_id
     })
-  }, [political_info?.political_party_id, parties?.length, reset]);
+  }, [political_info?.political_party_id, parties?.length, leaderOptions?.is_get, reset]);
 
 
   return (
