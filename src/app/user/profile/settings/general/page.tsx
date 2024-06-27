@@ -103,11 +103,6 @@ const AdminGeneralSettingPage: FC = () => {
         </ul>
 
         <div className='flex justify-end gap-3'>
-          {/* <Link
-            href={'/leader/profile'}
-            className='rounded-full px-8 py-3 text-[14px] bg-gray-400 text-gray-50 transition-all capitalize hover:bg-orange-500 hover:text-orange-50'>
-            cancel
-          </Link> */}
           <button
             onClick={() => { formSubmitHandler() }}
             type='button'

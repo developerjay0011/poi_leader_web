@@ -36,7 +36,6 @@ export const DirectoryTable: FC<DirectoryTableProps> = ({ searchStr, isDirectory
   const handleDelete = async () => {
     tryCatch(
       async () => {
-
         const response = await deleteDirectory(deleteValue?.id as string, deleteValue?.leaderid as string);
         if (response?.success) {
           onClose();

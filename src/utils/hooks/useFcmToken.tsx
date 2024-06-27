@@ -10,7 +10,6 @@ const useFcmToken = () => {
     const [notificationPermissionStatus, setNotificationPermissionStatus] = useState('');
 
     useEffect(() => {
-
         const retrieveToken = async () => {
             try {
                 if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
@@ -28,7 +27,6 @@ const useFcmToken = () => {
                         const currentToken = await getToken(messaging, { vapidKey: 'BNYsk1NtajjgTAMxMluwiJFJb0lY_FmjJ7gkwR-XikS6tRtm_MPwWQk6k965NpKAKqdouhmfeQJ1nVHcmUqF5cs', });
                         if (currentToken) {
                             setToken(currentToken);
-                            console.log(currentToken)
                             setCookie(LEADER_FCM_TOKEN_KEY, JSON.stringify(currentToken))
                         } else {
                             console.error('No registration token available. Request permission to generate one.');

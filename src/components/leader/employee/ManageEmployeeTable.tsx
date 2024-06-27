@@ -8,7 +8,6 @@ import { RiTableAltLine } from "react-icons/ri";
 import { EmployeePermissionForm } from '../forms/EmployeePermission';
 import { GetLeaderEmployeeTabAccess } from '@/redux_store/employee/employeeApi';
 import { employeeSlice } from '@/redux_store/employee/employeeApiSlice';
-import { sliceData } from '@/utils/TableWrapper';
 
 interface ManageEmployeeTableProps {
   searchStr: string
@@ -19,12 +18,9 @@ interface ManageEmployeeTableProps {
   employees: any
 }
 
-export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, handleEdit, changeActiveStatus, curPageNo, filterDataCount, employees }) => {
+export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ handleEdit, changeActiveStatus, employees }) => {
   const [showAdd, setShowAdd] = useState(false)
   const dispatch = cusDispatch();
-
-
-
   return (
     <>
       <table className='w-full my-8 border'>
@@ -63,7 +59,7 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
                     {el.phoneno}
                   </td>
                   <td className='capitalize text-left border-r px-2 align-text-center'>
-                    {el.location}
+                    {el.location?.location}
                   </td>
                   <td className='text-center border printHide'>
                     <StatusBtn
@@ -94,9 +90,6 @@ export const ManageEmployeeTable: FC<ManageEmployeeTableProps> = ({ searchStr, h
           )}
         </tbody>
       </table>
-
-
-
       {showAdd && (
         <EmployeePermissionForm
           heading="Access Tabs"

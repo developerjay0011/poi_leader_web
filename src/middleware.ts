@@ -131,7 +131,7 @@ const setRoute = (pathname: string, isNotification: string, userType: string): s
 const readLeaderNotification = async (token: string, notificationId: string, leaderId: string) => {
   try {
     const data = { id: notificationId, leaderid: leaderId };
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${APIRoutes.ReadLeaderNotification}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${APIRoutes.ReadLeaderNotification}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -139,8 +139,6 @@ const readLeaderNotification = async (token: string, notificationId: string, lea
       },
       body: JSON.stringify(data),
     });
-    const result = await response.json();
-    console.log(result);
   } catch (error) {
     console.error(error);
   }

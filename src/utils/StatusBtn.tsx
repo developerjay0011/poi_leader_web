@@ -32,7 +32,7 @@ export const StatusBtn: FC<StatusBtnProps> = ({
     <>
       <button
         onClick={showModal}
-        className={`text-white rounded-full py-0.5 px-4 text-[13px] capitalize enable_transition ${status === '0'
+        className={`text-white rounded py-0.5 px-4 text-[13px] capitalize enable_transition ${status === '0'
           ? 'bg-red-600 hover:bg-red-500'
           : 'bg-green-600 hover:bg-green-500'
           }`}>

@@ -1,6 +1,6 @@
 "use client";
 import { Comment, Like, PostDetails } from "@/utils/typesUtils";
-import { dateConverter } from "@/utils/utility";
+import { dateConverter, dateConverter2 } from "@/utils/utility";
 import { FC, useState } from "react";
 import { BiSolidMessageAltDetail } from "react-icons/bi";
 import { BsFillHeartFill, BsHeart, BsThreeDots } from "react-icons/bs";
@@ -60,7 +60,6 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
         Getpost();
       }
     } catch (error) {
-      console.error(error);
     }
   };
 
@@ -93,7 +92,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
             </h4>
             <p className="flex items-center capitalize gap-2 text-sm font-[500]">
               <span>
-                Published on:{" "}{dateConverter(post?.createddate)}
+                Published on:{" "}{dateConverter2(post?.createddate)}
               </span>
             </p>
           </div>
@@ -115,7 +114,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
       {/* Post */}
       <div className="flex flex-col gap-5 mt-5">
         {post?.media?.length > 0 && <PostGrid imagesOrVideos={post?.media?.map((item: any) => getImageUrl(item?.media)) as []} />}
-        <p className="text-[16px]">{post?.written_text}</p>
+        {post?.written_text && <p className="text-[16px]">{post?.written_text}</p>}
       </div>
       <div className="w-full h-[2px] bg-zinc-100 my-6" />
 

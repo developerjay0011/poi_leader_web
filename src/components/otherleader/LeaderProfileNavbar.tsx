@@ -6,12 +6,12 @@ export const LeaderProfileNavbar: FC<LeaderProfileNavbarProps> = ({ setType, typ
   return (
     <>
       <nav className="flex items-center gap-8 ml-20 max-[1480px]:ml-10 max-[1200px]:ml-5 max-[450px]:gap-4 max-[1100px]:flex-wrap max-[620px]:justify-center">
-        <div className={`text-lg font-[500] capitalize relative cursor-pointer ${type == "feed" && " text-orange-500 "}`}
+        {/* <div className={`text-lg font-[500] capitalize relative cursor-pointer ${type == "feed" && " text-orange-500 "}`}
           // href={ProtectedRoutes.leaderFeed}
           onClick={() => setType("feed")}
         >
           Feed
-        </div>
+        </div> */}
 
         <div className={`text-lg font-[500] capitalize relative cursor-pointer ${type == "agenda" && " text-orange-500 "}`}
           // href={ProtectedRoutes.leaderProfile}

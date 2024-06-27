@@ -190,7 +190,7 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
 
           <div className="flex items-center justify-between px-3">
             <div className="flex items-center gap-3">
-              <label htmlFor={`medias-${type} cursor-pointer`}>
+              <label htmlFor={`medias-${type}`}>
                 <input
                   type="file"
                   className="hidden"
@@ -200,13 +200,18 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
                 <BsImageFill className="text-sky-950 text-xl text-opacity-70 cursor-pointer" />
               </label>
             </div>
-            <div className="ml-auto relative" id="moreOptions">
+            <div className="ml-auto relative" >
               {showMorePostOptions && (
                 <PostTypes
                   onClose={() => setShowMorePostOptions(false)}
                   accessTypeOptions={(e: any) => setAccessType(e)}
+                  accessType={accessType}
                 />
               )}
+              {/* <div className="flex flex-row gap-3" >
+                <PeopleCount accessTypeOptions={(e: any) => setAccessType(e)} accessType={accessType} value='open' label="Open To All" />
+                <PeopleCount accessTypeOptions={(e: any) => setAccessType(e)} accessType={accessType} value='followers' label="Followers" />
+              </div> */}
               <div className="" id={"moreOptions"} onClick={() => setShowMorePostOptions(!showMorePostOptions)}>
                 <span className="capitalize">{`Post Type `} <span className="capitalize text-orange-500 font-medium cursor-pointer">{(accessType && ": " + accessType)}</span></span>
               </div>
@@ -227,8 +232,8 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
               </div>
 
               <div className="flex items-center gap-2 flex-wrap">
-                {previewImages.map((el) => (
-                  <div className="w-20 aspect-square relative" key={el.id}>
+                {previewImages.map((el, index: number) => (
+                  <div className="w-20 aspect-square relative" key={index}>
                     {el.type === "image" && (
                       <CustomImage
                         src={el.media}
@@ -266,3 +271,26 @@ export const NewPostBox: FC<NewPostBoxProps> = ({ type, handleClose, handleAdd }
     </>
   );
 };
+const PeopleCount: FC<{
+  accessTypeOptions: any,
+  value: string
+  label: string
+  accessType: any
+}> = ({ accessTypeOptions, value, label, accessType }) => {
+  return (
+    <label
+      htmlFor={value}
+      className='flex gap-2 items-center cursor-pointer w-max'>
+      <input
+        type='radio'
+        className='checkbox hidden'
+        id={value}
+        value={value}
+        checked={value == accessType}
+        onChange={(e) => accessTypeOptions(value)}
+      />
+      <span className='select-none w-5 aspect-square rounded-full inline-block relative border-cyan-600 border-4 cursor-pointer after:bg-cyan-600 after:w-4/6 after:aspect-square after:absolute after:top-1/2 after:left-1/2 after:translate-x-[-50%] after:translate-y-[-50%] after:rounded-full after:opacity-0' />
+      <span className='font-medium'>{label}</span>
+    </label>
+  )
+}

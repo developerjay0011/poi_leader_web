@@ -78,7 +78,6 @@ export const RegisterForm: FC = () => {
         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: sandOtp.message }))
       }
     } catch (err) {
-      console.error(err);
       setRegistering(false);
     }
   };

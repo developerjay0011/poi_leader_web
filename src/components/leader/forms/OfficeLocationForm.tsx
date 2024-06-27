@@ -5,8 +5,6 @@ import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
 import { tryCatch } from '@/config/try-catch'
-import { AddEditEmployee, GetEmployees } from '@/redux_store/employee/employeeApi'
-import { employeeAction } from '@/redux_store/employee/employeeApiSlice'
 import { Modal } from '@/components/modal/modal'
 import { SaveOfficeLocation } from '@/redux_store/location/locationApi'
 

@@ -53,10 +53,7 @@ export const EmployeeManagePage: FC = () => {
                 <TableWrapper
                     heading='Manage Employees'
                     addBtnTitle='add employee'
-                    addBtnClickFn={() => {
-                        setEdit(null)
-                        setShowAdd(true)
-                    }}
+                    addBtnClickFn={() => { setEdit(null); setShowAdd(true) }}
                     curDataCount={1}
                     totalCount={searchFilterFunction(searchFilter, employees, "fullname", { curPageNo, filterDataCount })?.mainlist?.length}
                     changeFilterFn={changeFilterCount}

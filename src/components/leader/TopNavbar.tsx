@@ -98,166 +98,170 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
 
   useEffect(() => {
     try {
-      if (user_type == "leader") {
-        (async () => {
-          let allcookies: any = await getCookies()
-          if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
-            if (userDetails?.leaderId) {
-              const leaderRes = await getProfile(userDetails?.leaderId, dispatch);
-              dispatch(leaderActions.setLeaderProfile(leaderRes));
-              if (leaderRes?.request_status !== "Approved" && leaderRes?.request_status != "Re-submitted") {
-                dispatch(authActions.logout(false as any))
-                return
-              }
-              const Data = await getDirectory(userDetails?.leaderId as string);
-              dispatch(directoryAction.storedirectory(Data))
+      (async () => {
+        let allcookies: any = await getCookies()
+        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
+          if (user_type == "leader") {
+            const leaderRes = await getProfile(userDetails?.leaderId, dispatch);
+            dispatch(leaderActions.setLeaderProfile(leaderRes));
 
-              // Leader
-              const LeadersDropdown = await getLeadersOptions();
-              dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-
-              // TrendingLeader
-
-              const leaderList = await GetLeaderList();
-              dispatch(leaderActions.setLeaderlist(leaderList))
-              const trendingLeader = await getTrendingLeaderList();
-              dispatch(leaderActions.setTrendingLeader(trendingLeader))
-
-              // Follower
-              const followingRes = await getFollowers(userDetails?.leaderId as string);
-              dispatch(leaderActions.setFollowers(followingRes));
-              const followering = await getFollowering(userDetails?.leaderId as string)
-              dispatch(leaderActions.setFollowing(followering))
-
-              // Stories
-              const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
-              dispatch(postActions.storeStories(storiesForLeader as any[]));
-
-
-              // GetBirthdayList
-              const BirthdayList = await GetBirthdayList();
-              dispatch(leaderActions.setBirthdayList(BirthdayList));
-
-              //event
-              const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
-              dispatch(eventAction.storeDashboardevents(DashboardEvents));
-
-              // Posts
-              const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
-              dispatch(postActions.setPost(postsForLeader));
-              const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
-              dispatch(postActions.listPosts(leaderpost as any));
-
-
-              // Notification
-              const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": 0 });
-              dispatch(leaderActions.setNotification(response));
-
-              // Letter
-              const Letters = await getLetters(userDetails?.leaderId as string);
-              dispatch(letterActions.storeLetter(Letters));
-              const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
-              dispatch(letterActions.storeLetterTemplate(LetterTemplates));
-              const Tickets = await getTickets(userDetails?.leaderId as string);
-              dispatch(ticketActions.storeTicket(Tickets));
-
-              // Groups
-              const Groups = await getGroups(userDetails?.leaderId as string);
-              dispatch(groupActions.storeGroups(Groups));
-
-              // GetEmployees
-              const Employees = await GetEmployees(userDetails?.leaderId as string);
-              dispatch(employeeAction.storeemployees(Employees));
-
-              // Category
-              const Category = await getCategory(userDetails?.leaderId as string);
-              dispatch(developmentAction.storeCategories(Category));
-
-              // Development
-              const Development = await getDevelopment(userDetails?.leaderId as string);
-              dispatch(developmentAction.storeDevelopments(Development));
-
-              // Agenda
-              const Agenda = await getAgenda(userDetails?.leaderId as string);
-              dispatch(agendaAction.storeAgendas(Agenda));
-
-              const Files = await GetFiles(userDetails?.leaderId as string);
-              dispatch(fileAction.storeFiles(Files));
-
-              const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
-              dispatch(locationAction.storeLocation(OfficeLocations));
+            if (leaderRes?.request_status !== "Approved" && leaderRes?.request_status != "Re-submitted") {
+              dispatch(authActions.logout(false as any))
+              return
             }
+            const Data = await getDirectory(userDetails?.leaderId as string);
+            dispatch(directoryAction.storedirectory(Data))
+
+            // Leader
+            const LeadersDropdown = await getLeadersOptions();
+            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+
+            // TrendingLeader
+
+            const leaderList = await GetLeaderList();
+            dispatch(leaderActions.setLeaderlist(leaderList))
+
+            const trendingLeader = await getTrendingLeaderList();
+            dispatch(leaderActions.setTrendingLeader(trendingLeader))
+
+            // Follower
+            const followingRes = await getFollowers(userDetails?.leaderId as string);
+            dispatch(leaderActions.setFollowers(followingRes));
+
+            const followering = await getFollowering(userDetails?.leaderId as string)
+            dispatch(leaderActions.setFollowing(followering))
+
+            // Stories
+            const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
+            dispatch(postActions.storeStories(storiesForLeader as any[]));
+
+            // GetBirthdayList
+            const BirthdayList = await GetBirthdayList();
+            dispatch(leaderActions.setBirthdayList(BirthdayList));
+
+            //event
+            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+            dispatch(eventAction.storeDashboardevents(DashboardEvents));
+
+            // Posts
+            const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+            dispatch(postActions.setPost(postsForLeader));
+
+            const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
+            dispatch(postActions.listPosts(leaderpost as any));
+
+
+            // Notification
+            const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": 0 });
+            dispatch(leaderActions.setNotification(response));
+
+            // Letter
+            const Letters = await getLetters(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetter(Letters));
+
+            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
+
+            const Tickets = await getTickets(userDetails?.leaderId as string);
+            dispatch(ticketActions.storeTicket(Tickets));
+
+            // Groups
+            const Groups = await getGroups(userDetails?.leaderId as string);
+            dispatch(groupActions.storeGroups(Groups));
+
+            // GetEmployees
+            const Employees = await GetEmployees(userDetails?.leaderId as string);
+            dispatch(employeeAction.storeemployees(Employees));
+
+            // Category
+            const Category = await getCategory(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeCategories(Category));
+
+            // Development
+            const Development = await getDevelopment(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeDevelopments(Development));
+
+            // Agenda
+            const Agenda = await getAgenda(userDetails?.leaderId as string);
+            dispatch(agendaAction.storeAgendas(Agenda));
+
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
+
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+            dispatch(locationAction.storeLocation(OfficeLocations));
           }
-        })();
-      }
-      if (user_type != "leader") {
-        (async () => {
-          let allcookies: any = await getCookies()
-          if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY) {
-            if (userDetails?.leaderId) {
-              const employee = await GetSingleEmployeeDetail({
-                "leaderid": userDetails?.leaderId,
-                "employeeid": userDetails?.employeeId
-              });
-              dispatch(employeeAction.setemployedetails(employee));
+          if (user_type == "employee") {
+            const employee = await GetSingleEmployeeDetail({ "leaderid": userDetails?.leaderId, "employeeid": userDetails?.employeeId });
+            dispatch(employeeAction.setemployedetails(employee));
 
-              const leaderRes = await getProfile(userDetails?.leaderId);
-              dispatch(leaderActions.setLeaderProfile(leaderRes));
+            const leaderRes = await getProfile(userDetails?.leaderId);
+            dispatch(leaderActions.setLeaderProfile(leaderRes));
 
-              // Notification
-              const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": userDetails?.employeeId });
-              dispatch(leaderActions.setNotification(response));
+            // Notification
+            const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": userDetails?.employeeId });
+            dispatch(leaderActions.setNotification(response));
 
-              const LeadersDropdown = await getLeadersOptions();
-              dispatch(commonActions.setLeaderOptions(LeadersDropdown));
+            const LeadersDropdown = await getLeadersOptions();
+            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
 
-              const data = await getLetterTemplates(userDetails?.leaderId as string);
-              dispatch(letterActions.storeLetterTemplate(data));
+            // Directory
+            const Directory = await getDirectory(userDetails?.leaderId as string);
+            dispatch(directoryAction.storedirectory(Directory))
 
-              const Data = await getDirectory(userDetails?.leaderId as string);
-              dispatch(directoryAction.storedirectory(Data))
-              const Files = await GetFiles(userDetails?.leaderId as string);
-              dispatch(fileAction.storeFiles(Files));
-              const Letters = await getLetters(userDetails?.leaderId as string);
-              dispatch(letterActions.storeLetter(Letters));
-              const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
-              dispatch(letterActions.storeLetterTemplate(LetterTemplates));
-              const Tickets = await getTickets(userDetails?.leaderId as string);
-              dispatch(ticketActions.storeTicket(Tickets));
+            // Files
+            const Files = await GetFiles(userDetails?.leaderId as string);
+            dispatch(fileAction.storeFiles(Files));
 
-              //event
-              const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
-              dispatch(eventAction.storeDashboardevents(DashboardEvents));
+            // Letters
+            const Letters = await getLetters(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetter(Letters));
 
-              // Groups
-              const Groups = await getGroups(userDetails?.leaderId as string);
-              dispatch(groupActions.storeGroups(Groups));
+            // LetterTemplates
+            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
+            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
 
-              // GetEmployees
-              const Employees = await GetEmployees(userDetails?.leaderId as string);
-              dispatch(employeeAction.storeemployees(Employees));
+            // Tickets
+            const Tickets = await getTickets(userDetails?.leaderId as string);
+            dispatch(ticketActions.storeTicket(Tickets));
 
-              // Category
-              const Category = await getCategory(userDetails?.leaderId as string);
-              dispatch(developmentAction.storeCategories(Category));
+            //event
+            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
+            dispatch(eventAction.storeDashboardevents(DashboardEvents));
 
-              // Development
-              const Development = await getDevelopment(userDetails?.leaderId as string);
-              dispatch(developmentAction.storeDevelopments(Development));
+            // Groups
+            const Groups = await getGroups(userDetails?.leaderId as string);
+            dispatch(groupActions.storeGroups(Groups));
 
-              // Agenda
-              const Agenda = await getAgenda(userDetails?.leaderId as string);
-              dispatch(agendaAction.storeAgendas(Agenda));
-              const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
-              dispatch(locationAction.storeLocation(OfficeLocations));
-            }
+            // GetEmployees
+            const Employees = await GetEmployees(userDetails?.leaderId as string);
+            dispatch(employeeAction.storeemployees(Employees));
+
+            // Category
+            const Category = await getCategory(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeCategories(Category));
+
+            // Development
+            const Development = await getDevelopment(userDetails?.leaderId as string);
+            dispatch(developmentAction.storeDevelopments(Development));
+
+            // Agenda
+            const Agenda = await getAgenda(userDetails?.leaderId as string);
+            dispatch(agendaAction.storeAgendas(Agenda));
+
+            // locations
+            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
+            dispatch(locationAction.storeLocation(OfficeLocations));
           }
-        })();
-      }
+        }
+      })();
     } catch (error) {
-      console.error(error)
     }
   }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
+
+
+
+
   useEffect(() => {
     if (user_type == "leader") {
       (async () => {

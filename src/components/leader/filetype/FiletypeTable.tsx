@@ -15,7 +15,7 @@ interface FiletypeTableProps {
   filestypes: any
 }
 
-export const FiletypeTable: FC<FiletypeTableProps> = ({ searchStr, handleEdit, getFiles, curPageNo, filterDataCount, filestypes }) => {
+export const FiletypeTable: FC<FiletypeTableProps> = ({ handleEdit, getFiles, filestypes }) => {
   const { userDetails }: any = cusSelector((state) => state.auth);
   const { location } = cusSelector((state) => state.location);
   return (

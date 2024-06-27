@@ -67,7 +67,7 @@ export const TicketTimeLine: FC<TicketTimeLineProps> = ({ onClose, onAddMileSton
               ))}
               <div className='flex justify-center col-span-full gap-2'>
                 <button
-                  className={`text-sm mt-2 align-center transition-all px-5 py-1 rounded-full capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
+                  className={`text-sm mt-2 align-center transition-all px-5 py-1 rounded capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium`}
                   onClick={() => onAddMileStone()}
                 >
                   Add Status

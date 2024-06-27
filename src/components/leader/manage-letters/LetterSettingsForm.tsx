@@ -144,12 +144,12 @@ export const LetterSettingsForm: FC<LetterSettingsFormProps> = ({
               <button
                 type='button'
                 onClick={onClose}
-                className='py-2 px-4 uppercase text-white bg-cyan-500 text-sm rounded-md'>
+                className='py-2 px-4 uppercase text-white bg-cyan-500 text-sm rounded-full'>
                 close
               </button>
               <button
                 type='submit'
-                className='py-2 px-4 uppercase text-white bg-cyan-700 text-sm rounded-md'>
+                className='py-2 px-4 uppercase text-white bg-cyan-700 text-sm rounded-full'>
                 save
               </button>
             </div>

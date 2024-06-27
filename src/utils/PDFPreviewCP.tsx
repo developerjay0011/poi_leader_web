@@ -106,7 +106,7 @@ export const PDFPreviewCP: FC<PDFPreviewCPProps> = ({
               <button
                 type='button'
                 onClick={onClose}
-                className='rounded-full capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
+                className='rounded capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
                 Close
               </button>
 
@@ -114,7 +114,7 @@ export const PDFPreviewCP: FC<PDFPreviewCPProps> = ({
                 trigger={() => (
                   <button
                     type='button'
-                    className='rounded-full capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
+                    className='rounded capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
                     print
                   </button>
                 )}

@@ -44,19 +44,18 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false, 
         fetchMyStories();
       }
     } catch (error) {
-      console.error(error);;
     }
   };
 
   return (
     <>
-      <CommonBox title="Stories" cusJSX={other == false ? [<BsPlusCircle className="text-orange-500 text-[25px] aspect-square object-cover object-center cursor-pointer" onClick={() => setOpenPopup(true)} />] : []}>
+      <CommonBox title="Stories" cusJSX={other == false ? [<BsPlusCircle key={"add-stories"} className="text-orange-500 text-[25px] aspect-square object-cover object-center cursor-pointer" onClick={() => setOpenPopup(true)} />] : []}>
         <ul className="flex gap-2 py-5  w-full overflow-x-auto ">
-          {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string, create_ddate: string } | undefined, index: null) => {
+          {setstories?.map((el: | { media?: any[]; index?: number, leaderid: string; image: string; name: string; createddate: string, create_ddate: string } | undefined, index2: number) => {
             return (
               <Story
                 userImage={getImageUrl(el?.image as string)}
-                key={index}
+                key={index2}
                 stories={el?.media}
                 handleDelete={handleDelete}
                 self={userDetails?.leaderId == el?.leaderid}
@@ -87,7 +86,7 @@ export const StoriesBox: FC<StoriesBoxProps> = ({ is_my_postandstories = false, 
           }
         }}
       >
-        <div className="object-center w-[400px]">
+        <div className="object-center w-[760px]">
           <NewPostBox handleAdd={() => { fetchStories(); fetchMyStories(); }} type="story" handleClose={() => setOpenPopup(false)} />
         </div>
       </Modal>

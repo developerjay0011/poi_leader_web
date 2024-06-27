@@ -22,14 +22,12 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, className, ...props
       {...props}
       src={imageError ? NoImg : src}
       alt={alt}
-      onLoadingComplete={(result) => {
-        if (result.naturalWidth === 0) setImageError(true)
-      }}
+      onLoadingComplete={(result) => { if (result.naturalWidth === 0) setImageError(true) }}
       onError={(event) => setImageError(true)}
       onEmptied={() => setImageError(true)}
       loading="eager"
       className={className}
-    // className={imageError ? `${className} !object-contain !bg-[grey]` : className}
+      priority
     />
   );
 };

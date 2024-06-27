@@ -15,7 +15,7 @@ import { SendMessage } from "../forms/SendMessageFrom";
 import { Modal } from "@/components/modal/modal";
 import { MembersToGroup } from "../forms/Memberstogroup";
 import { MultiSelect } from "@/utils/MultiSelect";
-import { EducationDropdowns, GenderDropdowns, MaritalStatusDropdowns } from '@/constants/common'
+import { GenderDropdowns } from '@/constants/common'
 import moment from "moment";
 
 interface DirectoryPageProps { }
@@ -54,7 +54,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
         }
       )
     })();
-  }, [dispatch, userDetails?.leaderId, isDirectory]);
+  }, [userDetails?.leaderId, isDirectory]);
 
   const formSubmitHandler = async (data: any) => {
     tryCatch(
@@ -288,12 +288,15 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
               title="Whatsapp no."
               type="number"
               validations={{
+                required: false,
                 validate: {
                   notAValidNo(val) {
-                    return (
-                      val.toString().length === 10 ||
-                      "please enter a valid whatsapp no"
-                    );
+                    if (val) {
+                      return (
+                        val.toString().length === 10 ||
+                        "please enter a valid whatsapp no"
+                      );
+                    }
                   },
                 },
               }}

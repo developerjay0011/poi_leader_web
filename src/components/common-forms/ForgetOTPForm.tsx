@@ -38,7 +38,6 @@ export const ForgetOTPForm: FC<ForgetOTPFormProps> = ({
         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: verify.message }))
       }
     } catch (err) {
-      console.error(err);
       setRegistering(false);
     }
   };

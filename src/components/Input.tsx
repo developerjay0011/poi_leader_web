@@ -121,47 +121,42 @@ export const Input: FC<InputProps> = ({
             },
           })}
           placeholder={placeholder}
-          className={commonStyles}
+          className={commonStyles + "flex justify-center item-center py-1"}
           multiple={multiple}
         />
-
         {type === 'password' && (
-          <span
-            onClick={() => setIsPassword((lst) => !lst)}
-            className={`cursor-pointer absolute top-1/2 translate-y-[-50%] right-3 ${errors[id] ? 'text-red-500' : ''
-              }`}>
+          <span onClick={() => setIsPassword((lst) => !lst)} className={`cursor-pointer absolute top-1/2 translate-y-[-50%] right-3 ${errors[id] ? 'text-red-500' : ''}`}>
             {isPassword ? <HiEyeOff /> : <HiEye />}
           </span>
         )}
       </div>
     ),
-    select:
-      type === 'select' && selectField ? (
-        <select
-          disabled={disabled}
-          id={id}
-          key={id}
-          multiple={multiple}
-          {...register(id, {
-            ...validations,
-            required: {
-              value: required ? true : false,
-              message: 'Field is required',
-            },
-          })}
-          className={`${commonStyles}`}>
-          <option value=''>
-            {listdata?.length > 0 ? selectField.title : `No ${selectField.title.split(' ').at(-1)} Found !!`}
+    select: type === 'select' && selectField ? (
+      <select
+        disabled={disabled}
+        id={id}
+        key={id}
+        multiple={multiple}
+        {...register(id, {
+          ...validations,
+          required: {
+            value: required ? true : false,
+            message: 'Field is required',
+          },
+        })}
+        className={`${commonStyles}`}>
+        <option value=''>
+          {listdata?.length > 0 ? selectField.title : `No ${selectField.title.split(' ').at(-1)} Found !!`}
+        </option>
+        {listdata?.map((el) => (
+          <option value={el.id} key={el.id}>
+            {el.value}
           </option>
-          {listdata?.map((el) => (
-            <option value={el.id} key={el.id}>
-              {el.value}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <></>
-      ),
+        ))}
+      </select>
+    ) : (
+      <></>
+    ),
   }
 
   return (

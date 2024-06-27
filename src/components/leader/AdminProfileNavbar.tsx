@@ -40,7 +40,7 @@ export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
   ]
   useEffect(() => {
     document.addEventListener("click", (e) => {
-      if (!(e.target as HTMLElement).closest("#analytics") && showMoreOptions)
+      if (!(e.target as HTMLElement).closest("#analytics"))
         setShowMoreOptions(false);
     });
   }, []);
@@ -73,7 +73,7 @@ export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowMoreOptions(false)}
-              className='flex flex-col items-start bg-white rounded-sm shadow-lg absolute top-full right-0 z-[50]'>
+              className='flex flex-col items-start bg-white rounded-sm shadow-lg absolute top-full right-0 z-[50] rounded-xl border overflow-hidden'>
               <CusLink
                 href='/user/analytics'
                 activeLinkClasses='bg-orange-500 text-orange-50 underline'

@@ -1,7 +1,6 @@
 'use client'
 import { FC, useEffect, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { ShortcutsBox } from '@/components/timlineComponents/ShortcutsBox'
 import { ManageTemplateForm } from '../forms/TemplateForm'
 import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
 import { ManageTemplateTable } from '../letter/ManageTemplateTable'
@@ -11,7 +10,6 @@ import { letterActions } from '@/redux_store/letter/letterSlice'
 import { tryCatch } from '@/config/try-catch'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'
-import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
 
 export const LetterTemplateManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)

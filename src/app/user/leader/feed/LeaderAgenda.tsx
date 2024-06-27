@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState } from "react";
-import { AGENDA_STATUS, AGENDA_VAL, PRIORITIES, PRIORITY, dateConverter, } from "@/utils/utility";
+import { AGENDA_STATUS, AGENDA_VAL, PRIORITIES, PRIORITY, dateConverter, dateConverter2, } from "@/utils/utility";
 import { AgendaDetails } from "@/redux_store/agenda/agendaSlice";
 import { AnimatePresence } from "framer-motion";
 import { TimeLineDetails } from "@/utils/typesUtils";
@@ -56,7 +56,7 @@ export const AgendaDevelopmentsPost: FC<AgendaPostProps> = ({
               </h4>
               <p className="flex items-center capitalize gap-2 text-sm font-[500]">
                 <span>
-                  Published on:{" "}{dateConverter(creation_date)}
+                  Published on:{" "}{dateConverter2(creation_date)}
                 </span>
               </p>
             </div>

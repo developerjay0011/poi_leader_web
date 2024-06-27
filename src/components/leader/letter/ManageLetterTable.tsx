@@ -33,7 +33,6 @@ export const ManageLetterTable: FC<ManageLetterTableProps> = ({ searchStr, handl
       let designation = `${todata?.ministry_name} (${todata?.designation})`
       return ({ fileno, to, designation })
     } catch (error) {
-      console.error(error)
     }
   }
   return (

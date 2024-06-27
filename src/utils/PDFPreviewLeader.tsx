@@ -11,7 +11,7 @@ interface PDFPreviewCPProps {
 export const PDFPreviewLeader: FC<PDFPreviewCPProps> = ({
   onClose,
   letter_html
-  
+
 }) => {
 
   const letterDiv = useRef<HTMLDivElement>(null)
@@ -36,20 +36,20 @@ export const PDFPreviewLeader: FC<PDFPreviewCPProps> = ({
                 <BiX className='text-4xl' />
               </button>
             </div> */}
-            <div  className='flex flex-col w-full h-full overflow-hidden gap-[1cm] p-[1cm]'>
+            <div className='flex flex-col w-full h-full overflow-hidden gap-[1cm] p-[1cm]'>
               <div className='letter_preview bg-white p-10' ref={letterDiv}>
                 <div dangerouslySetInnerHTML={{ __html: letter_html }} />
               </div>
-              </div>
+            </div>
             {/* PDF Preview */}
-       
+
 
             {/* CTA's */}
             <div className='flex items-center gap-3 justify-end px-3 border-t py-4'>
               <button
                 type='button'
                 onClick={onClose}
-                className='rounded-full capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
+                className='rounded capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
                 Close
               </button>
 
@@ -57,7 +57,7 @@ export const PDFPreviewLeader: FC<PDFPreviewCPProps> = ({
                 trigger={() => (
                   <button
                     type='button'
-                    className='rounded-full capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
+                    className='rounded capitalize px-6 py-2 bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-orange-50 font-[500]'>
                     print
                   </button>
                 )}

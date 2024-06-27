@@ -1,7 +1,6 @@
 "use client";
 import { FC } from "react";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { useRouter } from "next/navigation";
+import { cusSelector } from "@/redux_store/cusHooks";
 import { ShortcutsBox } from "./ShortcutsBox";
 
 export const ProfileShortcutsBox: FC = () => {

@@ -57,7 +57,6 @@ const PoliticalInformationPage: FC = () => {
     );
   }
 
-
   return (
     <form
       className='grid grid-cols-2 gap-x-4 gap-y-5'
@@ -74,7 +73,7 @@ const PoliticalInformationPage: FC = () => {
           parliamentaryConstituency={leaderOptions.parliamentries}
           states={leaderOptions.states}
           designations={leaderOptions?.designations}
-          parties={leaderOptions?.politicalparty}
+          parties={leaderOptions?.politicalparty?.map((item: any) => ({ ...item, party_name: item?.party_name + " (" + item?.abbreviation + ")" }))}
           control={control}
           errors={errors}
           register={register}
@@ -92,22 +91,20 @@ const PoliticalInformationPage: FC = () => {
           parliamentaryConstituency={leaderOptions.parliamentries}
           states={leaderOptions.states}
           designations={leaderOptions?.designations}
-          parties={leaderOptions?.politicalparty}
+          parties={leaderOptions?.politicalparty?.map((item: any) => ({ ...item, party_name: item?.party_name + " (" + item?.abbreviation + ")" }))}
           control={control}
           ministries={leaderOptions?.ministries}
           errors={errors}
         />
-
       }
-
       <div className='flex justify-end col-span-full gap-2 mt-5'>
         <Link
           href={ProtectedRoutes.userProfile}
-          className='rounded px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize '>
+          className='rounded-full px-6 py-2 bg-orange-200 text-orange-500 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize '>
           close
         </Link>
         <button
-          className='rounded px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize'
+          className='rounded-full px-6 py-2 bg-orange-500 text-orange-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 font-[500] capitalize'
           type='submit'>
           Save
         </button>

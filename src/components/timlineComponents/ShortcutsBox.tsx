@@ -7,7 +7,7 @@ import { LuNetwork } from "react-icons/lu";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { HiSpeakerphone } from "react-icons/hi";
 import { TfiStatsUp } from "react-icons/tfi";
-import { MdContacts, MdSpaceDashboard } from "react-icons/md";
+import { MdContacts } from "react-icons/md";
 import { AnimatePresence } from "framer-motion";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
 import { useRouter } from "next/navigation";
@@ -92,11 +92,12 @@ export const ShortcutsBox: FC = () => {
     <>
       <CommonBox title="shortcuts">
         <div className="flex flex-col py-4 gap-5 font-normal" >
-          {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any) => (
+          {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any, index: number) => (
             <ShortcutBtn
               Icon={El.Icon}
               title={El.name}
               route={El.link}
+              key={index}
             />
           ))}
           <AnimatePresence mode="wait">

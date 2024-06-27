@@ -19,6 +19,7 @@ export interface UserData {
 
 // Function to convert date in easy to read format
 export const dateConverter = (date: string) => date ? new Intl.DateTimeFormat('en-IN', { month: 'short', day: '2-digit', year: 'numeric', }).format(new Date(date)) : ""
+export const dateConverter2 = (date: string) => date ? new Intl.DateTimeFormat('en-IN', { month: 'short', day: '2-digit', year: 'numeric', hour: "2-digit", minute: "2-digit" }).format(new Date(date)) : ""
 
 // Convert file to base64
 export const convertFileToBase64: (u: File) => Promise<string> = (userInpFile: File) =>

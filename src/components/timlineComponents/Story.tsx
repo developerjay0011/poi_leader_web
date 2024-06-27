@@ -1,10 +1,10 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Stories from "react-insta-stories";
 import Modal from "react-modal";
-import { cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
-import { BsTrash3Fill } from "react-icons/bs";
+import { BsThreeDots, BsTrash3Fill } from "react-icons/bs";
+import { BiDotsVerticalRounded } from "react-icons/bi";
 import moment from "moment";
 import { usePathname } from "next/navigation";
 export const Story: FC<StoryProps> = ({
@@ -17,15 +17,13 @@ export const Story: FC<StoryProps> = ({
 }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [storiesdata, setStoriesdata] = useState({}) as any
+  const [showMorePostOptions, setShowMorePostOptions] = useState(false) as any
   const deletePostHandler = async () => {
     handleDelete(storiesdata?.postid)
     setIsOpen(false)
   };
   const storyContent = { width: 'auto', maxWidth: '100%', maxHeight: '100%', margin: 'auto', }
   const curRoute = usePathname() != "/user" && self == true
-
-
-
 
 
   return (
@@ -54,6 +52,7 @@ export const Story: FC<StoryProps> = ({
               bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, -50%)",
+              padding: 10
             },
             overlay: {
               background: "rgb(0,0,0,0.5)"
@@ -62,17 +61,10 @@ export const Story: FC<StoryProps> = ({
 
           contentLabel="Example Modal"
         >
-          <button
-            onClick={() => { deletePostHandler() }}
-            className="flex items-center  self-right gap-2 last_noti capitalize mb-2 transition-all"
-            style={{ display: self ? "flex" : "none" }}
-          >
-            <BsTrash3Fill /> delete
-          </button>
-          <div className="object-center relative">
+          <div className="object-center relative flex h-max w-max">
             <Stories
               stories={stories as any}
-              storyContainerStyles={{ borderRadius: 8, overflow: "hidden" }}
+              storyContainerStyles={{ borderRadius: 8, overflow: "hidden", zIndex: 500 }}
               defaultInterval={1500}
               width={432}
               height={768}
@@ -81,6 +73,27 @@ export const Story: FC<StoryProps> = ({
               onStoryStart={(s: any, st: any) => { setStoriesdata(st) }}
               keyboardNavigation={true}
             />
+            <div style={{ position: "absolute", zIndex: 10000, display: self ? "flex" : "none", right: 10, top: 25, }} >
+              <button
+                style={{ color: "white", position: "absolute", zIndex: 10000, right: 0, top: 0, }}
+                onClick={(e) => { e.stopPropagation(); setShowMorePostOptions(!showMorePostOptions) }}>
+                <BiDotsVerticalRounded className="text-2xl" />
+              </button>
+              {showMorePostOptions && (
+                <div onClick={(e) => { e.stopPropagation(); setShowMorePostOptions(!showMorePostOptions) }} style={{ position: "absolute", zIndex: 10000, width: "100%", height: "100%", color: "white" }} >
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      deletePostHandler()
+                    }}
+                    style={{ position: "absolute", zIndex: 10000, right: 10, top: 25, }}
+                    className="flex items-center gap-2 capitalize py-1 mb-2 rounded-md px-1 hover:bg-orange-500 hover:text-orange-50 transition-all"
+                  >
+                    <BsTrash3Fill size={15} /> delete
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </Modal >
       )}

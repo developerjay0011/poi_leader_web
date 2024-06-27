@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { AgendaOptions } from "../AgendaOptions";
 import { GrClose } from "react-icons/gr";
@@ -86,6 +86,7 @@ export const AgendaPost: FC<AgendaPostProps> = ({
         }
       })
   }
+
   return (
     <>
       <article className="border bg-white rounded-md relative flex items-start max-[450px]:flex-col">

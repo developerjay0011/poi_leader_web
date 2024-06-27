@@ -29,14 +29,14 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
         setType('about')
         const res = await getSingleLeader(id);
         dispatch(authActions.setLeaderData(res));
-        const leaderpost = await GetLeaderAddedPosts(id) as any
-        setPost(leaderpost)
         const followingRes = await getFollowers(id as string);
         setFollowers(followingRes as [])
         const followering = await getFollowering(id as string)
         setFollowing(followering as [])
-        const storiesForLeader = await getLeaderAddedStories(id as string, { userImage: leaderData?.image, image: leaderData?.image, name: setusername(leaderData), leaderid: id }) as any
-        setStories(storiesForLeader)
+        // const storiesForLeader = await getLeaderAddedStories(id as string, { userImage: leaderData?.image, image: leaderData?.image, name: setusername(leaderData), leaderid: id }) as any
+        // setStories(storiesForLeader)
+        // const leaderpost = await GetLeaderAddedPosts(id) as any
+        // setPost(leaderpost)
       }
     })();
   }, [dispatch, id]);
@@ -78,12 +78,12 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
           {/* Leader Nav */}
           <LeaderProfileNavbar type={type} setType={(i: any) => setType(i)} />
           <div className='ml-auto flex items-center gap-8 max-[450px]:ml-0 max-[450px]:gap-4'>
-            <div onClick={() => setType("feed")} className={`flex flex-col items-center font-[500] capitalize cursor-pointer ${type == "feed" && " text-orange-500 "}`}>
+            {/* <div onClick={() => setType("feed")} className={`flex flex-col items-center font-[500] capitalize cursor-pointer ${type == "feed" && " text-orange-500 "}`}>
               posts
               <span className='text-orange-500 text-2xl font-normal'>
                 {leaderData?.posts?.length}
               </span>
-            </div>
+            </div> */}
             <div onClick={() => setType("followers")} className={`flex flex-col items-center font-[500] capitalize cursor-pointer ${type == "followers" && " text-orange-500 "}`}>
               Followers
               <span className='text-orange-500 text-2xl font-normal'>

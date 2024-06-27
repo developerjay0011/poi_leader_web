@@ -148,13 +148,13 @@ export const ManageTemplateForm: FC<ManageTemplateFormProps> = ({
               <button
                 type='button'
                 onClick={onClose}
-                className='py-2 px-4 bg-cyan-500 rounded-md uppercase text-sm text-white hover:bg-cyan-600 transition-all'>
+                className='py-2 px-4 bg-cyan-500 rounded-full uppercase text-sm text-white hover:bg-cyan-600 transition-all'>
                 Close
               </button>
               <button
                 type='submit'
                 disabled={submitting}
-                className='py-2 px-4 bg-sky-500 rounded-md uppercase text-sm text-white hover:bg-sky-600 transition-all'>
+                className='py-2 px-4 bg-sky-500 rounded-full uppercase text-sm text-white hover:bg-sky-600 transition-all'>
                 {submitting ? 'submitting...' : heading}
               </button>
             </div>

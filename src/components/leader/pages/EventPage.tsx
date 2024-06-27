@@ -134,13 +134,8 @@ export const EventPage: FC<EventPageProps> = () => {
         filteredResult = filteredResult?.filter(item => item?.event_type === statusFilter);
       }
     }
-
     return Array.isArray(event) ? searchFilterFunction(searchFilter, filteredResult, "title", { curPageNo, filterDataCount }) : { mainlist: [], filterlist: [] }
   };
-
-
-
-  console.log(watch("start_datetime"))
   return (
     <>
       <div className='bg-white border shadow-sm rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start m-5'>

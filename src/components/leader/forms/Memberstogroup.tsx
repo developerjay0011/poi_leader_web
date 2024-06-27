@@ -212,7 +212,7 @@ export const MembersToGroup: FC<MemberstogroupFormProp> = ({ setShowMember, show
 
         <button
           type="submit"
-          className="px-5 self-end h-[40px] w-max bg-orange-500 text-orange-50 rounded-md text-sm 
+          className="px-5 self-end h-[40px] w-max bg-orange-500 text-orange-50 rounded-full text-sm 
                 capitalize transition-all hover:bg-orange-600 items-center flex gap-2"
         >
           <FaPlus className='text-1xl' /> {showMember}
