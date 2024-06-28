@@ -9,9 +9,9 @@ import { getImageUrl, setusername } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import { useSearchParams } from 'next/navigation'
 import { LeaderProfileNavbar } from "@/components/otherleader/LeaderProfileNavbar";
-import LeaderProfilePage from "./about/page";
 import { getFollowering, getFollowers } from "@/redux_store/leader/leaderAPI";
 import { GetLeaderAddedPosts, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
+import Leaderdata from "./Leaderdata";
 
 const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderData } = cusSelector((st) => st.auth);
@@ -99,16 +99,21 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
         </div>
       </section>
+      <section>
+        {
+          <Leaderdata
+            type={type}
+            leader_id={id}
+            following={following}
+            followers={followers}
+            stories={stories}
+            posts={posts}
+          />
+        }
+      </section>
 
       {/* Data will get rendered acc. to route clicked */}
-      <section className="w-full">{<LeaderProfilePage
-        type={type}
-        leader_id={id}
-        following={following}
-        followers={followers}
-        stories={stories}
-        posts={posts}
-      />}</section>
+      <section className="w-full">{children}</section>
     </section>
   );
 };

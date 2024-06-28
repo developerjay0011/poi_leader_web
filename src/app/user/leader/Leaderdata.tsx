@@ -4,23 +4,28 @@ import { LeaderPersonalInfo } from '@/components/otherleader/LeaderPersonalInfo'
 import { GeneralInfoBox } from '@/components/otherleader/GeneralInfoBox'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { CommonBox } from '@/utils/CommonBox'
+import { AgendaDevelopmentsPost } from './feed/LeaderAgenda'
+import { OtherTimeLinePage } from './about/TimeLinePage'
 import { PeoplesComponentWrapper } from '@/utils/PeoplesComponentWrapper'
 import { Following } from '@/components/peoples/Following'
 import { Follower } from '@/components/peoples/Follower'
 
-// interface LeaderProfilePageProps {
-//   type: string;
-//   leader_id: string;
-//   following: any;
-//   followers: any;
-//   stories: any;
-//   posts: any;
-// }
+interface LeaderProfilePageProps {
+  type: string;
+  leader_id: string;
+  following: any;
+  followers: any;
+  stories: any;
+  posts: any;
+}
 
-const LeaderProfilePage: FC = () => {
+export const Leaderdata: FC<LeaderProfilePageProps> = ({ type, leader_id, stories, followers, following, posts }) => {
+  const { leaderData } = cusSelector((st) => st.auth);
+  const [searchString, setSearchString] = useState('')
+  const changeSearchString = (val: string) => setSearchString(val)
   return (
     <div className='flex gap-5 w-full flex-col'>
-      {/* {type == "about" ?
+      {type == "about" ?
         <div className='flex gap-5 w-full max-[900px]:flex-col'>
           <div className='w-[40%] max-[1500px]:w-[45%] max-[1250px]:w-[45%] max-[1130px]:w-[40%] max-[900px]:w-full'>
             <LeaderPersonalInfo />
@@ -104,9 +109,9 @@ const LeaderProfilePage: FC = () => {
                   stories={stories}
                   posts={posts}
                 />
-      } */}
+      }
     </div>
   )
 }
 
-export default LeaderProfilePage;
+export default Leaderdata;

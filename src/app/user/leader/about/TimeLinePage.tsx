@@ -7,7 +7,7 @@ import { Post } from "@/components/posts/Post";
 import { StoriesBox } from "@/components/timlineComponents/StoriesBox";
 
 interface TimeLinePageProps {
-  leader_id: string
+  leader_id?: string
   stories?: any
   posts?: any
 }
