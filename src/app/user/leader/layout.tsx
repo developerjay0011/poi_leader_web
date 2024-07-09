@@ -100,16 +100,14 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
         </div>
       </section>
       <section>
-        {
-          <Leaderdata
-            type={type}
-            leader_id={id}
-            following={following}
-            followers={followers}
-            stories={stories}
-            posts={posts}
-          />
-        }
+        {<Leaderdata
+          type={type}
+          leader_id={id}
+          following={following}
+          followers={followers}
+          stories={stories}
+          posts={posts}
+        />}
       </section>
 
       {/* Data will get rendered acc. to route clicked */}
