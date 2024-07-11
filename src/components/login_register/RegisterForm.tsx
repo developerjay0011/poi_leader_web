@@ -206,22 +206,22 @@ export const RegisterForm: FC = () => {
           className="hidden w-auto self-start m-auto max-lg:block h-[10rem]"
         />
 
-        <h3 className="hidden capitalize text-[2rem] font-[300] mt-4 max-lg:text-center max-lg:block">
+        <h3 className="hidden capitalize text-[2rem] font-[300] mt-4 max-lg:text-center max-lg:block" >
           Welcome to the Politician of India
         </h3>
         {/* ----------------------------- */}
 
-        <h2 className="uppercase font-[200] text-6xl flex flex-col items-center gap-2 max-lg:hidden">
+        <h2 className="uppercase font-[200] text-6xl flex flex-col items-center gap-2 max-lg:hidden" >
           <HiUserAdd className="text-6xl" />
           sign up
         </h2>
 
-        <p className="text-center text-sm">
+        < p className="text-center text-sm" >
           Sign Up And Connect With The Leaders & Emerging Leaders Around The
           India.
         </p>
 
-        <div className="flex items-center justify-between px-4 mt-5 w-full max-[500px]:px-0">
+        < div className="flex items-center justify-between px-4 mt-5 w-full max-[500px]:px-0" >
           <label
             htmlFor="leader"
             className="flex gap-2 items-center cursor-pointer"
@@ -234,13 +234,14 @@ export const RegisterForm: FC = () => {
               className="hidden checkbox"
               {...register("userType", {
                 required: "field is required",
-              })}
+              })
+              }
             />
-            <span className="select-none w-5 aspect-square rounded-full inline-block relative border-sky-800 border-[4px] cursor-pointer after:bg-sky-800 after:w-[65%] after:aspect-square after:absolute after:top-1/2 after:left-1/2 after:translate-x-[-50%] after:translate-y-[-50%] after:rounded-full after:opacity-0" />
-            <span>Leader</span>
+            < span className="select-none w-5 aspect-square rounded-full inline-block relative border-sky-800 border-[4px] cursor-pointer after:bg-sky-800 after:w-[65%] after:aspect-square after:absolute after:top-1/2 after:left-1/2 after:translate-x-[-50%] after:translate-y-[-50%] after:rounded-full after:opacity-0" />
+            <span>Leader </span>
           </label>
 
-          <label
+          < label
             htmlFor="emergingLeader"
             className="flex gap-2 items-center cursor-pointer"
           >
@@ -251,15 +252,16 @@ export const RegisterForm: FC = () => {
               className="hidden checkbox"
               {...register("userType", {
                 required: "field is required",
-              })}
+              })
+              }
             />
-            <span className="select-none w-5 aspect-square rounded-full inline-block relative border-sky-800 border-[4px] cursor-pointer after:bg-sky-800 after:w-[65%] after:aspect-square after:absolute after:top-1/2 after:left-1/2 after:translate-x-[-50%] after:translate-y-[-50%] after:rounded-full after:opacity-0" />
-            <span>Emerging Leader</span>
+            < span className="select-none w-5 aspect-square rounded-full inline-block relative border-sky-800 border-[4px] cursor-pointer after:bg-sky-800 after:w-[65%] after:aspect-square after:absolute after:top-1/2 after:left-1/2 after:translate-x-[-50%] after:translate-y-[-50%] after:rounded-full after:opacity-0" />
+            <span>Emerging Leader </span>
           </label>
         </div>
 
-        <section className="px-4 w-full max-[500px]:px-0">
-          <div className="w-full bg-sky-100 flex flex-col overflow-hidden rounded-lg shadow-md">
+        < section className="px-4 w-full max-[500px]:px-0" >
+          <div className="w-full bg-sky-100 flex flex-col overflow-hidden rounded-lg shadow-md" >
             <LPInputField
               iconSize="text-2xl"
               register={register}
@@ -274,7 +276,8 @@ export const RegisterForm: FC = () => {
                     return val.includes(" ") || "Please enter a valid name";
                   },
                 },
-              }}
+              }
+              }
               Icon={MdPerson}
             />
 
@@ -358,7 +361,7 @@ export const RegisterForm: FC = () => {
             />
           </div>
 
-          <button
+          < button
             type="submit"
             disabled={!isValid || registering}
             className="py-2 px-6 font-semibold bg-sky-800 text-sky-50 rounded-full mt-8 max-[500px]:ml-3 disabled:cursor-not-allowed disabled:bg-zinc-200 disabled:text-zinc-400"
@@ -366,16 +369,16 @@ export const RegisterForm: FC = () => {
             {!registering ? "Register" : "Registering..."}
           </button>
 
-          <p className="mt-8">
-            Already Registered ?{" "}
-            <Link href={AuthRoutes.login} className="underline hover:font-[600]">
+          < p className="mt-8" >
+            Already Registered ? {" "}
+            < Link href={AuthRoutes.login} className="underline hover:font-[600]" >
               Login
             </Link>
           </p>
         </section>
       </form>
 
-      <AnimatePresence mode="wait">
+      < AnimatePresence mode="wait" >
         {showOTPForm && (
           <OTPForm
             onClose={closeOTPForm}

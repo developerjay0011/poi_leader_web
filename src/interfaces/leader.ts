@@ -81,6 +81,8 @@ export interface PoliticalInfo {
   election_year?: string
   election_stateid?: string
   election_constituency_id?: string
+  election_constituency?: string
+  election_parliamentary_constituency?: string
   election_parliamentary_constituency_id?: string
   position?: string
   opponents?: string

@@ -11,6 +11,7 @@ import { BsPencilSquare } from 'react-icons/bs'
 import { ProtectedRoutes } from '@/constants/routes'
 import { getImageUrl, setusername } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
+import { LEADER_IDS } from '@/utils/typesUtils'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers, following } = cusSelector((state) => state.leader);
@@ -96,10 +97,28 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
                     {setusername(leaderProfile)}
                     <MdVerified className='text-2xl text-orange-500' />
                   </span>
-                  <span className='text-[14px] font-normal'>
-                    {leaderProfile?.political_info?.political_party && leaderProfile?.political_info?.political_party + " ( " + (leaderProfile?.political_info?.designation || leaderProfile?.political_info?.post_in_party) + " )"}
-                  </span>
                 </h5>
+                <h5 className='text-[14px] font-normal'>
+                  {leaderProfile?.political_info?.political_party}
+                </h5>
+                <h5 className='text-[14px] font-normal'>
+                  {leaderProfile?.political_info?.designation || leaderProfile?.political_info?.post_in_party || " "}
+                </h5>
+                {leaderProfile?.political_info?.parliament_house &&
+                  <h5 className='text-[14px] font-normal capitalize'>
+                    {leaderProfile?.political_info?.parliament_house}{" "}
+                    {/* {(leaderProfile?.political_info?.designation_id === LEADER_IDS.mpID && leaderProfile?.political_info?.parliamentary) &&
+                      <span className='text-[14px] font-normal'>
+                        ({leaderProfile?.political_info?.parliamentary})
+                      </span>
+                    }
+                    {(leaderProfile?.political_info?.assembly && leaderProfile?.political_info?.designation_id === LEADER_IDS.mlaID) &&
+                      <span className='text-[14px] font-normal'>
+                        ({leaderProfile?.political_info?.assembly})
+                      </span>
+                    } */}
+                  </h5>
+                }
               </Link>
 
               {/* User Nav */}

@@ -49,12 +49,24 @@ export const EventPage: FC<EventPageProps> = () => {
   const { event } = cusSelector((state) => state.event);
   const { register, setValue, watch, formState: { errors }, handleSubmit, reset, } = useForm<UserDetails>();
   const [attachments, setattachments] = useState([]) as any
+  const startDateTime = watch("start_datetime");
+  const end_datetime = watch("end_datetime") || null
+  const event_type = watch("event_type")
 
   useEffect(() => {
     (async () => {
       getEvent()
     })();
   }, [userDetails, dispatch, userDetails?.leaderId]);
+
+  useEffect(() => {
+    if (startDateTime && end_datetime == null && event_type == "event") {
+      const endDateTime = moment(startDateTime).add(1, 'hour').format("YYYY-MM-DDTHH:mm");
+      setValue('end_datetime', endDateTime);
+    }
+  }, [startDateTime, setValue]);
+
+
 
   const getEvent = async () => {
     tryCatch(

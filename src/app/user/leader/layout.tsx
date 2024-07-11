@@ -12,6 +12,7 @@ import { LeaderProfileNavbar } from "@/components/otherleader/LeaderProfileNavba
 import { getFollowering, getFollowers } from "@/redux_store/leader/leaderAPI";
 import { GetLeaderAddedPosts, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import Leaderdata from "./Leaderdata";
+import { LEADER_IDS } from "@/utils/typesUtils";
 
 const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderData } = cusSelector((st) => st.auth);
@@ -40,8 +41,6 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
       }
     })();
   }, [dispatch, id]);
-
-
   return (
     <section className='m-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-8 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'>
       <section className="flex flex-col text-sky-950 border-b border-l border-r w-full">
@@ -70,9 +69,27 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
             <h5 className="flex flex-col items-left text-xl font-[600] capitalize">
               {leaderData?.personal_info?.last_name && leaderData?.personal_info?.first_name ? leaderData?.personal_info?.first_name + " " + leaderData?.personal_info?.last_name : leaderData?.personal_info?.first_name}
             </h5>
-            <span className='text-[14px] font-normal'>
-              {leaderData?.political_info?.political_party && leaderData?.political_info?.political_party + " ( " + (leaderData?.political_info?.designation || leaderData?.political_info?.post_in_party) + " )"}
-            </span>
+            <h5 className='text-[14px] font-normal'>
+              {leaderData?.political_info?.political_party}
+            </h5>
+            <h5 className='text-[14px] font-normal'>
+              {leaderData?.political_info?.designation || leaderData?.political_info?.post_in_party || " "}
+            </h5>
+            {leaderData?.political_info?.parliament_house &&
+              <h5 className='text-[14px] font-normal capitalize'>
+                {leaderData?.political_info?.parliament_house}{" "}
+                {/* {(leaderData?.political_info?.designation_id === LEADER_IDS.mpID && leaderData?.political_info?.parliamentary) &&
+                  <span className='text-[14px] font-normal'>
+                    ({leaderData?.political_info?.parliamentary})
+                  </span>
+                }
+                {(leaderData?.political_info?.assembly && leaderData?.political_info?.designation_id === LEADER_IDS.mlaID) &&
+                  <span className='text-[14px] font-normal'>
+                    ({leaderData?.political_info?.assembly})
+                  </span>
+                } */}
+              </h5>
+            }
           </div>
 
           {/* Leader Nav */}
