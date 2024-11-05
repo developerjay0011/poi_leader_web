@@ -11,7 +11,6 @@ import { BsPencilSquare } from 'react-icons/bs'
 import { ProtectedRoutes } from '@/constants/routes'
 import { getImageUrl, setusername } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
-import { LEADER_IDS } from '@/utils/typesUtils'
 
 const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderProfile, followers, following } = cusSelector((state) => state.leader);

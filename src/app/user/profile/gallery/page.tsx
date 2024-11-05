@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { BriefPost } from "@/components/posts/BriefPost";
-import { NewPostFields } from "@/utils/typesUtils";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 import { Datanotfound } from "@/utils/Datanotfound";
@@ -9,117 +8,10 @@ import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { getImageUrl } from "@/config/get-image-url";
 
 const AdminProfileGalleryPage = () => {
-  const [searchStr, setSearchStr] = useState("");
-  const [updateGallery, setUpdateGallery] = useState({});
-  const [isGallery, setIsGallery] = useState(false);
-  const [apimedia, setApiMedia] = useState<NewPostFields[]>([]);
-  const [media, setMedia] = useState<NewPostFields[]>([]);
-  const dispatch = cusDispatch();
   const [type, setType] = useState("");
-  const { userDetails } = cusSelector((st) => st.auth);
-  const { gallery } = cusSelector((state) => state.gallery);
   const mypostData: any = cusSelector((state) => state.posts.posts);
   const mediaArray = Array.isArray(mypostData) ? mypostData.flatMap((post: any) => post.media || []) : [];
   const filterDataOnPriority = mediaArray?.filter((el: any) => type ? el?.type?.includes(type) : el);
-  // useEffect(() => {
-  //   (async () => {
-  //     tryCatch(
-  //       async () => {
-  //         const data = await getGalleryData(userDetails?.leaderId as string);
-  //         dispatch(galleryActions.storeGallery(data))
-  //       })
-  //   })();
-  // }, [userDetails?.leaderId, dispatch, updateGallery]);
-
-  // const deletedata = (data: any) => {
-  //   setUpdateGallery(data);
-  // };
-
-  // const onCancel = () => {
-  //   setIsGallery(false);
-  // };
-
-  // const mediaChangeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-  //   const data = e.target.files as FileList;
-
-  //   if (!data) return;
-
-  //   for (let i = 0; i < data.length; i++) {
-  //     const uploadData = data[i];
-
-  //     // checking for media type
-  //     if (
-  //       !(
-  //         uploadData.type.includes("image") || uploadData.type.includes("video")
-  //       )
-  //     )
-  //       return;
-
-  //     // converting data into base 64
-  //     const convertedData = await convertFileToBase64(uploadData);
-
-  //     setApiMedia((lst) => {
-  //       const oldData = [...lst];
-
-  //       oldData.push({
-  //         type: uploadData.type.split("/")[0] as PostType,
-  //         media: uploadData as any,
-  //         id: GenerateId(),
-  //       });
-
-  //       return oldData;
-  //     });
-  //     setMedia((lst) => {
-  //       const oldData = [...lst];
-  //       oldData.push({
-  //         type: uploadData.type.split("/")[0] as PostType,
-  //         media: convertedData as string,
-  //         id: GenerateId(),
-  //       });
-
-  //       return oldData;
-  //     });
-  //   }
-  // };
-
-  // const removeImageHandler = (id: string) => {
-  //   setMedia((lst) => {
-  //     const newData = [...lst];
-
-  //     newData.splice(
-  //       newData.findIndex((dt) => dt.id === id),
-  //       1
-  //     );
-
-  //     return newData;
-  //   });
-  // };
-
-  // const handleSave = async () => {
-  //   tryCatch(
-  //     async () => {
-  //       const formData = new FormData();
-  //       formData.append("leaderid", userDetails?.leaderId || "");
-  //       for (let i = 0; i < apimedia.length; i++) {
-  //         const item: any = apimedia[i];
-  //         formData.append("media", item?.media);
-  //       }
-
-  //       const response = await saveGallery(formData);
-  //       if (response?.success) {
-  //         onCancel();
-  //         setApiMedia([])
-  //         setMedia([])
-  //         setUpdateGallery(response);
-  //         dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-  //       } else {
-  //         dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
-  //       }
-  //     })
-  // };
-
-
-
 
   return (
     <>

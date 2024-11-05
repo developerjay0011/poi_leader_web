@@ -7,13 +7,14 @@ import { FaFacebook, FaInstagram, FaRedhat } from 'react-icons/fa'
 import { RiUserHeartLine } from 'react-icons/ri'
 import { AiOutlineUser } from 'react-icons/ai'
 import { IoMdShare } from 'react-icons/io'
-import { BiLocationPlus } from 'react-icons/bi'
+import { BiBriefcaseAlt, BiLocationPlus } from 'react-icons/bi'
 import { cusSelector } from '@/redux_store/cusHooks'
 
 interface GeneralInfoBoxProps { }
 
 export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
+  const { leaderOptions } = cusSelector((state) => state.common);
   const socialNetworks: JSX.Element[] = [
     <Link
       target='_blank'
@@ -32,6 +33,8 @@ export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
       <FaInstagram />
     </Link>,
   ]
+
+
 
   return (
     <>
@@ -52,6 +55,19 @@ export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
           <GeneralInfo Icon={AiOutlineUser} heading="Mother's name">
             <p className='text-[14px] pl-7 text-justify'>{leaderProfile.personal_info?.mother_name}</p>
           </GeneralInfo>
+          {leaderProfile.political_info?.is_hold_ministry &&
+            <GeneralInfo Icon={BiBriefcaseAlt} heading="Ministry">
+              {leaderProfile.political_info?.ministries?.map((i) => {
+                var label = leaderOptions?.ministries?.find((t) => t?.id == i?.ministryid)?.name
+                return label && (
+                  <p className='text-[14px] pl-7 text-justify'>
+                    {label}
+                  </p>
+                )
+              })}
+            </GeneralInfo>
+          }
+
 
           <GeneralInfo Icon={FaRedhat} heading='education'>
             <p className='text-[14px] pl-7 text-justify'>{leaderProfile.personal_info?.higher_education}</p>

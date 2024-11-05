@@ -7,13 +7,14 @@ import { FaFacebook, FaInstagram, FaRedhat } from 'react-icons/fa'
 import { RiUserHeartLine } from 'react-icons/ri'
 import { AiOutlineUser } from 'react-icons/ai'
 import { IoMdShare } from 'react-icons/io'
-import { BiLocationPlus } from 'react-icons/bi'
+import { BiBriefcaseAlt, BiLocationPlus } from 'react-icons/bi'
 import { cusSelector } from '@/redux_store/cusHooks'
 
 interface GeneralInfoBoxProps { }
 
 export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
   const { leaderData } = cusSelector((state) => state.auth);
+  const { leaderOptions } = cusSelector((state) => state.common);
   const socialNetworks: JSX.Element[] = [
     <Link
       target='_blank'
@@ -52,7 +53,18 @@ export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
           <GeneralInfo Icon={AiOutlineUser} heading="Mother's name">
             <p className='text-[14px] pl-7 text-justify'>{leaderData.personal_info?.mother_name}</p>
           </GeneralInfo>
-
+          {leaderData.political_info?.is_hold_ministry &&
+            <GeneralInfo Icon={BiBriefcaseAlt} heading="Ministry">
+              {leaderData.political_info?.ministries?.map((i) => {
+                var label = leaderOptions?.ministries?.find((t) => t?.id == i?.ministryid)?.name
+                return label && (
+                  <p className='text-[14px] pl-7 text-justify'>
+                    {label}
+                  </p>
+                )
+              })}
+            </GeneralInfo>
+          }
           <GeneralInfo Icon={FaRedhat} heading='education'>
             <p className='text-[14px] pl-7 text-justify'>{leaderData.personal_info?.higher_education}</p>
           </GeneralInfo>
@@ -65,19 +77,19 @@ export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
             </div>
           </GeneralInfo>
           {
-            leaderData.personal_info?.marital_status == "unmarried"?
-            <div className=''>
-              <GeneralInfo Icon={BsGenderMale} heading='no of sons'>
-                <p className='text-[14px] pl-7 text-justify'>{leaderData.personal_info?.no_of_sons}</p>
-              </GeneralInfo>
+            leaderData.personal_info?.marital_status == "unmarried" ?
+              <div className=''>
+                <GeneralInfo Icon={BsGenderMale} heading='no of sons'>
+                  <p className='text-[14px] pl-7 text-justify'>{leaderData.personal_info?.no_of_sons}</p>
+                </GeneralInfo>
 
-              <GeneralInfo Icon={BsGenderFemale} heading='no of daughters'>
-                <p className='text-[14px] pl-7 text-justify'>{leaderData.personal_info?.no_of_daughters}</p>
-              </GeneralInfo>
-            </div>:null
+                <GeneralInfo Icon={BsGenderFemale} heading='no of daughters'>
+                  <p className='text-[14px] pl-7 text-justify'>{leaderData.personal_info?.no_of_daughters}</p>
+                </GeneralInfo>
+              </div> : null
 
           }
-          
+
           {/* <GeneralInfo Icon={BsStars} heading='work and experience'>
             <p className='text-[14px] pl-7 text-justify'>5 years</p>
           </GeneralInfo> */}

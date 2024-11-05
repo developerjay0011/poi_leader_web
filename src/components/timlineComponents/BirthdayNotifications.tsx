@@ -1,15 +1,13 @@
 'use client'
-import Image from 'next/image'
 import { FC, useEffect, useState } from 'react'
 import Sparkles from '@/assets/sparkles.png'
 import { BiSolidLeftArrow, BiSolidRightArrow } from 'react-icons/bi'
-import { GenerateId, calCurrentDate } from '@/utils/utility'
+import { calCurrentDate } from '@/utils/utility'
 import { cusSelector } from '@/redux_store/cusHooks'
 import { MdVerified } from 'react-icons/md'
 import CustomImage from '@/utils/CustomImage'
 import { getImageUrl } from '@/config/get-image-url'
-
-
+import dob from '@/assets/dob-cake.gif'
 
 const prefixArr = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th']
 
@@ -35,6 +33,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
   useEffect(() => {
     setGreetingsSent(birthday.sendGreetings)
   }, [birthday])
+
 
   return birthdaylist?.length > 0 && (
     <section className='border rounded-md bg-white text-sky-950 overflow-hidden'>
@@ -87,7 +86,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
           {/*  */}
 
           <CustomImage
-            src={'https://wpkixx.com/html/pitnik/images/resources/dob-cake.gif'}
+            src={dob}
             alt='birthday gif'
             unoptimized={true}
             width={1000}
@@ -95,7 +94,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
             className='w-[85%] aspect-square object-contain'
           />
 
-          <h2 className='text-center text-xl text-slate-500 w-max  pb-3 '>
+          <h2 className='text-center text-xl text-slate-500 w-[100%]  pb-3 '>
             <strong className='text-orange-500 capitalize'>
               {birthday.name}
             </strong>{' '}

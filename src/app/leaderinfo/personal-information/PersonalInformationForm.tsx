@@ -136,7 +136,7 @@ export const PersonalInformationForm: FC<PersonalInformationFormProps> = ({ setP
           errors={errors2}
           id="about_me"
           register={register2 as any}
-          title='About me.'
+          title='About me :'
           type='textarea'
         />
       </form>

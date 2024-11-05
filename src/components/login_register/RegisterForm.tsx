@@ -140,7 +140,7 @@ export const RegisterForm: FC = () => {
     }
   };
   const SetCookieAndRedux = async (data: any, loginResponse: any, usertype: string, resBody: any) => {
-    const userData = { ...data.user_detail, leaderId: data?.leader_detail.id };
+    const userData = { ...data.user_detail, leaderId: data?.leader_detail.id, fcm_tokens: [] };
     setCookie(USER_VERIFY, 'false');
     setCookie(LOGIN_BODY, resBody);
     router.push(AuthRoutes.leaderinfo);

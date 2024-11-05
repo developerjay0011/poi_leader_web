@@ -34,7 +34,8 @@ export const PersonalInformationForm: FC = () => {
   useEffect(() => {
     reset({
       ...personal_info,
-      dob: moment(personal_info?.dob).format("YYYY-MM-DD")
+      dob: moment(personal_info?.dob).format("YYYY-MM-DD"),
+      "about_me": leaderProfile?.about_me
     })
   }, [personal_info, reset]);
 
@@ -45,6 +46,7 @@ export const PersonalInformationForm: FC = () => {
         const param = {
           ...leaderProfile,
           'personal_info': resBody,
+          "about_me": data?.about_me
         }
         const response = await submitLeaderForm(param);
         if (response?.success) {
@@ -260,6 +262,13 @@ export const PersonalInformationForm: FC = () => {
             title: 'Select Higher Education',
             options: EducationDropdowns,
           }}
+        />
+        <Input
+          errors={errors}
+          id="about_me"
+          register={register as any}
+          title='About me :'
+          type='textarea'
         />
         <div className='flex justify-end col-span-full gap-2 mt-5'>
           <Link

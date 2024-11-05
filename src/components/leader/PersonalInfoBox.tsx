@@ -49,11 +49,11 @@ export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {
               heading='Gender: '
             />
 
-            <PersonalBriefInfo
+            {/* <PersonalBriefInfo
               Icon={MdBloodtype}
               data={leaderProfile.personal_info?.blood_group}
               heading='Blood Group: '
-            />
+            /> */}
 
             <PersonalBriefInfo
               Icon={BiLogoGmail}

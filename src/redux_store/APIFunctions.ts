@@ -3,8 +3,6 @@ import { tryCatch } from "@/config/try-catch";
 import { APIRoutes } from "@/constants/routes";
 import moment from "moment";
 import { Sendnoti } from "./notification/notification";
-import { setCookie } from "cookies-next";
-import { USER_INFO } from "@/constants/common";
 
 // Create / Update Leader API
 export const submitLeaderForm = async (body: any, islogin?: any) => {

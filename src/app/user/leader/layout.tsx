@@ -5,14 +5,12 @@ import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { ReactNode, FC, useEffect, useState, } from "react";
 import { getSingleLeader } from "@/redux_store/auth/authAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { getImageUrl, setusername } from "@/config/get-image-url";
+import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import { useSearchParams } from 'next/navigation'
 import { LeaderProfileNavbar } from "@/components/otherleader/LeaderProfileNavbar";
 import { getFollowering, getFollowers } from "@/redux_store/leader/leaderAPI";
-import { GetLeaderAddedPosts, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
 import Leaderdata from "./Leaderdata";
-import { LEADER_IDS } from "@/utils/typesUtils";
 
 const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { leaderData } = cusSelector((st) => st.auth);

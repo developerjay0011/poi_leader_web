@@ -14,6 +14,7 @@ const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
   const { userDetails }: any = cusSelector((state) => state.auth);
   const pathname = usePathname()
+
   useLayoutEffect(() => {
     (async () => {
       let usertype = getCookie(USER_TYPE)

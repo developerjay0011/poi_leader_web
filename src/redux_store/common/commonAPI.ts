@@ -1,10 +1,7 @@
 import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
-import { USER_INFO } from '@/constants/common';
 import { APIRoutes } from '@/constants/routes'
-import axios from 'axios';
-import { getCookie } from 'cookies-next';
 
 export const getLeadersOptions = async () => {
   return tryCatch(

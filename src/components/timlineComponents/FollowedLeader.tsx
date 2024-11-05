@@ -23,7 +23,7 @@ interface TrendingUsersProps {
 }
 export const FollowedLeader: FC<TrendingUsersProps> = ({ }) => {
   const { following } = cusSelector((state) => state.leader);
-  return (
+  return following?.length > 0 && (
     <>
       <section
         className={`border rounded-md w-full bg-white text-sky-950 max-h-[25rem] overflow-hidden flex flex-col`}

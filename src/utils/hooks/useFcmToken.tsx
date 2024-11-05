@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { deleteToken, getMessaging, getToken } from 'firebase/messaging';
+import { getMessaging, getToken } from 'firebase/messaging';
 import firebaseApp from '../firebase/firebase';
 import { setCookie } from "cookies-next";
 import { LEADER_FCM_TOKEN_KEY, LEADER_IP } from '@/constants/common';

@@ -21,6 +21,7 @@ import {
 import { YesNoField } from '@/components/YesNoField'
 import { Input } from '@/components/Input'
 import { cusSelector } from '@/redux_store/cusHooks'
+import moment from 'moment'
 
 
 interface LeaderPoliticalInfoProps {
@@ -64,10 +65,12 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
   const rajyaSabhaNominated = watch('rajyaSabhaNominated')
   const { political_info } = leaderProfile;
   const hasMinistry = watch('hasMinistry')
+
   useEffect(() => {
     if (political_info) {
       reset({
         ...political_info,
+        joined_date: moment(political_info?.joined_date).format("YYYY-MM-DD"),
         hasMinistry: political_info?.is_hold_ministry ? 'yes' : null,
         rajyaSabhaNominated: political_info?.is_nominated ? 'yes' : null,
       })
@@ -207,8 +210,17 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
           )}
 
         </>
-      )
-      }
+      )}
+
+      <Input
+        errors={errors}
+        required
+        register={register}
+        validations={{ required: 'Joined Date is required' }}
+        id='joined_date'
+        title='Joined Date'
+        type='date'
+      />
 
       {designation_id && designation_id === LEADER_IDS.mlaID && (
         <>

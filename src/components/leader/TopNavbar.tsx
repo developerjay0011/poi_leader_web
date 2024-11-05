@@ -63,9 +63,10 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   const { notification } = cusSelector((state) => state.leader);
   const notification_isread = notification?.filter((e) => e?.isread == false)
 
-  let allcookies: any = getCookies()
-  let heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
-  heading = heading === "user" || heading === "employee access" ? "home" : heading;
+  const allcookies: any = getCookies()
+  const heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
+
+
   const searchFilterFunction = (text: string) => {
     if (text) {
       const newData = leaderlist?.filter(
@@ -80,6 +81,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
       return leaderlist
     };
   }
+
   useEffect(() => {
     document.addEventListener("click", (e) => {
       // hiding usernav bar when clicked anywhere except usericon
@@ -93,173 +95,128 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
       if (!(e.target as HTMLElement).closest("#searchBox") && searchUserStr != "")
         setSearchUserStr('');
     });
-  }, []);
-
+  }, [])
 
   useEffect(() => {
-    try {
-      (async () => {
-        let allcookies: any = await getCookies()
-        if (allcookies?.USER_VERIFY == "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
-          if (user_type == "leader") {
-            const leaderRes = await getProfile(userDetails?.leaderId, dispatch);
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
+    (async () => {
+      try {
 
-            if (leaderRes?.request_status !== "Approved" && leaderRes?.request_status != "Re-submitted") {
-              dispatch(authActions.logout(false as any))
-              return
+        if (allcookies?.USER_VERIFY === "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
+
+          const isLeader = user_type === "leader";
+          const isEmployee = user_type === "employee";
+
+          if (isLeader) {
+            // Fetch leader's profile
+            const [leaderRes, leadersDropdown, leaderList, trendingLeader, followingRes, followering, storiesForLeader,
+              birthdayList, dashboardEvents, postsForLeader, leaderPosts, notifications] = await Promise.all([
+                getProfile(userDetails?.leaderId, dispatch),
+                getLeadersOptions(),
+                GetLeaderList(),
+                getTrendingLeaderList(),
+                getFollowers(userDetails?.leaderId),
+                getFollowering(userDetails?.leaderId),
+                getStoriesForLeader(userDetails?.leaderId),
+                GetBirthdayList(),
+                GetDashboardEvents(userDetails?.leaderId),
+                GetPostsForLeader(userDetails?.leaderId),
+                GetLeaderAddedPosts(userDetails?.leaderId),
+                getNotification({ leaderId: userDetails?.leaderId, employeeId: 0 }),
+              ]);
+
+            dispatch(leaderActions.setLeaderProfile(leaderRes));
+            if (leaderRes?.request_status !== "Approved" && leaderRes?.request_status !== "Re-submitted") {
+              dispatch(authActions.logout(false as any));
+              return;
             }
-            const Data = await getDirectory(userDetails?.leaderId as string);
-            dispatch(directoryAction.storedirectory(Data))
 
-            // Leader
-            const LeadersDropdown = await getLeadersOptions();
-            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
-
-            // TrendingLeader
-
-            const leaderList = await GetLeaderList();
-            dispatch(leaderActions.setLeaderlist(leaderList))
-
-            const trendingLeader = await getTrendingLeaderList();
-            dispatch(leaderActions.setTrendingLeader(trendingLeader))
-
-            // Follower
-            const followingRes = await getFollowers(userDetails?.leaderId as string);
+            // Dispatch all data
+            dispatch(commonActions.setLeaderOptions(leadersDropdown));
+            dispatch(leaderActions.setLeaderlist(leaderList));
+            dispatch(leaderActions.setTrendingLeader(trendingLeader));
             dispatch(leaderActions.setFollowers(followingRes));
-
-            const followering = await getFollowering(userDetails?.leaderId as string)
-            dispatch(leaderActions.setFollowing(followering))
-
-            // Stories
-            const storiesForLeader = await getStoriesForLeader(userDetails?.leaderId);
-            dispatch(postActions.storeStories(storiesForLeader as any[]));
-
-            // GetBirthdayList
-            const BirthdayList = await GetBirthdayList();
-            dispatch(leaderActions.setBirthdayList(BirthdayList));
-
-            //event
-            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
-            dispatch(eventAction.storeDashboardevents(DashboardEvents));
-
-            // Posts
-            const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
+            dispatch(leaderActions.setFollowing(followering));
+            dispatch(postActions.storeStories(storiesForLeader as any));
+            dispatch(leaderActions.setBirthdayList(birthdayList));
+            dispatch(eventAction.storeDashboardevents(dashboardEvents));
             dispatch(postActions.setPost(postsForLeader));
+            dispatch(postActions.listPosts(leaderPosts as any));
+            dispatch(leaderActions.setNotification(notifications));
 
-            const leaderpost = await GetLeaderAddedPosts(userDetails?.leaderId);
-            dispatch(postActions.listPosts(leaderpost as any));
 
+            const [directoryData, letters, letterTemplates, tickets, groups, employees, category, development, agenda, files, officeLocations] = await Promise.all([
+              getDirectory(userDetails?.leaderId),
+              getLetters(userDetails?.leaderId),
+              getLetterTemplates(userDetails?.leaderId),
+              getTickets(userDetails?.leaderId),
+              getGroups(userDetails?.leaderId),
+              GetEmployees(userDetails?.leaderId),
+              getCategory(userDetails?.leaderId),
+              getDevelopment(userDetails?.leaderId),
+              getAgenda(userDetails?.leaderId),
+              GetFiles(userDetails?.leaderId),
+              GetOfficeLocations(userDetails?.leaderId)
+            ]);
 
-            // Notification
-            const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": 0 });
-            dispatch(leaderActions.setNotification(response));
-
-            // Letter
-            const Letters = await getLetters(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetter(Letters));
-
-            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
-
-            const Tickets = await getTickets(userDetails?.leaderId as string);
-            dispatch(ticketActions.storeTicket(Tickets));
-
-            // Groups
-            const Groups = await getGroups(userDetails?.leaderId as string);
-            dispatch(groupActions.storeGroups(Groups));
-
-            // GetEmployees
-            const Employees = await GetEmployees(userDetails?.leaderId as string);
-            dispatch(employeeAction.storeemployees(Employees));
-
-            // Category
-            const Category = await getCategory(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeCategories(Category));
-
-            // Development
-            const Development = await getDevelopment(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeDevelopments(Development));
-
-            // Agenda
-            const Agenda = await getAgenda(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeAgendas(Agenda));
-
-            const Files = await GetFiles(userDetails?.leaderId as string);
-            dispatch(fileAction.storeFiles(Files));
-
-            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
-            dispatch(locationAction.storeLocation(OfficeLocations));
+            dispatch(directoryAction.storedirectory(directoryData));
+            dispatch(letterActions.storeLetter(letters));
+            dispatch(letterActions.storeLetterTemplate(letterTemplates));
+            dispatch(ticketActions.storeTicket(tickets));
+            dispatch(groupActions.storeGroups(groups));
+            dispatch(employeeAction.storeemployees(employees));
+            dispatch(developmentAction.storeCategories(category));
+            dispatch(developmentAction.storeDevelopments(development));
+            dispatch(agendaAction.storeAgendas(agenda));
+            dispatch(fileAction.storeFiles(files));
+            dispatch(locationAction.storeLocation(officeLocations));
           }
-          if (user_type == "employee") {
-            const employee = await GetSingleEmployeeDetail({ "leaderid": userDetails?.leaderId, "employeeid": userDetails?.employeeId });
-            dispatch(employeeAction.setemployedetails(employee));
-
-            const leaderRes = await getProfile(userDetails?.leaderId);
+          if (isEmployee) {
+            const [employeeDetail, leaderRes, notifications, leadersDropdown, directoryData, files, letters, letterTemplates] = await Promise.all([
+              GetSingleEmployeeDetail({ leaderid: userDetails?.leaderId, employeeid: userDetails?.employeeId }),
+              getProfile(userDetails?.leaderId),
+              getNotification({ leaderId: userDetails?.leaderId, employeeId: userDetails?.employeeId }),
+              getLeadersOptions(),
+              getDirectory(userDetails?.leaderId),
+              GetFiles(userDetails?.leaderId),
+              getLetters(userDetails?.leaderId),
+              getLetterTemplates(userDetails?.leaderId),
+            ]);
+            dispatch(employeeAction.setemployedetails(employeeDetail));
             dispatch(leaderActions.setLeaderProfile(leaderRes));
+            dispatch(leaderActions.setNotification(notifications));
+            dispatch(commonActions.setLeaderOptions(leadersDropdown));
+            dispatch(directoryAction.storedirectory(directoryData));
+            dispatch(fileAction.storeFiles(files));
+            dispatch(letterActions.storeLetter(letters));
+            dispatch(letterActions.storeLetterTemplate(letterTemplates));
 
-            // Notification
-            const response = await getNotification({ "leaderId": userDetails?.leaderId, "employeeId": userDetails?.employeeId });
-            dispatch(leaderActions.setNotification(response));
+            const [tickets, dashboardEvents, groups, employees, category, development, agenda, officeLocations] = await Promise.all([
+              getTickets(userDetails?.leaderId),
+              GetDashboardEvents(userDetails?.leaderId),
+              getGroups(userDetails?.leaderId),
+              GetEmployees(userDetails?.leaderId),
+              getCategory(userDetails?.leaderId),
+              getDevelopment(userDetails?.leaderId),
+              getAgenda(userDetails?.leaderId),
+              GetOfficeLocations(userDetails?.leaderId)
+            ]);
 
-            const LeadersDropdown = await getLeadersOptions();
-            dispatch(commonActions.setLeaderOptions(LeadersDropdown));
 
-            // Directory
-            const Directory = await getDirectory(userDetails?.leaderId as string);
-            dispatch(directoryAction.storedirectory(Directory))
-
-            // Files
-            const Files = await GetFiles(userDetails?.leaderId as string);
-            dispatch(fileAction.storeFiles(Files));
-
-            // Letters
-            const Letters = await getLetters(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetter(Letters));
-
-            // LetterTemplates
-            const LetterTemplates = await getLetterTemplates(userDetails?.leaderId as string);
-            dispatch(letterActions.storeLetterTemplate(LetterTemplates));
-
-            // Tickets
-            const Tickets = await getTickets(userDetails?.leaderId as string);
-            dispatch(ticketActions.storeTicket(Tickets));
-
-            //event
-            const DashboardEvents = await GetDashboardEvents(userDetails?.leaderId);
-            dispatch(eventAction.storeDashboardevents(DashboardEvents));
-
-            // Groups
-            const Groups = await getGroups(userDetails?.leaderId as string);
-            dispatch(groupActions.storeGroups(Groups));
-
-            // GetEmployees
-            const Employees = await GetEmployees(userDetails?.leaderId as string);
-            dispatch(employeeAction.storeemployees(Employees));
-
-            // Category
-            const Category = await getCategory(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeCategories(Category));
-
-            // Development
-            const Development = await getDevelopment(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeDevelopments(Development));
-
-            // Agenda
-            const Agenda = await getAgenda(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeAgendas(Agenda));
-
-            // locations
-            const OfficeLocations = await GetOfficeLocations(userDetails?.leaderId as string);
-            dispatch(locationAction.storeLocation(OfficeLocations));
+            dispatch(ticketActions.storeTicket(tickets));
+            dispatch(eventAction.storeDashboardevents(dashboardEvents));
+            dispatch(groupActions.storeGroups(groups));
+            dispatch(employeeAction.storeemployees(employees));
+            dispatch(developmentAction.storeCategories(category));
+            dispatch(developmentAction.storeDevelopments(development));
+            dispatch(agendaAction.storeAgendas(agenda));
+            dispatch(locationAction.storeLocation(officeLocations));
           }
         }
-      })();
-    } catch (error) {
-    }
-  }, [dispatch, allcookies?.TOKEN_KEY, userDetails?.leaderId])
-
-
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    })();
+  }, [dispatch, userDetails?.leaderId]);
 
 
   useEffect(() => {
@@ -303,7 +260,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
               )}              {/* Search box */}
               {searchUserStr.length > 0 && (
                 // <ul className="absolute overflow-hidden bg-red w-full">
-                <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100]">
+                <ul className="absolute rounded-md shadow-md border bg-white overflow-x-hidden overflow-y-auto main_scrollbar max-h-[80vh] top-[110%] left-0 w-full z-[100]">
                   {searchFilterFunction(searchUserStr)?.map((item: any) =>
                     <BriefUserInfo
                       key={item?.id}
@@ -325,7 +282,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
               )}
             </label>
 
-            <h3 className="capitalize">{heading}</h3>
+            <h3 className="capitalize">{heading === "user" || heading === "employee access" ? "home" : heading}</h3>
 
             <div className="h-10 w-[2px] bg-sky-50 bg-opacity-40" />
 
@@ -387,7 +344,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
           </>
           :
           <>
-            <h3 className="capitalize ml-2">{heading}</h3>
+            <h3 className="capitalize ml-2">{heading === "user" || heading === "employee access" ? "home" : heading}</h3>
             <div className="h-10 w-[2px] bg-sky-50 bg-opacity-40" />
             <section className="flex items-center gap-8">
               <button type="button" onClick={() => router.push(`/user/employeehome`)}>
@@ -469,7 +426,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 <FaSearch className="absolute top-1/2 right-5 translate-y-[-50%] text-opacity-70 text-sky-50 text-xl" />
               )}
               {searchUserStr.length > 0 && (
-                <ul className="absolute rounded-md shadow-md border bg-white overflow-hidden top-[110%] left-0 w-full z-[100] bg-">
+                <ul className="absolute rounded-md shadow-md border bg-white overflow-x-hidden overflow-y-auto main_scrollbar max-h-[80vh] top-[110%] left-0 w-full z-[100] ">
                   {searchFilterFunction(searchUserStr)?.map((item: any) =>
                     <BriefUserInfo
                       key={item?.id}

@@ -51,11 +51,11 @@ export const LeaderPersonalInfo: FC<LeaderPersonalInfoProps> = () => {
               heading="Gender: "
             />
 
-            <PersonalBriefInfo
+            {/* <PersonalBriefInfo
               Icon={MdBloodtype}
               data={leaderData?.personal_info?.blood_group as string}
               heading="Blood Group: "
-            />
+            /> */}
 
             <PersonalBriefInfo
               Icon={FaHandshake}

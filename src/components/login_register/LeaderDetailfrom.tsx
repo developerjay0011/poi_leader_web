@@ -1,10 +1,10 @@
 "use client";
 import { ChangeEvent, FC, ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCookie, setCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { authActions } from "@/redux_store/auth/authSlice";
-import { LOGIN_BODY, TOKEN_KEY, ToastType } from "@/constants/common";
+import { LOGIN_BODY, ToastType } from "@/constants/common";
 import { AuthRoutes } from "@/constants/routes";
 import CustomImage from "@/utils/CustomImage";
 import { userLogin } from "@/redux_store/auth/authAPI";
