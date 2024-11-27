@@ -91,4 +91,9 @@ export const ForgotPassword = async (resBody: any) => {
 };
 
 
-
+export const fetchAppinfo = async () => {
+  return tryCatch(async () => {
+    const res = await Axios.get(APIRoutes.GetLoginScreenCount)
+    return res.data;
+  });
+};

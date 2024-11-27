@@ -30,7 +30,7 @@ export const APIRoutes = {
   verifyOTP: `${API_Prefix}/common/verifyOtp`,
   getLeadersForDropdown: `${API_Prefix}/common/getAddLeadersDropdown`,
   GetCategories: `${API_Prefix}/common/GetCategories`,
-
+  GetLoginScreenCount: `${API_Prefix}/Leader/GetLoginScreenCount`,
 
   // Leader Endpoints
   login: `${API_Prefix}/leader/login`,
