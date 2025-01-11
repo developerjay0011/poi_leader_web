@@ -28,7 +28,7 @@ export const NetworksPage: FC = () => {
     const { userDetails } = cusSelector((st) => st.auth);
     const { groups } = cusSelector((state) => state.group);
     const dispatch = cusDispatch();
-    useEffect(() => { (async () => { getGroup() })() }, [dispatch, userDetails?.leaderId]);
+
     const getGroup = () => {
         tryCatch(
             async () => {

@@ -186,7 +186,6 @@ export const SingleComment: FC<SingleCommentProps> = ({ username, id, userId, po
               <form className="flex items-end bg-white gap-3 pt-3" onSubmit={addNewNestedComment}>
                 <CustomImage
                   src={getImageUrl(leaderProfile?.image)}
-                  priority={true}
                   alt="user dp"
                   width={1000}
                   height={1000}

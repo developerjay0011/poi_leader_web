@@ -1,6 +1,6 @@
 "use client";
 import { Comment, Like, PostDetails } from "@/utils/typesUtils";
-import { dateConverter, dateConverter2 } from "@/utils/utility";
+import { dateConverter2 } from "@/utils/utility";
 import { FC, useState } from "react";
 import { BiSolidMessageAltDetail } from "react-icons/bi";
 import { BsFillHeartFill, BsHeart, BsThreeDots } from "react-icons/bs";
@@ -35,7 +35,9 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
   const [showMorePostOptions, setShowMorePostOptions] = useState(false);
   const { userDetails } = cusSelector((st) => st.auth);
   const { leaderProfile } = cusSelector((st) => st.leader);
-  var is_like = islike(post?.likes, userDetails?.id)
+  var isLike = islike(post?.likes, userDetails?.id)
+  const [is_like, setIslike] = useState(isLike);
+  const [likeNumber, setLikeNumber] = useState(post?.likes?.length || 0);
   const [showLikeAnimation, setShowLikeAnimation] = useState((post?.likes as Like[])?.some((el) => el.userId === userDetails?.id));
   const handleLike = async () => {
     const likeBody = {
@@ -51,16 +53,12 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
       post_leaderid: post?.leaderid,
       userid: userDetails?.id,
     };
-    try {
-      if (!is_like) {
-        await LikePost(likeBody);
-        Getpost();
-      } else {
-        await UnlikePostorStory(UnlikeBody);
-        Getpost();
-      }
-    } catch (error) {
+    const liker_status = !is_like ? await LikePost(likeBody) : await UnlikePostorStory(UnlikeBody)
+    if (liker_status?.success) {
+      setIslike(!is_like)
+      setLikeNumber(!is_like ? likeNumber + 1 : likeNumber - 1)
     }
+    Getpost();
   };
 
   const handleDelete = async () => {
@@ -126,7 +124,7 @@ export const Post: FC<PostProps> = ({ userdetails, post, Getpost, index, allData
           {is_like ? (<BsFillHeartFill className="text-lg" />) : (<BsHeart className="text-lg" />)}
           {!firstTime && (<BsFillHeartFill className={`text-lg overlay ${showLikeAnimation ? "fadeOut" : "fadeIn"}`} />)}
           <span className="text-[14px] absolute -top-4 left-4 font-[500]">
-            {post?.likes?.length}
+            {likeNumber}
           </span>
         </button>
         <button

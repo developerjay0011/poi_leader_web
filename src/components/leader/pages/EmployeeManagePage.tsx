@@ -47,9 +47,6 @@ export const EmployeeManagePage: FC = () => {
         [userDetails?.leaderId, getEmployeeData]
     )
 
-    useEffect(() => {
-        getEmployeeData()
-    }, [getEmployeeData])
 
     const filteredEmployees = useMemo(
         () => searchFilterFunction(searchFilter, employees, 'fullname', { curPageNo, filterDataCount }),

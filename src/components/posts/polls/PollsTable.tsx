@@ -23,11 +23,8 @@ export const PollsTable: FC<PollsTableProps> = ({ polls }) => {
     )
   }
   useEffect(() => {
-    (async () => {
-      getPoll()
-
-    })();
-  }, [userDetails, dispatch, userDetails?.leaderId]);
+    (async () => { getPoll() })();
+  }, [dispatch, userDetails?.leaderId]);
   const handlePollDelete = async (id: string) => {
     tryCatch(
       async () => {

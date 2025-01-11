@@ -12,7 +12,7 @@ export interface EventDetails {
 
 interface EventState {
   event: EventDetails[]
-  dashboardevents: any
+  dashboardevents: any[]
 }
 
 const init: EventState = {
@@ -25,10 +25,10 @@ export const eventSlice = createSlice({
   initialState: init,
   reducers: {
     storeEvent(state, action) {
-      state.event = action.payload
+      state.event = Array.isArray(action.payload) ? action.payload : []
     },
     storeDashboardevents(state, action) {
-      state.dashboardevents = action.payload
+      state.dashboardevents = Array.isArray(action.payload) ? action.payload : []
     },
   },
 })

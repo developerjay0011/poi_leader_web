@@ -29,10 +29,6 @@ export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = fal
   var setpost = is_my_postandstories ? mypostData : postData
   var mypostdata = is_my_postandstories ? { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId } : {}
 
-  useEffect(() => {
-    (async () => { await Getpost(); })();
-  }, []);
-
   return (
     <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
       <StoriesBox is_my_postandstories={is_my_postandstories} />

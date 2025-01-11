@@ -1,11 +1,9 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { AgendaPost } from "@/components/posts/agenda/AgendaPost";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
 import AgendaForm from "@/components/posts/agenda/AgendaForm";
-import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { Datanotfound } from "@/utils/Datanotfound";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
 import { Modal } from "@/components/modal/modal";
@@ -17,20 +15,11 @@ export const AgendaPage: FC = () => {
     const [statusFilter, setStatusFilter] = useState("");
     const [isAgenda, setIsAgenda] = useState(false);
     const [Agenda, setAgenda] = useState({}) as any
-    const { userDetails } = cusSelector((st) => st.auth);
     const { categories, agendas } = cusSelector((st) => st.agenda);
     const filterDataOnPriority = agendas?.filter((el) => priorityFilter ? el.priority === priorityFilter : el);
     const filterDataOnStatus = filterDataOnPriority?.filter((el) => statusFilter ? el.status === statusFilter : el);
     const filterData = filterDataOnStatus?.filter((el) => categoryFilter ? el.categoryid === categoryFilter : el);
     const onCancel = () => { setIsAgenda(false); };
-    useEffect(() => {
-        (async () => {
-            const data = await getAgenda(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeAgendas(data))
-            const categories = await getCategory(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeCategories(categories))
-        })()
-    }, [dispatch, userDetails?.leaderId]);
 
     const agendaJSX = filterData?.map((el) => (
         <AgendaPost

@@ -32,10 +32,6 @@ const LeaderProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
         setFollowers(followingRes as [])
         const followering = await getFollowering(id as string)
         setFollowing(followering as [])
-        // const storiesForLeader = await getLeaderAddedStories(id as string, { userImage: leaderData?.image, image: leaderData?.image, name: setusername(leaderData), leaderid: id }) as any
-        // setStories(storiesForLeader)
-        // const leaderpost = await GetLeaderAddedPosts(id) as any
-        // setPost(leaderpost)
       }
     })();
   }, [dispatch, id]);

@@ -54,12 +54,6 @@ export const EventPage: FC<EventPageProps> = () => {
   const event_type = watch("event_type")
 
   useEffect(() => {
-    (async () => {
-      getEvent()
-    })();
-  }, [userDetails, dispatch, userDetails?.leaderId]);
-
-  useEffect(() => {
     if (startDateTime && end_datetime == null && event_type == "event") {
       const endDateTime = moment(startDateTime).add(1, 'hour').format("YYYY-MM-DDTHH:mm");
       setValue('end_datetime', endDateTime);

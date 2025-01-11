@@ -12,22 +12,22 @@ export interface AgendaDetails {
   status: string
   title: string
   id: string
-  leaderid:string
+  leaderid: string
   created_by_type: string
   timeline: TimeLineDetails[]
   saved_by_type: string
-  saved_by:string
-  
+  saved_by: string
+
 }
 export interface TimeLineFormField {
   status: string
   id: string
   leaderid: string
-  agendaid:string
+  agendaid: string
   access: string
   attachments: string
   description: string
-  milestone:string
+  milestone: string
 }
 
 export interface CategoryFilter {
@@ -49,10 +49,10 @@ export const agendaSlice = createSlice({
   initialState: init,
   reducers: {
     storeAgendas(state, action: PayloadAction<AgendaDetails[]>) {
-      state.agendas = action.payload
+      state.agendas = Array.isArray(action.payload) ? action.payload : []
     },
     storeCategories(state, action: PayloadAction<CategoryFilter[]>) {
-      state.categories = action.payload
+      state.categories = Array.isArray(action.payload) ? action.payload : []
     },
   },
 })

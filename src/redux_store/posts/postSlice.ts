@@ -29,23 +29,23 @@ export const postSlice = createSlice({
   name: 'post',
   initialState: init,
   reducers: {
-    setPost(state, action: PayloadAction<PostDetails[]>) {
-      state.allPosts = action.payload
+    setPost(state, action: PayloadAction<PostDetails[] | any>) {
+      state.allPosts = Array.isArray(action.payload) ? action.payload : []
     },
     listPosts(state, action: PayloadAction<PostDetails[]>) {
-      state.posts = action.payload
+      state.posts = Array.isArray(action.payload) ? action.payload : []
     },
     storePosts(state, action: PayloadAction<PostDetails[]>) {
-      state.posts = action.payload
+      state.posts = Array.isArray(action.payload) ? action.payload : []
     },
     addPost(state, action: PayloadAction<PostDetails>) {
-      state.posts = [...state.posts, action.payload]
+      state.posts = Array.isArray(action.payload) ? [...state.posts, action.payload] : []
     },
     storeStories(state, action: PayloadAction<PostDetails[]>) {
-      state.stories = action.payload
+      state.stories = Array.isArray(action.payload) ? action.payload : []
     },
     storeMyStories(state, action: PayloadAction<PostDetails[]>) {
-      state.mystories = action.payload
+      state.mystories = Array.isArray(action.payload) ? action.payload : []
     },
   },
 })

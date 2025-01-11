@@ -47,10 +47,10 @@ export const ticketSlice = createSlice({
   initialState,
   reducers: {
     storeticketcategory(state, action) {
-      state.ticketcategory = action.payload
+      state.ticketcategory = Array.isArray(action.payload) ? action.payload : []
     },
     storeTicket(state, action) {
-      state.ticket = action.payload
+      state.ticket = Array.isArray(action.payload) ? action.payload : []
     },
   },
 });

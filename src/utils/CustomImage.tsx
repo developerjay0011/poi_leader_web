@@ -20,6 +20,7 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, className, ...props
         if (result.naturalWidth === 0) setImageError(true);
       }}
       onError={() => setImageError(true)}
+      onLoadStart={() => setImageError(false)}
       loading="lazy"
       className={className}
       placeholder="empty"

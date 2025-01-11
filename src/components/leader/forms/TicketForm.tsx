@@ -293,7 +293,6 @@ export const TicketForm: FC<ManageEmployessFormProps> = ({ onClose, submitting, 
                 <Image
                   src={signature}
                   alt=""
-                  priority={true}
                   width={1000}
                   height={1000}
                   className="w-20 aspect-square object-cover object-center bg-white"

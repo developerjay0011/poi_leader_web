@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface EmployeeState {
-  employees: [],
+  employees: any[],
   employeaccess: {}
   employedetails: any
 }
@@ -17,7 +17,7 @@ export const employeeSlice = createSlice({
   initialState: init,
   reducers: {
     storeemployees(state, action) {
-      state.employees = action.payload
+      state.employees = Array.isArray(action.payload) ? action.payload : []
     },
     setemployeaccess(state, action: any) {
       state.employeaccess = action.payload

@@ -1,15 +1,14 @@
 'use client'
-import { FC, ReactNode, useEffect, useLayoutEffect } from 'react'
+import { FC, ReactNode, useLayoutEffect } from 'react'
 import { TopNavbar } from '@/components/leader/TopNavbar'
 import { LeftNavbar } from '@/components/leader/LeftNavbar'
 import { RightNavbar } from '@/components/leader/RightNavbar'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { fetchAccessTabs, tabfilter } from '@/redux_store/accesstab/tabApi'
+import { fetchAccessTabs } from '@/redux_store/accesstab/tabApi'
 import { accessAction } from '@/redux_store/accesstab/tabSlice'
 import { getCookie } from 'cookies-next'
 import { USER_TYPE } from '@/constants/common'
 import { usePathname } from 'next/navigation'
-import { EXTRA_TABS, LEFT_NAV_ROUTES } from '@/utils/routes'
 import Notificationpage from '@/utils/firebase/notification'
 
 const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {

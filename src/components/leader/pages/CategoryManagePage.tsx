@@ -1,16 +1,8 @@
 'use client'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { ManageTemplateForm } from '../forms/TemplateForm'
 import { TableWrapper, searchFilterFunction } from '@/utils/TableWrapper'
-import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { deleteLetterTemplates } from '@/redux_store/letter/letterApi'
-import { tryCatch } from '@/config/try-catch'
-import { commonActions } from '@/redux_store/common/commonSlice'
-import { Savedby, ToastType } from '@/constants/common'
-import { ProfileShortcutsBox } from '@/components/timlineComponents/ProfileShortcutsBox'
-import { getCategory } from '@/redux_store/agenda/agendaApi'
-import { agendaAction } from '@/redux_store/agenda/agendaSlice'
+import { cusSelector } from '@/redux_store/cusHooks'
 import { CategoryTable } from '../category/CategoryTable'
 import { CategoryFrom } from '../forms/CategoryForm'
 
@@ -18,7 +10,6 @@ export const CategoryManagePage: FC = () => {
     const [showAddTemplateForm, setShowAddTemplateForm] = useState(false)
     const [searchFilter, setSearchFilter] = useState('');
     const [isEdit, setEdit] = useState<any>();
-    const { userDetails } = cusSelector((st) => st.auth);
     const { categories } = cusSelector((state) => state.agenda);
 
     const changeFilterData = (str: string) => setSearchFilter(str)
@@ -33,15 +24,6 @@ export const CategoryManagePage: FC = () => {
         setFilterAmount(val)
         setCurPageNo(1)
     }
-    const dispatch = cusDispatch();
-    const getCategorylist = async () => {
-        const data = await getCategory(userDetails?.leaderId as string);
-        dispatch(agendaAction.storeCategories(data));
-    };
-    useEffect(() => {
-        (async () => { getCategorylist(); })();
-    }, [userDetails, dispatch]);
-
 
 
     return (

@@ -50,11 +50,6 @@ export const LetterTemplateManagePage: FC = () => {
             })
 
     }
-    useEffect(() => {
-        (async () => {
-            getTemplate();
-        })();
-    }, [userDetails, dispatch]);
 
     return (
         <>

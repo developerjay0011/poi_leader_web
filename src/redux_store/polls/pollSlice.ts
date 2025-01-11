@@ -44,7 +44,7 @@ export const pollSlice = createSlice({
   initialState,
   reducers: {
     storePoll(state, action: PayloadAction<PollDetails[]>) {
-      state.poll = action.payload
+      state.poll = Array.isArray(action.payload) ? action.payload : []
     },
   },
 });

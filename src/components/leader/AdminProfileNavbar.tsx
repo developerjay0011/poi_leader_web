@@ -50,11 +50,12 @@ export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
       <nav className='flex items-center gap-8 ml-20 max-[1480px]:ml-10 max-[1200px]:ml-5 max-[450px]:gap-4 max-[1100px]:flex-wrap max-[620px]:justify-center'>
 
 
-        {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any) => (
+        {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any, index) => (
           <CusLink
             activeLinkClasses='active_profile_link'
-            normalClasses='text-sky-950'
-            className='text-lg font-[500] capitalize relative'
+            normalClasses='text-sky-950 '
+            className='text-lg font-[500] capitalize relative '
+            key={index}
             href={El.link}>
             {El.name}
           </CusLink>

@@ -12,7 +12,6 @@ const AdminProfilePage = () => {
 
         <div className='w-[72%] max-[1500px]:w-[69%] max-[1250px]:w-[65%] max-[1130px]:w-[62%] max-[900px]:w-full flex flex-col gap-5'>
           <GeneralInfoBox />
-          {/* <NetworksList /> */}
         </div>
       </div>
     </>

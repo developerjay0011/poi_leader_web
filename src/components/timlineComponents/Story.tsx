@@ -30,7 +30,6 @@ export const Story: FC<StoryProps> = ({
     <>
       <li onClick={() => { setIsOpen(true); }} className="item-center flex flex-col gap-1">
         <CustomImage
-          priority={true}
           src={userImage}
           width={1000}
           height={1000}

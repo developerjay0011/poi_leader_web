@@ -12,22 +12,22 @@ export interface DevelopmentDetails {
   status: string
   development_title: string
   id: string
-  leaderid:string
+  leaderid: string
   created_by_type: string
   timeline: TimeLineDetails[]
   saved_by_type: string
-  saved_by:string
-  
+  saved_by: string
+
 }
 export interface TimeLineFormField {
   status: string
   id: string
   leaderid: string
-  developmentid:string
+  developmentid: string
   access: string
   attachments: string
   description: string
-  milestone:string
+  milestone: string
 }
 
 export interface CategoryFilter {
@@ -49,10 +49,10 @@ export const developmentSlice = createSlice({
   initialState: init,
   reducers: {
     storeDevelopments(state, action: PayloadAction<DevelopmentDetails[]>) {
-      state.developments = action.payload
+      state.developments = Array.isArray(action.payload) ? action.payload : []
     },
     storeCategories(state, action: PayloadAction<CategoryFilter[]>) {
-      state.categories = action.payload
+      state.categories = Array.isArray(action.payload) ? action.payload : []
     },
   },
 })

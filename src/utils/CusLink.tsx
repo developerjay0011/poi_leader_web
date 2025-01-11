@@ -22,6 +22,7 @@ export const CusLink: FC<CusLinkProps> = ({
 }) => {
   const curActiveRoute = usePathname()
   const classes = curActiveRoute === href ? activeLinkClasses : normalClasses
+
   return (
     <>
       <Link

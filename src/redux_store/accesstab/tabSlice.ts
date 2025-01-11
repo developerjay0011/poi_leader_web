@@ -18,7 +18,7 @@ export const accessSlice = createSlice({
   initialState: init,
   reducers: {
     storeAccesstabs(state, action: any) {
-      state.accesstabs = action.payload
+      state.accesstabs = Array.isArray(action.payload) ? action.payload : []
     },
     storeUsertype(state, action) {
       state.usertype = action.payload

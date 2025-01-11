@@ -75,6 +75,7 @@ export const LeaderPoliticalInfo: FC<LeaderPoliticalInfoProps> = ({
       rajyaSabhaNominated: political_info?.is_nominated && !personal_infolist.hasOwnProperty("is_nominated") ? 'yes' : null,
     })
   }, [leaderProfile?.id, reset]);
+
   useEffect(() => {
     const { political_info } = leaderProfile;
     if (designation_id) {

@@ -14,8 +14,6 @@ import { Shortarray } from '@/components/Input'
 export const TicketTemplateManagePage: FC = () => {
     const dispatch = cusDispatch();
     const searchParams = useSearchParams();
-    const types = searchParams.get('type');
-    const referenceid = searchParams.get('referenceid');
     const [showTicket, setShowTicket] = useState(false)
     const [ischecked, setIschecked] = useState<any>([])
     const [searchFilter, setSearchFilter] = useState('');

@@ -13,7 +13,7 @@ export const locationSlice = createSlice({
   initialState: init,
   reducers: {
     storeLocation(state, action) {
-      state.location = action.payload
+      state.location = Array.isArray(action.payload) ? action.payload : []
     },
   },
 })

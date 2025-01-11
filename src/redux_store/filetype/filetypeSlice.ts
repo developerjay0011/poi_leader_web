@@ -13,7 +13,7 @@ export const fileSlice = createSlice({
   initialState: init,
   reducers: {
     storeFiles(state, action) {
-      state.filestype = action.payload
+      state.filestype = Array.isArray(action.payload) ? action.payload : []
     },
   },
 })

@@ -16,37 +16,16 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl, setusername } from "@/config/get-image-url";
-import { GetBirthdayList, GetLeaderList, followLeader, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList, unFollowLeader } from "@/redux_store/leader/leaderAPI";
+import { followLeader, getFollowering, unFollowLeader } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import { getCookies } from "cookies-next";
 import { tryCatch } from "@/config/try-catch";
-import { getLetterTemplates, getLetters } from "@/redux_store/letter/letterApi";
-import { letterActions } from "@/redux_store/letter/letterSlice";
-import { getLeadersOptions } from "@/redux_store/common/commonAPI";
 import { authActions } from "@/redux_store/auth/authSlice";
 import { FaPowerOff } from 'react-icons/fa6'
-import { GetLeaderAddedPosts, GetPostsForLeader, getLeaderAddedStories, getStoriesForLeader } from "@/redux_store/posts/postAPI";
+import { getLeaderAddedStories } from "@/redux_store/posts/postAPI";
 import { postActions } from "@/redux_store/posts/postSlice";
-import { getDirectory } from "@/redux_store/directory/directoryApi";
-import { directoryAction } from "@/redux_store/directory/directorySlice";
-import { GetDashboardEvents } from "@/redux_store/event/eventApi";
-import { eventAction } from "@/redux_store/event/eventSlice";
-import { getTickets, } from "@/redux_store/ticket/ticketApi";
-import { ticketActions } from "@/redux_store/ticket/ticketSlice";
-import { getGroups } from "@/redux_store/group/groupAPI";
-import { groupActions } from "@/redux_store/group/groupSlice";
-import { GetEmployees, GetSingleEmployeeDetail } from "@/redux_store/employee/employeeApi";
-import { employeeAction } from "@/redux_store/employee/employeeApiSlice";
-import { getDevelopment } from "@/redux_store/development/developmentApi";
-import { developmentAction } from "@/redux_store/development/developmentSlice";
-import { getAgenda, getCategory } from "@/redux_store/agenda/agendaApi";
-import { agendaAction } from "@/redux_store/agenda/agendaSlice";
-import { GetFiles } from "@/redux_store/filetype/filetypeApi";
-import { fileAction } from "@/redux_store/filetype/filetypeSlice";
-import { GetOfficeLocations } from "@/redux_store/location/locationApi";
-import { locationAction } from "@/redux_store/location/locationSlice";
 import { Nave } from "../posts/utils";
 
 
@@ -96,128 +75,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
         setSearchUserStr('');
     });
   }, [])
-
-  useEffect(() => {
-    (async () => {
-      try {
-
-        if (allcookies?.USER_VERIFY === "true" && allcookies?.TOKEN_KEY && userDetails?.leaderId) {
-
-          const isLeader = user_type === "leader";
-          const isEmployee = user_type === "employee";
-
-          if (isLeader) {
-            // Fetch leader's profile
-            const [leaderRes, leadersDropdown, leaderList, trendingLeader, followingRes, followering, storiesForLeader,
-              birthdayList, dashboardEvents, postsForLeader, leaderPosts, notifications] = await Promise.all([
-                getProfile(userDetails?.leaderId, dispatch),
-                getLeadersOptions(),
-                GetLeaderList(),
-                getTrendingLeaderList(),
-                getFollowers(userDetails?.leaderId),
-                getFollowering(userDetails?.leaderId),
-                getStoriesForLeader(userDetails?.leaderId),
-                GetBirthdayList(),
-                GetDashboardEvents(userDetails?.leaderId),
-                GetPostsForLeader(userDetails?.leaderId),
-                GetLeaderAddedPosts(userDetails?.leaderId),
-                getNotification({ leaderId: userDetails?.leaderId, employeeId: 0 }),
-              ]);
-
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
-            if (leaderRes?.request_status !== "Approved" && leaderRes?.request_status !== "Re-submitted") {
-              dispatch(authActions.logout(false as any));
-              return;
-            }
-
-            // Dispatch all data
-            dispatch(commonActions.setLeaderOptions(leadersDropdown));
-            dispatch(leaderActions.setLeaderlist(leaderList));
-            dispatch(leaderActions.setTrendingLeader(trendingLeader));
-            dispatch(leaderActions.setFollowers(followingRes));
-            dispatch(leaderActions.setFollowing(followering));
-            dispatch(postActions.storeStories(storiesForLeader as any));
-            dispatch(leaderActions.setBirthdayList(birthdayList));
-            dispatch(eventAction.storeDashboardevents(dashboardEvents));
-            dispatch(postActions.setPost(postsForLeader));
-            dispatch(postActions.listPosts(leaderPosts as any));
-            dispatch(leaderActions.setNotification(notifications));
-
-
-            const [directoryData, letters, letterTemplates, tickets, groups, employees, category, development, agenda, files, officeLocations] = await Promise.all([
-              getDirectory(userDetails?.leaderId),
-              getLetters(userDetails?.leaderId),
-              getLetterTemplates(userDetails?.leaderId),
-              getTickets(userDetails?.leaderId),
-              getGroups(userDetails?.leaderId),
-              GetEmployees(userDetails?.leaderId),
-              getCategory(userDetails?.leaderId),
-              getDevelopment(userDetails?.leaderId),
-              getAgenda(userDetails?.leaderId),
-              GetFiles(userDetails?.leaderId),
-              GetOfficeLocations(userDetails?.leaderId)
-            ]);
-
-            dispatch(directoryAction.storedirectory(directoryData));
-            dispatch(letterActions.storeLetter(letters));
-            dispatch(letterActions.storeLetterTemplate(letterTemplates));
-            dispatch(ticketActions.storeTicket(tickets));
-            dispatch(groupActions.storeGroups(groups));
-            dispatch(employeeAction.storeemployees(employees));
-            dispatch(developmentAction.storeCategories(category));
-            dispatch(developmentAction.storeDevelopments(development));
-            dispatch(agendaAction.storeAgendas(agenda));
-            dispatch(fileAction.storeFiles(files));
-            dispatch(locationAction.storeLocation(officeLocations));
-          }
-          if (isEmployee) {
-            const [employeeDetail, leaderRes, notifications, leadersDropdown, directoryData, files, letters, letterTemplates] = await Promise.all([
-              GetSingleEmployeeDetail({ leaderid: userDetails?.leaderId, employeeid: userDetails?.employeeId }),
-              getProfile(userDetails?.leaderId),
-              getNotification({ leaderId: userDetails?.leaderId, employeeId: userDetails?.employeeId }),
-              getLeadersOptions(),
-              getDirectory(userDetails?.leaderId),
-              GetFiles(userDetails?.leaderId),
-              getLetters(userDetails?.leaderId),
-              getLetterTemplates(userDetails?.leaderId),
-            ]);
-            dispatch(employeeAction.setemployedetails(employeeDetail));
-            dispatch(leaderActions.setLeaderProfile(leaderRes));
-            dispatch(leaderActions.setNotification(notifications));
-            dispatch(commonActions.setLeaderOptions(leadersDropdown));
-            dispatch(directoryAction.storedirectory(directoryData));
-            dispatch(fileAction.storeFiles(files));
-            dispatch(letterActions.storeLetter(letters));
-            dispatch(letterActions.storeLetterTemplate(letterTemplates));
-
-            const [tickets, dashboardEvents, groups, employees, category, development, agenda, officeLocations] = await Promise.all([
-              getTickets(userDetails?.leaderId),
-              GetDashboardEvents(userDetails?.leaderId),
-              getGroups(userDetails?.leaderId),
-              GetEmployees(userDetails?.leaderId),
-              getCategory(userDetails?.leaderId),
-              getDevelopment(userDetails?.leaderId),
-              getAgenda(userDetails?.leaderId),
-              GetOfficeLocations(userDetails?.leaderId)
-            ]);
-
-
-            dispatch(ticketActions.storeTicket(tickets));
-            dispatch(eventAction.storeDashboardevents(dashboardEvents));
-            dispatch(groupActions.storeGroups(groups));
-            dispatch(employeeAction.storeemployees(employees));
-            dispatch(developmentAction.storeCategories(category));
-            dispatch(developmentAction.storeDevelopments(development));
-            dispatch(agendaAction.storeAgendas(agenda));
-            dispatch(locationAction.storeLocation(officeLocations));
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    })();
-  }, [dispatch, userDetails?.leaderId]);
-
 
   useEffect(() => {
     if (user_type == "leader") {

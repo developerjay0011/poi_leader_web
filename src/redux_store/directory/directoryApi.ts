@@ -2,7 +2,6 @@ import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
-import { DirectoryDetails } from './directorySlice';
 
 // Get Directory API
 export const getDirectory = async (leaderid: string) => {
@@ -18,7 +17,7 @@ export const getDirectory = async (leaderid: string) => {
 export const deleteDirectory = async (id: string, leaderid: string) => {
   return tryCatch(
     async () => {
-      const res = await Axios.post(APIRoutes.deleteDirectory, { id,leaderid });
+      const res = await Axios.post(APIRoutes.deleteDirectory, { id, leaderid });
       return res.data;
     }
   );

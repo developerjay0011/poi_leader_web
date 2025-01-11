@@ -18,16 +18,6 @@ const AdminProfileLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { userDetails } = cusSelector((st) => st.auth);
   const dispatch = cusDispatch();
 
-
-  useEffect(() => {
-    (async () => {
-      if (userDetails?.leaderId) {
-        const res = await getProfile(userDetails?.leaderId);
-        dispatch(leaderActions.setLeaderProfile(res));
-      }
-    })()
-  }, [dispatch, userDetails?.leaderId]);
-
   const onChangeHandler = async (e: ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const files = e.target.files as FileList;
     if (files.length > 0) {

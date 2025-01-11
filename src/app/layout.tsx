@@ -1,8 +1,9 @@
 import './globals.scss'
 import type { Metadata } from 'next'
-import { CusProvider } from '@/redux_store/CusProvider' // Provider for Managing state using REDUX
+import { CusProvider } from '@/redux_store/CusProvider'
 import { FC, ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
+
 export const metadata: Metadata = {
   title: 'Politician Of India',
   description: 'Politician of india',
@@ -11,10 +12,8 @@ export const metadata: Metadata = {
 const RootLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <html lang='en' >
-      <body >
-        <div>
-          <Toaster />
-        </div>
+      <body>
+        <div><Toaster /></div>
         <CusProvider>{children}</CusProvider>
       </body>
     </html>

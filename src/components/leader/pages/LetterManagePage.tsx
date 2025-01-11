@@ -40,11 +40,7 @@ export const LetterManagePage: FC = () => {
             })
 
     }
-    useEffect(() => {
-        (async () => {
-            getletter();
-        })();
-    }, [userDetails, dispatch]);
+
 
     return (
         <>

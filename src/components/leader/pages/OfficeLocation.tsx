@@ -32,14 +32,6 @@ export const OfficeLocation: FC = () => {
         }
     };
 
-    useEffect(() => {
-        (async () => {
-            await GetofficeLocations();
-        })();
-    }, [userDetails?.leaderId, dispatch]);
-
-    // handleFilter(ticket, statusFilter, categoryFilter, locationFilter)?.mainlist?.length
-
     return (
         <>
             <div className='bg-white border shadow-sm m-5 rounded-md overflow-hidden flex flex-col gap-5 flex-1 self-start'>

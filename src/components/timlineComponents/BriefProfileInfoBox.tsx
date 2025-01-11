@@ -29,7 +29,7 @@ export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = ({ }) => {
             alt='profile pic'
             width={100}
             height={100}
-            className='w-[4.75rem] rounded-full aspect-square object-cover object-center max-[1400px]:w-[4.5rem] max-[1300px]:w-[4rem]'
+            className='w-[4rem] rounded-full aspect-square object-cover object-center max-[1400px]:w-[4.5rem] max-[1300px]:w-[4rem]'
           />
 
           <div className='flex flex-col gap-1'>

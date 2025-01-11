@@ -49,22 +49,22 @@ export const leaderSlice = createSlice({
       state.reasons = action.payload
     },
     setFollowers(state, action) {
-      state.followers = action.payload;
+      state.followers = Array.isArray(action.payload) ? action.payload : []
     },
     setBirthdayList(state, action) {
-      state.birthdaylist = action.payload;
+      state.birthdaylist = Array.isArray(action.payload) ? action.payload : []
     },
     setFollowing(state, action) {
-      state.following = action.payload;
+      state.following = Array.isArray(action.payload) ? action.payload : []
     },
     setTrendingLeader(state, action: any) {
-      state.trendingLeader = action.payload;
+      state.trendingLeader = Array.isArray(action.payload) ? action.payload : []
     },
     setLeaderlist(state, action: any) {
-      state.leaderlist = action.payload;
+      state.leaderlist = Array.isArray(action.payload) ? action.payload : []
     },
     setNotification(state, action: any) {
-      state.notification = action.payload;
+      state.notification = Array.isArray(action.payload) ? action.payload : []
     },
   },
 });

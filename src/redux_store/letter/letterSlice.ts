@@ -51,10 +51,10 @@ export const letterSlice = createSlice({
   initialState,
   reducers: {
     storeLetterTemplate(state, action) {
-      state.letter_templete = action.payload
+      state.letter_templete = Array.isArray(action.payload) ? action.payload : []
     },
     storeLetter(state, action: PayloadAction<LetterDetails[]>) {
-      state.letter = action.payload
+      state.letter = Array.isArray(action.payload) ? action.payload : []
     },
   },
 });

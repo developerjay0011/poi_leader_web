@@ -24,7 +24,7 @@ export const groupSlice = createSlice({
   initialState,
   reducers: {
     storeGroups(state, action) {
-      state.groups = action.payload
+      state.groups = Array.isArray(action.payload) ? action.payload : []
     },
   },
 });

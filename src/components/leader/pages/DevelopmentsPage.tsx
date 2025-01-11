@@ -1,12 +1,8 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { DevelopmentPost } from "@/components/posts/development/Post";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { getCategory } from "@/redux_store/agenda/agendaApi";
 import { AGENDA_STATUS, AGENDA_VAL } from "@/utils/utility";
-import { agendaAction } from "@/redux_store/agenda/agendaSlice";
-import { getDevelopment } from "@/redux_store/development/developmentApi";
-import { developmentAction } from "@/redux_store/development/developmentSlice";
 import DevelopmentForm from "@/components/posts/development/Form";
 import { Datanotfound } from "@/utils/Datanotfound";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";
@@ -26,14 +22,7 @@ export const DevelopmentPage: FC = () => {
     const filterDataOnStatus = filterDataOnPriority?.filter((el) => statusFilter ? el.status === statusFilter : el);
     const filterData = filterDataOnStatus?.filter((el) => categoryFilter ? el.categoryid === categoryFilter : el);
     const onCancel = () => { setIsAgenda(false) };
-    useEffect(() => {
-        (async () => {
-            const data = await getDevelopment(userDetails?.leaderId as string);
-            dispatch(developmentAction.storeDevelopments(data))
-            const categories = await getCategory(userDetails?.leaderId as string);
-            dispatch(agendaAction.storeCategories(categories))
-        })()
-    }, [dispatch, userDetails?.leaderId]);
+
     const developmentJSX = filterData?.map((el) => (
         <DevelopmentPost
             setDevelopment={(data: any) => {

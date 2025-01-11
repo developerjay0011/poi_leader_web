@@ -57,10 +57,10 @@ export const GeneralInfoBox: FC<GeneralInfoBoxProps> = () => {
           </GeneralInfo>
           {leaderProfile.political_info?.is_hold_ministry &&
             <GeneralInfo Icon={BiBriefcaseAlt} heading="Ministry">
-              {leaderProfile.political_info?.ministries?.map((i) => {
+              {leaderProfile.political_info?.ministries?.map((i, index) => {
                 var label = leaderOptions?.ministries?.find((t) => t?.id == i?.ministryid)?.name
                 return label && (
-                  <p className='text-[14px] pl-7 text-justify'>
+                  <p key={index} className='text-[14px] pl-7 text-justify'>
                     {label}
                   </p>
                 )

@@ -29,11 +29,7 @@ export const FileType: FC = () => {
             dispatch(fileAction.storeFiles(Files))
         }
     };
-    useEffect(() => {
-        (async () => {
-            await getFiles();
-        })();
-    }, [userDetails?.leaderId, dispatch]);
+
 
 
     return (

@@ -54,7 +54,7 @@ export const DirectoryPage: FC<DirectoryPageProps> = () => {
         }
       )
     })();
-  }, [userDetails?.leaderId, isDirectory]);
+  }, [isDirectory]);
 
   const formSubmitHandler = async (data: any) => {
     tryCatch(

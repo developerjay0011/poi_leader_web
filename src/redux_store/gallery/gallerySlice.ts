@@ -22,7 +22,7 @@ export const gallerySlice = createSlice({
   initialState,
   reducers: {
     storeGallery(state, action: PayloadAction<GalleryDetails[]>) {
-      state.gallery = action.payload
+      state.gallery = Array.isArray(action.payload) ? action.payload : []
     },
   },
 });
