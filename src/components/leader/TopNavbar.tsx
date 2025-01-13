@@ -46,7 +46,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
   const allcookies: any = getCookies()
   const heading = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1);
 
-
   const searchFilterFunction = (text: string) => {
     if (text) {
       const newData = leaderlist?.filter(
@@ -88,10 +87,6 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
       })();
     }
   }, [dispatch, leaderProfile?.image])
-
-  useEffect(() => {
-    if (!userDetails?.leaderId) { LogoutUser(dispatch, false) }
-  }, [dispatch, userDetails]);
 
   return (
     <>

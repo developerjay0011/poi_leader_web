@@ -381,7 +381,6 @@ const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
     (async () => {
       if (userDetails?.leaderId) {
         const res = await getProfile(userDetails?.leaderId)
-        console.log(res)
         if (res?.request_status !== "Approved" && res?.request_status !== "Re-submitted" && isLeader) {
           LogoutUser(dispatch, false)
           return;

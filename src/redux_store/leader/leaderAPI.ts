@@ -3,13 +3,15 @@ import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
 import { APIRoutes, API_Prefix } from '@/constants/routes'
 import { Sendnoti } from '../notification/notification';
-import { Savedby } from '@/constants/common';
+import { Savedby, TOKEN_KEY } from '@/constants/common';
 import { LogoutUser } from '../auth/authAPI';
+import { getCookie } from 'cookies-next';
 
 export const getProfile = async (leaderId: string, dispatch?: any) => {
   return tryCatch(
     async () => {
-      if (!leaderId) {
+      const token = getCookie(TOKEN_KEY);
+      if (!leaderId || !token) {
         LogoutUser(dispatch, true)
         return
       }
