@@ -38,6 +38,7 @@ export const leaderSlice = createSlice({
   reducers: {
     setLeaderProfile(state, action: PayloadAction<LeaderProfile>) {
       state.leaderProfile = {
+        ...userDetails,
         ...{
           ...state.leaderProfile,
           is_get: true

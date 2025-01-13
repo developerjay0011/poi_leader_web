@@ -27,6 +27,7 @@ import { FaPowerOff } from 'react-icons/fa6'
 import { getLeaderAddedStories } from "@/redux_store/posts/postAPI";
 import { postActions } from "@/redux_store/posts/postSlice";
 import { Nave } from "../posts/utils";
+import { LogoutUser } from "@/redux_store/auth/authAPI";
 
 
 export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
@@ -88,6 +89,9 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
     }
   }, [dispatch, leaderProfile?.image])
 
+  useEffect(() => {
+    if (!userDetails?.leaderId) { LogoutUser(dispatch, false) }
+  }, [dispatch, userDetails]);
 
   return (
     <>
@@ -230,7 +234,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
             </section>
 
             <section className="flex items-center gap-4 ml-auto relative">
-              <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout(true as any)) }}>
+              <button className="flex items-center gap-2" onClick={async () => { LogoutUser(dispatch, true) }}>
                 <FaPowerOff />log out
               </button>
             </section>
@@ -319,7 +323,7 @@ export const TopNavbar: FC<{ user_type: any }> = ({ user_type }) => {
                 onClick={() => { setShowMobileNav(!showMobileNav) }}
               />
               <section className="flex items-center gap-4 ml-auto relative">
-                <button className="flex items-center gap-2" onClick={async () => { await dispatch(authActions.logout(true as any)) }}>
+                <button className="flex items-center gap-2" onClick={async () => { LogoutUser(dispatch, true) }}>
                   <FaPowerOff />log out
                 </button>
               </section>

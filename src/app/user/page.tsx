@@ -32,7 +32,7 @@ const AdminHomePage = () => {
         <TimeLinePage is_my_postandstories={false} />
 
         {/* RIGHT FEED */}
-        <div className="w-max flex flex-col self-start gap-5 max-[1200px]:hidden">
+        <div className="w-max flex flex-col self-start gap-5 max-[1200px]:hidden w-[23%]">
           <BriefProfileInfoBox />
           <ShortcutsBox />
         </div>

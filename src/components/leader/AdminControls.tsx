@@ -1,5 +1,6 @@
 'use client'
 import { ProtectedRoutes } from '@/constants/routes'
+import { LogoutUser } from '@/redux_store/auth/authAPI'
 import { authActions } from '@/redux_store/auth/authSlice'
 import { cusDispatch } from '@/redux_store/cusHooks'
 import { ShortcutBtn } from '@/utils/ShortcutBtn'
@@ -29,7 +30,7 @@ export const AdminControls: FC = () => {
           title='account settings'
           route={ProtectedRoutes.accountSetting}
         />
-        <button onClick={() => { dispatch(authActions.logout(true as any)) }}>
+        <button onClick={() => { LogoutUser(dispatch, true) }}>
           <ShortcutBtn Icon={FaPowerOff} title='log out' route='/' />
         </button>
       </aside>

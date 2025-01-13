@@ -1,11 +1,9 @@
 import {
   RegisterOptions,
-  UseFormRegisterReturn,
   FieldErrors,
   UseFormRegister,
 } from 'react-hook-form'
 import { FC, HTMLInputTypeAttribute } from 'react'
-import { FaUser } from 'react-icons/fa'
 import { LoginFormFields, RegisterFormFields } from '@/utils/typesUtils'
 
 interface LoginFormFieldsProps {

@@ -5,11 +5,9 @@ import { FC } from 'react'
 const LoginPage: FC = () => {
 
   return (
-    <>
-      <LoginLayout isleaderinfo={false}>
-        <LoginForm />
-      </LoginLayout>
-    </>
+    <LoginLayout isleaderinfo={false}>
+      <LoginForm />
+    </LoginLayout>
   )
 }
 

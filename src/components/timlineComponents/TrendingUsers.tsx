@@ -77,6 +77,7 @@ const TrendingUser: FC<TrendingUserProps> = ({
 }) => {
   const { userDetails } = cusSelector((state) => state.auth);
   const dispatch = cusDispatch();
+
   const handleClick = async (id: string, isFollowing: boolean) => {
     const postBody = {
       senderid: userDetails?.leaderId,

@@ -49,7 +49,6 @@ const PoliticalInformationPage: FC = () => {
         if (response?.success) {
           await dispatch(leaderActions.setLeaderProfile({ political_info: { ...resBody, } }));
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
-          // dispatch(authActions.logout(false as any))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))
         }

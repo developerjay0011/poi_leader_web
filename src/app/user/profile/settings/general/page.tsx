@@ -1,6 +1,4 @@
 'use client'
-import { GenerateId } from '@/utils/utility'
-import Link from 'next/link'
 import { FC, useState, useId } from 'react'
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import { tryCatch } from '@/config/try-catch';
@@ -11,7 +9,7 @@ import { ToastType } from '@/constants/common';
 import { AnimatePresence } from 'framer-motion';
 import { ConfirmDialogBox } from '@/utils/ConfirmDialogBox';
 import { closeAccount, deActiveAccount } from '@/redux_store/common/commonAPI';
-import { authActions } from '@/redux_store/auth/authSlice';
+import { LogoutUser } from '@/redux_store/auth/authAPI';
 
 const AdminGeneralSettingPage: FC = () => {
   const { leaderProfile } = cusSelector((state) => state.leader);
@@ -28,7 +26,7 @@ const AdminGeneralSettingPage: FC = () => {
       async () => {
         const response = await (isDelete ? closeAccount(userDetails?.id as string) : deActiveAccount(userDetails?.id as string));
         if (response?.success) {
-          dispatch(authActions.logout(true as any))
+          LogoutUser(dispatch, false)
           dispatch(commonActions.showNotification({ type: ToastType.SUCCESS, message: response.message }))
         } else {
           dispatch(commonActions.showNotification({ type: ToastType.ERROR, message: response.message }))

@@ -8,6 +8,7 @@ import { MdVerified } from 'react-icons/md'
 import CustomImage from '@/utils/CustomImage'
 import { getImageUrl } from '@/config/get-image-url'
 import dob from '@/assets/dob-cake.gif'
+import Image from 'next/image'
 
 const prefixArr = ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th']
 
@@ -58,7 +59,7 @@ export const BirthdayNotifications: FC<BirthdayNotificationsProps> = () => {
       </div>
 
       <ul className='py-4 px-10 relative'>
-        <CustomImage
+        <Image
           src={Sparkles}
           alt='background'
           className='absolute top-0 left-0 object-cover object-center w-full h-full'

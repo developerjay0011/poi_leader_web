@@ -4,6 +4,14 @@ import { tryCatch } from '@/config/try-catch'
 import { APIRoutes } from '@/constants/routes'
 import { LoginData, RegisterData } from '@/utils/typesUtils'
 import { MapFcm, Sendnoti, sendlocalnoti } from '../notification/notification'
+import { authActions } from './authSlice'
+import { persistor } from '..'
+
+export const LogoutUser = async (dispatch: any, type: any) => {
+  dispatch(authActions.logout(type as any))
+  persistor.purge();
+}
+
 export const registerUser = async (body: RegisterData) => {
   return tryCatch(
     async () => {

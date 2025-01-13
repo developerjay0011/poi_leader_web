@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { NewPostBox } from "./NewPostBox";
 import { Post } from "./Post";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";

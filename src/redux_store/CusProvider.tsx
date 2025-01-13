@@ -1,11 +1,12 @@
 'use client'
-import { FC, ReactNode, Suspense, useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
-import { store } from '.'
+import { store, persistor } from '.'
 import { cusDispatch } from './cusHooks'
 import { usePathname } from 'next/navigation'
 import { USER_INFO, USER_TYPE } from '@/constants/common'
 import { getCookie } from 'cookies-next'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import { GetBirthdayList, GetLeaderList, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
@@ -34,22 +35,45 @@ import { fileAction } from "@/redux_store/filetype/filetypeSlice";
 import { GetOfficeLocations } from "@/redux_store/location/locationApi";
 import { locationAction } from "@/redux_store/location/locationSlice";
 import { authActions } from './auth/authSlice'
+import Image from 'next/image'
+import Logo from "@/assets/favicon.png";
+import { LogoutUser } from './auth/authAPI'
 
 
 interface CusProviderProps {
   children: ReactNode
 }
 
+const LoadingPage = () => {
+  return (
+    <div className='h-screen w-full flex items-center justify-center justify-center flex-col bg-red'>
+      <Image
+        src={Logo}
+        alt="poi logo"
+        className="h-[13rem] w-auto self-center max-lg:m-auto max-lg:h-[10rem]"
+      />
+      <div style={{ width: '40px', height: '40px', border: '5px solid #ccc', borderTop: '5px solid orange', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  )
+}
+
 export const CusProvider: FC<CusProviderProps> = ({ children }) => {
 
   return (
-    <Suspense fallback={<p></p>} >
-      <Provider store={store}>
+    <Provider store={store}>
+      <PersistGate loading={LoadingPage()} persistor={persistor}>
         <AuthLayer>{children}</AuthLayer>
-      </Provider>
-    </Suspense>
+      </PersistGate>
+    </Provider>
   )
 }
+
 const getDashboard = [
   {
     tab: ["user"],
@@ -130,6 +154,7 @@ const getDashboard = [
     onSave: (res: any, dispatch: any) => dispatch(postActions.listPosts(res)),
   },
 ];
+
 const getAny = [
   {
     tab: ["any"],
@@ -172,6 +197,7 @@ const getAny = [
     onSave: (res: any, dispatch: any) => dispatch(fileAction.storeFiles(res)),
   },
 ];
+
 const aplist = [
   {
     tab: ["events"],
@@ -307,7 +333,6 @@ const aplist = [
   },
 ];
 
-
 const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = cusDispatch()
   const curRoute = usePathname();
@@ -356,8 +381,9 @@ const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
     (async () => {
       if (userDetails?.leaderId) {
         const res = await getProfile(userDetails?.leaderId)
+        console.log(res)
         if (res?.request_status !== "Approved" && res?.request_status !== "Re-submitted" && isLeader) {
-          dispatch(authActions.logout(false as any));
+          LogoutUser(dispatch, false)
           return;
         }
         dispatch(leaderActions.setLeaderProfile(res))
