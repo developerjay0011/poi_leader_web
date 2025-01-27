@@ -13,7 +13,7 @@
     "@ckeditor/ckeditor5-react": "^6.1.0",
     "@hookform/error-message": "^2.0.1",
     "@react-pdf/renderer": "^3.1.12",
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^2.5.0",
     "@types/crypto-js": "^4.1.1",
     "@types/node": "20.4.1",
     "@types/react": "18.2.14",

@@ -1,10 +1,7 @@
 import { NotificationPage } from '@/components/leader/pages/Notificationpage';
 
-
-
 const NotificationsPage = () => {
-
-  return (<NotificationPage />)
+  return <NotificationPage />
 }
 
 export default NotificationsPage

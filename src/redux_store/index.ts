@@ -1,6 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import { uiSlice } from './UI/uiSlice'
 import { postSlice } from './posts/postSlice'
@@ -20,6 +19,24 @@ import { ticketSlice } from './ticket/ticketSlice'
 import { accessSlice } from './accesstab/tabSlice'
 import { fileSlice } from './filetype/filetypeSlice'
 import { locationSlice } from './location/locationSlice'
+import localStorage from 'redux-persist/lib/storage'
+
+const createNoopStorage = () => {
+  return {
+    getItem(_key: any) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: any, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: any) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage = typeof window !== 'undefined' ? localStorage : createNoopStorage();
+
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
@@ -45,56 +62,31 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'posts', 'follow', 'common', 'leader', 'agenda',
-    'directory', 'development', 'gallery', 'group', 'event', 'poll',
-    'letter', 'employee', 'ticket', 'access', "file", "location"],
+  whitelist: ['auth', 'follow', 'common', 'leader', 'agenda',
+    'directory', 'development', 'gallery', 'event', 'access'],
+  timeout: 2000,
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [
-          'persist/PERSIST',
-          'persist/REHYDRATE',
-          'persist/PAUSE',
-          'persist/REGISTER',
-          'persist/FLUSH',
-          'persist/PURGE',
-        ],
-      },
-    }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [
+        'persist/PERSIST',
+        'persist/REHYDRATE',
+        'persist/PAUSE',
+        'persist/REGISTER',
+        'persist/FLUSH',
+        'persist/PURGE',
+      ],
+    },
+  }),
 })
 
 export const persistor = persistStore(store)
 
-// export const store = configureStore({
-//   reducer: {
-//     auth: authSlice.reducer,
-//     common: commonSlice.reducer,
-//     leader: leaderSlice.reducer,
-//     UI: uiSlice.reducer,
-//     posts: postSlice.reducer,
-//     agenda: agendaSlice.reducer,
-//     directory: directorySlice.reducer,
-//     development: developmentSlice.reducer,
-//     gallery: gallerySlice.reducer,
-//     group: groupSlice.reducer,
-//     event: eventSlice.reducer,
-//     poll: pollSlice.reducer,
-//     letter: letterSlice.reducer,
-//     employee: employeeSlice.reducer,
-//     ticket: ticketSlice.reducer,
-//     access: accessSlice.reducer,
-//     file: fileSlice.reducer,
-//     location: locationSlice.reducer,
-//   },
-// })
-
-// types to configure custom useSelector and useDispatch hooks for better auto compeletion through TS
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 

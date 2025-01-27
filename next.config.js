@@ -6,7 +6,18 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+    dirs: ['src'],
   },
+
+  typescript: {
+    ignoreBuildErrors: false,
+    tsconfigPath: './tsconfig.json',
+  },
+
+  // Compression and performance
+  compress: true,
 }
+
+process.env.NODE_NO_WARNINGS = '1';
 
 module.exports = nextConfig
