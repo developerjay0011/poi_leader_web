@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useMemo, useState } from "react";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { tabfilter } from "@/redux_store/accesstab/tabApi";
 import { LEFT_NAV_ROUTES } from "@/utils/routes";
@@ -35,16 +35,16 @@ export const LeftNavbar: FC = () => {
     setIsTooltipVisible(info);
   };
 
+  const leftnav = useMemo(() => {
+    return tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES)
+  }, [accesstabs, usertype, LEFT_NAV_ROUTES])
+
 
   return (
     <>
       <section className={`py-8 px-3 bg-white shadow_left min-h-full max-[1000px]:hidden overflow-y-auto main_scrollbar relative`}>
-        <section className="flex flex-col gap-5 ">
-          {loader ? LEFT_NAV_ROUTES.map((El: any, index: number) => (
-            <LeftNavLink key={index} info={''} link={''} setIsTooltipVisible={setIsTooltipVisible}
-              handleLinkMouseEnter={() => { }}
-            ><></></LeftNavLink>
-          )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any, index: number) => (
+        <section className="flex flex-col gap-5 min-w-12">
+          {leftnav?.map((El: any, index: number) => (
             <LeftNavLink
               key={index}
               info={El.name}
@@ -52,7 +52,7 @@ export const LeftNavbar: FC = () => {
               setIsTooltipVisible={setIsTooltipVisible}
               handleLinkMouseEnter={handleLinkMouseEnter}
             >
-              {<El.Icon />}
+              <El.Icon />
             </LeftNavLink>
           ))}
         </section>

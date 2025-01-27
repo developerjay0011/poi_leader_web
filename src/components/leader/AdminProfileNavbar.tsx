@@ -1,6 +1,6 @@
 'use client'
 import { CusLink } from '@/utils/CusLink'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { motion as m } from 'framer-motion'
 import { TfiStatsUp } from 'react-icons/tfi'
@@ -38,6 +38,13 @@ export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
       tabname: "Manage Developments",
     },
   ]
+
+
+  const navs = useMemo(() => {
+    return tabfilter(accesstabs, usertype, NAV_ROUTES)
+  }, [accesstabs, usertype, NAV_ROUTES])
+
+
   useEffect(() => {
     document.addEventListener("click", (e) => {
       if (!(e.target as HTMLElement).closest("#analytics"))
@@ -48,9 +55,7 @@ export const AdminProfileNavbar: FC<AdminProfileNavbarProps> = () => {
   return (
     <>
       <nav className='flex items-center gap-8 ml-20 max-[1480px]:ml-10 max-[1200px]:ml-5 max-[450px]:gap-4 max-[1100px]:flex-wrap max-[620px]:justify-center'>
-
-
-        {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any, index) => (
+        {navs?.map((El: any, index) => (
           <CusLink
             activeLinkClasses='active_profile_link'
             normalClasses='text-sky-950 '

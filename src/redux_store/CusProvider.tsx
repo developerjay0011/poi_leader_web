@@ -34,7 +34,6 @@ import { GetFiles } from "@/redux_store/filetype/filetypeApi";
 import { fileAction } from "@/redux_store/filetype/filetypeSlice";
 import { GetOfficeLocations } from "@/redux_store/location/locationApi";
 import { locationAction } from "@/redux_store/location/locationSlice";
-import { authActions } from './auth/authSlice'
 import Image from 'next/image'
 import Logo from "@/assets/favicon.png";
 import { LogoutUser } from './auth/authAPI'
@@ -67,7 +66,7 @@ export const CusProvider: FC<CusProviderProps> = ({ children }) => {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={LoadingPage()} persistor={persistor}>
+      <PersistGate loading={<LoadingPage />} persistor={persistor}>
         <AuthLayer>{children}</AuthLayer>
       </PersistGate>
     </Provider>

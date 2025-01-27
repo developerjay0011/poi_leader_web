@@ -1,6 +1,6 @@
 import { CusLink } from '@/utils/CusLink'
 import { motion as m } from 'framer-motion'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useMemo } from 'react'
 import POILogo from '@/assets/poi_logo_1.png'
 import CustomImage from '@/utils/CustomImage'
 import { cusSelector } from '@/redux_store/cusHooks'
@@ -39,6 +39,9 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
     return () => window.removeEventListener('resize', handleResize);
   }, [showMobileNav]);
 
+  const navs = useMemo(() => {
+    return tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES)
+  }, [accesstabs, usertype, LEFT_NAV_ROUTES])
 
   return (
     <>
@@ -66,14 +69,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
               </div>
 
               <div className='w-full flex flex-col gap-2 relative h-full items-start  main_scrollbar overflow-y-auto'>
-                {loader ? LEFT_NAV_ROUTES.map((El: any) => (
-                  <Shimmer>
-                    <TopNavLink key={El.id} link={''}>
-                      <>
-                      </>
-                    </TopNavLink>
-                  </Shimmer>
-                )) : [...tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES as any) as []]?.map((El: any) => (
+                {navs?.map((El: any) => (
                   <TopNavLink key={El.id} link={usertype === "leader" ? El.link : El.link2}>
                     {<El.Icon className='text-xl' />}{El.name}
                   </TopNavLink>

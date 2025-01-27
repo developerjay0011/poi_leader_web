@@ -1,6 +1,6 @@
 "use client";
 import { CommonBox } from "@/utils/CommonBox";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { FaBell, FaClipboard, FaUser } from "react-icons/fa";
 import { ShortcutBtn } from "@/utils/ShortcutBtn";
 import { LuNetwork } from "react-icons/lu";
@@ -88,11 +88,15 @@ export const ShortcutsBox: FC = () => {
     }
   };
 
+  const navs = useMemo(() => {
+    return tabfilter(accesstabs, usertype, NAV_ROUTES)
+  }, [accesstabs, usertype, NAV_ROUTES])
+
   return (
     <>
       <CommonBox title="shortcuts">
         <div className="flex flex-col py-4 gap-5 font-normal" >
-          {[...tabfilter(accesstabs, usertype, NAV_ROUTES as any) as []]?.map((El: any, index: number) => (
+          {navs?.map((El: any, index: number) => (
             <ShortcutBtn
               Icon={El.Icon}
               title={El.name}
