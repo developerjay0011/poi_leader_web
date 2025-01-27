@@ -13,7 +13,8 @@ export async function middleware(request: NextRequest) {
 
   const searchParams = request.nextUrl.searchParams;
 
-  if (!token && (routeList.includes(pathname) || routeList.includes(pathname))) {
+  if (!token && routeList.includes(pathname)) {
+    console.log('token not found');
     return NextResponse.redirect(new URL(AuthRoutes.mlogin, request.url));
   }
 
@@ -32,7 +33,7 @@ export async function middleware(request: NextRequest) {
     newUrl.searchParams.delete('isnotification');
     return NextResponse.redirect(newUrl);
   }
-
+  return NextResponse.next();
 }
 
 const setRoute = (pathname: string, isNotification: string, userType: string): string => {

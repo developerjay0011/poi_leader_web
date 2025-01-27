@@ -10,20 +10,13 @@ import { setCookie } from 'cookies-next';
 export const fetchTabs = async (userId: string, type?: string) => {
   return tryCatch(
     async () => {
-      let res: any = null
-      var tab_data: any = null
       var notoroute: any = null
       if (type == "employee") {
-        res = await Axios.get(insertVariables(APIRoutes.getAccessTabs, { userId }));
-        var tab_layout = tabfilter(res?.data, "leader", [...LEFT_NAV_ROUTES, ...EXTRA_TABS] as any)?.map((item: any) => item?.link || "")
-        notoroute = [...LEFT_NAV_ROUTES, ...EXTRA_TABS]?.filter((item: any) => (!tab_layout?.includes(item?.link)) && item?.link)?.map((item: any) => item?.link)
+        notoroute = await fetchEmployeeAccessTabs(userId)
       } else {
-        res = await Axios.get(insertVariables(APIRoutes.GetLeaderEmployeeTabAccess, { userId }));
-        tab_data = Array.isArray(res.data?.accesses) ? res.data?.accesses?.filter((item: any) => item?.ischecked == true)?.map((item: any) => ({ id: item?.tabid, tabname: item?.tabname })) : []
-        var tab_layout = tabfilter(tab_data, "employee", [...LEFT_NAV_ROUTES, ...EXTRA_TABS] as any)?.map((item: any) => item?.link2 || '')
-        notoroute = [...LEFT_NAV_ROUTES, ...EXTRA_TABS]?.filter((item: any) => (!tab_layout?.includes(item?.link2)) && item?.link2)?.map((item: any) => item?.link2 || "")
+        notoroute = await fetchAccessTabs(userId)
       }
-      return notoroute
+      return notoroute?.notoroute
     }
   );
 };

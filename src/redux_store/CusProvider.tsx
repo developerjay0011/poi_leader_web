@@ -1,5 +1,5 @@
 'use client'
-import { FC, ReactNode, useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 import { Provider } from 'react-redux'
 import { store, persistor } from '.'
 import { usePathname } from 'next/navigation'
@@ -50,34 +50,37 @@ const NotAccessible = () => {
   const isLeader = getCookie(USER_TYPE) == "leader"
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center p-8 bg-white rounded-lg shadow-lg max-w-md">
-        <div className="mb-6">
+      <div className="text-center p-8 px-6  bg-white shadow-lg max-w-md rounded-lg">
+        <div className="my-6 p-2 flex items-center justify-center">
           <Image
             src={Logo}
             alt="Logo"
             width={80}
             height={80}
-            className="mx-auto"
+            className="mx-auto self-center max-lg:m-auto max-lg:h-[10rem]"
           />
         </div>
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Restricted</h1>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-600 mb-4">
           You don't have permission to access this page. Please contact your administrator for access.
         </p>
-        <Link
-          href={isLeader ? "/user" : "/employee-access"}
-          className="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Return to Dashboard
-        </Link>
+        <div className="mb-8 flex items-center justify-center">
+          <Link
+            href={isLeader ? "/user" : "/employee-access"}
+            className="w-max flex items-center gap-2 self-center mx-auto text-sm transition-all px-3 py-1 rounded-[5px] capitalize bg-orange-500 text-orange-50 hover:text-orange-500 hover:bg-orange-100 hover:font-medium"
+          >
+            Return to Dashboard
+          </Link>
+        </div>
       </div>
     </div>
   )
 }
 const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
-  let is_not_accessable = false
   const curRoute = usePathname();
   const [loader, setLoader] = useState<any>(true)
+  const [is_not_accessable, setIsNotAccessible] = useState<any>(true)
+  const [tabs, setTabs] = useState<any>(null)
   const authRouteList = Object.values(AuthRoutes);
   let userDetails: any = getCookie(USER_INFO);
   userDetails = userDetails && JSON.parse(userDetails);
@@ -87,20 +90,27 @@ const AuthLayer: FC<{ children: ReactNode }> = ({ children }) => {
     (async () => {
       if (userDetails?.leaderId) {
         setLoader(true)
-        console.log(isLeader ? userDetails?.leaderId : userDetails?.employeeId, isLeader ? "leader" : "employee")
         const access_tabs = await fetchTabs(isLeader ? userDetails?.leaderId : userDetails?.employeeId, isLeader ? "leader" : "employee")
-        if ((authRouteList.includes(curRoute) || curRoute.includes('/employee-access') || (access_tabs.includes(curRoute) && curRoute !== '/user' && curRoute !== '/user/profile')) && isLeader) {
-          is_not_accessable = true
-        }
-        if ((authRouteList.includes(curRoute) || curRoute.includes('/user') || (access_tabs.includes(curRoute) && curRoute !== '/employee-access')) && !isLeader) {
-          is_not_accessable = true
-        }
+        setTabs(access_tabs)
         setLoader(false)
       } else {
         setLoader(false)
       }
     })()
   }, [])
+
+  useEffect(() => {
+    var is_accessable = false
+    if (!loader && Array.isArray(tabs)) {
+      if ((authRouteList.includes(curRoute) || curRoute.includes('/employee-access') || (tabs.includes(curRoute) && curRoute !== '/user' && curRoute !== '/user/profile')) && isLeader) {
+        is_accessable = true
+      }
+      if ((authRouteList.includes(curRoute) || curRoute.includes('/user') || (tabs.includes(curRoute) && curRoute !== '/employee-access')) && !isLeader) {
+        is_accessable = true
+      }
+    }
+    setIsNotAccessible(is_accessable)
+  }, [loader, tabs, curRoute])
 
 
   if (is_not_accessable || loader) {

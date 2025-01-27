@@ -206,7 +206,7 @@ const aplist = [
     onSave: (res: any, dispatch: any) => dispatch(groupActions.storeGroups(res)),
   },
   {
-    tab: ["manage-letter", "manage-letter-template", "ticket", "analytics"],
+    tab: ["manage letter", "manage lettertemplate", "ticket", "analytics"],
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) {
@@ -217,7 +217,7 @@ const aplist = [
     onSave: (res: any, dispatch: any) => dispatch(letterActions.storeLetter(res)),
   },
   {
-    tab: ["manage-letter", "manage-letter-template", "ticket"],
+    tab: ["manage letter", "manage letter template", "ticket"],
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) {
@@ -228,7 +228,7 @@ const aplist = [
     onSave: (res: any, dispatch: any) => dispatch(letterActions.storeLetterTemplate(res)),
   },
   {
-    tab: ["manage-letter", "manage-letter-template", "ticket", "analytics"],
+    tab: ["manage letter", "manage letter template", "ticket", "analytics"],
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) {
@@ -239,7 +239,7 @@ const aplist = [
     onSave: (res: any, dispatch: any) => dispatch(ticketActions.storeTicket(res)),
   },
   {
-    tab: ["manage-letter", "manage-letter-template", "ticket", "any"],
+    tab: ["manage location", "manage letter", "manage letter template", "ticket", "any"],
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) {
@@ -250,7 +250,7 @@ const aplist = [
     onSave: (res: any, dispatch: any) => dispatch(locationAction.storeLocation(res)),
   },
   {
-    tab: ["manage-employees"],
+    tab: ["manage employees"],
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) {
@@ -261,7 +261,7 @@ const aplist = [
     onSave: (res: any, dispatch: any) => dispatch(employeeAction.storeemployees(res)),
   },
   {
-    tab: ["manage-categories", "agenda", "developments"],
+    tab: ["manage categories", "agenda", "developments"],
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) {
@@ -318,10 +318,12 @@ export const ProtectedPage: FC<{ children: ReactNode, isLeader: any, userDetails
       if (path != "user") {
         for (let i = 0; i < apifilter.length; i++) {
           const element = apifilter[i];
-          if (element?.tab?.includes(path)) {
-            const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId)
-            element?.onSave(res, dispatch);
-          }
+          setTimeout(async () => {
+            if (element?.tab?.includes(path)) {
+              const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId)
+              element?.onSave(res, dispatch);
+            }
+          }, 1000);
         }
         if (userData == null && isLeader) { GetHomePage(userDetails, 4000) }
       }
@@ -332,7 +334,9 @@ export const ProtectedPage: FC<{ children: ReactNode, isLeader: any, userDetails
   }
 
 
-  useEffect(() => { getApiCall() }, [path]);
+  useEffect(() => {
+    getApiCall()
+  }, [path]);
   useEffect(() => {
     setUserData(null);
     (async () => {
