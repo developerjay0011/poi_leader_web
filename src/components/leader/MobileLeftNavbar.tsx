@@ -4,7 +4,6 @@ import { FC, ReactNode, useEffect, useMemo } from 'react'
 import POILogo from '@/assets/poi_logo_1.png'
 import CustomImage from '@/utils/CustomImage'
 import { cusSelector } from '@/redux_store/cusHooks'
-import Shimmer from "react-shimmer-effect";
 import { tabfilter } from '@/redux_store/accesstab/tabApi'
 import { LEFT_NAV_ROUTES } from '@/utils/routes'
 interface MobileLeftNavbarProps {
@@ -65,7 +64,7 @@ export const MobileLeftNavbar: FC<MobileLeftNavbarProps> = ({ onClose, showMobil
               className='w-1/2 bg-white flex flex-col gap-2 relative h-full z-[102] items-start max-[500px]:w-[75%] max-w-[300px] '>
               <div
                 className='w-full text-center bg-sky-950 flex justify-center py-3'>
-                <CustomImage src={POILogo} alt='poi logo' className='h-12 w-auto' />
+                <CustomImage src={POILogo} alt='poi logo' className='h-12 w-auto' priority={true} />
               </div>
 
               <div className='w-full flex flex-col gap-2 relative h-full items-start  main_scrollbar overflow-y-auto'>

@@ -1,7 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['api.politicianofindia.com', 'images.unsplash.com', 'wpkixx.com', '203.92.43.166'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.politicianofindia.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'wpkixx.com'
+      },
+      {
+        protocol: 'http',
+        hostname: '203.92.43.166'
+      }
+    ],
     formats: ['image/avif', 'image/webp'],
   },
   eslint: {

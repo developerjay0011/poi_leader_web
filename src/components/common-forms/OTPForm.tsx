@@ -35,9 +35,7 @@ export const OTPForm: FC<OTPFormProps> = ({
   })
   const otpInpRef = useRef<HTMLInputElement>(null)
 
-  const { registering, otpVerified, verifyingOTP, otpErr } = cusSelector(
-    (st) => st.UI
-  )
+  const { registering, otpVerified, verifyingOTP, otpErr } = cusSelector((st) => st.UI)
 
   const router = useRouter()
 

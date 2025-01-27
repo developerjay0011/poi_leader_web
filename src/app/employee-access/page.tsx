@@ -32,7 +32,7 @@ const AdminHomePage = () => {
           {loader ? null : navs?.length > 0 ?
             <aside className='grid grid grid-cols-2  w-full md:grid-cols-3 flex  gap-5 '>
               {navs?.map((El: any, index: number) => (
-                <ShortcutBtn Icon={El.Icon} key={El.id} link={usertype === "leader" ? El.link : El.link2} title={El.name} />
+                <ShortcutBtn key={index} Icon={El.Icon} link={usertype === "leader" ? El.link : El.link2} title={El.name} />
               ))}
             </aside>
             :

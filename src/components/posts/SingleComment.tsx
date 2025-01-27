@@ -1,6 +1,5 @@
 import { cusSelector } from "@/redux_store/cusHooks";
 import { Comment, NestedComment } from "@/utils/typesUtils";
-import Image from "next/image";
 import { FC, FormEvent, useEffect, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { PostCommentOptions } from "./PostCommentOptions";

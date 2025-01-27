@@ -1,5 +1,5 @@
 'use client'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, memo } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
@@ -12,7 +12,7 @@ interface CusLinkProps {
   target?: boolean
 }
 
-export const CusLink: FC<CusLinkProps> = ({
+const CusLinkComponent: FC<CusLinkProps> = ({
   href,
   activeLinkClasses,
   children,
@@ -24,22 +24,24 @@ export const CusLink: FC<CusLinkProps> = ({
   const classes = curActiveRoute === href ? activeLinkClasses : normalClasses
 
   return (
-    <>
-      <Link
-        href={href ? href : ""}
-        className={`${className} ${classes}`}
-        target={target ? '_parent' : '_self'}>
-        {children}
-      </Link>
-    </>
+    <Link
+      href={href ?? ""}
+      className={`${className} ${classes}`}
+      target={target ? '_parent' : '_self'}
+      prefetch={true}
+    >
+      {children}
+    </Link>
   )
 }
-export const Shortanylistbytime = (list = [], key = "") => {
-  const combinedData = [...list];
-  combinedData.sort((a, b) => {
+
+export const CusLink = memo(CusLinkComponent);
+
+export const Shortanylistbytime = (list: any[] = [], key = "") => {
+  if (!Array.isArray(list) || !key) return [];
+  return [...list].sort((a, b) => {
     const dateA = new Date(a?.[key]);
     const dateB = new Date(b?.[key]);
-    return dateB.getTime() - dateA.getTime()
+    return dateB.getTime() - dateA.getTime();
   });
-  return Array.isArray(combinedData) && combinedData
 }

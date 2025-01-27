@@ -1,7 +1,6 @@
 import { MediaPost } from '@/utils/typesUtils'
 import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
-import { FullPost } from './FullPost'
 import CustomImage from '@/utils/CustomImage'
 
 export const FourColumnImgLayout: FC<{
@@ -41,17 +40,6 @@ export const FourColumnImgLayout: FC<{
             )
         })}
       </figure>
-
-      <AnimatePresence>
-        {/* {showFullPost && (
-          <FullPost
-            onClose={hidePost}
-            posts={media}
-            postId={postId}
-            userId={userId}
-          />
-        )} */}
-      </AnimatePresence>
     </>
   )
 }

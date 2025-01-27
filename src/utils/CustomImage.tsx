@@ -11,17 +11,19 @@ interface CustomImageProps extends ImageProps {
 const CustomImage: React.FC<CustomImageProps> = ({ src, alt, className, ...props }) => {
   const [imageError, setImageError] = useState(false);
   const imageSrc = !src ? NoImg : imageError ? NoImg : src;
+
   return (
     <Image
       {...props}
       src={imageSrc}
       alt={alt}
-      onLoadingComplete={(result) => {
-        if (result.naturalWidth === 0) setImageError(true);
+      onLoad={(event) => {
+        const img = event.target as HTMLImageElement;
+        if (img.naturalWidth === 0) setImageError(true);
       }}
       onError={() => setImageError(true)}
       onLoadStart={() => setImageError(false)}
-      loading="lazy"
+      priority={true}
       className={className}
       placeholder="empty"
     />

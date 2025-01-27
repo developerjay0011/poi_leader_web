@@ -18,8 +18,6 @@ export const PollPost: FC<PollPostProps> = ({
   poll_options,
   pollType,
   title,
-  postId,
-  userId,
   username,
   createdDate,
 }) => {

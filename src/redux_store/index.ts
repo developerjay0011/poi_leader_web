@@ -1,3 +1,4 @@
+'use client'
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 
@@ -19,7 +20,8 @@ import { ticketSlice } from './ticket/ticketSlice'
 import { accessSlice } from './accesstab/tabSlice'
 import { fileSlice } from './filetype/filetypeSlice'
 import { locationSlice } from './location/locationSlice'
-import localStorage from 'redux-persist/lib/storage'
+import storage from 'redux-persist/lib/storage'
+import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 
 const createNoopStorage = () => {
   return {
@@ -35,7 +37,7 @@ const createNoopStorage = () => {
   };
 };
 
-const storage = typeof window !== 'undefined' ? localStorage : createNoopStorage();
+let reduxStorage = (typeof window !== 'undefined' ? storage : createNoopStorage());
 
 
 const rootReducer = combineReducers({
@@ -61,7 +63,7 @@ const rootReducer = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  storage,
+  storage: reduxStorage,
   whitelist: ['auth', 'follow', 'common', 'leader', 'agenda',
     'directory', 'development', 'gallery', 'event', 'access'],
   timeout: 2000,
@@ -71,18 +73,20 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [
-        'persist/PERSIST',
-        'persist/REHYDRATE',
-        'persist/PAUSE',
-        'persist/REGISTER',
-        'persist/FLUSH',
-        'persist/PURGE',
-      ],
-    },
-  }),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        // Ignore these field paths in all actions and state
+        ignoredActionPaths: ['payload.timestamp', 'meta.arg'],
+        ignoredPaths: ['items.dates'],
+      },
+      // Disable thunk middleware in development for better performance
+      thunk: process.env.NODE_ENV === 'production',
+      // Conditionally enable middleware based on environment
+      immutableCheck: process.env.NODE_ENV === 'production',
+    }),
+  devTools: process.env.NODE_ENV !== 'production',
 })
 
 export const persistor = persistStore(store)

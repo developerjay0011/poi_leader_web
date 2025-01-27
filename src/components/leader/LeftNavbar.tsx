@@ -5,6 +5,7 @@ import { LEFT_NAV_ROUTES } from "@/utils/routes";
 import { CusLink } from "@/utils/CusLink";
 
 const LeftNavLink: FC<{ children: ReactNode; link: string; info: string; target?: boolean, setIsTooltipVisible: any, handleLinkMouseEnter: any }> = ({ handleLinkMouseEnter, children, link, info, target, setIsTooltipVisible }) => {
+
   return (
     <CusLink
       activeLinkClasses="bg-sky-950 text-sky-50"
@@ -15,7 +16,8 @@ const LeftNavLink: FC<{ children: ReactNode; link: string; info: string; target?
     >
       <div
         className="h-full w-full flex items-center justify-center"
-        onMouseOver={(e) => handleLinkMouseEnter(e, info)} onMouseLeave={() => setIsTooltipVisible(false)}>
+        onMouseOver={(e) => handleLinkMouseEnter(e, info)} onMouseLeave={() => setIsTooltipVisible(false)}
+      >
         {children}
       </div>
     </CusLink>
@@ -23,9 +25,12 @@ const LeftNavLink: FC<{ children: ReactNode; link: string; info: string; target?
 };
 
 export const LeftNavbar: FC = () => {
-  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const { accesstabs, usertype } = cusSelector((state) => ({
+    accesstabs: state.access.accesstabs,
+    usertype: state.access.usertype
+  }));
 
   const handleLinkMouseEnter = (event: React.MouseEvent<HTMLAnchorElement>, info: any) => {
     const linkRect = event.currentTarget.getBoundingClientRect();
@@ -36,15 +41,17 @@ export const LeftNavbar: FC = () => {
   };
 
   const leftnav = useMemo(() => {
-    return tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES)
-  }, [accesstabs, usertype, LEFT_NAV_ROUTES])
+    if (!accesstabs || !usertype) return [];
+    return tabfilter(accesstabs, usertype, LEFT_NAV_ROUTES);
+  }, [accesstabs, usertype]);
 
+  if (!leftnav?.length) return null;
 
   return (
     <>
-      <section className={`py-8 px-3 bg-white shadow_left min-h-full max-[1000px]:hidden overflow-y-auto main_scrollbar relative`}>
+      <section className="py-8 px-3 bg-white shadow_left min-h-full max-[1000px]:hidden overflow-y-auto main_scrollbar relative">
         <section className="flex flex-col gap-5 min-w-12">
-          {leftnav?.map((El: any, index: number) => (
+          {leftnav.map((El: any, index: number) => (
             <LeftNavLink
               key={index}
               info={El.name}

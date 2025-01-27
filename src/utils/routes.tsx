@@ -18,7 +18,8 @@ export const LEFT_NAV_ROUTES = [
     name: 'agenda',
     Icon: BiTask,
     tabname: "Manage Agenda",
-    isuser: "Employee"
+    isuser: "Employee",
+    protected: true
   },
   {
     link: '/user/profile/developments',
@@ -26,14 +27,16 @@ export const LEFT_NAV_ROUTES = [
     name: 'developments',
     Icon: BsHouseGearFill,
     tabname: "Manage Developments",
-    isuser: "Employee"
+    isuser: "Employee",
+    protected: true
   },
   {
     id: GenerateId(),
     link: '/user',
     name: 'feed',
     Icon: FaClipboard,
-    tabname: "Leader"
+    tabname: "Leader",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -49,7 +52,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/profile/networks',
     name: 'Manage Group',
     Icon: LuNetwork,
-    tabname: "Manage Group"
+    tabname: "Manage Group",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -57,7 +61,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/profile/directory',
     name: 'Manage Directory',
     Icon: MdContacts,
-    tabname: "Manage Directory"
+    tabname: "Manage Directory",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -65,7 +70,7 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/analytics',
     name: 'account stats',
     Icon: TfiStatsUp,
-    tabname: "Leader"
+    tabname: "Leader",
   },
   {
     id: GenerateId(),
@@ -73,7 +78,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/events',
     name: 'events',
     Icon: BsFillCalendar3WeekFill,
-    tabname: "Manage Events"
+    tabname: "Manage Events",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -81,7 +87,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/letter/manage-letter',
     name: 'Manage Letter',
     Icon: SlEnvolopeLetter,
-    tabname: "Manage Letters"
+    tabname: "Manage Letters",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -89,7 +96,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/letter/manage-letter-template',
     name: 'Manage Template Letter',
     Icon: SlEnvolopeLetter,
-    tabname: "Manage Letter Templates"
+    tabname: "Manage Letter Templates",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -97,7 +105,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/ticket',
     name: 'Ticket',
     Icon: ImTicket,
-    tabname: "Manage Letters"
+    tabname: "Manage Letters",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -106,6 +115,7 @@ export const LEFT_NAV_ROUTES = [
     name: 'Manage Office Location',
     Icon: FaMapLocationDot,
     tabname: "Manage Office Locations",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -114,6 +124,7 @@ export const LEFT_NAV_ROUTES = [
     name: 'Manage file type',
     Icon: FaFileInvoice,
     tabname: "Manage File",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -121,7 +132,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/employees/manage-employees',
     name: 'Manage Employees',
     Icon: BiSolidUserDetail,
-    tabname: "Manage Employees"
+    tabname: "Manage Employees",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -129,7 +141,8 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/polls',
     name: 'Manage Polls',
     Icon: HiSpeakerphone,
-    tabname: "Manage Polls"
+    tabname: "Manage Polls",
+    protected: true
   },
   {
     id: GenerateId(),
@@ -137,37 +150,44 @@ export const LEFT_NAV_ROUTES = [
     link2: '/employee-access/manage-categories',
     name: 'Manage Categories',
     Icon: BiCategoryAlt,
-    tabname: "Manage Categories"
+    tabname: "Manage Categories",
+    protected: true
   },
 ]
 export const EXTRA_TABS = [{
   link: '/user/letter/add-letter',
   link2: '/employee-access/letter/add-letter',
   tabname: "Manage Letters",
+  protected: true
 },
 {
   link: '/user/profile/feed',
   name: 'feed',
-  tabname: "Leader"
+  tabname: "Leader",
+  protected: true
 },
 {
   link: '/user/profile/gallery',
   name: 'gallery',
-  tabname: "Leader"
+  tabname: "Leader",
+  protected: true
 },
 {
   link: '/user/profile/agenda',
   name: 'agenda',
   tabname: "Manage Agenda",
+  protected: true
 },
 {
   link: '/user/profile/developments',
   name: 'developments',
   tabname: "Manage Developments",
+  protected: true
 },
 {
   link: '/employee-access/profile/notifications',
   name: 'notifications',
   tabname: "employee",
+  protected: true
 },
 ]

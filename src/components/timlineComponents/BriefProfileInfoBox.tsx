@@ -12,12 +12,8 @@ interface BriefProfileInfoBoxProps {
 }
 
 export const BriefProfileInfoBox: FC<BriefProfileInfoBoxProps> = ({ }) => {
-  const { userDetails } = cusSelector((st) => st.UI)
   const { leaderProfile } = cusSelector((state) => state.leader);
   const { notification } = cusSelector((state) => state.leader);
-  const [showLikes, setShowLikes] = useState(true)
-  const showLike = () => setShowLikes(true)
-  const hideLike = () => setShowLikes(false)
 
   return (
     <>

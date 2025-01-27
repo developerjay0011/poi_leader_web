@@ -1,3 +1,4 @@
+'use client'
 import { TypedUseSelectorHook, useSelector, useDispatch } from 'react-redux'
 import type { AppDispatch, RootState } from '.'
 
