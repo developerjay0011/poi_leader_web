@@ -21,6 +21,7 @@ export const getProfile = async (leaderId: string, dispatch?: any) => {
     }
   );
 };
+
 export const getNotification = async (data: any) => {
   return tryCatch(
     async () => {
@@ -44,8 +45,6 @@ export const uploadProfileImage = async (formData: any) => {
   );
 };
 
-
-
 export const uploadActivityPictures = async (formData: any) => {
   return tryCatch(
     async () => {
@@ -67,7 +66,7 @@ export const getTrendingLeaderList = async () => {
     }
   );
 };
-// Follow Unfollow API
+
 export const getFollowers = async (leaderId: string) => {
   return tryCatch(
     async () => {
@@ -76,6 +75,7 @@ export const getFollowers = async (leaderId: string) => {
     }
   );
 };
+
 export const getFollowering = async (leaderId: string) => {
   return tryCatch(
     async () => {
@@ -127,7 +127,6 @@ export const unFollowLeader = async (body: any) => {
   );
 };
 
-
 export const GetBirthdayList = async () => {
   return tryCatch(
     async () => {
@@ -136,7 +135,6 @@ export const GetBirthdayList = async () => {
     }
   );
 };
-
 
 export const ClearAllLeaderNotification = async (leaderId: any) => {
   return tryCatch(
@@ -164,9 +162,6 @@ export const ReadLeaderNotification = async (body: any) => {
     }
   );
 };
-
-
-
 
 export const GetLeaderList = async () => {
   return tryCatch(

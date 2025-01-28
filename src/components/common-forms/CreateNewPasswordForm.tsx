@@ -1,7 +1,6 @@
 'use client'
 import { FC, FormEvent, useState } from 'react'
 import { motion as m } from 'framer-motion'
-import { ErrObj } from '@/utils/typesUtils'
 import { ForgotPassword } from '@/redux_store/auth/authAPI'
 import { cusDispatch } from '@/redux_store/cusHooks'
 import { ToastType } from '@/constants/common'

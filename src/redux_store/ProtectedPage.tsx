@@ -2,7 +2,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 import { cusDispatch } from './cusHooks'
 
-import { GetBirthdayList, GetLeaderList, getFollowering, getFollowers, getNotification, getProfile, getTrendingLeaderList } from "@/redux_store/leader/leaderAPI";
+import { GetBirthdayList, GetLeaderList, getFollowering, getFollowers, getNotification, getTrendingLeaderList } from "@/redux_store/leader/leaderAPI";
 import { leaderActions } from "@/redux_store/leader/leaderSlice";
 import { commonActions } from "@/redux_store/common/commonSlice";
 import { getLetterTemplates, getLetters } from "@/redux_store/letter/letterApi";
@@ -28,7 +28,6 @@ import { GetFiles } from "@/redux_store/filetype/filetypeApi";
 import { fileAction } from "@/redux_store/filetype/filetypeSlice";
 import { GetOfficeLocations } from "@/redux_store/location/locationApi";
 import { locationAction } from "@/redux_store/location/locationSlice";
-import { LogoutUser } from './auth/authAPI'
 
 
 const getDashboard = [
@@ -70,12 +69,6 @@ const getDashboard = [
       }
     },
     onSave: (res: any, dispatch: any) => { dispatch(postActions.setPost(res)) },
-  },
-  {
-    tab: ["user"],
-    only_leader: true,
-    onCall: async (id: any, dispatch: any) => await getTrendingLeaderList(), // No leaderId needed
-    onSave: (res: any, dispatch: any) => dispatch(leaderActions.setTrendingLeader(res)),
   },
   {
     tab: ["user"],
@@ -141,12 +134,6 @@ const getAny = [
       return []
     },
     onSave: (res: any, dispatch: any) => dispatch(leaderActions.setNotification(res)),
-  },
-  {
-    tab: ["any"],
-    only_leader: false,
-    onCall: async (leaderId: any, dispatch: any, employeeId?: any) => await GetLeaderList(), // No leaderId needed
-    onSave: (res: any, dispatch: any) => dispatch(leaderActions.setLeaderlist(res)),
   },
   {
     tab: ["any"],
@@ -296,66 +283,94 @@ const aplist = [
   },
 ];
 
+const leadersApiList = [
+  {
+    tab: ["any"],
+    only_leader: false,
+    onCall: async (leaderId: any, dispatch: any, employeeId?: any) => await GetLeaderList(), // No leaderId needed
+    onSave: (res: any, dispatch: any) => dispatch(leaderActions.setLeaderlist(res)),
+  },
+  {
+    tab: ["user"],
+    only_leader: true,
+    onCall: async (id: any, dispatch: any) => await getTrendingLeaderList(), // No leaderId needed
+    onSave: (res: any, dispatch: any) => dispatch(leaderActions.setTrendingLeader(res)),
+  },
+];
+
 export const ProtectedPage: FC<{ children: ReactNode, isLeader: any, userDetails: any, curRoute: any }> = ({ children, isLeader, userDetails, curRoute }) => {
   const dispatch = cusDispatch()
-  const [userData, setUserData] = useState<any>(null)
+  const [loadFirst, setloadFirst] = useState<any>(false)
+  const [loadedUser, setloadedUser] = useState<any>(false)
   const path: any = curRoute?.split("/").at(-1)?.includes("-") ? curRoute?.split("/").at(-1)?.replaceAll("-", " ") : curRoute?.split("/").at(-1) || ""
 
   const GetHomePage = async (userDetails: any, timeout = 0) => {
     setTimeout(async () => {
-      var userApi = getDashboard
-      for (let i = 0; i < userApi.length; i++) {
-        const element = userApi[i];
+      for (let i = 0; i < getDashboard.length; i++) {
+        const element = getDashboard[i];
         const res = await element?.onCall(userDetails?.leaderId, dispatch)
-        element?.onSave(res, dispatch);
+        await element?.onSave(res, dispatch);
       }
     }, timeout);
   }
+
   const getApiCall = async () => {
     try {
       var apifilter = aplist.filter((i: any) => (i?.only_leader == true && isLeader && i?.only_leader != "employee") || (i?.only_leader === false))
-
-      if (path == "user" && isLeader) { GetHomePage(userDetails) }
-      if (path != "user") {
-        for (let i = 0; i < apifilter.length; i++) {
-          const element = apifilter[i];
-          setTimeout(async () => {
-            if (element?.tab?.includes(path)) {
-              const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId)
-              element?.onSave(res, dispatch);
-            }
-          }, 1000);
-        }
-        if (userData == null && isLeader) { GetHomePage(userDetails, 4000) }
+      apifilter = apifilter?.filter((i: any) => i?.tab?.includes(path))
+      for (let i = 0; i < apifilter.length; i++) {
+        const element = apifilter[i];
+        const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId)
+        await element?.onSave(res, dispatch);
       }
-      setUserData(userDetails)
+      return true;
     } catch (error) {
       console.error(error)
+      return false;
     }
   }
 
+  const initialLoad = async () => {
+    try {
+      setloadFirst(false)
+      if (path == "user" && isLeader && userDetails?.leaderId) {
+        setloadedUser(true)
+        await GetHomePage(userDetails)
+      }
+      if (path != "user") {
+        await getApiCall()
+      }
+      if (!loadedUser && isLeader && userDetails?.leaderId) {
+        await GetHomePage(userDetails, 1000)
+      }
+      setloadFirst(true)
+    } catch (error) {
+      setloadFirst(true)
+    }
+  }
 
   useEffect(() => {
-    getApiCall()
+    (async () => { await initialLoad(); })()
   }, [path]);
+
   useEffect(() => {
-    setUserData(null);
-    (async () => {
-      if (userDetails?.leaderId) {
-        const res = await getProfile(userDetails?.leaderId)
-        if (res?.request_status !== "Approved" && res?.request_status !== "Re-submitted" && isLeader) {
-          LogoutUser(dispatch, false)
-          return;
+    if (loadFirst) {
+      setTimeout(async () => {
+        for (let i = 0; i < getAny.length; i++) {
+          const element = getAny[i];
+          const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId);
+          await element?.onSave(res, dispatch);
         }
-        dispatch(leaderActions.setLeaderProfile(res))
-      }
-      for (let i = 0; i < getAny.length; i++) {
-        const element = getAny[i];
-        const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId);
-        element?.onSave(res, dispatch);
-      }
-    })()
-  }, []);
+        for (let t = 0; t < leadersApiList.length; t++) {
+          const element = leadersApiList[t];
+          const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId);
+          await element?.onSave(res, dispatch);
+        }
+      }, 2000);
+    } else {
+      setloadedUser(false)
+    }
+  }, [loadFirst]);
 
   return children
 }

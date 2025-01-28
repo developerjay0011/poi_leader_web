@@ -1,6 +1,6 @@
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import { StatusBtn } from '@/utils/StatusBtn'
 import { BiEdit } from 'react-icons/bi';
@@ -8,8 +8,6 @@ import { Savedby, ToastType } from '@/constants/common';
 import { SaveCategory, getCategory } from '@/redux_store/agenda/agendaApi';
 import { commonActions } from '@/redux_store/common/commonSlice';
 import { agendaAction } from '@/redux_store/agenda/agendaSlice';
-import { generateCategoricalChart } from 'recharts/types/chart/generateCategoricalChart';
-import { sliceData } from '@/utils/TableWrapper';
 
 interface AssemblyConstituencyTableProps {
   searchStr: string

@@ -27,7 +27,6 @@ export const registerUser = async (body: RegisterData) => {
   );
 }
 
-// Log user in
 export const userLogin = async (body: LoginData) => {
   return tryCatch(
     async () => {
@@ -77,8 +76,6 @@ export const getSingleLeader = async (leaderid: string) => {
   );
 };
 
-
-
 export const CheckLeaderUserRegExists = async (body: {
   email: string;
   mobile: string
@@ -97,7 +94,6 @@ export const ForgotPassword = async (resBody: any) => {
     return res.data;
   });
 };
-
 
 export const fetchAppinfo = async () => {
   return tryCatch(async () => {

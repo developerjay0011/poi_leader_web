@@ -4,7 +4,6 @@ import { FC } from 'react'
 import { Notification } from '@/components/leader/Notification'
 import { ClearAllLeaderNotification, getNotification } from '@/redux_store/leader/leaderAPI';
 import { leaderActions } from '@/redux_store/leader/leaderSlice';
-import { Datanotfound } from '@/utils/Datanotfound';
 import { Savedby } from '@/constants/common';
 interface NotiProps {
   id: string,

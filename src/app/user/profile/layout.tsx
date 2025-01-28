@@ -13,18 +13,6 @@ import { getImageUrl, setusername } from '@/config/get-image-url'
 import { authActions } from '@/redux_store/auth/authSlice'
 import { ErrorBoundary } from 'react-error-boundary'
 
-// Types
-interface LeaderProfile {
-  bgimage?: string;
-  image?: string;
-  political_info?: {
-    political_party?: string;
-    designation?: string;
-    post_in_party?: string;
-    parliament_house?: string;
-  };
-}
-
 interface AdminProfileLayoutProps {
   children: ReactNode;
 }
@@ -96,11 +84,7 @@ const AdminProfileLayout: FC<AdminProfileLayoutProps> = memo(({ children }) => {
   ), [onChangeHandler]);
 
   return (
-    <ErrorBoundary
-      FallbackComponent={({ error }) => (
-        <div className="text-red-500 p-4">Error loading profile: {error.message}</div>
-      )}
-    >
+    <ErrorBoundary FallbackComponent={({ error }) => (<div className="text-red-500 p-4">Error loading profile: {error.message}</div>)} >
       <section className='m-auto my-10 w-[75%] overflow-y-scroll main_scrollbar flex flex-col gap-5 max-[1650px]:w-[90%] max-[1370px]:w-[95%] max-[1000px]:w-[94%] max-[1000px]:my-6 max-[400px]:w-[98%] max-[400px]:my-2'>
         <div className='flex flex-col gap-5'>
           <section className='flex flex-col text-sky-950 border-b border-l border-r w-full'>

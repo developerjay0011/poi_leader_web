@@ -1,8 +1,6 @@
-import { FC } from 'react'
 import {
   BarChart,
   Bar,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,

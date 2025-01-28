@@ -14,6 +14,9 @@ import { fetchTabs } from './accesstab/tabApi'
 import { ProtectedPage } from './ProtectedPage'
 import { ErrorBoundary } from 'react-error-boundary'
 import { accessAction } from './accesstab/tabSlice'
+import { getProfile } from './leader/leaderAPI'
+import { LogoutUser } from './auth/authAPI'
+import { leaderActions } from './leader/leaderSlice'
 
 // Types
 interface CusProviderProps {
@@ -136,13 +139,20 @@ const AuthLayer: FC<{ children: ReactNode }> = memo(({ children }) => {
         const userId: any = isLeader ? userDetails.id : userDetails.employeeId
         const userType = isLeader ? "leader" : "employee"
         const access_tabs = await fetchTabs(userId, userType, dispatch)
-
         if (mounted) {
           setTabState({
             data: access_tabs,
             loading: false,
             error: null
           })
+        }
+        const userDetails_api = await getProfile(userDetails?.leaderId)
+        if (userDetails_api) {
+          if (userDetails_api?.request_status !== "Approved" && userDetails_api?.request_status !== "Re-submitted" && isLeader) {
+            LogoutUser(dispatch, false)
+            return;
+          }
+          dispatch(leaderActions.setLeaderProfile(userDetails_api))
         }
       } catch (error) {
         console.error('Error fetching tabs:', error)
@@ -221,7 +231,7 @@ export const CusProvider: FC<CusProviderProps> = memo(({ children }) => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Provider store={store}>
-        <PersistGate loading={<LoadingPage />} persistor={persistor}>
+        <PersistGate loading={null} persistor={persistor}>
           <AuthLayer>{children}</AuthLayer>
         </PersistGate>
       </Provider>

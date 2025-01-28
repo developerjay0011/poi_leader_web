@@ -1,3 +1,4 @@
+'use client'
 import { FC, ReactNode, useMemo, useState } from "react";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { tabfilter } from "@/redux_store/accesstab/tabApi";

@@ -64,8 +64,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage: reduxStorage,
-  whitelist: ['auth', 'follow', 'common', 'leader', 'agenda',
-    'directory', 'development', 'gallery', 'event', 'access'],
+  whitelist: ['auth', 'common', 'agenda', 'directory', 'development', 'access'],
   timeout: 2000,
 }
 
