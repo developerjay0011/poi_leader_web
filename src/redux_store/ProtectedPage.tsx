@@ -366,7 +366,7 @@ export const ProtectedPage: FC<{ children: ReactNode, isLeader: any, userDetails
           const res = await element?.onCall(userDetails?.leaderId, dispatch, userDetails?.employeeId);
           await element?.onSave(res, dispatch);
         }
-      }, 2000);
+      }, 1000);
     } else {
       setloadedUser(false)
     }

@@ -1,10 +1,8 @@
 import Axios from '@/config/axios'
 import { insertVariables } from '@/config/insert-variables';
 import { tryCatch } from '@/config/try-catch'
-import { TAB_ACCESS } from '@/constants/common';
 import { APIRoutes, EmployeeProtectedRoutes } from '@/constants/routes'
 import { EXTRA_TABS, LEFT_NAV_ROUTES } from '@/utils/routes';
-import { setCookie } from 'cookies-next';
 import { accessAction } from './tabSlice';
 
 
@@ -29,7 +27,6 @@ export const fetchAccessTabs = async (userId: string, data?: any) => {
       const res = await Axios.get(insertVariables(APIRoutes.getAccessTabs, { userId }));
       var tab_layout = tabfilter(res?.data, "leader", [...LEFT_NAV_ROUTES, ...EXTRA_TABS] as any)?.map((item: any) => item?.link || "")
       var notoroute = [...LEFT_NAV_ROUTES, ...EXTRA_TABS]?.filter((item: any) => (!tab_layout?.includes(item?.link)) && item?.link)?.map((item: any) => item?.link)
-      await setCookie(TAB_ACCESS, notoroute);
       if (data?.nav) {
         await data?.router.push(EmployeeProtectedRoutes.employee);
         data?.setLoggingIn(false)
@@ -46,7 +43,6 @@ export const fetchEmployeeAccessTabs = async (employeeid: string, data?: any) =>
       var tab_data = Array.isArray(res.data?.accesses) ? res.data?.accesses?.filter((item: any) => item?.ischecked == true)?.map((item: any) => ({ id: item?.tabid, tabname: item?.tabname })) : []
       var tab_layout = tabfilter(tab_data, "employee", [...LEFT_NAV_ROUTES, ...EXTRA_TABS] as any)?.map((item: any) => item?.link2 || '')
       var notoroute = [...LEFT_NAV_ROUTES, ...EXTRA_TABS]?.filter((item: any) => (!tab_layout?.includes(item?.link2)) && item?.link2)?.map((item: any) => item?.link2 || "")
-      await setCookie(TAB_ACCESS, notoroute);
       if (data?.nav) {
         await data?.router.push(EmployeeProtectedRoutes.employee);
         data?.setLoggingIn(false)
