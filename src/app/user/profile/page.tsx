@@ -1,21 +1,43 @@
-import { NetworksList } from '@/components/leader/NetworksList'
-import { GeneralInfoBox } from '@/components/leader/GeneralInfoBox'
-import { PersonalInfoBox } from '@/components/leader/PersonalInfoBox'
+'use client'
+import { lazy, Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorFallback } from '@/components/common/ErrorFallback'
+import { memo } from 'react'
+
+// Lazy load components
+const GeneralInfoBox = lazy(() => import('@/components/leader/GeneralInfoBox').then(mod => ({ default: mod.GeneralInfoBox })))
+const PersonalInfoBox = lazy(() => import('@/components/leader/PersonalInfoBox').then(mod => ({ default: mod.PersonalInfoBox })))
+
+// Loading component
+const LoadingComponent = () => (
+  <div className="animate-pulse">
+    <div className="h-48 bg-gray-200 rounded-md"></div>
+  </div>
+)
 
 const AdminProfilePage = () => {
   return (
-    <>
-      <div className='flex gap-5 w-full max-[900px]:flex-col'>
-        <div className='w-[28%] max-[1500px]:w-[31%] max-[1250px]:w-[35%] max-[1130px]:w-[38%] max-[900px]:w-full'>
-          <PersonalInfoBox />
-        </div>
-
-        <div className='w-[72%] max-[1500px]:w-[69%] max-[1250px]:w-[65%] max-[1130px]:w-[62%] max-[900px]:w-full flex flex-col gap-5'>
-          <GeneralInfoBox />
-        </div>
+    <div className="flex gap-5 w-full max-lg:flex-col">
+      {/* Personal Info Section */}
+      <div className="w-[28%] max-2xl:w-[31%] max-xl:w-[35%] max-lg:w-full">
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={<LoadingComponent />}>
+            <PersonalInfoBox />
+          </Suspense>
+        </ErrorBoundary>
       </div>
-    </>
+
+      {/* General Info Section */}
+      <div className="w-[72%] max-2xl:w-[69%] max-xl:w-[65%] max-lg:w-full">
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={<LoadingComponent />}>
+            <GeneralInfoBox />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+    </div>
   )
 }
 
-export default AdminProfilePage
+// Memoize the component to prevent unnecessary re-renders
+export default memo(AdminProfilePage)

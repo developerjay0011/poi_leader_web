@@ -5,18 +5,20 @@ import { TAB_ACCESS } from '@/constants/common';
 import { APIRoutes, EmployeeProtectedRoutes } from '@/constants/routes'
 import { EXTRA_TABS, LEFT_NAV_ROUTES } from '@/utils/routes';
 import { setCookie } from 'cookies-next';
+import { accessAction } from './tabSlice';
 
 
-export const fetchTabs = async (userId: string, type?: string) => {
+export const fetchTabs = async (userId: string, type?: string, dispatch?: any) => {
   return tryCatch(
     async () => {
-      var notoroute: any = null
+      var tabs: any = null
       if (type == "employee") {
-        notoroute = await fetchEmployeeAccessTabs(userId)
+        tabs = await fetchEmployeeAccessTabs(userId)
       } else {
-        notoroute = await fetchAccessTabs(userId)
+        tabs = await fetchAccessTabs(userId)
       }
-      return notoroute?.notoroute
+      if (Array.isArray(tabs?.tab_data)) { await dispatch(accessAction.storeAccesstabs(tabs?.tab_data)) }
+      return tabs?.notoroute
     }
   );
 };

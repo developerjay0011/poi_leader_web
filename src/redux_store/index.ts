@@ -77,14 +77,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        // Ignore these field paths in all actions and state
-        ignoredActionPaths: ['payload.timestamp', 'meta.arg'],
-        ignoredPaths: ['items.dates'],
       },
-      // Disable thunk middleware in development for better performance
-      thunk: process.env.NODE_ENV === 'production',
-      // Conditionally enable middleware based on environment
-      immutableCheck: process.env.NODE_ENV === 'production',
     }),
   devTools: process.env.NODE_ENV !== 'production',
 })
