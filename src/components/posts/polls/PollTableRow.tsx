@@ -6,7 +6,6 @@ import { AnimatePresence } from 'framer-motion'
 import { ManagePollsForm } from '@/components/leader/forms/PollsForm'
 import { PollsPreview } from './PollsPreview'
 import { ErrorTableRow } from '@/utils/ErrorTableRow'
-import { cusSelector } from '@/redux_store/cusHooks'
 import moment from 'moment'
 
 interface PollTableRowProps {

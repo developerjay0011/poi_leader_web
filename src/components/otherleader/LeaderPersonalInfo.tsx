@@ -6,12 +6,10 @@ import { BiLogoGmail } from "react-icons/bi";
 import { FaTransgenderAlt } from "react-icons/fa";
 import {
   FaCakeCandles,
-  FaGlobe,
   FaHandshake,
   FaPhone,
   FaUser,
 } from "react-icons/fa6";
-import { MdBloodtype } from "react-icons/md";
 import { RootState } from "@/redux_store";
 import moment from "moment";
 interface LeaderPersonalInfoProps { }

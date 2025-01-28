@@ -1,5 +1,5 @@
 'use client'
-import Image, { StaticImageData } from 'next/image'
+import { StaticImageData } from 'next/image'
 import { FC, useState, useRef } from 'react'
 import { BiSolidDownArrow, BiX } from 'react-icons/bi'
 import { Shortarray } from '../Input'

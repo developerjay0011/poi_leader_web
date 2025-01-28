@@ -12,7 +12,6 @@ import {
   FaPhone,
   FaUser,
 } from 'react-icons/fa6'
-import { MdBloodtype } from 'react-icons/md'
 
 interface PersonalInfoBoxProps { }
 export const PersonalInfoBox: FC<PersonalInfoBoxProps> = () => {

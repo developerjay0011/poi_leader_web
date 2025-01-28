@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { FC } from 'react'
 import { FaPlus } from 'react-icons/fa';
-import { MdCheckBox, MdDelete, MdEdit } from 'react-icons/md';
+import { MdDelete, MdEdit } from 'react-icons/md';
 
 interface NetworkProps {
   backgroundImg: string

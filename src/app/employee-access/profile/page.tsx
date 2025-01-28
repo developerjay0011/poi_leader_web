@@ -1,4 +1,3 @@
-import { NetworksList } from '@/components/leader/NetworksList'
 import { GeneralInfoBox } from '@/components/leader/GeneralInfoBox'
 import { PersonalInfoBox } from '@/components/leader/PersonalInfoBox'
 

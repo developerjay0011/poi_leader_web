@@ -1,18 +1,6 @@
-import { UserData, userImg } from "@/utils/utility";
-import { FC, useCallback, useEffect, useState } from "react";
-import { BiComment, BiLike, BiShare } from "react-icons/bi";
-import { BsThreeDots } from "react-icons/bs";
-import { RiCheckboxMultipleBlankFill } from "react-icons/ri";
-import { PostOptions } from "./PostOptions";
+import { FC, useCallback, useState } from "react";
 import CustomImage from "@/utils/CustomImage";
 import { getImageUrl } from "@/config/get-image-url";
-import { tryCatch } from "@/config/try-catch";
-import { deleteGallery } from "@/redux_store/gallery/galleryAPI";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import { commonActions } from "@/redux_store/common/commonSlice";
-import { ToastType } from "@/constants/common";
-import { GrClose } from "react-icons/gr";
-import PostGrid from "../PostGrid";
 import ImageViewer from 'react-simple-image-viewer';
 
 interface BriefPostProps {

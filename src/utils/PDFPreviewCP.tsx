@@ -1,8 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { motion as m } from 'framer-motion'
-import Image from 'next/image'
 import { cusSelector } from '@/redux_store/cusHooks'
-import { dateConverterNumeric } from './utility'
 import ReactToPrint from 'react-to-print'
 import { getImageUrl } from '@/config/get-image-url'
 import moment from 'moment'

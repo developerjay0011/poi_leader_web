@@ -1,5 +1,5 @@
 'use client'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { CommonBox } from '@/utils/CommonBox'
 import { FaBell, } from 'react-icons/fa6'
 import Link from 'next/link'

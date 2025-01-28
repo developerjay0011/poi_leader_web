@@ -2,7 +2,7 @@
 import { CommonBox } from '@/utils/CommonBox'
 import Link from 'next/link'
 import { FC, ReactNode } from 'react'
-import { BsGenderFemale, BsGenderMale, BsStars } from 'react-icons/bs'
+import { BsGenderFemale, BsGenderMale } from 'react-icons/bs'
 import { FaFacebook, FaInstagram, FaRedhat } from 'react-icons/fa'
 import { RiUserHeartLine } from 'react-icons/ri'
 import { AiOutlineUser } from 'react-icons/ai'

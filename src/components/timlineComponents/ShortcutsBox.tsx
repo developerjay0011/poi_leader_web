@@ -16,12 +16,11 @@ import { closeAccount, deActiveAccount } from "@/redux_store/common/commonAPI";
 import { tabfilter } from "@/redux_store/accesstab/tabApi";
 
 export const ShortcutsBox: FC = () => {
-  const dispatch = cusDispatch();
   const router = useRouter();
   const [showConfirmBox, setShowConfirmBox] = useState(false);
   const [showCloseConfirmBox, setShowCloseConfirmBox] = useState(false);
   const { userDetails } = cusSelector((state: RootState) => state.auth);
-  const { accesstabs, usertype, loader } = cusSelector((state) => state.access);
+  const { accesstabs, usertype } = cusSelector((state) => state.access);
   const NAV_ROUTES = [
     {
       link: '/user',

@@ -1,6 +1,6 @@
 "use client";
 import { dateConverter } from "@/utils/utility";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { PollDetails } from "@/utils/typesUtils";
 import { cusSelector } from "@/redux_store/cusHooks";
 import { PollOption } from "./PollOption";
@@ -9,10 +9,6 @@ import { getImageUrl } from "@/config/get-image-url";
 import CustomImage from "@/utils/CustomImage";
 import { VoteAdd } from "@/redux_store/posts/postAPI";
 import Link from "next/link";
-import { GrClose } from "react-icons/gr";
-import { BsThreeDots } from "react-icons/bs";
-import { AgendaOptions } from "../AgendaOptions";
-import { tryCatch } from "@/config/try-catch";
 import { Nave } from "../utils";
 
 interface PollPostProps extends PollDetails {

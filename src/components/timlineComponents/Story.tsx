@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import Stories from "react-insta-stories";
 import Modal from "react-modal";
 import CustomImage from "@/utils/CustomImage";
 import { StoryProps } from "@/interfaces/story";
-import { BsThreeDots, BsTrash3Fill } from "react-icons/bs";
+import { BsTrash3Fill } from "react-icons/bs";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import moment from "moment";
 import { usePathname } from "next/navigation";

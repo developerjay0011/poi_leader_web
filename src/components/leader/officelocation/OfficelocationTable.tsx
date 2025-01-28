@@ -1,10 +1,8 @@
-import { cusDispatch, cusSelector } from '@/redux_store/cusHooks';
+import { cusSelector } from '@/redux_store/cusHooks';
 import { DeleteOfficeLocation } from '@/redux_store/location/locationApi';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
-import { sliceData } from '@/utils/TableWrapper';
 import { FC } from 'react'
 import { BiEdit, BiSolidTrashAlt } from 'react-icons/bi';
-import { RiTableAltLine } from "react-icons/ri";
 
 interface OfficelocationTableProps {
   searchStr: string

@@ -5,7 +5,6 @@ import {
   AGENDA_VAL,
   PRIORITIES,
   PRIORITY,
-  dateConverter,
   dateConverter2,
 } from "@/utils/utility";
 import { DevelopmentAgendaTimeLine } from "./DevelopmentAgendaTimeLine";
@@ -18,7 +17,7 @@ import { ProtectedRoutes } from "@/constants/routes";
 import { AgendaOptions } from "../AgendaOptions";
 import { GrClose } from "react-icons/gr";
 import { BsThreeDots } from "react-icons/bs";
-import { deleteAgenda, deleteAgendapost, getAgenda } from "@/redux_store/agenda/agendaApi";
+import { deleteAgendapost, getAgenda } from "@/redux_store/agenda/agendaApi";
 import { tryCatch } from "@/config/try-catch";
 import { agendaAction } from "@/redux_store/agenda/agendaSlice";
 import { useDispatch } from "react-redux";

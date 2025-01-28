@@ -1,9 +1,6 @@
-import { getImageUrl } from '@/config/get-image-url'
-import Image from 'next/image'
 import { FC, useEffect, useState } from 'react'
 import { BiX } from 'react-icons/bi'
 import { MdArrowDropDown } from 'react-icons/md'
-import CustomImage from './CustomImage'
 
 interface ImageMultiSelectIPProps {
   options: any

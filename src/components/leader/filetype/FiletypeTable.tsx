@@ -2,7 +2,6 @@
 import { cusSelector } from '@/redux_store/cusHooks';
 import { DeleteFile } from '@/redux_store/filetype/filetypeApi';
 import { ErrorTableRow } from '@/utils/ErrorTableRow';
-import { sliceData } from '@/utils/TableWrapper';
 import { FC } from 'react'
 import { BiEdit, BiSolidTrashAlt } from 'react-icons/bi';
 

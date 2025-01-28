@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { BiX } from 'react-icons/bi'
 import { motion as m } from 'framer-motion'
-import Image from 'next/image'
 import { FaFileAlt } from 'react-icons/fa'
 import { getImageUrl } from '@/config/get-image-url'
 import { dateConverter } from '@/utils/utility'

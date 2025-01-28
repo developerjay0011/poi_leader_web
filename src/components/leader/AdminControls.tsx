@@ -1,7 +1,6 @@
 'use client'
 import { ProtectedRoutes } from '@/constants/routes'
 import { LogoutUser } from '@/redux_store/auth/authAPI'
-import { authActions } from '@/redux_store/auth/authSlice'
 import { cusDispatch } from '@/redux_store/cusHooks'
 import { ShortcutBtn } from '@/utils/ShortcutBtn'
 import { FC } from 'react'

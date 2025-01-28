@@ -1,5 +1,4 @@
 import { MediaPost } from '@/utils/typesUtils'
-import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
 import CustomImage from '@/utils/CustomImage'
 

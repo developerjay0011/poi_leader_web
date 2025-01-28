@@ -1,7 +1,7 @@
 import { UserDetails } from '@/utils/typesUtils'
 import { ErrorMessage } from '@hookform/error-message'
 import { FC, HTMLInputTypeAttribute, useState } from 'react'
-import { FieldErrors, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import { FieldErrors, RegisterOptions } from 'react-hook-form'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 
 interface InputProps {

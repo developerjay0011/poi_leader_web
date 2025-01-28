@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Input } from "../../Input";
-import { UserDetails } from "@/utils/typesUtils";
 import { useForm } from "react-hook-form";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import moment from "moment";

@@ -12,12 +12,9 @@ import {
 import { LetterInputField } from '../manage-letters/LetterInputField'
 import { LetterSelectField } from '../manage-letters/LetterSelectField'
 import { LetterTextarea } from '../manage-letters/LetterTextarea'
-import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
-import { getTickets } from '@/redux_store/ticket/ticketApi'
-import { ticketActions } from '@/redux_store/ticket/ticketSlice'
+import { cusSelector } from '@/redux_store/cusHooks'
 import { LetterFormFields } from '../pages/CreateLetterpage'
 import { Savedby } from '@/constants/common'
-import { watch } from 'fs'
 
 interface LetterFormProps {
   register: UseFormRegister<LetterFormFields>
@@ -85,21 +82,6 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, setV
 
       <Line />
 
-      {/* <LetterSelectField
-        error={errors}
-        id='language'
-        title='Select Language'
-        selectOptions={[
-          { id: 'hindi', val: 'hindi' },
-          { id: 'english', val: 'english' },
-        ]}
-        register={register}
-        required
-        validations={{ required: 'Language is required' }}
-      /> */}
-
-      {/* <Line /> */}
-
       {Savedby().saved_by_type &&
         <LetterInputField
           error={errors}
@@ -124,7 +106,6 @@ export const LetterForm: FC<LetterFormProps> = ({ errors, register, states, setV
         register={register}
         required
         validations={{ required: 'IdNo is required' }}
-      // readonly
       />
 
       <Line />

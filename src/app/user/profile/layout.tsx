@@ -25,7 +25,6 @@ const ProfileImage = memo(({ src, alt, className }: { src: string; alt: string; 
     width={1000}
     height={1000}
     className={className}
-    priority
   />
 ));
 ProfileImage.displayName = 'ProfileImage';

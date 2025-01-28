@@ -7,11 +7,7 @@ import { getImageUrl } from '@/config/get-image-url';
 import { BsTrash3Fill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
-import toast from 'react-hot-toast';
-import {
-
-  TimeLineDetails
-} from '@/utils/typesUtils'
+import {TimeLineDetails} from '@/utils/typesUtils'
 import TimeLineForm from './TineLineForm';
 import { tryCatch } from '@/config/try-catch';
 import { commonActions } from '@/redux_store/common/commonSlice';

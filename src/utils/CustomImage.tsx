@@ -23,7 +23,7 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, className, ...props
       }}
       onError={() => setImageError(true)}
       onLoadStart={() => setImageError(false)}
-      priority={true}
+      loading='lazy'
       className={className}
       placeholder="empty"
     />

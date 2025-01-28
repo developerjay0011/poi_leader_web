@@ -1,7 +1,5 @@
 import { FC, useEffect } from 'react'
-import { AnimatePresence, motion as m } from 'framer-motion'
 import { useForm } from 'react-hook-form'
-import { BiX } from 'react-icons/bi'
 import { cusDispatch, cusSelector } from '@/redux_store/cusHooks'
 import { commonActions } from '@/redux_store/common/commonSlice'
 import { ToastType } from '@/constants/common'

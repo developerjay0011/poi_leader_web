@@ -22,7 +22,6 @@ import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import { getCookies } from "cookies-next";
 import { tryCatch } from "@/config/try-catch";
-import { authActions } from "@/redux_store/auth/authSlice";
 import { FaPowerOff } from 'react-icons/fa6'
 import { getLeaderAddedStories } from "@/redux_store/posts/postAPI";
 import { postActions } from "@/redux_store/posts/postSlice";

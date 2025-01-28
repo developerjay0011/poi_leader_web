@@ -5,19 +5,7 @@ import { Notification } from '@/components/leader/Notification'
 import { ClearAllLeaderNotification, getNotification } from '@/redux_store/leader/leaderAPI';
 import { leaderActions } from '@/redux_store/leader/leaderSlice';
 import { Savedby } from '@/constants/common';
-interface NotiProps {
-  id: string,
-  leaderid: string,
-  postid: string,
-  userid: string,
-  username: string,
-  userimg: string,
-  usertype: string,
-  title: string,
-  description: string,
-  createddate: string,
-  isread: true
-}
+
 interface BriefNotificationsProps {
   onClick: any
 

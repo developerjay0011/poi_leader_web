@@ -1,6 +1,5 @@
 'use client'
 import { FC, useState, ChangeEvent } from 'react'
-import { BiMinusCircle, BiX } from 'react-icons/bi'
 import { BsCameraFill } from 'react-icons/bs'
 import { motion as m } from 'framer-motion'
 import {
@@ -12,6 +11,7 @@ import { convertFileToBase64 } from '@/utils/utility'
 import { NewPollsFormFields } from './PollsForm'
 import CustomImage from '@/utils/CustomImage'
 import { getImageUrl } from '@/config/get-image-url'
+import { BiMinusCircle, BiX } from 'react-icons/bi'
 
 interface ImagePlusTextInputProps {
   id: string

@@ -2,10 +2,8 @@
 
 import { FC, useState } from "react";
 import { BsTrash3Fill } from "react-icons/bs";
-import { MdReport } from "react-icons/md";
 import { AnimatePresence, motion as m } from "framer-motion";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
-import { cusSelector } from "@/redux_store/cusHooks";
 
 interface PostOptionsProps {
   deletePostHandler: () => void;

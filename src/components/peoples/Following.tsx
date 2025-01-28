@@ -8,7 +8,6 @@ import { leaderActions } from '@/redux_store/leader/leaderSlice';
 import CustomImage from '@/utils/CustomImage'
 import Link from 'next/link';
 import { FC } from 'react'
-import { BsThreeDots } from 'react-icons/bs'
 import { Nave } from '../posts/utils';
 
 interface FollowerProps {

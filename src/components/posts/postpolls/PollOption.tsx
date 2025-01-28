@@ -1,6 +1,5 @@
 import { getImageUrl } from '@/config/get-image-url'
 import CustomImage from '@/utils/CustomImage'
-import Image from 'next/image'
 import { FC } from 'react'
 
 export const PollOption: FC<{

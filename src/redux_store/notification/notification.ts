@@ -1,5 +1,4 @@
-import { LEADER_FCM_TOKEN_KEY, USER_INFO } from "@/constants/common";
-import axios from "axios";
+import { LEADER_FCM_TOKEN_KEY } from "@/constants/common";
 import { getCookie } from "cookies-next";
 export const MapFcm = (tokens = [], removeown = false) => {
   var token = Array.isArray(tokens) ? [...tokens] : [] as any

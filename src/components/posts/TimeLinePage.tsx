@@ -9,15 +9,19 @@ import { postActions } from "@/redux_store/posts/postSlice";
 import { AgendaPost } from "./postagenda/AgendaPost";
 import { PollPost } from "./postpolls/PollPost";
 import { setusername } from "@/config/get-image-url";
+
 interface TimeLinePageProps {
   is_my_postandstories: boolean
+  visibleItems?: number
 }
+
 export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = false }) => {
   const dispatch = cusDispatch();
   const postData: any = cusSelector((state) => state.posts.allPosts);
   const mypostData: any = cusSelector((state) => state.posts.posts);
   const { userDetails } = cusSelector((state) => state.auth);
   const { leaderProfile } = cusSelector((state) => state.leader);
+
   const Getpost = async () => {
     if (userDetails?.leaderId) {
       const postsForLeader = await GetPostsForLeader(userDetails?.leaderId);
@@ -26,14 +30,17 @@ export const TimeLinePage: FC<TimeLinePageProps> = ({ is_my_postandstories = fal
       dispatch(postActions.listPosts(leaderpost as any));
     }
   };
+
   var setpost = is_my_postandstories ? mypostData : postData
   var mypostdata = is_my_postandstories ? { image: leaderProfile?.image, name: setusername(leaderProfile), leaderid: userDetails?.leaderId } : {}
+
+  const visiblePosts = setpost
 
   return (
     <div className="flex-1 flex flex-col gap-5 max-[1200px]:w-full">
       <StoriesBox is_my_postandstories={is_my_postandstories} />
       <NewPostBox handleAdd={() => Getpost()} type="post" />
-      {setpost?.map((el: any, index: string) => {
+      {visiblePosts?.map((el: any, index: string) => {
         var type = el?.type
         return type === "post" ? (
           <div key={index}>

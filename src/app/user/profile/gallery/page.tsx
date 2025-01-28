@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { BriefPost } from "@/components/posts/BriefPost";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import {  cusSelector } from "@/redux_store/cusHooks";
 import { ProfileShortcutsBox } from "@/components/timlineComponents/ProfileShortcutsBox";
 import { Datanotfound } from "@/utils/Datanotfound";
 import { PeoplesComponentWrapper } from "@/utils/PeoplesComponentWrapper";

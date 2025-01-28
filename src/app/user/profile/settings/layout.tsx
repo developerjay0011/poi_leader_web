@@ -1,10 +1,7 @@
 import { CusLink } from '@/utils/CusLink'
-import Image from 'next/image'
 import { FC, ReactNode } from 'react'
 import { BsGearFill } from 'react-icons/bs'
-import { FaAddressBook, FaEdit, FaUniversity, FaUser } from 'react-icons/fa'
-import { FaUserGroup } from 'react-icons/fa6'
-import PoliticalIcon from '@/assets/icons/political-instability.png'
+import { FaAddressBook, FaUniversity, FaUser } from 'react-icons/fa'
 
 const AdminSettingsLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (

@@ -12,7 +12,6 @@ interface PollsPreviewProps {
 }
 
 export const PollsPreview: FC<PollsPreviewProps> = ({ onClose, pollDetails, }) => {
-  const { userDetails } = cusSelector((st) => st.auth)
   const { leaderProfile } = cusSelector((st) => st.leader)
 
   return (

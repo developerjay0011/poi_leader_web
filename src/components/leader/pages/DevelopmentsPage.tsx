@@ -15,7 +15,6 @@ export const DevelopmentPage: FC = () => {
     const [statusFilter, setStatusFilter] = useState("");
     const [isAgenda, setIsAgenda] = useState(false);
     const [development, setDevelopment] = useState({}) as any
-    const { userDetails } = cusSelector((st) => st.auth);
     const { categories } = cusSelector((st) => st.agenda);
     const { developments } = cusSelector((st) => st.development);
     const filterDataOnPriority = developments?.filter((el) => priorityFilter ? el.priority === priorityFilter : el);

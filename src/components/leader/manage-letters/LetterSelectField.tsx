@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import { RegisterOptions, UseFormRegister, FieldErrors } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { LetterFormFields } from '../pages/CreateLetterpage'

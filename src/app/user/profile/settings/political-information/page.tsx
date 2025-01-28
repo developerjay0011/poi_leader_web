@@ -12,7 +12,6 @@ import { ToastType } from '@/constants/common'
 import { UserDetails } from '@/utils/typesUtils'
 import { ProtectedRoutes } from '@/constants/routes'
 import { LeaderPoliticalInfo } from './components/LeaderPoliticalInfo'
-import { authActions } from '@/redux_store/auth/authSlice'
 
 const PoliticalInformationPage: FC = () => {
   const { leaderOptions } = cusSelector((state) => state.common);

@@ -16,7 +16,6 @@ import { tryCatch } from '@/config/try-catch';
 import Link from 'next/link';
 import { Savedby } from '@/constants/common';
 import { getImageUrl, setusername } from '@/config/get-image-url';
-import { sliceData } from '@/utils/TableWrapper';
 import { FaFileAlt } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 

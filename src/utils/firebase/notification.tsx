@@ -17,7 +17,7 @@ import { ticketActions } from '@/redux_store/ticket/ticketSlice';
 
 
 export default function Notificationpage() {
-    const { fcmToken, notificationPermissionStatus } = useFcmToken();
+    const fcmToken = useFcmToken();
     const dispatch = cusDispatch()
     const router = useRouter();
     let userDetails: any = getCookie(USER_INFO);

@@ -1,6 +1,6 @@
 "use client";
 import { StaticImageData } from "next/image";
-import { FC } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
 import CustomImage from "@/utils/CustomImage";
 import { getFollowering, unFollowLeader } from "@/redux_store/leader/leaderAPI";
@@ -11,6 +11,7 @@ import { commonActions } from "@/redux_store/common/commonSlice";
 import { ToastType } from "@/constants/common";
 import Link from "next/link";
 import { Nave } from "../posts/utils";
+
 interface Leader {
   image: string;
   designation: string;
@@ -21,37 +22,62 @@ interface Leader {
 interface TrendingUsersProps {
   followers: any;
 }
+
 export const FollowedLeader: FC<TrendingUsersProps> = ({ }) => {
   const { following } = cusSelector((state) => state.leader);
-  return following?.length > 0 && (
-    <>
-      <section
-        className={`border rounded-md w-full bg-white text-sky-950 max-h-[25rem] overflow-hidden flex flex-col`}
-      >
-        <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-6 py-3 border-b font-[500] text-[16px] capitalize">
-          Following Leaders
-        </h2>
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleItems, setVisibleItems] = useState(10);
+  const [loadIncrement, setLoadIncrement] = useState(10);
 
-        <div className="overflow-y-scroll flex-1 main_scrollbar">
-          <ul className="flex flex-col">
-            {following?.length > 0 &&
-              following?.map((item: Leader, index: number) => {
-                return (
-                  <TrendingUser
-                    userImg={getImageUrl(item?.image) || ""}
-                    designation={item?.designation || ""}
-                    username={item?.name || ""}
-                    id={item?.leaderid || ""}
-                    key={index}
-                  />
-                );
-              })}
-          </ul>
-        </div>
-      </section>
-    </>
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    if (scrollTop + clientHeight >= scrollHeight - 20) {
+      // First load was 10 items, subsequent loads will be 20
+      setLoadIncrement(20);
+      setVisibleItems(prev => prev + loadIncrement);
+    }
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [loadIncrement]);
+
+  const visibleFollowing = following?.slice(0, visibleItems);
+
+  return following?.length > 0 && (
+    <section className={`border rounded-md w-full bg-white text-sky-950 max-h-[25rem] overflow-hidden flex flex-col`}>
+      <h2 className="flex items-center after:h-1/2 after:w-[3px] after:bg-orange-600 after:rounded-full after:absolute after:top-1/2 after:translate-y-[-50%] after:left-0 relative px-6 py-3 border-b font-[500] text-[16px] capitalize">
+        Following Leaders
+      </h2>
+
+      <div ref={containerRef} className="overflow-y-scroll flex-1 main_scrollbar">
+        <ul className="flex flex-col">
+          {visibleFollowing?.length > 0 &&
+            visibleFollowing?.map((item: Leader, index: number) => {
+              return (
+                <TrendingUser
+                  userImg={getImageUrl(item?.image) || ""}
+                  designation={item?.designation || ""}
+                  username={item?.name || ""}
+                  id={item?.leaderid || ""}
+                  key={index}
+                />
+              );
+            })}
+          {visibleItems < (following?.length || 0) && (
+            <div className="text-center py-2 text-gray-500">Scroll for more...</div>
+          )}
+        </ul>
+      </div>
+    </section>
   );
 };
+
 interface TrendingUserProps {
   designation: string;
   username: string;

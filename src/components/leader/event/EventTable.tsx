@@ -2,7 +2,7 @@
 import { tryCatch } from "@/config/try-catch";
 import { ToastType } from "@/constants/common";
 import { commonActions } from "@/redux_store/common/commonSlice";
-import { cusDispatch, cusSelector } from "@/redux_store/cusHooks";
+import { cusDispatch } from "@/redux_store/cusHooks";
 import { deleteEvent, getEvents } from "@/redux_store/event/eventApi";
 import { eventAction } from "@/redux_store/event/eventSlice";
 import { ConfirmDialogBox } from "@/utils/ConfirmDialogBox";
