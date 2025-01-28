@@ -339,9 +339,9 @@ export const ProtectedPage: FC<{ children: ReactNode, isLeader: any, userDetails
       }
       if (path != "user") {
         await getApiCall()
-      }
-      if (!loadedUser && isLeader && userDetails?.leaderId) {
-        await GetHomePage(userDetails, 1000)
+        if (!loadedUser && isLeader && userDetails?.leaderId) {
+          await GetHomePage(userDetails, 1000)
+        }
       }
       setloadFirst(true)
     } catch (error) {
