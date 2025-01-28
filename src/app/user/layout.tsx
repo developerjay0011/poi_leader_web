@@ -1,9 +1,5 @@
 'use client'
-import { FC, ReactNode, useLayoutEffect, lazy, Suspense, memo } from 'react'
-import { cusDispatch } from '@/redux_store/cusHooks'
-import { accessAction } from '@/redux_store/accesstab/tabSlice'
-import { getCookie } from 'cookies-next'
-import { USER_TYPE } from '@/constants/common'
+import { FC, ReactNode, lazy, memo } from 'react'
 
 // Lazy load components
 const TopNavbar = lazy(() => import('@/components/leader/TopNavbar').then(mod => ({ default: mod.TopNavbar })))
@@ -12,39 +8,17 @@ const RightNavbar = lazy(() => import('@/components/leader/RightNavbar').then(mo
 const Notificationpage = lazy(() => import('@/utils/firebase/notification').then(mod => ({ default: mod.default })))
 
 const AdminLayout: FC<{ children: ReactNode }> = memo(({ children }) => {
-  const dispatch = cusDispatch()
-
-  useLayoutEffect(() => {
-    (async () => {
-      let usertype = getCookie(USER_TYPE)
-      await dispatch(accessAction.storeUsertype(usertype))
-    })()
-  });
-
-
   return (
     <main className='flex flex-col h-[100dvh] overflow-hidden'>
-      <Suspense fallback={null}>
-        <TopNavbar user_type="leader" />
-      </Suspense>
-
+      <TopNavbar user_type="leader" />
       <div className='flex flex-grow overflow-y-scroll scroll_hidden'>
-        <Suspense fallback={null}>
-          <LeftNavbar />
-        </Suspense>
-
+        <LeftNavbar />
         <section className='bg-zinc-100 flex-1 overflow-y-scroll main_scrollbar'>
           {children}
         </section>
-
-        <Suspense fallback={null}>
-          <RightNavbar />
-        </Suspense>
+        <RightNavbar />
       </div>
-
-      <Suspense fallback={null}>
-        <Notificationpage />
-      </Suspense>
+      <Notificationpage />
     </main>
   )
 })

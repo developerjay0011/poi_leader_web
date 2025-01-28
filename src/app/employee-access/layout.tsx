@@ -11,23 +11,15 @@ const EmployeeLayout: FC<{ children: ReactNode }> = memo(({ children }) => {
   return (
     <Suspense fallback={null}>
       <main className='flex flex-col h-[100dvh] overflow-hidden'>
-        <Suspense fallback={null}>
-          <TopNavbar user_type="employee" />
-        </Suspense>
+        <TopNavbar user_type="employee" />
         <div className='flex flex-grow overflow-y-scroll scroll_hidden'>
-          <Suspense fallback={null}>
-            <LeftNavbar />
-          </Suspense>
+          <LeftNavbar />
           <section className='bg-zinc-100 flex-1 overflow-y-scroll main_scrollbar'>
             {children}
           </section>
-          <Suspense fallback={null}>
-            <RightNavbar />
-          </Suspense>
+          <RightNavbar />
         </div>
-        <Suspense fallback={null}>
-          <Notificationpage />
-        </Suspense>
+        <Notificationpage />
       </main>
     </Suspense>
   )

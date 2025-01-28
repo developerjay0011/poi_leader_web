@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { fetchTabs } from './accesstab/tabApi'
 import { ProtectedPage } from './ProtectedPage'
 import { ErrorBoundary } from 'react-error-boundary'
+import { accessAction } from './accesstab/tabSlice'
 
 // Types
 interface CusProviderProps {
@@ -107,6 +108,8 @@ const AuthLayer: FC<{ children: ReactNode }> = memo(({ children }) => {
 
   const userDetails = useMemo<UserDetails | null>(() => {
     try {
+      let usertype = getCookie(USER_TYPE)
+      dispatch(accessAction.storeUsertype(usertype))
       const userInfo = getCookie(USER_INFO)
       return userInfo ? JSON.parse(userInfo as string) : null
     } catch (error) {
