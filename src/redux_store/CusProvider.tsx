@@ -38,11 +38,12 @@ const LoadingPage = memo(() => (
     <Image
       src={Logo}
       alt="poi logo"
-      className="h-[13rem] w-auto self-center max-lg:m-auto max-lg:h-[10rem]"
+      className="h-[13rem] w-auto self-center max-lg:h-[10rem]"
       priority
     />
     <div
       style={{
+        marginTop: "20px",
         width: '40px',
         height: '40px',
         border: '4px solid #e5e7eb',

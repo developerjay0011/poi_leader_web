@@ -3,13 +3,6 @@ import type { Metadata, Viewport } from 'next'
 import { CusProvider } from '@/redux_store/CusProvider'
 import { FC, ReactNode, memo } from 'react'
 import { Toaster } from 'react-hot-toast'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -54,8 +47,8 @@ ToasterComponent.displayName = 'ToasterComponent'
 
 const RootLayout: FC<{ children: ReactNode }> = memo(({ children }) => {
   return (
-    <html lang='en' className={inter.variable}>
-      <body className={inter.className}>
+    <html lang='en'>
+      <body>
         <ToasterComponent />
         <CusProvider>{children}</CusProvider>
       </body>

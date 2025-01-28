@@ -135,7 +135,8 @@ const getAny = [
     only_leader: false,
     onCall: async (leaderId: any, dispatch: any, employeeId?: any) => {
       if (leaderId) { // Check both employeeId and leaderId
-        await getNotification({ leaderId: leaderId, employeeId: employeeId })
+        const response = await await getNotification({ leaderId: leaderId, employeeId: employeeId })
+        return response
       }
       return []
     },
